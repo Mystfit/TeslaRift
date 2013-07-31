@@ -1,0 +1,13 @@
+.DS_Store
+*.swp
+*.Trashes
+
+TeslaRift-Unity/Library
+TeslaRift-Unity/Temp
+*.csproj
+*.pidb
+*.unityproj
+*.sln
+*.userprefs
+
+Live/TeslaRift\ Project/Icon?
