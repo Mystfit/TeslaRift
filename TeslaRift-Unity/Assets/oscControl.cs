@@ -20,6 +20,7 @@
 
 using UnityEngine;
 using System;
+using System.Net;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -27,11 +28,20 @@ using UnityOSC;
 
 public class oscControl : MonoBehaviour {
 	
+	public string targetIp = "127.0.0.1";
+	public string targetPort = "2345";
+	
 	private Dictionary<string, ServerLog> servers;
+	
+	private SixenseInput.Controller leftHand;
+	private SixenseInput.Controller rightHand;
+	
+	private int noteTimer = 0;
 	
 	// Script initialization
 	void Start() {	
 		OSCHandler.Instance.Init(); //init OSC
+		OSCHandler.Instance.CreateClient("Live", System.Net.IPAddress.Parse(targetIp), int.Parse(targetPort));
 		servers = new Dictionary<string, ServerLog>();
 	}
 
@@ -40,8 +50,40 @@ public class oscControl : MonoBehaviour {
     // How many frames per second or Update() calls per frame?
 	void Update() {
 		
+		leftHand = SixenseInput.GetController( SixenseHands.LEFT );
+		rightHand = SixenseInput.GetController( SixenseHands.RIGHT );
+		
 		OSCHandler.Instance.UpdateLogs();
 		servers = OSCHandler.Instance.Servers;
+		
+		float[] testNote = {0.0f, 0.0f};
+	
+		if(leftHand != null){
+			float yDist = leftHand.Position.y;
+			float range = 400.0f;
+			
+			testNote[0] = (Math.Min( Math.Max(yDist, 0.0f), range)) / range;
+			testNote[1] = 0.8f;
+			
+			Debug.Log(String.Format("{0}, {1}", testNote[0], testNote[1] ));
+
+		}
+	
+		
+		List<float> testNoteParams = new List<float>(testNote);
+		
+		if(noteTimer > 3){
+			OSCHandler.Instance.SendMessageToClient("Live", "/tesla/noteparams", testNoteParams);
+			OSCHandler.Instance.SendMessageToClient("Live", "/tesla/noteOn", 1);
+			OSCHandler.Instance.SendMessageToClient("Live", "/tesla/noteOn", 0);
+
+			noteTimer = 0;
+		}
+		
+		noteTimer++;
+		
+		
+		
 		
 	    foreach( KeyValuePair<string, ServerLog> item in servers )
 		{

@@ -234,9 +234,18 @@ public class SixenseInput : MonoBehaviour
 		BIND_CONTROLLER_ONE,
 		BIND_CONTROLLER_TWO,
 	}
-	
+		
 	private static Controller[] m_Controllers = new Controller[MAX_CONTROLLERS];
 	private ControllerManagerState m_ControllerManagerState = ControllerManagerState.NONE;
+	
+	/// <summary>
+	/// Do the controllers require calibrating?
+	/// </summary>
+	public bool RequiresCalibration() { 
+		if (m_ControllerManagerState == ControllerManagerState.NONE) 
+			return true;
+		return false;
+	}
 	
 	/// <summary>
 	/// Initialize the sixense driver and allocate the controllers.

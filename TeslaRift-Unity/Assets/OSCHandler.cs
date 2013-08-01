@@ -93,7 +93,7 @@ public class OSCHandler : MonoBehaviour
 	{
 		//Initialize OSC clients (transmitters)
 		//Example:		
-		CreateClient("Live", IPAddress.Parse("127.0.0.1"), 2345);
+		//CreateClient("Live", IPAddress.Parse("130.195.44.102"), 2346);
 		
 		//Initialize OSC servers (listeners)
 		//Example:
