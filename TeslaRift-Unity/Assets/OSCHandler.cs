@@ -129,6 +129,7 @@ public class OSCHandler : MonoBehaviour
 	{
 		foreach(KeyValuePair<string,ClientLog> pair in _clients)
 		{
+			SendMessageToClient(pair.Key, "/allOff", 1);
 			pair.Value.client.Close();
 		}
 		

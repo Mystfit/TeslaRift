@@ -330,6 +330,7 @@ public class SixenseInput : MonoBehaviour
 								Controllers[i].HandBind = SixenseHands.LEFT;
 								SixensePlugin.sixenseAutoEnableHemisphereTracking( i );
 								m_ControllerManagerState = ControllerManagerState.BIND_CONTROLLER_TWO;
+								Controllers[i].SetEnabled(true);
 								break;
 							}
 						}
@@ -351,6 +352,7 @@ public class SixenseInput : MonoBehaviour
 								Controllers[i].HandBind = SixenseHands.RIGHT;
 								SixensePlugin.sixenseAutoEnableHemisphereTracking( i );
 								m_ControllerManagerState = ControllerManagerState.NONE;
+								Controllers[i].SetEnabled(true);
 								break;
 							}
 						}

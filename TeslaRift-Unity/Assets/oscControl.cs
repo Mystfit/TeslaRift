@@ -33,16 +33,52 @@ public class oscControl : MonoBehaviour {
 	
 	private Dictionary<string, ServerLog> servers;
 	
-	private SixenseInput.Controller leftHand;
-	private SixenseInput.Controller rightHand;
+	private SixenseInput.Controller m_leftHandController;
+	private SixenseInput.Controller m_rightHandController;
+	private GameObject m_leftHand;
+	private GameObject m_rightHand;
 	
-	private int noteTimer = 0;
+	private GameObject m_leftCollisionTarget = null;
+	private GameObject m_rightCollisionTarget = null;
+	
+	private bool m_isLeftGrabbingObject = false;
+	private bool m_isRightGrabbingObject = false;
+	
+	private int m_noteTimer = 0;
+	private bool m_isPlayingManualNote = false;
 	
 	// Script initialization
 	void Start() {	
 		OSCHandler.Instance.Init(); //init OSC
 		OSCHandler.Instance.CreateClient("Live", System.Net.IPAddress.Parse(targetIp), int.Parse(targetPort));
 		servers = new Dictionary<string, ServerLog>();
+		
+		m_leftHand = GameObject.Find("hand_left");
+		m_rightHand = GameObject.Find("hand_right");
+	}
+	
+	void CollidedWith(HandCollisionParams collisionParams){
+		
+		if(collisionParams.hand == SixenseHands.LEFT)
+			m_leftCollisionTarget = collisionParams.target;
+		else
+			m_rightCollisionTarget = collisionParams.target;
+		
+		Debug.Log(String.Format("{0} HIT HAND {1}", collisionParams.target, collisionParams.hand));
+	}
+	
+	void UnCollidedWith(HandCollisionParams collisionParams){
+		
+		if(collisionParams.hand == SixenseHands.LEFT)
+			m_leftCollisionTarget = null;
+		else
+			m_rightCollisionTarget = null;
+		
+		Debug.Log(String.Format("{0} LEFT HAND {1}", collisionParams.target, collisionParams.hand));
+	}
+	
+	void OnApplicationQuit() {
+		
 	}
 
 	// NOTE: The received messages at each server are updated here
@@ -50,40 +86,17 @@ public class oscControl : MonoBehaviour {
     // How many frames per second or Update() calls per frame?
 	void Update() {
 		
-		leftHand = SixenseInput.GetController( SixenseHands.LEFT );
-		rightHand = SixenseInput.GetController( SixenseHands.RIGHT );
+		if(m_leftHandController == null)
+			m_leftHandController = SixenseInput.GetController( SixenseHands.LEFT );
+			
+		if(m_rightHandController == null)
+			m_rightHandController = SixenseInput.GetController( SixenseHands.RIGHT );
 		
+		HandleInput();
+		
+		//Update the note being sent
 		OSCHandler.Instance.UpdateLogs();
 		servers = OSCHandler.Instance.Servers;
-		
-		float[] testNote = {0.0f, 0.0f};
-	
-		if(leftHand != null){
-			float yDist = leftHand.Position.y;
-			float range = 400.0f;
-			
-			testNote[0] = (Math.Min( Math.Max(yDist, 0.0f), range)) / range;
-			testNote[1] = 0.8f;
-			
-			Debug.Log(String.Format("{0}, {1}", testNote[0], testNote[1] ));
-
-		}
-	
-		
-		List<float> testNoteParams = new List<float>(testNote);
-		
-		if(noteTimer > 3){
-			OSCHandler.Instance.SendMessageToClient("Live", "/tesla/noteparams", testNoteParams);
-			OSCHandler.Instance.SendMessageToClient("Live", "/tesla/noteOn", 1);
-			OSCHandler.Instance.SendMessageToClient("Live", "/tesla/noteOn", 0);
-
-			noteTimer = 0;
-		}
-		
-		noteTimer++;
-		
-		
-		
 		
 	    foreach( KeyValuePair<string, ServerLog> item in servers )
 		{
@@ -99,5 +112,86 @@ public class oscControl : MonoBehaviour {
 				                                    item.Value.packets[lastPacketIndex].Data[0].ToString())); //First data value
 			}
 	    }
+	}
+	
+	
+	void HandleInput()
+	{
+		HandleGrabbing();
+		HandleButtons();
+	}
+	
+	
+	void HandleButtons()
+	{
+		if(m_leftHandController != null){
+			
+			if(m_leftHandController.GetButton(SixenseButtons.BUMPER)){
+				
+				
+			
+				float[] testNote = {0.0f, 0.0f};
+				
+				float yDist = m_leftHandController.Position.y;
+				float range = 400.0f;
+				
+				
+				testNote[0] = (Math.Min( Math.Max(yDist, 0.0f), range)) / range;
+								
+				Debug.Log(testNote[0]);
+
+				testNote[1] = 0.8f;
+				List<float> testNoteParams = new List<float>(testNote);
+				OSCHandler.Instance.SendMessageToClient("Live", "/tesla/noteOn", 1);
+				OSCHandler.Instance.SendMessageToClient("Live", "/tesla/noteparams", testNoteParams);
+				OSCHandler.Instance.SendMessageToClient("Live", "/tesla/noteOn", 0);
+
+			} else {
+				if(m_isPlayingManualNote){
+					OSCHandler.Instance.SendMessageToClient("Live", "/tesla/noteOn", 0);
+					m_isPlayingManualNote = false;
+				}
+			}
+		}
+	}
+	
+	
+	//Handle trigger events. At the moment this is limited to grabbing physics objects.
+	//--------------------------------------------------
+	void HandleGrabbing()
+	{
+		
+		if(m_leftHandController != null){
+			
+			//Attach
+			if(m_leftCollisionTarget && m_leftHandController.GetButton(SixenseButtons.TRIGGER)){
+				m_leftCollisionTarget.GetComponent<Rigidbody>().isKinematic = true;
+				m_leftCollisionTarget.transform.parent = m_leftHand.transform;
+				m_isLeftGrabbingObject = true;
+			}
+			
+			//Release
+			if(!m_leftHandController.GetButton(SixenseButtons.TRIGGER) && m_isLeftGrabbingObject && m_leftCollisionTarget){
+				m_leftCollisionTarget.GetComponent<Rigidbody>().isKinematic = false;
+				m_leftCollisionTarget.transform.parent = null;
+				m_isLeftGrabbingObject = false;
+			}
+		}
+		
+		if(m_rightHandController != null){
+			//Attach 
+			if(m_rightCollisionTarget && m_rightHandController.GetButton(SixenseButtons.TRIGGER)){
+				m_rightCollisionTarget.GetComponent<Rigidbody>().isKinematic = true;
+				m_rightCollisionTarget.transform.parent = m_rightHand.transform;
+				m_isRightGrabbingObject = true;
+			}
+		
+			//Release
+			if(!m_rightHandController.GetButton(SixenseButtons.TRIGGER) && m_isRightGrabbingObject && m_rightCollisionTarget){
+				m_rightCollisionTarget.GetComponent<Rigidbody>().isKinematic = false;
+				m_rightCollisionTarget.transform.parent = null;
+				m_isRightGrabbingObject = false;
+			}
+		}
 	}
 }
