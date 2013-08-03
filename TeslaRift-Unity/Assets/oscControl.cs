@@ -64,7 +64,7 @@ public class oscControl : MonoBehaviour {
 		else
 			m_rightCollisionTarget = collisionParams.target;
 		
-		Debug.Log(String.Format("{0} HIT HAND {1}", collisionParams.target, collisionParams.hand));
+		//Debug.Log(String.Format("{0} HIT HAND {1}", collisionParams.target, collisionParams.hand));
 	}
 	
 	void UnCollidedWith(HandCollisionParams collisionParams){
@@ -74,7 +74,7 @@ public class oscControl : MonoBehaviour {
 		else
 			m_rightCollisionTarget = null;
 		
-		Debug.Log(String.Format("{0} LEFT HAND {1}", collisionParams.target, collisionParams.hand));
+		//Debug.Log(String.Format("{0} LEFT HAND {1}", collisionParams.target, collisionParams.hand));
 	}
 	
 	void OnApplicationQuit() {
@@ -138,7 +138,7 @@ public class oscControl : MonoBehaviour {
 				
 				testNote[0] = (Math.Min( Math.Max(yDist, 0.0f), range)) / range;
 								
-				Debug.Log(testNote[0]);
+				//Debug.Log(testNote[0]);
 
 				testNote[1] = 0.8f;
 				List<float> testNoteParams = new List<float>(testNote);
@@ -165,15 +165,13 @@ public class oscControl : MonoBehaviour {
 			
 			//Attach
 			if(m_leftCollisionTarget && m_leftHandController.GetButton(SixenseButtons.TRIGGER)){
-				m_leftCollisionTarget.GetComponent<Rigidbody>().isKinematic = true;
-				m_leftCollisionTarget.transform.parent = m_leftHand.transform;
+				m_leftCollisionTarget.GetComponent<EffectCube>().AddGrabber(m_leftHand);				
 				m_isLeftGrabbingObject = true;
 			}
-			
+		
 			//Release
 			if(!m_leftHandController.GetButton(SixenseButtons.TRIGGER) && m_isLeftGrabbingObject && m_leftCollisionTarget){
-				m_leftCollisionTarget.GetComponent<Rigidbody>().isKinematic = false;
-				m_leftCollisionTarget.transform.parent = null;
+				m_leftCollisionTarget.GetComponent<EffectCube>().RemoveGrabber(m_leftHand);				
 				m_isLeftGrabbingObject = false;
 			}
 		}
@@ -181,15 +179,13 @@ public class oscControl : MonoBehaviour {
 		if(m_rightHandController != null){
 			//Attach 
 			if(m_rightCollisionTarget && m_rightHandController.GetButton(SixenseButtons.TRIGGER)){
-				m_rightCollisionTarget.GetComponent<Rigidbody>().isKinematic = true;
-				m_rightCollisionTarget.transform.parent = m_rightHand.transform;
+				m_rightCollisionTarget.GetComponent<EffectCube>().AddGrabber(m_rightHand);				
 				m_isRightGrabbingObject = true;
 			}
 		
 			//Release
 			if(!m_rightHandController.GetButton(SixenseButtons.TRIGGER) && m_isRightGrabbingObject && m_rightCollisionTarget){
-				m_rightCollisionTarget.GetComponent<Rigidbody>().isKinematic = false;
-				m_rightCollisionTarget.transform.parent = null;
+				m_rightCollisionTarget.GetComponent<EffectCube>().RemoveGrabber(m_rightHand);				
 				m_isRightGrabbingObject = false;
 			}
 		}
