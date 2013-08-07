@@ -211,9 +211,10 @@ public class OSCHandler : MonoBehaviour
 	{
 		List<object> temp = new List<object>();
 		temp.Add(value);
-		
+			
 		SendMessageToClient(clientId, address, temp);
 	}
+	
 	
 	/// <summary>
 	/// Sends an OSC message to a specified client, given its clientId (defined at the OSC client construction),
@@ -230,15 +231,35 @@ public class OSCHandler : MonoBehaviour
 	/// </param>
 	public void SendMessageToClient<T>(string clientId, string address, List<T> values)
 	{	
+		OSCMessage message = new OSCMessage(address);
+	
+		foreach(T msgvalue in values)
+		{
+			message.Append(msgvalue);
+		}
+		
+		SendBuiltMessageToClient(clientId, address, message);
+	}
+	
+	
+	
+	/// <summary>
+	/// Sends an OSC message to a specified client, given its clientId (defined at the OSC client construction),
+	/// OSC address and a pre-built OSCmessage object. Also updates the client log.
+	/// </summary>
+	/// <param name="clientId">
+	/// A <see cref="System.String"/>
+	/// </param>
+	/// <param name="address">
+	/// A <see cref="System.String"/>
+	/// </param>
+	/// <param name="values">
+	/// A <see cref="List<T>"/>
+	/// </param>
+	public void SendBuiltMessageToClient(string clientId, string address, OSCMessage message)
+	{
 		if(_clients.ContainsKey(clientId))
 		{
-			OSCMessage message = new OSCMessage(address);
-		
-			foreach(T msgvalue in values)
-			{
-				message.Append(msgvalue);
-			}
-			
 			if(_clients[clientId].log.Count < _loglength)
 			{
 				_clients[clientId].log.Add(String.Concat(DateTime.UtcNow.ToString(),".",
@@ -264,6 +285,8 @@ public class OSCHandler : MonoBehaviour
 			Debug.LogError(string.Format("Can't send OSC messages to {0}. Client doesn't exist.", clientId));
 		}
 	}
+	
+
 	
 	/// <summary>
 	/// Updates clients and servers logs.

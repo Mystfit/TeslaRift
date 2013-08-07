@@ -32,9 +32,7 @@ public class OSCcontroller : MonoBehaviour {
 	public string targetPort = "2345";
 	
 	private Dictionary<string, ServerLog> servers;
-	
-	private bool m_isPlayingManualNote = false;
-	
+		
 	// Script initialization
 	void Start() {	
 		OSCHandler.Instance.Init(); //init OSCs

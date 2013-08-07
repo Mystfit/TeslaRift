@@ -28,6 +28,8 @@ public class HydraController : MonoBehaviour {
 	private HydraStates m_leftHandState;
 	private HydraStates m_rightHandState;
 	
+	private ChoreographController m_choreoControl;
+	
 	// Initialization
 	//------------------
 	void Start() {
@@ -35,6 +37,7 @@ public class HydraController : MonoBehaviour {
 		m_rightHand = GameObject.Find("hand_right");
 		m_leftHandState = HydraStates.LEFT_IDLE;
 		m_rightHandState = HydraStates.RIGHT_IDLE;
+		m_choreoControl = GameObject.Find("PerformanceControllers").GetComponent<ChoreographController>();
 	}
 	
 	
@@ -118,39 +121,37 @@ public class HydraController : MonoBehaviour {
 	
 	void HandleTestButtonInput(){
 		
-		//All OSC specific stuff to be moved into the tool/instrument controllers!
-		float[] testNote = {0.0f, 0.0f};
 		float range = 400.0f;
-		
+
 		if(m_leftHandController != null){
-//			
-//			float L_YDist = m_leftHandController.Position.y;
-//			
-//			if(m_leftHandController.GetButton(SixenseButtons.BUMPER)){
-//				
-//				testNote[0] = (Math.Min( Math.Max(L_YDist, 0.0f), range)) / range;
-//				testNote[1] = 0.8f;
-//				
-//				List<float> testNoteParams = new List<float>(testNote);
-//				OSCHandler.Instance.SendMessageToClient("Live", "/tesla/noteOn", 1);
-//				OSCHandler.Instance.SendMessageToClient("Live", "/tesla/noteparams", testNoteParams);
-//				OSCHandler.Instance.SendMessageToClient("Live", "/tesla/noteOn", 0);
-//
-//			} else {
-//				OSCHandler.Instance.SendMessageToClient("Live", "/tesla/noteOn", 0);				
-//			}
-			float L_XDist = m_leftHandController.Position.x;
+			
 			float L_YDist = m_leftHandController.Position.y;
 			
-			if(m_leftHandController.GetButton(SixenseButtons.BUMPER)){
-				testNote[0] = (Math.Min( Math.Max(L_XDist, -range), -range)) / range;
-				testNote[1] = (Math.Min( Math.Max(L_YDist, 0.0f), range)) / range;
-	
-				List<float> testNoteParams = new List<float>(testNote);
-				OSCHandler.Instance.SendMessageToClient("Live", "/tesla/kaossPad", testNoteParams);
-				OSCHandler.Instance.SendMessageToClient("Live", "/tesla/kaossOn", 1.0);
-			} else {
-				OSCHandler.Instance.SendMessageToClient("Live", "/tesla/kaossOn", 0.0);
+			if(m_leftHandController.GetButtonDown(SixenseButtons.FOUR))
+				m_choreoControl.playTestNote();
+			
+			
+			if(m_leftHandController.GetButtonUp(SixenseButtons.FOUR))
+				m_choreoControl.stopTestNote();
+		
+			
+			if(m_leftHandController.GetButtonDown(SixenseButtons.TWO)){
+				m_choreoControl.playTestChord1();
+				
+				
+			} else if(m_leftHandController.GetButtonUp(SixenseButtons.TWO)) {
+				m_choreoControl.stopTestChord1();
+			}
+			
+				
+			
+			if(m_leftHandController.GetButtonDown(SixenseButtons.BUMPER)){
+				
+				m_choreoControl.playTestChord2();
+				
+			} else if (m_leftHandController.GetButtonUp(SixenseButtons.BUMPER)) {
+				
+				m_choreoControl.stopTestChord2();
 			}
 		}
 		
@@ -159,16 +160,9 @@ public class HydraController : MonoBehaviour {
 			float R_YDist = m_rightHandController.Position.y;
 			
 			if(m_rightHandController.GetButton(SixenseButtons.BUMPER)){
-				testNote[1] = (Math.Min( Math.Max(R_XDist, 0.0f), range)) / range;
-				testNote[0] = (Math.Min( Math.Max(R_YDist, 0.0f), range)) / range;
-					
-				Debug.Log(String.Format("{0}, {1}",testNote[0], testNote[1]));
-
-				List<float> testNoteParams = new List<float>(testNote);
-				OSCHandler.Instance.SendMessageToClient("Live", "/tesla/kpPad", testNoteParams);
-				OSCHandler.Instance.SendMessageToClient("Live", "/tesla/kpOn", 1.0);
-			} else {
-				OSCHandler.Instance.SendMessageToClient("Live", "/tesla/kpOn", 0.0);
+				
+				if(m_rightHandController.GetButton(SixenseButtons.BUMPER))
+					m_choreoControl.m_testInstrument.addMessageToQueue("gate", (Math.Min( Math.Max(R_YDist, 0.0f), range)) / range);
 			}
 		}
 	}
