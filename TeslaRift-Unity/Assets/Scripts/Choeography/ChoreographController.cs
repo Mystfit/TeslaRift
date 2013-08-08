@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 public class ChoreographController : MonoBehaviour {
 	
-	public BaseInstrument m_testInstrument;
+	public TeslaInstrument m_testInstrument;
 
 	// Use this for initialization
 	void Start () {
-		m_testInstrument = new BaseInstrument("Live", "tesla", "testArp");
-		m_testInstrument.addParam("noteparams", "int");
-		m_testInstrument.addParam("noteOn", "int");
+		m_testInstrument = new TeslaInstrument("Live", "tesla", "teslaLead");
+		m_testInstrument.addParam("noteParams", "note");
+		//m_testInstrument.addParam("noteOn", "int");
 		m_testInstrument.addParam("gate", "int");
 	}
 	

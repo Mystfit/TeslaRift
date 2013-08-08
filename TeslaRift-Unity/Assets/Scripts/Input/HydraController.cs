@@ -29,6 +29,7 @@ public class HydraController : MonoBehaviour {
 	private HydraStates m_rightHandState;
 	
 	private ChoreographController m_choreoControl;
+	private ToolController m_toolControl;
 	
 	// Initialization
 	//------------------
@@ -38,6 +39,7 @@ public class HydraController : MonoBehaviour {
 		m_leftHandState = HydraStates.LEFT_IDLE;
 		m_rightHandState = HydraStates.RIGHT_IDLE;
 		m_choreoControl = GameObject.Find("PerformanceControllers").GetComponent<ChoreographController>();
+		m_toolControl = GameObject.Find ("PerformanceControllers").GetComponent<ToolController>();
 	}
 	
 	
@@ -145,13 +147,17 @@ public class HydraController : MonoBehaviour {
 			
 				
 			
-			if(m_leftHandController.GetButtonDown(SixenseButtons.BUMPER)){
+			if(m_leftHandController.GetButton(SixenseButtons.BUMPER)){
 				
-				m_choreoControl.playTestChord2();
+				//m_choreoControl.playTestChord2();
+				SingleModifierTool tool = m_toolControl.currentTool as SingleModifierTool;
+				tool.testTriggerNote((Math.Min( Math.Max(L_YDist, 0.0f), range)) / range);
 				
 			} else if (m_leftHandController.GetButtonUp(SixenseButtons.BUMPER)) {
 				
-				m_choreoControl.stopTestChord2();
+				//m_choreoControl.stopTestChord2();
+				SingleModifierTool tool = m_toolControl.currentTool as SingleModifierTool;
+				tool.testReleaseNote();
 			}
 		}
 		

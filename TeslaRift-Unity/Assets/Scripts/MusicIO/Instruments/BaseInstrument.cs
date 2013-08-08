@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityOSC;
 
 
-
 //**
 //	Base Instrument
 // 
@@ -33,11 +32,20 @@ public class BaseInstrument {
 	// Parameter functions
 	//-----------------
 	public void addParam(string name, string valueType){
-		m_params.Add(new BaseInstrumentParam(name, false)); 
+		if(valueType == "note")
+			m_params.Add(new Note(name, this, false)); 
+		else
+			m_params.Add(new BaseInstrumentParam(name, this, false)); 
 	}
 	
-	public void addNoteParam(){
+	public List<BaseInstrumentParam> paramList{ get { return m_params; } }
 	
+	public void addMidiNoteMessageToQueue(string paramName, float pitch, float velocity, float voice, int trigger){
+		object[] noteArr = {pitch, velocity , voice};
+		List<object> noteList = new List<object>(noteArr);
+		
+		this.addMessageToQueue(paramName, noteList );
+		this.addMessageToQueue("noteOn", trigger);
 	}
 	
 	
@@ -61,7 +69,12 @@ public class BaseInstrument {
 	// Update functions
 	//-----------------
 	public void update(){
+		processParameters();
 		processMessageQueue();
+	}
+	
+	public virtual void processParameters(){
+	
 	}
 	
 	public void processMessageQueue(){
@@ -87,22 +100,31 @@ public class BaseInstrumentParam {
 	
 	protected string m_name = "";
 	protected float m_fValue = 0.0f;
+	BaseInstrument m_owner = null;
 	protected bool m_enabled = true;
 	protected bool m_isMidiNoteParam = false;
+	protected bool m_isDirty = false;
 
 	//OSC addresses
 	protected bool m_expectingReturnMessage = false;
 	
-	public BaseInstrumentParam(string name, bool isExpectingReturnMessage){
+	public BaseInstrumentParam(string name, BaseInstrument paramOwner, bool isExpectingReturnMessage){
 		m_name = name;
+		m_owner = paramOwner;
 	}
 	
 	//Getters / Setters
 	public string name{	get { return m_name; } }
+	public BaseInstrument owner{ get { return m_owner; } }
 	public float val { get { return m_fValue; }	}
-	public void setVal(float value){ m_fValue = value; }
+	public void setVal(float value){ 
+		m_fValue = value; 
+		m_isDirty = true;
+	}
+	public bool isDirty { get { return m_isDirty; } }
+	public void setClean(){ m_isDirty = false; }
 	public bool enabled{ get { return m_enabled; } }
-	public void setEnabled(bool value){	m_enabled = value; }
+	public void setEnabled(bool value){	m_enabled = value; m_isDirty = true; }
 }
 
 
@@ -115,21 +137,25 @@ public class BaseInstrumentParam {
 //**
 public class Note : BaseInstrumentParam {
 	
-	protected int m_pitch = 0;
-	protected int m_velocity = 0;
-	protected int m_aftertouch = 0;
-	protected int m_noteIndex = 0;
+	public float velocity = 0;
+	public int[] noteIndex;
 	
-	public void setNoteParams(int pitch, int velocity, int aftertouch, int noteIndex){
-		m_pitch = pitch;
-		m_velocity = velocity;
-		m_aftertouch = aftertouch;
-		m_noteIndex = noteIndex;
+	public void setNote(float notePitch, float noteVelocity, int index, int trigger){
+		velocity = noteVelocity;
+		noteIndex[index] = trigger;
+		
+		setVal(notePitch);	//Need to find better way of keeping value in sync with note parameters
+	}
+	
+	public void releaseNote(int index = 0){
+		noteIndex[index] = 0;
+		m_isDirty = true;
 	}
 			
-	public Note(string name, bool isExpectingReturnMessage)
-			: base(name, isExpectingReturnMessage)
+	public Note(string name, BaseInstrument paramOwner, bool isExpectingReturnMessage)
+			: base(name, paramOwner, isExpectingReturnMessage)
 	{
+		noteIndex = new int[4];
 	}
 }
 
