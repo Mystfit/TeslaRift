@@ -38,6 +38,8 @@ public class HydraController : MonoBehaviour {
 		m_rightHand = GameObject.Find("hand_right");
 		m_leftHandState = HydraStates.LEFT_IDLE;
 		m_rightHandState = HydraStates.RIGHT_IDLE;
+		
+		//Controllers
 		m_choreoControl = GameObject.Find("PerformanceControllers").GetComponent<ChoreographController>();
 		m_toolControl = GameObject.Find ("PerformanceControllers").GetComponent<ToolController>();
 	}
@@ -77,6 +79,7 @@ public class HydraController : MonoBehaviour {
 			
 		HandleTestGrabInput();
 		HandleTestButtonInput();
+		HandleTestKeyboardInput();
 	}
 	
 	
@@ -170,6 +173,24 @@ public class HydraController : MonoBehaviour {
 				if(m_rightHandController.GetButton(SixenseButtons.BUMPER))
 					m_choreoControl.m_testInstrument.addMessageToQueue("gate", (Math.Min( Math.Max(R_YDist, 0.0f), range)) / range);
 			}
+		}
+	}
+	
+	public void HandleTestKeyboardInput(){
+		if(Input.GetKeyDown(KeyCode.UpArrow)){
+			m_choreoControl.playTestChord1();
+		}
+		
+		if(Input.GetKeyUp(KeyCode.UpArrow)){
+			m_choreoControl.stopTestChord1();
+		}
+		
+		if(Input.GetKeyDown(KeyCode.DownArrow)){
+			m_choreoControl.playTestChord2();
+		}
+		
+		if(Input.GetKeyUp(KeyCode.DownArrow)){
+			m_choreoControl.stopTestChord2();
 		}
 	}
 }

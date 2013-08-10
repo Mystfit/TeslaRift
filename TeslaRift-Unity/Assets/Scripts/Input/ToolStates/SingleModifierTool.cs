@@ -18,8 +18,8 @@ public class SingleModifierTool : BaseTool
 	
 	public void testTriggerNote(float value){
 		foreach(BaseInstrumentParam param in m_targetParameters){
-			if(param.name == "noteParams"){
-				Note note = param as Note;
+			if(param.GetType() == typeof(NoteParam)){
+				NoteParam note = param as NoteParam;
 				note.setNote( value, 0.8f, 0, 1);
 			} else {
 				param.setVal(value);
@@ -28,8 +28,8 @@ public class SingleModifierTool : BaseTool
 	}
 	
 	public void testReleaseNote(){
-		Note note = getTargetByName("noteParams") as Note;
-		note.releaseNote(0);
+		NoteParam note = getTargetByName("noteParams") as NoteParam;
+		note.releaseChord();
 	}
 }
 

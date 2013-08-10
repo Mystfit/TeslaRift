@@ -32,11 +32,23 @@ public class BaseInstrument {
 	// Parameter functions
 	//-----------------
 	public void addParam(string name, string valueType){
-		if(valueType == "note")
-			m_params.Add(new Note(name, this, false)); 
+		if(valueType == "noteParam")
+			m_params.Add(new NoteParam(name, this, false)); 
 		else
 			m_params.Add(new BaseInstrumentParam(name, this, false)); 
 	}
+	
+	public BaseInstrumentParam getParamByName(string name){
+		BaseInstrumentParam result = null;
+		foreach(BaseInstrumentParam param in m_params){
+			if(param.name == name){
+				return param;
+				result = param;
+			}
+		}
+		return result;
+	}
+
 	
 	public List<BaseInstrumentParam> paramList{ get { return m_params; } }
 	
@@ -74,7 +86,21 @@ public class BaseInstrument {
 	}
 	
 	public virtual void processParameters(){
-	
+		foreach(BaseInstrumentParam param in m_params){
+			if(param.isDirty){
+				
+				if(param.GetType() == typeof(NoteParam)){
+					NoteParam chord = param as NoteParam;
+					foreach(Note note in chord.getNoteList()){
+						addMidiNoteMessageToQueue(note.name, note.val, note.velocity, note.noteIndex, note.noteTrigger );
+					}
+				} else {
+					addMessageToQueue(param.name, param.val);
+				}
+					
+				param.setClean();
+			}
+		}
 	}
 	
 	public void processMessageQueue(){
@@ -100,7 +126,7 @@ public class BaseInstrumentParam {
 	
 	protected string m_name = "";
 	protected float m_fValue = 0.0f;
-	BaseInstrument m_owner = null;
+	protected BaseInstrument m_owner = null;
 	protected bool m_enabled = true;
 	protected bool m_isMidiNoteParam = false;
 	protected bool m_isDirty = false;
@@ -128,6 +154,47 @@ public class BaseInstrumentParam {
 }
 
 
+public class NoteParam : BaseInstrumentParam {
+	
+	
+	protected List<Note> m_chordNotes;
+	
+	
+	public NoteParam(string name, BaseInstrument paramOwner, bool isExpectingReturnMessage)
+			: base(name, paramOwner, isExpectingReturnMessage)
+	{
+		m_chordNotes = new List<Note>();
+	}
+	
+	public void releaseChord(){
+		foreach(Note note in m_chordNotes){
+			note.releaseNote();
+		}
+	}
+	
+	public Note getNote(int index){ return m_chordNotes[index]; }
+	public List<Note> getNoteList(){ return m_chordNotes; }
+	
+	public void setNote(float notePitch, float noteVelocity, int index, int trigger){
+		bool noteExists = false;
+		if(index < m_chordNotes.Count){
+			foreach(Note note in m_chordNotes){
+				if(note.noteIndex == index){
+					note.setNote(notePitch, noteVelocity, index, trigger);
+					noteExists = true;
+					m_isDirty = true;
+					return;
+				}
+			}
+		}
+		
+		if(!noteExists){
+			m_chordNotes.Add(new Note(m_name, m_owner, false));
+			m_chordNotes[m_chordNotes.Count-1].setNote(notePitch, noteVelocity, index, trigger);			
+		}		
+	}
+}
+
 
 //**
 //	Note class
@@ -138,24 +205,25 @@ public class BaseInstrumentParam {
 public class Note : BaseInstrumentParam {
 	
 	public float velocity = 0;
-	public int[] noteIndex;
+	public int noteTrigger;
+	public int noteIndex;
 	
 	public void setNote(float notePitch, float noteVelocity, int index, int trigger){
 		velocity = noteVelocity;
-		noteIndex[index] = trigger;
-		
+		noteTrigger = trigger;
+		noteIndex = index;
 		setVal(notePitch);	//Need to find better way of keeping value in sync with note parameters
 	}
 	
-	public void releaseNote(int index = 0){
-		noteIndex[index] = 0;
+	public void releaseNote(){
+		noteTrigger = 0;
 		m_isDirty = true;
 	}
 			
 	public Note(string name, BaseInstrument paramOwner, bool isExpectingReturnMessage)
 			: base(name, paramOwner, isExpectingReturnMessage)
 	{
-		noteIndex = new int[4];
+		
 	}
 }
 
