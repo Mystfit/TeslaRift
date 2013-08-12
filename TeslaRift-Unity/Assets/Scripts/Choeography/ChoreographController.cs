@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class ChoreographController : MonoBehaviour {
 	
+	public static string clientName = "Live";
+	
 	public TeslaInstrument m_testInstrument;
 
 	// Use this for initialization
@@ -30,8 +32,8 @@ public class ChoreographController : MonoBehaviour {
 		m_testInstrument.addMessageToQueue("noteOn", 0);
 	}
 	
-	public void playTestChord1(){
-		NoteParam chord = m_testInstrument.getParamByName("noteParams") as NoteParam;
+	public void playTestChord1(BaseInstrument instrument){
+		NoteParam chord = instrument.getParamByName("noteParams") as NoteParam;
 		if(chord != null){
 			chord.setNote(Utils.Midi.midiIntToFloat(70), 0.8f, 0, 1);
 			chord.setNote(Utils.Midi.midiIntToFloat(82), 0.8f, 1, 1);
@@ -39,8 +41,8 @@ public class ChoreographController : MonoBehaviour {
 		}
 	}
 	
-	public void stopTestChord1(){
-		NoteParam chord = m_testInstrument.getParamByName("noteParams") as NoteParam;
+	public void stopTestChord1(BaseInstrument instrument){
+		NoteParam chord = instrument.getParamByName("noteParams") as NoteParam;
 		if(chord != null){
 			chord.setNote(Utils.Midi.midiIntToFloat(70), 0.8f, 0, 0);
 			chord.setNote(Utils.Midi.midiIntToFloat(82), 0.8f, 1, 0);
@@ -48,8 +50,8 @@ public class ChoreographController : MonoBehaviour {
 		}
 	}
 	
-	public void playTestChord2(){
-		NoteParam chord = m_testInstrument.getParamByName("noteParams") as NoteParam;
+	public void playTestChord2(BaseInstrument instrument){
+		NoteParam chord = instrument.getParamByName("noteParams") as NoteParam;
 		if(chord != null){
 			chord.setNote(Utils.Midi.midiIntToFloat(77), 0.8f, 0, 1);
 			chord.setNote(Utils.Midi.midiIntToFloat(81), 0.8f, 1, 1);
@@ -57,8 +59,8 @@ public class ChoreographController : MonoBehaviour {
 		}
 	}
 	
-	public void stopTestChord2(){
-		NoteParam chord = m_testInstrument.getParamByName("noteParams") as NoteParam;
+	public void stopTestChord2(BaseInstrument instrument){
+		NoteParam chord = instrument.getParamByName("noteParams") as NoteParam;
 		if(chord != null){
 			chord.setNote(Utils.Midi.midiIntToFloat(77), 0.8f, 0, 0);
 			chord.setNote(Utils.Midi.midiIntToFloat(81), 0.8f, 1, 0);

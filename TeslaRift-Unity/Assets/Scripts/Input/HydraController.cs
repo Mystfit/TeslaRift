@@ -136,16 +136,17 @@ public class HydraController : MonoBehaviour {
 				m_choreoControl.playTestNote();
 			
 			
+			
 			if(m_leftHandController.GetButtonUp(SixenseButtons.FOUR))
 				m_choreoControl.stopTestNote();
 		
 			
 			if(m_leftHandController.GetButtonDown(SixenseButtons.TWO)){
-				m_choreoControl.playTestChord1();
+				m_choreoControl.playTestChord1(m_choreoControl.m_testInstrument);
 				
 				
 			} else if(m_leftHandController.GetButtonUp(SixenseButtons.TWO)) {
-				m_choreoControl.stopTestChord1();
+				m_choreoControl.stopTestChord1(m_choreoControl.m_testInstrument);
 			}
 			
 				
@@ -170,27 +171,29 @@ public class HydraController : MonoBehaviour {
 			
 			if(m_rightHandController.GetButton(SixenseButtons.BUMPER)){
 				
-				if(m_rightHandController.GetButton(SixenseButtons.BUMPER))
-					m_choreoControl.m_testInstrument.addMessageToQueue("gate", (Math.Min( Math.Max(R_YDist, 0.0f), range)) / range);
+				if(m_rightHandController.GetButton(SixenseButtons.BUMPER)){
+					//m_choreoControl.m_testInstrument.addMessageToQueue("gate", (Math.Min( Math.Max(R_YDist, 0.0f), range)) / range);
+					m_choreoControl.m_testInstrument.getParamByName("gate").setVal((Math.Min( Math.Max(R_YDist, 0.0f), range)) / range);
+				}
 			}
 		}
 	}
 	
 	public void HandleTestKeyboardInput(){
 		if(Input.GetKeyDown(KeyCode.UpArrow)){
-			m_choreoControl.playTestChord1();
+			m_choreoControl.playTestChord1(m_choreoControl.m_testInstrument);
 		}
 		
 		if(Input.GetKeyUp(KeyCode.UpArrow)){
-			m_choreoControl.stopTestChord1();
+			m_choreoControl.stopTestChord1(m_choreoControl.m_testInstrument);
 		}
 		
 		if(Input.GetKeyDown(KeyCode.DownArrow)){
-			m_choreoControl.playTestChord2();
+			m_choreoControl.playTestChord2(m_choreoControl.m_testInstrument);
 		}
 		
 		if(Input.GetKeyUp(KeyCode.DownArrow)){
-			m_choreoControl.stopTestChord2();
+			m_choreoControl.stopTestChord2(m_choreoControl.m_testInstrument);
 		}
 	}
 }
