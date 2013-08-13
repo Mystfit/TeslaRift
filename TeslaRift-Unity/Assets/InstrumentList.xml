@@ -1,21 +1,31 @@
 <?xml version="1.0"?>
-<instruments>
-	<instrument name="TeslaLead">
-		<noteparam min="12" max="72"></noteparam>	
-		<param name="gate"></param>
-		<param name="bright"></param>
-	</instrument>
-	
-	<instrument name="KP3">
-		<param name="x"></param>
-		<param name="y"></param>
-		<param name="touch" trigger="x,y"></param>
-		<param name="progA"></param>
-		<param name="progB"></param>
-	</instrument>
-	
-	<instrument name="DeepSpaceArp">
-		<noteparam min="0" max="84"></noteparam>
-		<param name="highCut"></param>
-	</instrument>
-</instruments>	
+<instrumentDefinitions>	
+	<source>tesla</source>
+	<client>Live</client>
+	<instrumentList>	
+		<instrument name="TeslaLead">
+			<param name="noteParam" type="chord">
+				<min>12</min>
+				<max>72</max>
+			</param>	
+			<param name="gate"></param>
+			<param name="bright"></param>
+		</instrument>
+		
+		<instrument name="KP3">		
+			<param name="x"></param>
+			<param name="y"></param>
+			<param name="touch" type="toggle"></param>
+			<param name="progA"></param>
+			<param name="progB"></param>
+		</instrument>
+		
+		<instrument name="DeepSpaceArp">
+			<param name="noteParam" type="chord">
+				<min>0</min>
+				<max>84</max>
+			</param>
+			<param name="highCut"></param>
+		</instrument>
+	</instrumentList>	
+</instrumentDefinitions>

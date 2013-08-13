@@ -11,7 +11,7 @@ public class ChoreographController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		m_testInstrument = new TeslaInstrument("Live", "tesla", "teslaLead");
-		m_testInstrument.addParam("noteParams", "noteParam");
+		m_testInstrument.addParam("noteParams", "chord");
 		//m_testInstrument.addParam("noteOn", "int");
 		m_testInstrument.addParam("gate", "int");
 	}

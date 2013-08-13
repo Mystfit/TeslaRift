@@ -28,14 +28,20 @@ public class BaseInstrument {
 		m_messageQueue = new List<OSCMessage>();
 	}
 	
+	public string Name{ get {return m_name; } }
+	public string Owner{ get {return m_owner; } } 
+	public string Client{ get {return m_client; } }
 	
 	// Parameter functions
 	//-----------------
 	public void addParam(string name, string valueType){
-		if(valueType == "noteParam")
+		if(valueType == "chord")
 			m_params.Add(new NoteParam(name, this, false)); 
 		else
 			m_params.Add(new BaseInstrumentParam(name, this, false)); 
+		
+		//Other types for parameters need to be defined here. Mainly interaction types!"
+		//Toggle
 	}
 	
 	public BaseInstrumentParam getParamByName(string name){
