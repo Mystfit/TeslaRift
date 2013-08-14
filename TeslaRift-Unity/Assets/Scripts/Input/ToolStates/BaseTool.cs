@@ -4,39 +4,29 @@ using System.Collections.Generic;
 
 public class BaseTool {
 	
-	protected List<BaseInstrumentParam> m_targetParameters = null;
+	protected List<object> m_targets = null;
 	
 	public BaseTool(){
+		m_targets = new List<object>();
 	}
 	
-	public List<BaseInstrumentParam> targets {
+	public List<object> targets {
 		get {
-			return m_targetParameters;
+			return m_targets;
 		}
 	}
 	
-	public void setTargets<T>(T targetParam){
+	public void setTargets<T>(T target){
 		List<object> valueList = new List<object>();
-		valueList.Add(targetParam);
+		valueList.Add(target);
 		this.setTargets(valueList);
 	}
 	
-	public void setTargets(List<BaseInstrumentParam> targetParams){
-		m_targetParameters = targetParams;
+	public void setTargets(List<object> targets){
+		m_targets = targets;
 	}
-	
-	public BaseInstrumentParam getTargetByName(string name){
-		BaseInstrumentParam result = null;
-		foreach( BaseInstrumentParam param in m_targetParameters){
-			if(param.name == name){
-				result = param;
-			}
-		}
-		return result;
-	}
-
 	
 	// Update is called once per frame
-	public virtual void update () {
+	public virtual void Update () {
 	}
 }

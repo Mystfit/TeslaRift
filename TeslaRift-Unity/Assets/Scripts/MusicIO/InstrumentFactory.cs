@@ -7,9 +7,12 @@ public class InstrumentFactory : MonoBehaviour {
 	public static string GAMEINSTRUMENT_PREFIX = "GInstr_";
 	public GameObject instrumentPrefab = null;
 	public TextAsset instrumentDefinitionFile;
+	
+	private InstrumentController m_instrumentControllerRef = null;
 
 	// Use this for initialization
 	void Start () {
+		m_instrumentControllerRef = this.GetComponent<InstrumentController>();
 		LoadInstrumentDefinitions();
 	}
 	
@@ -40,14 +43,17 @@ public class InstrumentFactory : MonoBehaviour {
 				instrumentDef.addParam(name.Value, typeStr);
 			}
 			
+			m_instrumentControllerRef.AddInstrument(instrumentDef);
+			
 			//Create associated gameobject for instrument
 			CreateInstrumentGameObject(instrumentDef);
+			
 		}
 	}
 	
 	private void CreateInstrumentGameObject(BaseInstrument instrument){
 		GameObject instrumentGame = Instantiate(instrumentPrefab, new Vector3(Random.value * 2.5f - 2.5f, 0, Random.value * 2.5f - 2.5f), Quaternion.identity ) as GameObject;
 		instrumentGame.name = GAMEINSTRUMENT_PREFIX + instrument.Name;
-		instrumentGame.GetComponent<InstrumentDefinition>().Init(instrument.Name);
+		instrumentGame.GetComponent<InstrumentAttachment>().Init(instrument.Name);
 	}
 }

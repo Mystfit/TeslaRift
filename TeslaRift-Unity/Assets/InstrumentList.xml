@@ -2,6 +2,7 @@
 <instrumentDefinitions>	
 	<source>tesla</source>
 	<client>Live</client>
+	
 	<instrumentList>	
 		<instrument name="TeslaLead">
 			<param name="noteParam" type="chord">
@@ -27,5 +28,6 @@
 			</param>
 			<param name="highCut"></param>
 		</instrument>
-	</instrumentList>	
+	</instrumentList>
+	
 </instrumentDefinitions>

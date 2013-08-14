@@ -28,8 +28,9 @@ public class HydraController : MonoBehaviour {
 	private HydraStates m_leftHandState;
 	private HydraStates m_rightHandState;
 	
-	private ChoreographController m_choreoControl;
-	private ToolController m_toolControl;
+	private ChoreographController m_choreoControlRef;
+	private ToolController m_toolControlRef;
+	private InstrumentController m_instrumentControlRef;
 	
 	// Initialization
 	//------------------
@@ -40,31 +41,37 @@ public class HydraController : MonoBehaviour {
 		m_rightHandState = HydraStates.RIGHT_IDLE;
 		
 		//Controllers
-		m_choreoControl = GameObject.Find("PerformanceControllers").GetComponent<ChoreographController>();
-		m_toolControl = GameObject.Find ("PerformanceControllers").GetComponent<ToolController>();
+		m_choreoControlRef = GameObject.Find("__PerformanceControllers").GetComponent<ChoreographController>();
+		m_toolControlRef = GameObject.Find ("__PerformanceControllers").GetComponent<ToolController>();
+		m_instrumentControlRef = GameObject.Find ("__PerformanceControllers").GetComponent<InstrumentController>();
 	}
 	
 	
 	//Collision Handlers
 	//-------------------
-	void CollidedWith(HandCollisionParams collisionParams){
+	public void TriggerCollision(GameObject target, SixenseHands hand){
+		if(target.tag != "SoundObj")
+			return;
 		
-		if(collisionParams.hand == SixenseHands.LEFT)
-			m_leftCollisionTarget = collisionParams.target;
+		if(hand == SixenseHands.LEFT)
+			m_leftCollisionTarget = target;
 		else
-			m_rightCollisionTarget = collisionParams.target;
+			m_rightCollisionTarget = target;
 		
-		Debug.Log(String.Format("{0} HIT HAND {1}", collisionParams.target, collisionParams.hand));
+		Debug.Log(String.Format("{0} HIT HAND {1}", target, hand));
 	}
 	
-	void UnCollidedWith(HandCollisionParams collisionParams){
+	public void UnTriggerCollision(GameObject target, SixenseHands hand){
+		if(target.tag != "SoundObj")
+			return;
 		
-		if(collisionParams.hand == SixenseHands.LEFT)
+		if(hand == SixenseHands.LEFT)
 			m_leftCollisionTarget = null;
 		else
 			m_rightCollisionTarget = null;
 		
-		Debug.Log(String.Format("{0} LEFT HAND {1}", collisionParams.target, collisionParams.hand));
+		Debug.Log(String.Format("{0} LEFT HAND {1}", target, hand));
+		
 	}
 	
 	
@@ -132,36 +139,12 @@ public class HydraController : MonoBehaviour {
 			
 			float L_YDist = m_leftHandController.Position.y;
 			
-			if(m_leftHandController.GetButtonDown(SixenseButtons.FOUR))
-				m_choreoControl.playTestNote();
-			
-			
-			
-			if(m_leftHandController.GetButtonUp(SixenseButtons.FOUR))
-				m_choreoControl.stopTestNote();
-		
-			
-			if(m_leftHandController.GetButtonDown(SixenseButtons.TWO)){
-				m_choreoControl.playTestChord1(m_choreoControl.m_testInstrument);
+			if(m_leftHandController.GetButtonDown(SixenseButtons.BUMPER)){
+				m_choreoControlRef.playTestChord();
 				
 				
-			} else if(m_leftHandController.GetButtonUp(SixenseButtons.TWO)) {
-				m_choreoControl.stopTestChord1(m_choreoControl.m_testInstrument);
-			}
-			
-				
-			
-			if(m_leftHandController.GetButton(SixenseButtons.BUMPER)){
-				
-				//m_choreoControl.playTestChord2();
-				SingleModifierTool tool = m_toolControl.currentTool as SingleModifierTool;
-				tool.testTriggerNote((Math.Min( Math.Max(L_YDist, 0.0f), range)) / range);
-				
-			} else if (m_leftHandController.GetButtonUp(SixenseButtons.BUMPER)) {
-				
-				//m_choreoControl.stopTestChord2();
-				SingleModifierTool tool = m_toolControl.currentTool as SingleModifierTool;
-				tool.testReleaseNote();
+			} else if(m_leftHandController.GetButtonUp(SixenseButtons.BUMPER)) {
+				m_choreoControlRef.stopTestChord();
 			}
 		}
 		
@@ -173,7 +156,7 @@ public class HydraController : MonoBehaviour {
 				
 				if(m_rightHandController.GetButton(SixenseButtons.BUMPER)){
 					//m_choreoControl.m_testInstrument.addMessageToQueue("gate", (Math.Min( Math.Max(R_YDist, 0.0f), range)) / range);
-					m_choreoControl.m_testInstrument.getParamByName("gate").setVal((Math.Min( Math.Max(R_YDist, 0.0f), range)) / range);
+					this.GetComponent<InstrumentController>().SelectedInstrument.getParamByName("gate").setVal((Math.Min( Math.Max(R_YDist, 0.0f), range)) / range);
 				}
 			}
 		}
@@ -181,19 +164,11 @@ public class HydraController : MonoBehaviour {
 	
 	public void HandleTestKeyboardInput(){
 		if(Input.GetKeyDown(KeyCode.UpArrow)){
-			m_choreoControl.playTestChord1(m_choreoControl.m_testInstrument);
+			m_choreoControlRef.playTestChord();
 		}
 		
 		if(Input.GetKeyUp(KeyCode.UpArrow)){
-			m_choreoControl.stopTestChord1(m_choreoControl.m_testInstrument);
-		}
-		
-		if(Input.GetKeyDown(KeyCode.DownArrow)){
-			m_choreoControl.playTestChord2(m_choreoControl.m_testInstrument);
-		}
-		
-		if(Input.GetKeyUp(KeyCode.DownArrow)){
-			m_choreoControl.stopTestChord2(m_choreoControl.m_testInstrument);
+			m_choreoControlRef.stopTestChord();
 		}
 	}
 }
