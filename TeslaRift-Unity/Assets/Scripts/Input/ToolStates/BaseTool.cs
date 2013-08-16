@@ -4,17 +4,16 @@ using System.Collections.Generic;
 
 public class BaseTool {
 	
+	//Variables
 	protected List<object> m_targets = null;
 	
+	//Constructor
 	public BaseTool(){
 		m_targets = new List<object>();
 	}
 	
-	public List<object> targets {
-		get {
-			return m_targets;
-		}
-	}
+	//Accessors
+	public List<object> targets { get { return m_targets; }}
 	
 	public void setTargets<T>(T target){
 		List<object> valueList = new List<object>();

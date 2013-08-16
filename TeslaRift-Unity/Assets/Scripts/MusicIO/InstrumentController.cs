@@ -6,10 +6,14 @@ public class InstrumentController : MonoBehaviour {
 	
 	protected List<BaseInstrument> m_instruments;
 	protected BaseInstrument m_selectedInstrument;
+	
+	public InstrumentController(){
+		m_instruments = new List<BaseInstrument>();
+	}
 
 	// Use this for initialization
 	void Start () {
-		m_instruments = new List<BaseInstrument>();
+		
 	}
 	
 	// Update is called once per frame
@@ -30,6 +34,8 @@ public class InstrumentController : MonoBehaviour {
 	}
 	
 	public void AddInstrument(BaseInstrument instrument){
+		if(m_instruments == null)
+			m_instruments = new List<BaseInstrument>();
 		m_instruments.Add(instrument);
 	}
 	
