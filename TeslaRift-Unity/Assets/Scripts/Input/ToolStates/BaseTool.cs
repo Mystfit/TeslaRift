@@ -6,10 +6,15 @@ public class BaseTool {
 	
 	//Variables
 	protected List<object> m_targets = null;
+	protected BaseInstrument m_instrumentRef = null;
 	
 	//Constructor
 	public BaseTool(){
 		m_targets = new List<object>();
+	}
+	
+	public void setInstrument(BaseInstrument instrument){
+		m_instrumentRef = instrument;
 	}
 	
 	//Accessors
@@ -27,5 +32,6 @@ public class BaseTool {
 	
 	// Update is called once per frame
 	public virtual void Update () {
+		m_instrumentRef.update();
 	}
 }

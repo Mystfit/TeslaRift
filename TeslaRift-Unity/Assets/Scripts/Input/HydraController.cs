@@ -53,10 +53,11 @@ public class HydraController : MonoBehaviour {
 		if(target.tag != "SoundObj")
 			return;
 		
-		if(hand == SixenseHands.LEFT)
+		if(hand == SixenseHands.LEFT){
 			m_leftCollisionTarget = target;
-		else
+		}else{
 			m_rightCollisionTarget = target;
+		}
 		
 		Debug.Log(String.Format("{0} HIT HAND {1}", target, hand));
 	}
@@ -104,6 +105,7 @@ public class HydraController : MonoBehaviour {
 				m_leftCollisionTarget.GetComponent<Rigidbody>().isKinematic = true;
 				m_leftCollisionTarget.transform.parent = m_leftHand.transform;
 				m_leftHandState = HydraStates.LEFT_HOLDING;
+				m_toolControlRef.SetManualTool(m_leftCollisionTarget, ToolController.ToolHand.LEFT);
 			}
 			
 			//Release
@@ -111,6 +113,7 @@ public class HydraController : MonoBehaviour {
 				m_leftCollisionTarget.GetComponent<Rigidbody>().isKinematic = false;
 				m_leftCollisionTarget.transform.parent = null;
 				m_leftHandState = HydraStates.LEFT_IDLE; 
+				m_toolControlRef.StopTool(ToolController.ToolHand.LEFT);
 			}
 		}
 		
@@ -136,15 +139,15 @@ public class HydraController : MonoBehaviour {
 		float range = 400.0f;
 
 		if(m_leftHandController != null){
-			
+			float L_XDist = m_leftHandController.Position.x;
 			float L_YDist = m_leftHandController.Position.y;
 			
-			if(m_leftHandController.GetButtonDown(SixenseButtons.BUMPER)){
-				m_choreoControlRef.playTestChord();
-				
-				
-			} else if(m_leftHandController.GetButtonUp(SixenseButtons.BUMPER)) {
-				m_choreoControlRef.stopTestChord();
+			if(m_leftHandController.GetButton(SixenseButtons.BUMPER)){
+				Debug.Log((Math.Min( Math.Max(L_YDist, 0.0f), range)) / range);
+				GameObject.Find("__PerformanceControllers").GetComponent<ChoreographController>().m_pitchBendRate = (Math.Min( Math.Max(L_YDist, 0.0f), range)) / range;
+				//this.GetComponent<InstrumentController>().SelectedInstrument.getParamByName("gate").setVal((Math.Min( Math.Max(R_YDist, 0.0f), range)) / range);
+			} else {
+				GameObject.Find("__PerformanceControllers").GetComponent<ChoreographController>().m_pitchBendRate = 0.5f;
 			}
 		}
 		
@@ -153,11 +156,11 @@ public class HydraController : MonoBehaviour {
 			float R_YDist = m_rightHandController.Position.y;
 			
 			if(m_rightHandController.GetButton(SixenseButtons.BUMPER)){
-				
-				if(m_rightHandController.GetButton(SixenseButtons.BUMPER)){
-					//m_choreoControl.m_testInstrument.addMessageToQueue("gate", (Math.Min( Math.Max(R_YDist, 0.0f), range)) / range);
-					this.GetComponent<InstrumentController>().SelectedInstrument.getParamByName("gate").setVal((Math.Min( Math.Max(R_YDist, 0.0f), range)) / range);
-				}
+				Debug.Log((Math.Min( Math.Max(R_YDist, 0.0f), range)) / range);
+				this.GetComponent<ChoreographController>().m_pitchBendRate = (Math.Min( Math.Max(R_YDist, 0.0f), range)) / range;
+				//this.GetComponent<InstrumentController>().SelectedInstrument.getParamByName("gate").setVal((Math.Min( Math.Max(R_YDist, 0.0f), range)) / range);
+			} else {
+				this.GetComponent<ChoreographController>().m_pitchBendRate = 0.5f;
 			}
 		}
 	}
