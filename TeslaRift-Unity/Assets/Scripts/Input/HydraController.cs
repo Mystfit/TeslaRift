@@ -50,7 +50,7 @@ public class HydraController : MonoBehaviour {
 	//Collision Handlers
 	//-------------------
 	public void TriggerCollision(GameObject target, SixenseHands hand){
-		if(target.tag != "SoundObj")
+		if(!target.CompareTag("Instrument"))
 			return;
 		
 		if(hand == SixenseHands.LEFT){
@@ -63,7 +63,7 @@ public class HydraController : MonoBehaviour {
 	}
 	
 	public void UnTriggerCollision(GameObject target, SixenseHands hand){
-		if(target.tag != "SoundObj")
+		if(target.tag != "Instrument")
 			return;
 		
 		if(hand == SixenseHands.LEFT)
@@ -144,10 +144,10 @@ public class HydraController : MonoBehaviour {
 			
 			if(m_leftHandController.GetButton(SixenseButtons.BUMPER)){
 				Debug.Log((Math.Min( Math.Max(L_YDist, 0.0f), range)) / range);
-				GameObject.Find("__PerformanceControllers").GetComponent<ChoreographController>().m_pitchBendRate = (Math.Min( Math.Max(L_YDist, 0.0f), range)) / range;
+				//GameObject.Find("__PerformanceControllers").GetComponent<ChoreographController>().m_pitchBendRate = (Math.Min( Math.Max(L_YDist, 0.0f), range)) / range;
 				//this.GetComponent<InstrumentController>().SelectedInstrument.getParamByName("gate").setVal((Math.Min( Math.Max(R_YDist, 0.0f), range)) / range);
 			} else {
-				GameObject.Find("__PerformanceControllers").GetComponent<ChoreographController>().m_pitchBendRate = 0.5f;
+				//GameObject.Find("__PerformanceControllers").GetComponent<ChoreographController>().m_pitchBendRate = 0.5f;
 			}
 		}
 		
@@ -157,10 +157,10 @@ public class HydraController : MonoBehaviour {
 			
 			if(m_rightHandController.GetButton(SixenseButtons.BUMPER)){
 				Debug.Log((Math.Min( Math.Max(R_YDist, 0.0f), range)) / range);
-				this.GetComponent<ChoreographController>().m_pitchBendRate = (Math.Min( Math.Max(R_YDist, 0.0f), range)) / range;
+				//this.GetComponent<ChoreographController>().m_pitchBendRate = (Math.Min( Math.Max(R_YDist, 0.0f), range)) / range;
 				//this.GetComponent<InstrumentController>().SelectedInstrument.getParamByName("gate").setVal((Math.Min( Math.Max(R_YDist, 0.0f), range)) / range);
 			} else {
-				this.GetComponent<ChoreographController>().m_pitchBendRate = 0.5f;
+				//this.GetComponent<ChoreographController>().m_pitchBendRate = 0.5f;
 			}
 		}
 	}
