@@ -4,39 +4,49 @@ using System.Collections.Generic;
 
 public class BaseTool {
 	
-	protected List<BaseInstrumentParam> m_targetParameters = null;
+	private HydraController m_hydraRef = null;
 	
-	public BaseTool(){
+	//Variables
+	protected List<object> m_targets = null;
+	protected BaseInstrument m_instrumentRef = null;
+	
+	public enum ToolHand {BOTH = 0, LEFT, RIGHT };
+	protected ToolHand m_hand;
+	public ToolHand Hand{get { return m_hand; }}
+	
+	//Constructor
+	public BaseTool(ToolHand hand){
+		m_hydraRef = GameObject.Find("__HydraController").GetComponent<HydraController>();
+		m_targets = new List<object>();
+		m_hand = hand;
 	}
 	
-	public List<BaseInstrumentParam> targets {
-		get {
-			return m_targetParameters;
-		}
+	//Instrument tools
+	public void setInstrument(BaseInstrument instrument){
+		m_instrumentRef = instrument;
 	}
 	
-	public void setTargets<T>(T targetParam){
+	//Transitions
+	public virtual void transitionIn(){
+	}
+	
+	public virtual void transitionOut(){
+	}
+	
+	//Accessors
+	public List<object> targets { get { return m_targets; }}
+	
+	public void setTargets<T>(T target){
 		List<object> valueList = new List<object>();
-		valueList.Add(targetParam);
+		valueList.Add(target);
 		this.setTargets(valueList);
 	}
 	
-	public void setTargets(List<BaseInstrumentParam> targetParams){
-		m_targetParameters = targetParams;
+	public void setTargets(List<object> targets){
+		m_targets = targets;
 	}
-	
-	public BaseInstrumentParam getTargetByName(string name){
-		BaseInstrumentParam result = null;
-		foreach( BaseInstrumentParam param in m_targetParameters){
-			if(param.name == name){
-				result = param;
-			}
-		}
-		return result;
-	}
-
 	
 	// Update is called once per frame
-	public virtual void update () {
+	public virtual void Update () {
 	}
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<instrumentDefinitions>	
+	<source>tesla</source>
+	<client>Live</client>
+	
+	<instrumentList>	
+		<instrument name="TeslaLead">
+			<param name="noteParams" type="chord">
+				<min>12</min>
+				<max>72</max>
+			</param>	
+			<param name="gate"></param>
+			<param name="bright"></param>
+		</instrument>
+	
+	</instrumentList>
+	
+</instrumentDefinitions>

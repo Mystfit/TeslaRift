@@ -7,27 +7,17 @@
 using UnityEngine;
 using System.Collections;
 
-public struct HandCollisionParams{
-	public GameObject target;
-	public SixenseHands hand;
-	 
-	public HandCollisionParams(GameObject obj, SixenseHands hitHand){
-		target = obj;
-		hand = hitHand;
-	}
-}
-
 public class HydraHand : SixenseObjectController
 {
 	//Collision variables
-	public Object collisionTarget;
+	
+	protected HydraController m_hydra= null;
 	
 	protected float				m_fLastTriggerVal = 0.0f;
-	protected BoxCollider 		m_collider = null;
 	
 	protected override void Start() 
 	{
-		m_collider = this.gameObject.GetComponent<BoxCollider>();
+		m_hydra = GameObject.Find("__HydraController").GetComponent<HydraController>();
 		base.Start();
 	}
 	
@@ -54,46 +44,13 @@ public class HydraHand : SixenseObjectController
 			GUI.Box( new Rect( Screen.width / 2 + horizOffset, Screen.height - 40, labelWidth, 30 ),  "Press " + handStr + " START to control " + gameObject.name );		
 		}		
 	}
-	
-	// Updates the animated object from controller input.
-	protected void UpdateAnimationInput( SixenseInput.Controller controller)
-	{
-		// Fist
-		float fTriggerVal = controller.Trigger;
-		fTriggerVal = Mathf.Lerp( m_fLastTriggerVal, fTriggerVal, 0.1f );
-		m_fLastTriggerVal = fTriggerVal;
-	}
-	
-	
 
-	void OnTriggerEnter (Collider other) {
-		
-		//Debug.Log("BANG");
-	
-		Object currentTarget = collisionTarget != null ? collisionTarget : gameObject;
-		Behaviour targetBehaviour = currentTarget as Behaviour;
-		GameObject targetGameObject = currentTarget as GameObject;	
-		
-		HandCollisionParams handParams = new HandCollisionParams(other.gameObject, Hand);
-		
-		//targetGameObject = targetBehaviour.gameObject;
-		if(other.tag == "SoundObj")
-			targetGameObject.SendMessage("CollidedWith", handParams);
+	void OnTriggerEnter (Collider collidee) {		
+		m_hydra.TriggerCollision(collidee.gameObject, Hand);
 	}
 	
-	void OnTriggerExit (Collider other) {
-				
-		//Debug.Log("UNBANG");
-	
-		Object currentTarget = collisionTarget != null ? collisionTarget : gameObject;
-		Behaviour targetBehaviour = currentTarget as Behaviour;
-		GameObject targetGameObject = currentTarget as GameObject;
-		
-		HandCollisionParams handParams = new HandCollisionParams(other.gameObject, Hand);
-		
-		//targetGameObject = targetBehaviour.gameObject;
-		if(other.tag == "SoundObj")
-			targetGameObject.SendMessage("UnCollidedWith", handParams);
+	void OnTriggerExit (Collider collidee) {	
+		m_hydra.UnTriggerCollision(collidee.gameObject, Hand);
 	}
 }
 

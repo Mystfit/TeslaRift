@@ -3,33 +3,33 @@ using System.Collections.Generic;
 
 
 public class SingleModifierTool : BaseTool
-{
-	private float m_singleParameterValue = 0.0f;
-	
-	public SingleModifierTool () : base()
+{	
+	public SingleModifierTool (ToolHand hand) : base(hand)
 	{
-		m_singleParameterValue = 0.5f;
 	}
 	
-	public override void update()
-	{
-		base.update();
-	}
-	
-	public void testTriggerNote(float value){
-		foreach(BaseInstrumentParam param in m_targetParameters){
-			if(param.GetType() == typeof(NoteParam)){
-				NoteParam note = param as NoteParam;
-				note.setNote( value, 0.8f, 0, 1);
-			} else {
-				param.setVal(value);
-			}
+	public void playTestChord(){
+		NoteParam chord = m_instrumentRef.getParamByName("noteParam") as NoteParam;
+		if(chord != null){
+			chord.setNote(Utils.Midi.midiIntToFloat(70), 0.8f, 0, 1);
+			chord.setNote(Utils.Midi.midiIntToFloat(82), 0.8f, 1, 1);
+			chord.setNote(Utils.Midi.midiIntToFloat(86), 0.8f, 2, 1);
 		}
 	}
 	
-	public void testReleaseNote(){
-		NoteParam note = getTargetByName("noteParams") as NoteParam;
-		note.releaseChord();
+	public void stopTestChord(){
+		NoteParam chord = m_instrumentRef.getParamByName("noteParam") as NoteParam;
+		if(chord != null){
+			chord.setNote(Utils.Midi.midiIntToFloat(70), 0.8f, 0, 1);
+			chord.setNote(Utils.Midi.midiIntToFloat(82), 0.8f, 1, 1);
+			chord.setNote(Utils.Midi.midiIntToFloat(86), 0.8f, 2, 1);
+		}
+	}
+	
+	public override void Update()
+	{
+
+		base.Update();
 	}
 }
 
