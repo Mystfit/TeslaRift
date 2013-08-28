@@ -105,7 +105,7 @@ public class HydraController : MonoBehaviour {
 				m_leftCollisionTarget.GetComponent<Rigidbody>().isKinematic = true;
 				m_leftCollisionTarget.transform.parent = m_leftHand.transform;
 				m_leftHandState = HydraStates.LEFT_HOLDING;
-				m_toolControlRef.SetManualTool(m_leftCollisionTarget, ToolController.ToolHand.LEFT);
+				//m_toolControlRef.SetManualTool(m_leftCollisionTarget, ToolController.ToolHand.LEFT);
 			}
 			
 			//Release
@@ -113,7 +113,7 @@ public class HydraController : MonoBehaviour {
 				m_leftCollisionTarget.GetComponent<Rigidbody>().isKinematic = false;
 				m_leftCollisionTarget.transform.parent = null;
 				m_leftHandState = HydraStates.LEFT_IDLE; 
-				m_toolControlRef.StopTool(ToolController.ToolHand.LEFT);
+				//m_toolControlRef.StopTool(ToolController.ToolHand.LEFT);
 			}
 		}
 		

@@ -18,7 +18,9 @@ public class InstrumentController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		foreach(BaseInstrument instrument in m_instruments){
+			instrument.update();
+		}
 	}
 	
 	public BaseInstrument SelectedInstrument{ get { return m_selectedInstrument; } }

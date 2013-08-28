@@ -7,6 +7,7 @@ public class InstrumentFactory : MonoBehaviour {
 	public static string GAMEINSTRUMENT_PREFIX = "GInstr_";
 	public GameObject instrumentPrefab = null;
 	public TextAsset instrumentDefinitionFile;
+	public GameObject paramPanelPrefab;
 	
 	private InstrumentController m_instrumentControllerRef = null;
 
@@ -54,6 +55,19 @@ public class InstrumentFactory : MonoBehaviour {
 	private void CreateInstrumentGameObject(BaseInstrument instrument){
 		GameObject instrumentGame = Instantiate(instrumentPrefab, new Vector3(Random.value * 2.5f - 2.5f, 0, Random.value * 2.5f - 2.5f), Quaternion.identity ) as GameObject;
 		instrumentGame.name = GAMEINSTRUMENT_PREFIX + instrument.Name;
-		instrumentGame.GetComponent<InstrumentAttachment>().Init(instrument.Name);
+		instrumentGame.GetComponent<InstrumentAttachment>().Init(instrument);
+		
+		Vector3[] points = Utils.PointsOnSphere(instrument.paramList.Count);
+		
+		for(int i = 0; i < points.Length; i++){
+			Vector3 point = points[i];
+			Vector3 pos = instrumentGame.transform.position + point * 1.0f;
+			GameObject paramPlane = Instantiate(paramPanelPrefab, pos, Quaternion.identity) as GameObject;
+			
+			paramPlane.transform.parent = instrumentGame.transform;
+			paramPlane.transform.LookAt(instrumentGame.transform);
+			
+			paramPlane.AddComponent<ParamAttachment>().Init(instrument.paramList[i]);
+		}
 	}
 }

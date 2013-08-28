@@ -3,10 +3,16 @@ using System.Collections;
 
 public class IdleTool : BaseTool {
 	
-	public IdleTool() {
+	public IdleTool(ToolHand hand) : base(hand) {
 	}
 	
 	public override void Update(){
-		//CheckForSelection();
+		CheckForSelection();
 	}
+	
+	public void CheckForSelection(){
+	
+		
+	}
+	
 }

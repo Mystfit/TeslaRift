@@ -49,8 +49,8 @@ public class BaseInstrument {
 		foreach(BaseInstrumentParam param in m_params){
 			if(param.name == name){
 				return param;
-				result = param;
-			}
+				//result = param;
+			} 
 		}
 		return result;
 	}
