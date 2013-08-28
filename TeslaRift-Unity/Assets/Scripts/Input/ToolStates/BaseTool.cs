@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class BaseTool {
+public class BaseTool : MonoBehaviour {
 	
-	private HydraController m_hydraRef = null;
+	protected HydraController m_hydraRef = null;
 	
 	//Variables
 	protected List<object> m_targets = null;
@@ -14,10 +14,21 @@ public class BaseTool {
 	protected ToolHand m_hand;
 	public ToolHand Hand{get { return m_hand; }}
 	
+	//Hand states
+	public enum HandState{ IDLE = 0, SEARCHING, HOLDING, RELEASING};
+	protected HandState m_toolHandState = HandState.IDLE;
+	public HandState handState{ get { return m_toolHandState; }}
+	
 	//Constructor
-	public BaseTool(ToolHand hand){
+	public BaseTool(){
+	}
+	
+	public void Start(){
 		m_hydraRef = GameObject.Find("__HydraController").GetComponent<HydraController>();
-		m_targets = new List<object>();
+		m_targets = new List<object>();		
+	}
+	
+	public void Init(ToolHand hand){
 		m_hand = hand;
 	}
 	
@@ -27,10 +38,10 @@ public class BaseTool {
 	}
 	
 	//Transitions
-	public virtual void transitionIn(){
+	public virtual void TransitionIn(){
 	}
 	
-	public virtual void transitionOut(){
+	public virtual void TransitionOut(){
 	}
 	
 	//Accessors

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class SingleModifierTool : BaseTool
 {	
-	public SingleModifierTool (ToolHand hand) : base(hand)
+	public SingleModifierTool ()
 	{
 	}
 	

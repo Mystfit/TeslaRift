@@ -9,7 +9,7 @@ public class ToolController : MonoBehaviour {
 	protected BaseTool m_currentTool = null;
 	protected ChoreographController m_choreoRef = null;
 	protected InstrumentController m_instrumentControlRef = null;
-	
+	protected HydraController m_hydraRef = null;
 	
 	
 	//Tool stacks
@@ -22,16 +22,19 @@ public class ToolController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		
+		m_choreoRef = this.gameObject.GetComponent<ChoreographController>();
+		m_instrumentControlRef = this.gameObject.GetComponent<InstrumentController>();
+		m_hydraRef = GameObject.Find("__HydraController").GetComponent<HydraController>();
+		
 		//Tool stacks
 		m_LToolStack = new Stack<BaseTool>();
 		m_RToolStack = new Stack<BaseTool>();
 
-		//Test tool
-		pushTool(new IdleTool(BaseTool.ToolHand.LEFT));
-		pushTool(new IdleTool(BaseTool.ToolHand.RIGHT));
+		pushTool(typeof(IdleTool), BaseTool.ToolHand.LEFT);
+		pushTool(typeof(IdleTool), BaseTool.ToolHand.RIGHT);
 
-		m_choreoRef = this.gameObject.GetComponent<ChoreographController>();
-		m_instrumentControlRef = this.gameObject.GetComponent<InstrumentController>();
+		
+
 	}
 	
 	//Manual tool addition. Testing only
@@ -59,16 +62,28 @@ public class ToolController : MonoBehaviour {
 	}*/
 
 	
-	public void pushTool(BaseTool tool){
-		if(tool.Hand == BaseTool.ToolHand.LEFT)
-			m_LToolStack.Push(tool);
-		else if(tool.Hand == BaseTool.ToolHand.RIGHT)
-			m_RToolStack.Push(tool);
-		else if(tool.Hand == BaseTool.ToolHand.BOTH)
-			m_LToolStack.Push(tool);
-			m_RToolStack.Push(tool);
+	public void pushTool(System.Type toolType, BaseTool.ToolHand hand){
+		
+		BaseTool activeAttachedTool = m_hydraRef.GetHand(hand).GetComponent<BaseTool>();
+		
+		if(activeAttachedTool != null)
+			DestroyImmediate(activeAttachedTool);		//Should probably handle this in the transition
+		
+		activeAttachedTool =  m_hydraRef.GetHand(hand).AddComponent(toolType) as BaseTool;
+		//activeAttachedTool = m_hydraRef.GetHand(hand).GetComponent(toolType) 
+		activeAttachedTool.Init(hand);
+
+		if(hand == BaseTool.ToolHand.LEFT){
+			m_LToolStack.Push(activeAttachedTool);
+		}else if(hand == BaseTool.ToolHand.RIGHT){
+			m_RToolStack.Push(activeAttachedTool);
+		}else if(hand == BaseTool.ToolHand.BOTH){
+			m_LToolStack.Push(activeAttachedTool);
+			m_RToolStack.Push(activeAttachedTool);
+		}
 	}
 	
+	/*
 	public BaseTool popTool(BaseTool.ToolHand hand){
 		BaseTool result = null;
 		if(hand == BaseTool.ToolHand.LEFT)
@@ -76,7 +91,7 @@ public class ToolController : MonoBehaviour {
 		else if(hand == BaseTool.ToolHand.RIGHT)
 			result = m_RToolStack.Pop();
 		return result;
-	}
+	}*/
 	
 	public BaseTool currentTool(BaseTool.ToolHand hand){
 		switch(hand){

@@ -46,11 +46,30 @@ public class HydraController : MonoBehaviour {
 		m_instrumentControlRef = GameObject.Find ("__PerformanceControllers").GetComponent<InstrumentController>();
 	}
 	
+	public SixenseInput.Controller GetHandController(BaseTool.ToolHand hand){
+		if(hand == BaseTool.ToolHand.LEFT)
+			return m_leftHandController;
+		return m_rightHandController;
+	}
+	
+	public GameObject HandTarget(BaseTool.ToolHand hand){
+		if(hand == BaseTool.ToolHand.LEFT)
+			return m_leftCollisionTarget;
+		return m_rightCollisionTarget;
+	}
+	
+	public GameObject GetHand(BaseTool.ToolHand hand){
+		if(hand == BaseTool.ToolHand.LEFT)
+			return m_leftHand;
+		else
+			return m_rightHand;
+	}
+	
 	
 	//Collision Handlers
 	//-------------------
 	public void TriggerCollision(GameObject target, SixenseHands hand){
-		if(!target.CompareTag("Instrument"))
+		if(!target.CompareTag("Instrument") && !target.CompareTag("ParamPanel"))
 			return;
 		
 		if(hand == SixenseHands.LEFT){
@@ -63,7 +82,7 @@ public class HydraController : MonoBehaviour {
 	}
 	
 	public void UnTriggerCollision(GameObject target, SixenseHands hand){
-		if(target.tag != "Instrument")
+		if(!target.CompareTag("Instrument") && !target.CompareTag("ParamPanel"))
 			return;
 		
 		if(hand == SixenseHands.LEFT)
@@ -85,7 +104,7 @@ public class HydraController : MonoBehaviour {
 		if(m_rightHandController == null)
 			m_rightHandController = SixenseInput.GetController( SixenseHands.RIGHT );
 			
-		HandleTestGrabInput();
+		//HandleTestGrabInput();
 		HandleTestButtonInput();
 		HandleTestKeyboardInput();
 	}
@@ -100,13 +119,7 @@ public class HydraController : MonoBehaviour {
 		
 		if(m_leftHandController != null){
 				
-			//Attach
-			if(m_leftCollisionTarget && m_leftHandController.GetButton(SixenseButtons.TRIGGER)){
-				m_leftCollisionTarget.GetComponent<Rigidbody>().isKinematic = true;
-				m_leftCollisionTarget.transform.parent = m_leftHand.transform;
-				m_leftHandState = HydraStates.LEFT_HOLDING;
-				//m_toolControlRef.SetManualTool(m_leftCollisionTarget, ToolController.ToolHand.LEFT);
-			}
+			
 			
 			//Release
 			if(!m_leftHandController.GetButton(SixenseButtons.TRIGGER) && m_leftHandState == HydraStates.LEFT_HOLDING && m_leftCollisionTarget){
