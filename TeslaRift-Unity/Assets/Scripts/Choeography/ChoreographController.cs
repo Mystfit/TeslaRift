@@ -11,17 +11,17 @@ public class ChoreographController : MonoBehaviour {
 	public TeslaInstrument m_testInstrument;
 
 	void Start () {
-		m_testInstrument = new TeslaInstrument("Live", "tesla", "TeslaLead");
-		m_testInstrument.addParam("noteParams", "chord");
-		m_testInstrument.addParam("pitchbend", "int");
-		m_testInstrument.addParam("noteOn", "int");
-		m_testInstrument.addParam("gate", "int");
+		//m_testInstrument = new TeslaInstrument("Live", "tesla", "TeslaLead");
+		//m_testInstrument.addParam("noteParams", "chord");
+		//m_testInstrument.addParam("pitchbend", "int");
+		//m_testInstrument.addParam("noteOn", "int");
+		//m_testInstrument.addParam("gate", "int");
 	}
 	
 	void Update () {
 		
-		pitchSin(Mathf.Sin(Time.time * m_pitchBendRate * 2.0f));
-		m_testInstrument.update();
+		//pitchSin(Mathf.Sin(Time.time * m_pitchBendRate * 2.0f));
+		//m_testInstrument.update();
 	}
 	
 	

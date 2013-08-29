@@ -105,9 +105,42 @@ public class HydraController : MonoBehaviour {
 			m_rightHandController = SixenseInput.GetController( SixenseHands.RIGHT );
 			
 		//HandleTestGrabInput();
-		HandleTestButtonInput();
-		HandleTestKeyboardInput();
+		
+		SetTools();
+		
+		//HandleTestButtonInput();
+		//HandleTestKeyboardInput();
 	}
+	
+	public void SetTools(){
+		if(m_leftHandController != null){
+			if(m_leftHandController.GetButtonDown(SixenseButtons.TRIGGER)){
+				m_toolControlRef.PushTool(typeof(PhysGrabberTool), BaseTool.ToolHand.LEFT);
+			}
+			
+			if(m_leftHandController.GetButtonDown(SixenseButtons.BUMPER)){
+				m_toolControlRef.PushTool(typeof(ParamSelectTool), BaseTool.ToolHand.LEFT);
+			}
+
+			if(m_leftHandController.GetButtonDown(SixenseButtons.ONE)){
+				m_toolControlRef.PushTool(typeof(SingleModifierTool), BaseTool.ToolHand.LEFT);
+			}
+			
+			//Back to idle
+			if(m_leftHandController.GetButtonUp(SixenseButtons.TRIGGER) ||
+				m_leftHandController.GetButtonUp(SixenseButtons.BUMPER) ||
+				m_leftHandController.GetButtonUp(SixenseButtons.ONE))
+			{
+				BaseTool tool = m_leftHand.GetComponent(typeof(BaseTool)) as BaseTool;
+				if(tool != null)
+					tool.TransitionOut();
+				
+				//m_toolControlRef.PushTool(typeof(IdleTool), BaseTool.ToolHand.LEFT);
+				m_toolControlRef.PopTool(BaseTool.ToolHand.LEFT);
+			}
+		}
+	}
+	
 	
 	
 	

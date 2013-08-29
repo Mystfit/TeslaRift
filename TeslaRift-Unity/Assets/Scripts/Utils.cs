@@ -13,6 +13,10 @@ public static class Utils
 			return Clamp( (int)(fValue * 127), 0, 127);
 		}
 	}
+	
+	public static float Normalize(float value, float min, float max){
+		return (value - min) / (max - min);
+	}
 				
 	public static int Clamp(int value, int min, int max)  
 	{  

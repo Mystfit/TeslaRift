@@ -9,8 +9,10 @@
 				<min>12</min>
 				<max>72</max>
 			</param>	
-			<param name="gate"></param>
-			<param name="bright"></param>
+			<param name="clip1" type="clip"></param>
+			<param name="clip2" type="clip"></param>
+			<param name="gate" type="float"></param>
+			<param name="bright" type="float"></param>
 		</instrument>
 	
 	</instrumentList>

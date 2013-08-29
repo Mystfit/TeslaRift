@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class BaseTool : MonoBehaviour {
 	
 	protected HydraController m_hydraRef = null;
+	protected InstrumentController m_instrumentControlRef = null;
 	
 	//Variables
 	protected List<object> m_targets = null;
@@ -23,11 +24,17 @@ public class BaseTool : MonoBehaviour {
 	public BaseTool(){
 	}
 	
-	public void Start(){
+	public virtual void Start(){
 		m_hydraRef = GameObject.Find("__HydraController").GetComponent<HydraController>();
+		m_instrumentControlRef = GameObject.Find ("__PerformanceControllers").GetComponent<InstrumentController>();
+
 		m_targets = new List<object>();		
 	}
 	
+	public virtual void Update () {
+	}
+	
+	//Initializer
 	public void Init(ToolHand hand){
 		m_hand = hand;
 	}
@@ -57,7 +64,5 @@ public class BaseTool : MonoBehaviour {
 		m_targets = targets;
 	}
 	
-	// Update is called once per frame
-	public virtual void Update () {
-	}
+
 }
