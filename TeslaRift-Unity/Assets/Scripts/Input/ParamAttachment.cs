@@ -13,11 +13,19 @@ public class ParamAttachment : BaseAttachment {
 	// Update is called once per frame
 	void Update () {
 	}
+	
+	public override void ToggleSelected(){
+		SetSelected(!m_selected);
+	}
 		
 	public override void SetSelected (bool state)
 	{
 		base.SetSelected (state);
-		m_instrumentControlRef.SelectParameter(m_paramRef);
+		
+		if(state)
+			m_instrumentControlRef.SelectParameter(m_paramRef);
+		else
+			m_instrumentControlRef.DeselectParameter(m_paramRef);
 		
 		//Debug colours
 		if(state)

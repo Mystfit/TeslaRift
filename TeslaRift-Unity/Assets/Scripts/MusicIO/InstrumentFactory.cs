@@ -67,6 +67,7 @@ public class InstrumentFactory : MonoBehaviour {
 			
 			paramPlane.transform.parent = instrumentGame.transform;
 			paramPlane.transform.LookAt(instrumentGame.transform);
+			paramPlane.layer = LayerMask.NameToLayer("ParamSelectable");
 			
 			paramPlane.AddComponent<ParamAttachment>().Init(instrument.paramList[i]);
 		}

@@ -77,8 +77,6 @@ public class HydraController : MonoBehaviour {
 		}else{
 			m_rightCollisionTarget = target;
 		}
-		
-		Debug.Log(String.Format("{0} HIT HAND {1}", target, hand));
 	}
 	
 	public void UnTriggerCollision(GameObject target, SixenseHands hand){
@@ -89,9 +87,7 @@ public class HydraController : MonoBehaviour {
 			m_leftCollisionTarget = null;
 		else
 			m_rightCollisionTarget = null;
-		
-		Debug.Log(String.Format("{0} LEFT HAND {1}", target, hand));
-		
+				
 	}
 	
 	
