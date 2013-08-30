@@ -29,14 +29,15 @@ public class InstrumentController : MonoBehaviour {
 		foreach(BaseInstrument instrument in m_instruments){
 			
 			//Tesla specific killswitch
-			if(instrument.Name == "TeslaLead"){
-				if(m_teslaStateDirty){					
-					if(m_teslaInstrumentActive){
-						instrument.addMessageToQueue("killswitch", 0.0f);
-					} else {
-						instrument.addMessageToQueue("killswitch", 1.0f);
-					}
-					instrument.update();
+			if(instrument.Name == "TeslaArp" || instrument.Name == "TeslaBass" || instrument.Name == "TeslaLive"){
+				if(m_teslaStateDirty){		
+					BaseInstrument tesla = GetInstrumentByName("TeslaLive");
+					if(m_teslaInstrumentActive)
+						tesla.addMessageToQueue("killswitch", 1.0f);
+					else 
+						tesla.addMessageToQueue("killswitch", 0.0f);
+					
+					tesla.update();
 					m_teslaStateDirty = false;
 				} else {
 					if(m_teslaInstrumentActive)
@@ -73,7 +74,6 @@ public class InstrumentController : MonoBehaviour {
 	}
 	
 	public void SelectParameter(BaseInstrumentParam param){
-	
 		if( m_selectedParams.IndexOf(param) < 0){
 			param.setEnabled(true);
 			Debug.Log (param + ", selected");
@@ -89,6 +89,10 @@ public class InstrumentController : MonoBehaviour {
 			Debug.Log (param + ", deselected");
 			m_selectedParams.Remove(param);
 		}
+	}
+
+	public void DeselectAllParameters(){
+		m_selectedParams.Clear();		//Won't reset visual states! Move this into a dedicated tool
 	}
 	
 	

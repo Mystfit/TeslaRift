@@ -4,22 +4,28 @@
 	<client>Live</client>
 	
 	<instrumentList>	
-		<instrument name="TeslaLead">
-			<param name="noteParams" type="chord">
-				<min>12</min>
-				<max>72</max>
-			</param>	
+		<instrument name="TeslaArp" colour="0.15,0.90,0.10">
+			<param name="noteParams" type="chord"></param>	
+			<param name="stop" type="toggle"></param>
 			<param name="clip1" type="clip"></param>
 			<param name="clip2" type="clip"></param>
 			<param name="gate" type="float"></param>
-			<param name="bright" type="float"></param>
 		</instrument>
 		
-		<instrument name="KP3">
-			<param name="noteParams" type="chord">
-				<min>12</min>
-				<max>72</max>
-			</param>	
+		<instrument name="TeslaBass" colour="0.4,0.95,0.15">
+			<param name="noteParams" type="chord"></param>	
+			<param name="stop" type="toggle"></param>
+			<param name="clip1" type="clip"></param>
+			<param name="clip2" type="clip"></param>
+		</instrument>
+		
+		<instrument name="TeslaLive" colour="0.6,0.85,0.2">
+			<param name="noteParams" type="chord"></param>	
+			<param name="gate" type="float"></param>
+		</instrument>
+		
+		<instrument name="KP3" colour="0.1,0.1,0.95">
+			<param name="noteParams" type="chord"></param>	
 			<param name="x" type="float"></param>
 			<param name="y" type="float"></param>
 		</instrument>

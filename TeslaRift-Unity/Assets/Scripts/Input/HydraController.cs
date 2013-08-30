@@ -108,13 +108,35 @@ public class HydraController : MonoBehaviour {
 	}
 	
 	public void SetIndividualToolsLeft(){
+		if(m_leftHandController != null)
+		{
+			if(m_leftHandController.GetButtonDown(SixenseButtons.TWO)){
+				m_instrumentControlRef.DeselectAllParameters();
+			}
+			
+			if(m_leftHandController.GetButton(SixenseButtons.BUMPER) && m_leftHandController.GetButton(SixenseButtons.TRIGGER)){
+			
+				if(m_toolControlRef.currentTool(BaseTool.ToolHand.LEFT).GetType() == typeof(PhysGrabberTool)){
+					PhysGrabberTool physTool = m_toolControlRef.currentTool(BaseTool.ToolHand.LEFT) as PhysGrabberTool;
+					physTool.ApplyForceToInstruments(PhysGrabberTool.PhysDirection.BLOW);
+				}
+			}
+		}
 	}
 	
 	public void SetIndividualToolsRight(){
 		if(m_rightHandController != null)
 		{
-			if(m_rightHandController.GetButtonDown(SixenseButtons.FOUR)){
+			if(m_rightHandController.GetButtonDown(SixenseButtons.TWO)){
 				m_instrumentControlRef.PrimeTesla();
+			}
+			
+			if(m_rightHandController.GetButton(SixenseButtons.BUMPER) && m_rightHandController.GetButton(SixenseButtons.TRIGGER)){
+			
+				if(m_toolControlRef.currentTool(BaseTool.ToolHand.RIGHT).GetType() == typeof(PhysGrabberTool)){
+					PhysGrabberTool physTool = m_toolControlRef.currentTool(BaseTool.ToolHand.RIGHT) as PhysGrabberTool;
+					physTool.ApplyForceToInstruments(PhysGrabberTool.PhysDirection.SUCK);
+				}
 			}
 		}
 	}
@@ -128,12 +150,19 @@ public class HydraController : MonoBehaviour {
 				m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand);
 			}
 			
-			if(handControl.GetButtonDown(SixenseButtons.BUMPER)){
-				m_toolControlRef.PushTool(typeof(ParamSelectTool), hand);
+			if(handControl.GetButtonDown(SixenseButtons.BUMPER) && !handControl.GetButton(SixenseButtons.TRIGGER)){
+				if(m_toolControlRef.currentTool(hand) == null)
+					m_toolControlRef.PushTool(typeof(ParamSelectTool), hand);
+				else
+					Debug.Log("Existing tool still active");
 			}
 
 			if(handControl.GetButtonDown(SixenseButtons.ONE)){
-				m_toolControlRef.PushTool(typeof(SingleModifierTool), hand);
+				if(m_toolControlRef.currentTool(hand) == null)
+					m_toolControlRef.PushTool(typeof(SingleModifierTool), hand);
+				else
+					Debug.Log("Existing tool still active");
+				
 			}
 			
 			//Back to idle on tool release
@@ -148,94 +177,18 @@ public class HydraController : MonoBehaviour {
 				else if(hand == BaseTool.ToolHand.RIGHT)
 					handObj = m_rightHand;
 				
-				if(handObj != null){
-					BaseTool tool = handObj.GetComponent(typeof(BaseTool)) as BaseTool;
-					if(tool != null)
-						tool.TransitionOut();
-					
-					m_toolControlRef.PopTool(hand);
+				if(handControl.GetButton(SixenseButtons.TRIGGER) || handControl.GetButton(SixenseButtons.BUMPER)){
+					Debug.Log("Still in physics mode!");
+				} else {
+					if(handObj != null){
+						BaseTool tool = handObj.GetComponent(typeof(BaseTool)) as BaseTool;
+						if(tool != null)
+							tool.TransitionOut();
+						
+						m_toolControlRef.PopTool(hand);
+					}
 				}
 			}
-		}
-	}
-	
-	
-	
-	
-	
-	
-	//Input handlers
-	//------------------------
-	void HandleTestGrabInput(){
-		
-		if(m_leftHandController != null){
-				
-			
-			
-			//Release
-			if(!m_leftHandController.GetButton(SixenseButtons.TRIGGER) && m_leftHandState == HydraStates.LEFT_HOLDING && m_leftCollisionTarget){
-				m_leftCollisionTarget.GetComponent<Rigidbody>().isKinematic = false;
-				m_leftCollisionTarget.transform.parent = null;
-				m_leftHandState = HydraStates.LEFT_IDLE; 
-				//m_toolControlRef.StopTool(ToolController.ToolHand.LEFT);
-			}
-		}
-		
-		if(m_rightHandController != null){
-			//Attach 
-			if(m_rightCollisionTarget && m_rightHandController.GetButton(SixenseButtons.TRIGGER)){
-				m_rightCollisionTarget.GetComponent<Rigidbody>().isKinematic = true;
-				m_rightCollisionTarget.transform.parent = m_rightHand.transform;
-				m_leftHandState = HydraStates.RIGHT_HOLDING; 
-			}
-		
-			//Release
-			if(!m_rightHandController.GetButton(SixenseButtons.TRIGGER) && m_rightHandState == HydraStates.RIGHT_HOLDING && m_rightCollisionTarget){
-				m_rightCollisionTarget.GetComponent<Rigidbody>().isKinematic = false;
-				m_rightCollisionTarget.transform.parent = null;
-				m_leftHandState = HydraStates.RIGHT_IDLE; 
-			}
-		}
-	}
-	
-	void HandleTestButtonInput(){
-		
-		float range = 400.0f;
-
-		if(m_leftHandController != null){
-			float L_XDist = m_leftHandController.Position.x;
-			float L_YDist = m_leftHandController.Position.y;
-			
-			if(m_leftHandController.GetButton(SixenseButtons.BUMPER)){
-				Debug.Log((Math.Min( Math.Max(L_YDist, 0.0f), range)) / range);
-				//GameObject.Find("__PerformanceControllers").GetComponent<ChoreographController>().m_pitchBendRate = (Math.Min( Math.Max(L_YDist, 0.0f), range)) / range;
-				//this.GetComponent<InstrumentController>().SelectedInstrument.getParamByName("gate").setVal((Math.Min( Math.Max(R_YDist, 0.0f), range)) / range);
-			} else {
-				//GameObject.Find("__PerformanceControllers").GetComponent<ChoreographController>().m_pitchBendRate = 0.5f;
-			}
-		}
-		
-		if(m_rightHandController != null){
-			float R_XDist = m_rightHandController.Position.x;
-			float R_YDist = m_rightHandController.Position.y;
-			
-			if(m_rightHandController.GetButton(SixenseButtons.BUMPER)){
-				Debug.Log((Math.Min( Math.Max(R_YDist, 0.0f), range)) / range);
-				//this.GetComponent<ChoreographController>().m_pitchBendRate = (Math.Min( Math.Max(R_YDist, 0.0f), range)) / range;
-				//this.GetComponent<InstrumentController>().SelectedInstrument.getParamByName("gate").setVal((Math.Min( Math.Max(R_YDist, 0.0f), range)) / range);
-			} else {
-				//this.GetComponent<ChoreographController>().m_pitchBendRate = 0.5f;
-			}
-		}
-	}
-	
-	public void HandleTestKeyboardInput(){
-		if(Input.GetKeyDown(KeyCode.UpArrow)){
-			m_choreoControlRef.playTestChord();
-		}
-		
-		if(Input.GetKeyUp(KeyCode.UpArrow)){
-			m_choreoControlRef.stopTestChord();
 		}
 	}
 }

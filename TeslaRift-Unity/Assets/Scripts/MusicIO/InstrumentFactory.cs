@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Xml;
+using System;
 
 public class InstrumentFactory : MonoBehaviour {
 	
@@ -35,6 +36,8 @@ public class InstrumentFactory : MonoBehaviour {
 		//Create instrument objects		
 		foreach(XmlNode instrument in instrumentList){			
 			BaseInstrument instrumentDef = new BaseInstrument( client.InnerText, source.InnerText, instrument.Attributes["name"].Value );
+			string[] colorStr = instrument.Attributes["colour"].Value.Split(',');
+			Color instrColor = new Color(Convert.ToSingle(colorStr[0]), Convert.ToSingle(colorStr[1]), Convert.ToSingle(colorStr[2]));
 			
 			//Add params to instrument
 			foreach(XmlElement param in instrument.ChildNodes){
@@ -48,15 +51,17 @@ public class InstrumentFactory : MonoBehaviour {
 			m_instrumentControllerRef.AddInstrument(instrumentDef);
 			
 			//Create associated gameobject for instrument
-			CreateInstrumentGameObject(instrumentDef);
+			CreateInstrumentGameObject(instrumentDef, instrColor);
 			
 		}
 	}
 	
-	private void CreateInstrumentGameObject(BaseInstrument instrument){
+	private void CreateInstrumentGameObject(BaseInstrument instrument, Color instrumentColor){
 		GameObject instrumentGame = Instantiate(instrumentPrefab, transform.position, Quaternion.identity ) as GameObject;
 		instrumentGame.name = GAMEINSTRUMENT_PREFIX + instrument.Name;
 		instrumentGame.AddComponent<InstrumentAttachment>().Init(instrument);
+		instrumentGame.renderer.material.SetColor("_Color", instrumentColor);
+		Debug.Log(instrumentColor);
 		
 		Vector3[] points = Utils.PointsOnSphere(instrument.paramList.Count);
 		

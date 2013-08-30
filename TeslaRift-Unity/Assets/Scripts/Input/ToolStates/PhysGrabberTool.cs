@@ -5,7 +5,12 @@ public class PhysGrabberTool : BaseTool {
 	
 	public GameObject m_heldObject = null;
 	
-	private GameObject m_dragger = null;
+	private Vector3 m_lastHeldPosition;
+	private Vector3 m_deltaVelocity;
+	
+	public enum PhysDirection{ BLOW = 0, SUCK};
+	
+	private FixedJoint m_joint = null;
 	
 	public PhysGrabberTool() {
 	}
@@ -22,10 +27,37 @@ public class PhysGrabberTool : BaseTool {
 	
 	public override void TransitionOut(){
 		if(m_heldObject != null){
-			m_heldObject.transform.parent = null;
-			m_heldObject.GetComponent<Rigidbody>().isKinematic = false;
+			
+			if(m_joint != null){
+				Destroy(m_joint);
+				m_heldObject.rigidbody.velocity = m_deltaVelocity * 50;	
+			}
 			m_heldObject = null;
 			m_toolHandState = BaseTool.HandState.RELEASING;
+		}
+	}
+	
+	
+	public void ApplyForceToInstruments(PhysDirection physAction){
+		
+		GameObject[] instruments = GameObject.FindGameObjectsWithTag("Instrument");
+		foreach( GameObject instr in instruments){
+			Vector3 dir;
+			float dist;
+			
+			if(physAction == PhysDirection.BLOW){
+				dir = new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y - 90.0f, transform.rotation.eulerAngles.z).normalized;
+				dist = Mathf.Abs((transform.position - instr.transform.position).magnitude);
+				Debug.Log(dist);
+				if(dist < 10.0f)
+					instr.rigidbody.AddForce(dir * 20.0f);
+			} else if(physAction == PhysDirection.SUCK){
+				dir = transform.position - instr.transform.position;
+				dist = Mathf.Abs(dir.magnitude);
+				
+				if(dist > 0.5f)
+					instr.rigidbody.AddForce(dir * 20.0f);
+			}
 		}
 	}
 	
@@ -42,12 +74,15 @@ public class PhysGrabberTool : BaseTool {
 							
 							m_heldObject = m_hydraRef.HandTarget(m_hand);
 							
-							m_dragger = new GameObject("Rigidbody dragger");
-							Rigidbody body = m_dragger.AddComponent<Rigidbody>();
-							Rigidbody joint = m_dragger.AddComponent<FixedJoint>();
-							body.isKinematic = true;
+							//m_dragger = new GameObject("Rigidbody dragger");
+							//Rigidbody body = m_dragger.AddComponent<Rigidbody>();
+							//body.isKinematic = true;
 							
-							joint.transform.position = m_heldObject.transform.position;
+							m_joint = gameObject.AddComponent<FixedJoint>();
+							
+							m_joint.connectedBody = m_heldObject.GetComponent<Rigidbody>();
+							
+							//joint.transform.position = m_heldObject.transform.position;
 							
 							//m_heldObject = m_hydraRef.HandTarget(m_hand);
 							//m_heldObject.GetComponent<Rigidbody>().isKinematic = true;
@@ -61,6 +96,10 @@ public class PhysGrabberTool : BaseTool {
 			case HandState.RELEASING:	//Instrument floats in front of performer
 				break;
 			case HandState.HOLDING:
+				if(m_joint && m_heldObject){
+					m_deltaVelocity = m_heldObject.transform.position - m_lastHeldPosition;
+					m_lastHeldPosition =  m_heldObject.transform.position;
+				}
 				break;
 			}
 		}
