@@ -14,7 +14,7 @@ public class InstrumentFactory : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		m_instrumentControllerRef = this.GetComponent<InstrumentController>();
+		m_instrumentControllerRef = GameObject.Find("__PerformanceControllers").GetComponent<InstrumentController>();
 		LoadInstrumentDefinitions();
 	}
 	
@@ -54,7 +54,7 @@ public class InstrumentFactory : MonoBehaviour {
 	}
 	
 	private void CreateInstrumentGameObject(BaseInstrument instrument){
-		GameObject instrumentGame = Instantiate(instrumentPrefab, new Vector3(Random.value * 2.5f - 2.5f, 0, Random.value * 2.5f - 2.5f), Quaternion.identity ) as GameObject;
+		GameObject instrumentGame = Instantiate(instrumentPrefab, transform.position, Quaternion.identity ) as GameObject;
 		instrumentGame.name = GAMEINSTRUMENT_PREFIX + instrument.Name;
 		instrumentGame.AddComponent<InstrumentAttachment>().Init(instrument);
 		
@@ -68,6 +68,8 @@ public class InstrumentFactory : MonoBehaviour {
 			paramPlane.transform.parent = instrumentGame.transform;
 			paramPlane.transform.LookAt(instrumentGame.transform);
 			paramPlane.layer = LayerMask.NameToLayer("ParamSelectable");
+			
+			paramPlane.GetComponentInChildren<TextMesh>().text = instrument.paramList[i].name;
 			
 			paramPlane.AddComponent<ParamAttachment>().Init(instrument.paramList[i]);
 		}

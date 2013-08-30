@@ -14,7 +14,8 @@ public class SingleModifierTool : BaseTool
 	
 	public override void TransitionOut ()
 	{
-		base.TransitionOut ();
+		base.TransitionOut();
+		m_instrumentControlRef.SetNoteOff();
 	}
 	
 	public void playTestChord(){

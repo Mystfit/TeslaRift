@@ -19,8 +19,8 @@ public class HydraController : MonoBehaviour {
 	//-----------------------
 	private SixenseInput.Controller m_leftHandController;
 	private SixenseInput.Controller m_rightHandController;
-	private GameObject m_leftHand;
-	private GameObject m_rightHand;
+	public GameObject m_leftHand;
+	public GameObject m_rightHand;
 	
 	private GameObject m_leftCollisionTarget = null;
 	private GameObject m_rightCollisionTarget = null;
@@ -35,8 +35,6 @@ public class HydraController : MonoBehaviour {
 	// Initialization
 	//------------------
 	void Start() {
-		m_leftHand = GameObject.Find("hand_left");
-		m_rightHand = GameObject.Find("hand_right");
 		m_leftHandState = HydraStates.LEFT_IDLE;
 		m_rightHandState = HydraStates.RIGHT_IDLE;
 		
@@ -102,37 +100,61 @@ public class HydraController : MonoBehaviour {
 			
 		//HandleTestGrabInput();
 		
-		SetTools();
+		SetCommonTools(m_leftHandController, BaseTool.ToolHand.LEFT);
+		SetCommonTools(m_rightHandController, BaseTool.ToolHand.RIGHT);
 		
-		//HandleTestButtonInput();
-		//HandleTestKeyboardInput();
+		SetIndividualToolsLeft();
+		SetIndividualToolsRight();
 	}
 	
-	public void SetTools(){
-		if(m_leftHandController != null){
-			if(m_leftHandController.GetButtonDown(SixenseButtons.TRIGGER)){
-				m_toolControlRef.PushTool(typeof(PhysGrabberTool), BaseTool.ToolHand.LEFT);
+	public void SetIndividualToolsLeft(){
+	}
+	
+	public void SetIndividualToolsRight(){
+		if(m_rightHandController != null)
+		{
+			if(m_rightHandController.GetButtonDown(SixenseButtons.FOUR)){
+				m_instrumentControlRef.PrimeTesla();
+			}
+		}
+	}
+	
+	//Common tools between each hand
+	//-------------------------------
+	public void SetCommonTools(SixenseInput.Controller handControl, BaseTool.ToolHand hand){
+		if(handControl != null){
+			//Left hand
+			if(handControl.GetButtonDown(SixenseButtons.TRIGGER)){
+				m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand);
 			}
 			
-			if(m_leftHandController.GetButtonDown(SixenseButtons.BUMPER)){
-				m_toolControlRef.PushTool(typeof(ParamSelectTool), BaseTool.ToolHand.LEFT);
+			if(handControl.GetButtonDown(SixenseButtons.BUMPER)){
+				m_toolControlRef.PushTool(typeof(ParamSelectTool), hand);
 			}
 
-			if(m_leftHandController.GetButtonDown(SixenseButtons.ONE)){
-				m_toolControlRef.PushTool(typeof(SingleModifierTool), BaseTool.ToolHand.LEFT);
+			if(handControl.GetButtonDown(SixenseButtons.ONE)){
+				m_toolControlRef.PushTool(typeof(SingleModifierTool), hand);
 			}
 			
-			//Back to idle
-			if(m_leftHandController.GetButtonUp(SixenseButtons.TRIGGER) ||
-				m_leftHandController.GetButtonUp(SixenseButtons.BUMPER) ||
-				m_leftHandController.GetButtonUp(SixenseButtons.ONE))
+			//Back to idle on tool release
+			if(handControl.GetButtonUp(SixenseButtons.TRIGGER) ||
+				handControl.GetButtonUp(SixenseButtons.BUMPER) ||
+				handControl.GetButtonUp(SixenseButtons.ONE))
 			{
-				BaseTool tool = m_leftHand.GetComponent(typeof(BaseTool)) as BaseTool;
-				if(tool != null)
-					tool.TransitionOut();
+				GameObject handObj = null;
 				
-				//m_toolControlRef.PushTool(typeof(IdleTool), BaseTool.ToolHand.LEFT);
-				m_toolControlRef.PopTool(BaseTool.ToolHand.LEFT);
+				if(hand == BaseTool.ToolHand.LEFT)
+					handObj = m_leftHand;
+				else if(hand == BaseTool.ToolHand.RIGHT)
+					handObj = m_rightHand;
+				
+				if(handObj != null){
+					BaseTool tool = handObj.GetComponent(typeof(BaseTool)) as BaseTool;
+					if(tool != null)
+						tool.TransitionOut();
+					
+					m_toolControlRef.PopTool(hand);
+				}
 			}
 		}
 	}

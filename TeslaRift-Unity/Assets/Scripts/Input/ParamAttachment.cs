@@ -29,9 +29,9 @@ public class ParamAttachment : BaseAttachment {
 		
 		//Debug colours
 		if(state)
-			this.renderer.material.SetColor("_Color", Color.blue);
+			transform.GetComponentInChildren<Renderer>().material.SetColor("_Color", Color.blue);
 		else
-			this.renderer.material.SetColor("_Color", Color.white);
+			transform.GetComponentInChildren<Renderer>().material.SetColor("_Color", Color.white);
 
 	}
 	

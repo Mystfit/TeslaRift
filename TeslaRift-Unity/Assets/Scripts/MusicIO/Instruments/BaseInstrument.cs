@@ -156,7 +156,7 @@ public class BaseInstrumentParam {
 	public bool isDirty { get { return m_isDirty; } }
 	public void setClean(){ m_isDirty = false; }
 	public bool enabled{ get { return m_enabled; } }
-	public void setEnabled(bool value){	m_enabled = value; m_isDirty = true; }
+	public void setEnabled(bool value){	m_enabled = value;}
 }
 
 

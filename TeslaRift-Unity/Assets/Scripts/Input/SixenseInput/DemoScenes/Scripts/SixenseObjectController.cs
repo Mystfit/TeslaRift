@@ -10,6 +10,10 @@ public class SixenseObjectController : MonoBehaviour {
 	protected Quaternion		m_initialRotation;
 	protected Vector3			m_initialPosition;
 	protected Vector3			m_baseControllerPosition;
+	
+	protected bool 				m_bCalibrated = false;
+	private Vector3 			m_handOffset;
+	public Vector3 ShoulderPosition = new Vector3(0.1f, 1.5f, 0.2f);
 		
 	// Use this for initialization
 	protected virtual void Start() 
@@ -41,6 +45,21 @@ public class SixenseObjectController : MonoBehaviour {
 			GUI.Box( new Rect( Screen.width / 2 - 100, Screen.height - 40, 200, 30 ),  "Press Start To Move/Rotate" );
 		}
 	}
+	
+	public void Calibrate(SixenseInput.Controller controller){
+		if (!this.m_bCalibrated){
+			this.m_handOffset = Vector3.zero;
+		    if ((double) controller.Trigger > 0.5)
+		    {
+			  this.m_bCalibrated = true;
+			  Vector3 vector3 = new Vector3(controller.Position.x * Sensitivity.x, controller.Position.y * Sensitivity.y, controller.Position.z * Sensitivity.z);
+			  this.m_handOffset = this.ShoulderPosition - vector3;
+			  //this.m_playerController.OffsetY = this.m_handOffset.y - this.BaseHandOffsetY;
+			  gameObject.transform.localPosition = vector3 + this.m_handOffset + Vector3.up;
+		    }
+		}
+	}
+	
 	
 	
 	protected virtual void UpdateObject(  SixenseInput.Controller controller )

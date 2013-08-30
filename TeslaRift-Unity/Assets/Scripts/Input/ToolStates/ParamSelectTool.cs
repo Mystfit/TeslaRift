@@ -1,15 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+
 
 public class ParamSelectTool : BaseTool {
 	
 	public GameObject m_heldObject = null;
+	
+	private List<ParamAttachment> m_selectedParams;
 	
 	public ParamSelectTool() {
 	}
 	
 	public override void Start(){
 		base.Start();
+		m_selectedParams = new List<ParamAttachment>();
 		m_toolHandState = BaseTool.HandState.SEARCHING;
 	}
 	
@@ -33,10 +38,13 @@ public class ParamSelectTool : BaseTool {
 				Debug.Log("Ray hit " + hit.collider);
 				
 				ParamAttachment attach = hit.collider.gameObject.GetComponent<ParamAttachment>();
-				if(attach != null)
-					attach.ToggleSelected();
+				if(attach != null){
+					if( m_selectedParams.IndexOf(attach) < 0){
+						m_selectedParams.Add(attach);
+						attach.ToggleSelected();
+					}
+				}
 				
-				hit.collider.gameObject.renderer.material.SetColor("_Color", Color.blue);
 				m_toolHandState = BaseTool.HandState.HOLDING;
 			}
 			

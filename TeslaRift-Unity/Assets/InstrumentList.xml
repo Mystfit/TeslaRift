@@ -14,6 +14,15 @@
 			<param name="gate" type="float"></param>
 			<param name="bright" type="float"></param>
 		</instrument>
+		
+		<instrument name="KP3">
+			<param name="noteParams" type="chord">
+				<min>12</min>
+				<max>72</max>
+			</param>	
+			<param name="x" type="float"></param>
+			<param name="y" type="float"></param>
+		</instrument>
 	
 	</instrumentList>
 	

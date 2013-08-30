@@ -5,6 +5,8 @@ public class PhysGrabberTool : BaseTool {
 	
 	public GameObject m_heldObject = null;
 	
+	private GameObject m_dragger = null;
+	
 	public PhysGrabberTool() {
 	}
 	
@@ -37,9 +39,19 @@ public class PhysGrabberTool : BaseTool {
 					if(m_hydraRef.HandTarget(m_hand) != m_heldObject){
 						
 						if(m_hydraRef.HandTarget(m_hand).CompareTag("Instrument")){
+							
 							m_heldObject = m_hydraRef.HandTarget(m_hand);
-							m_heldObject.GetComponent<Rigidbody>().isKinematic = true;
-							m_heldObject.transform.parent = this.gameObject.transform;
+							
+							m_dragger = new GameObject("Rigidbody dragger");
+							Rigidbody body = m_dragger.AddComponent<Rigidbody>();
+							Rigidbody joint = m_dragger.AddComponent<FixedJoint>();
+							body.isKinematic = true;
+							
+							joint.transform.position = m_heldObject.transform.position;
+							
+							//m_heldObject = m_hydraRef.HandTarget(m_hand);
+							//m_heldObject.GetComponent<Rigidbody>().isKinematic = true;
+							//m_heldObject.transform.parent = this.gameObject.transform;
 							m_instrumentControlRef.SetLastSelectedGameInstrument(m_heldObject);
 							m_toolHandState = BaseTool.HandState.HOLDING;
 						}
