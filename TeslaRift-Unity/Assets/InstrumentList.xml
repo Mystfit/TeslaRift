@@ -26,8 +26,13 @@
 		
 		<instrument name="KP3" colour="0.1,0.1,0.95">
 			<param name="noteParams" type="chord"></param>	
-			<param name="x" type="float"></param>
-			<param name="y" type="float"></param>
+			<param name="A" type="float"></param>
+			<param name="Minor Repeat" type="float"></param>
+		</instrument>
+		
+		<instrument name="Session" colour="0.8,0.1,0.4">	
+			<param name="MajorRise" type="float"></param>
+			<param name="MinorNormal" type="float"></param>
 		</instrument>
 	
 	</instrumentList>
