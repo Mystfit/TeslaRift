@@ -76,6 +76,11 @@ public class InstrumentController : MonoBehaviour {
 	public void SelectParameter(BaseInstrumentParam param){
 		if( m_selectedParams.IndexOf(param) < 0){
 			param.setEnabled(true);
+			
+			if(param.GetType() == typeof(ToggleParam)){
+				ToggleParam toggle = param as ToggleParam;
+				toggle.setVal(1.0f);
+			}
 			Debug.Log (param + ", selected");
 			m_selectedParams.Add(param);
 		}
@@ -84,8 +89,14 @@ public class InstrumentController : MonoBehaviour {
 	public void DeselectParameter(BaseInstrumentParam param){
 		int existingIndex = m_selectedParams.IndexOf(param);
 		if (existingIndex >= 0){
-			
 			param.setEnabled(false);
+			
+			//Handle toggle sends
+			if(param.GetType() == typeof(ToggleParam)){
+				ToggleParam toggle = param as ToggleParam;
+				toggle.setVal(0.0f);
+			}
+			
 			Debug.Log (param + ", deselected");
 			m_selectedParams.Remove(param);
 		}

@@ -37,6 +37,13 @@
 			<param name="MajorRise" type="toggle"></param>
 			<param name="MinorNormal" type="toggle"></param>
 		</instrument>
+		
+		<instrument name="KP3" colour="0.9,0.1,0.8">
+			<param name="noteOn" type="toggle"></param>
+			<param name="x" type="float"></param>
+			<param name="y" type="float"></param>
+		</instrument>
+		
 	
 	</instrumentList>
 	
