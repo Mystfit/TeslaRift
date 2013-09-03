@@ -36,9 +36,11 @@ public class BaseInstrument {
 	//-----------------
 	public void addParam(string name, string valueType){
 		if(valueType == "chord")
-			m_params.Add(new NoteParam(name, this, false)); 
+			m_params.Add(new NoteParam(name, this)); 
+		else if(valueType == "toggle")
+			m_params.Add(new ToggleParam(name, this));
 		else
-			m_params.Add(new BaseInstrumentParam(name, this, false)); 
+			m_params.Add(new BaseInstrumentParam(name, this)); 
 		
 		//Other types for parameters need to be defined here. Mainly interaction types!"
 		//Toggle
@@ -140,7 +142,7 @@ public class BaseInstrumentParam {
 	//OSC addresses
 	protected bool m_expectingReturnMessage = false;
 	
-	public BaseInstrumentParam(string name, BaseInstrument paramOwner, bool isExpectingReturnMessage){
+	public BaseInstrumentParam(string name, BaseInstrument paramOwner){
 		m_name = name;
 		m_owner = paramOwner;
 	}
@@ -149,7 +151,7 @@ public class BaseInstrumentParam {
 	public string name{	get { return m_name; } }
 	public BaseInstrument owner{ get { return m_owner; } }
 	public float val { get { return m_fValue; }	}
-	public void setVal(float value){ 
+	public virtual void setVal(float value){ 
 		m_fValue = value; 
 		m_isDirty = true;
 	}
@@ -162,14 +164,33 @@ public class BaseInstrumentParam {
 }
 
 
+//Toggles can only be either 1.0f or 0.0f. Used for boolean style switches
+//------------------------------------------------------------------------
+public class ToggleParam : BaseInstrumentParam {
+	
+	public ToggleParam(string name, BaseInstrument paramOwner)
+			: base(name, paramOwner)
+	{
+	}
+	
+	public override void setVal(float value){
+		if(value > 0.5f){
+			base.setVal(1.0f);
+		} else if(value <= 0.5f){
+			setVal(0.0f);
+		}
+	}
+}
+
+
 public class NoteParam : BaseInstrumentParam {
 	
 	
 	protected List<Note> m_chordNotes;
 	
 	
-	public NoteParam(string name, BaseInstrument paramOwner, bool isExpectingReturnMessage)
-			: base(name, paramOwner, isExpectingReturnMessage)
+	public NoteParam(string name, BaseInstrument paramOwner)
+			: base(name, paramOwner)
 	{
 		m_chordNotes = new List<Note>();
 	}
@@ -229,7 +250,7 @@ public class Note : BaseInstrumentParam {
 	}
 			
 	public Note(string name, BaseInstrument paramOwner, bool isExpectingReturnMessage)
-			: base(name, paramOwner, isExpectingReturnMessage)
+			: base(name, paramOwner)
 	{
 		
 	}
