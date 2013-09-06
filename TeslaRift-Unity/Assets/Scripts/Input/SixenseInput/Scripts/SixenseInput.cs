@@ -325,7 +325,7 @@ public class SixenseInput : MonoBehaviour
 					{
 						for ( int i = 0; i < MAX_CONTROLLERS; i++ )
 						{
-							if ( ( m_Controllers[i] != null )&& ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
+							if ( ( m_Controllers[i] != null ) && Input.GetKeyDown(KeyCode.Space) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
 							//if ( ( m_Controllers[i] != null ) && Controllers[i].GetButtonDown( SixenseButtons.TRIGGER ) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
 							{
 								Controllers[i].HandBind = SixenseHands.LEFT;
@@ -348,7 +348,8 @@ public class SixenseInput : MonoBehaviour
 					{
 						for ( int i = 0; i < MAX_CONTROLLERS; i++ )
 						{
-							if ( ( m_Controllers[i] != null ) && Controllers[i].GetButtonDown( SixenseButtons.TRIGGER ) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
+							if ( ( m_Controllers[i] != null ) && Input.GetKeyDown(KeyCode.Space) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
+							//if ( ( m_Controllers[i] != null ) && Controllers[i].GetButtonDown( SixenseButtons.TRIGGER ) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
 							{
 								Controllers[i].HandBind = SixenseHands.RIGHT;
 								SixensePlugin.sixenseAutoEnableHemisphereTracking( i );
