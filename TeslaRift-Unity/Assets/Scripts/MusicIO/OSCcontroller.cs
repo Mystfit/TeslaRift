@@ -79,7 +79,7 @@ public class OSCcontroller : MonoBehaviour {
 
 				*/
 				
-				Debug.Log (new InstrumentMessage(item.Value.packets[lastPacketIndex].Address, (float)item.Value.packets[lastPacketIndex].Data[0]).ToString());
+				//Debug.Log (new InstrumentMessage(item.Value.packets[lastPacketIndex].Address, (float)item.Value.packets[lastPacketIndex].Data[0]).ToString());
 			}
 	    }
 	}
