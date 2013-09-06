@@ -58,6 +58,8 @@ public class InstrumentController : MonoBehaviour {
 			if(param.GetType() == typeof(NoteParam)){
 				NoteParam chord = param as NoteParam;
 				chord.setNote(value, 1.0f, 0, 1);
+			} if(param.GetType() == typeof(ToggleParam)){
+				//ignore toggles, they fire when selected
 			} else {
 				param.setVal(value);
 			}
