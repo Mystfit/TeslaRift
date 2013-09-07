@@ -14,6 +14,9 @@ public class SixenseObjectController : MonoBehaviour {
 	protected bool 				m_bCalibrated = false;
 	private Vector3 			m_handOffset;
 	public Vector3 ShoulderPosition = new Vector3(0.1f, 1.5f, 0.2f);
+	
+	//Arduino trigger
+	public bool m_enableArduino = true;
 		
 	// Use this for initialization
 	protected virtual void Start() 
@@ -64,8 +67,8 @@ public class SixenseObjectController : MonoBehaviour {
 	
 	protected virtual void UpdateObject(  SixenseInput.Controller controller )
 	{
-		if ( controller.GetButtonDown( SixenseButtons.START ) )
-		{
+		
+		if ( controller.GetButtonDown( SixenseButtons.START ) || Input.GetKeyDown(KeyCode.P)){
 			// enable position and orientation control
 			m_enabled = !m_enabled;
 			

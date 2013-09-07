@@ -30,13 +30,24 @@ public class OSCcontroller : MonoBehaviour {
 	
 	public string targetIp = "127.0.0.1";
 	public string targetPort = "2345";
+	public string clientName = "Live";
+	
+	public string serverName = "Unity";
+	public string serverPort = "2347";
+	public bool loopback = false;
 	
 	private Dictionary<string, ServerLog> servers;
 		
 	// Script initialization
 	void Start() {	
 		OSCHandler.Instance.Init(); //init OSCs
-		OSCHandler.Instance.CreateClient("Live", System.Net.IPAddress.Parse(targetIp), int.Parse(targetPort));
+		OSCHandler.Instance.CreateClient(clientName, System.Net.IPAddress.Parse(targetIp), int.Parse(targetPort));
+		
+		if(loopback){
+			OSCHandler.Instance.CreateServer(serverName, int.Parse(serverPort));
+		}
+		
+		
 		servers = new Dictionary<string, ServerLog>();
 	}
 	
@@ -60,11 +71,42 @@ public class OSCcontroller : MonoBehaviour {
 			{
 				int lastPacketIndex = item.Value.packets.Count - 1;
 				
+				/*
 				UnityEngine.Debug.Log(String.Format("SERVER: {0} ADDRESS: {1} VALUE 0: {2}", 
 				                                    item.Key, // Server name
 				                                    item.Value.packets[lastPacketIndex].Address, // OSC address
 				                                    item.Value.packets[lastPacketIndex].Data[0].ToString())); //First data value
+
+				*/
+				
+				//Debug.Log (new InstrumentMessage(item.Value.packets[lastPacketIndex].Address, (float)item.Value.packets[lastPacketIndex].Data[0]).ToString());
 			}
 	    }
+	}
+	
+	
+	
+	public class InstrumentMessage {
+	
+		public string Client;
+		public string Name;
+		public string Parameter;
+		public float Value;
+		
+		public InstrumentMessage(string oscAddress, float value)
+		{
+			
+			string[] split = oscAddress.Split('/');
+			
+			Client = split[0];
+			Name = split[1];
+			Parameter = split[2];
+			Value = value;
+		}
+		
+		public string ToString(){
+		
+		return "Instrument Name:" + Name + " Parameter:" + Parameter + " Value:" + Value;
+		}
 	}
 }
