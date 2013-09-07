@@ -1,30 +1,79 @@
-﻿Shader "Custom/test" {
-	Properties {
-		_MainTex ("Base (RGB)", 2D) = "white" {}
-	}
-	SubShader {
-		Tags { "RenderType"="Opaque" }
-		LOD 200
-		
-		CGPROGRAM
-		#pragma surface surf Lambert
-		#pragma target 4.0
-		#pragma only_renderers d3d11
+﻿Shader "Custom/ClipShader" 
 
+{
 
+   Properties 
 
-		sampler2D _MainTex;
+   {
 
-		struct Input {
-			float2 uv_MainTex;
-		};
+      _MainTex ("Texture", 2D) = "white" {}
 
-		void surf (Input IN, inout SurfaceOutput o) {
-			half4 c = tex2D (_MainTex, IN.uv_MainTex);
-			o.Albedo = c.rgb;
-			o.Alpha = c.a;
-		}
-		ENDCG
-	} 
-	FallBack "Diffuse"
-}
+      _a ("_a",Float) = 0.0
+
+      _b ("_b",Float) = 0.0
+
+      _c ("_c",Float) = 0.0
+
+      _d ("_d",Float) = 0.0
+
+      _clip ("_clip",Float) = 0
+
+    }
+
+    SubShader {
+
+      Tags { "RenderType" = "Opaque" }
+
+      Cull Off
+
+      CGPROGRAM
+
+      #pragma surface surf Lambert
+
+      struct Input {
+
+          float2 uv_MainTex;
+
+          float3 worldPos;
+
+      };
+
+      
+
+      sampler2D _MainTex;
+
+      float _a,_b,_c,_d,_clip;
+
+ 
+
+      void surf (Input IN, inout SurfaceOutput o) 
+
+      {
+
+          if(_clip == 1)
+
+          {
+
+             clip (_a *IN.worldPos.x +
+
+                _b *IN.worldPos.y +
+
+                _c *IN.worldPos.z +
+
+                _d > 0 ? -1 :1);
+
+         }
+
+ 
+
+          o.Albedo = tex2D (_MainTex, IN.uv_MainTex).rgb;
+
+      }
+
+      ENDCG
+
+    } 
+
+    Fallback "Diffuse"
+
+  }
