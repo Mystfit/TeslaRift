@@ -28,7 +28,6 @@ public class HydraController : MonoBehaviour {
 	private HydraStates m_leftHandState;
 	private HydraStates m_rightHandState;
 	
-	private ChoreographController m_choreoControlRef;
 	private ToolController m_toolControlRef;
 	private InstrumentController m_instrumentControlRef;
 	
@@ -39,7 +38,6 @@ public class HydraController : MonoBehaviour {
 		m_rightHandState = HydraStates.RIGHT_IDLE;
 		
 		//Controllers
-		m_choreoControlRef = GameObject.Find("__PerformanceControllers").GetComponent<ChoreographController>();
 		m_toolControlRef = GameObject.Find ("__PerformanceControllers").GetComponent<ToolController>();
 		m_instrumentControlRef = GameObject.Find ("__PerformanceControllers").GetComponent<InstrumentController>();
 	}

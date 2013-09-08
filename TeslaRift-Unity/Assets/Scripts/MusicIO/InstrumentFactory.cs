@@ -63,7 +63,7 @@ public class InstrumentFactory : MonoBehaviour {
 		instrumentGame.renderer.material.SetColor("_Color", instrumentColor);
 		Debug.Log(instrumentColor);
 		
-		Vector3[] points = Utils.PointsOnSphere(instrument.paramList.Count);
+		Vector3[] points = Utils.PointsOnSphere(instrument.paramList.Count, (int)instrument.paramList.Count);
 		
 		for(int i = 0; i < points.Length; i++){
 			Vector3 point = points[i];
