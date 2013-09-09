@@ -73,7 +73,7 @@
 			//float4 col = clampedCol;
 			o.Albedo = col.rgb;
 			//o.Alpha = col.r;
-			//o.Alpha = c.a;
+			o.Alpha = 1.0;
 		}
 		ENDCG
 	} 
