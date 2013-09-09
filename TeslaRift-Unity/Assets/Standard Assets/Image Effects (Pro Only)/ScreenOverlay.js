@@ -3,7 +3,7 @@
 
 @script ExecuteInEditMode
 @script RequireComponent (Camera)
-@script AddComponentMenu ("Image Effects/Other/Screen Overlay")
+@script AddComponentMenu ("Image Effects/Screen Overlay")
 
 class ScreenOverlay extends PostEffectsBase {
 	
@@ -20,6 +20,7 @@ class ScreenOverlay extends PostEffectsBase {
 	public var texture : Texture2D;
 			
 	public var overlayShader : Shader;
+	
 	private var overlayMaterial : Material = null;
 	
 	function CheckResources () : boolean {
@@ -27,13 +28,13 @@ class ScreenOverlay extends PostEffectsBase {
 		
 		overlayMaterial = CheckShaderAndCreateMaterial (overlayShader, overlayMaterial);
 		
-		if 	(!isSupported)
+		if(!isSupported)
 			ReportAutoDisable ();
 		return isSupported;
 	}
 	
 	function OnRenderImage (source : RenderTexture, destination : RenderTexture) {		
-		if (CheckResources() == false) {
+		if(CheckResources()==false) {
 			Graphics.Blit (source, destination);
 			return;
 		}

@@ -29,22 +29,29 @@ public static class Utils
     	return (value < min) ? min : (value > max) ? max : value;  
 	}
 	
+	//Generates points on the surface of a sphere
+	public static Vector3[] PointsOnSphere(int n, float scale){
+		return PointsOnSphere(n, scale, 0.0f);
+	}
 	
-	public static Vector3[] PointsOnSphere(int n){
+	public static Vector3[] PointsOnSphere(int n, float scale, float randomness){
 		Vector3[] pts = new Vector3[n];
 		
 		float inc = Mathf.PI * (3 - Mathf.Sqrt(5));
 		float off = 2.0f / n;
 		float x, y, z, r, phi;
+		float randAngle;
+		
+		randAngle = (randomness != 0.0f) ? UnityEngine.Random.value * randomness : 1.0f;
 		
 		for(int k = 0; k < n; k++){
 			y = k * off -1 + (off / 2);
 			r = Mathf.Sqrt(1 - y * y);
-			phi = k * inc;
+			phi = k * inc * randAngle;
 			x = Mathf.Cos(phi) * r;
 			z = Mathf.Sin (phi) * r;
-			
-			pts[k] = new Vector3(x, y, z);
+						
+			pts[k] = new Vector3(x, y, z) * scale;
 		}
 
 		return pts;
