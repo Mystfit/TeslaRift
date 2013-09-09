@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<instrumentDefinitions>	
+	<source>visuals</source>
+	<client>Unity</client>
+	
+	<instrumentList>	
+		<instrument name="PoleSphere" colour="0.15,0.90,0.10">
+			<param name="power" type="float"></param>
+			<param name="scale" type="float"></param>
+			<param name="poleA" type="3D"></param>
+			<param name="poleB" type="3D"></param>
+			<param name="poleC" type="3D"></param>
+		</instrument>
+	</instrumentList>
+	
+</instrumentDefinitions>

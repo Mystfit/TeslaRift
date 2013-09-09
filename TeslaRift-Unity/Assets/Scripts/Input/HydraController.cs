@@ -98,10 +98,10 @@ public class HydraController : MonoBehaviour {
 			
 		//HandleTestGrabInput();
 		
-		SetCommonTools(m_leftHandController, BaseTool.ToolHand.LEFT);
+		//SetCommonTools(m_leftHandController, BaseTool.ToolHand.LEFT);
 		SetCommonTools(m_rightHandController, BaseTool.ToolHand.RIGHT);
 		
-		SetIndividualToolsLeft();
+		//SetIndividualToolsLeft();
 		SetIndividualToolsRight();
 	}
 	
@@ -112,7 +112,7 @@ public class HydraController : MonoBehaviour {
 				m_instrumentControlRef.DeselectAllParameters();
 			}
 			
-			if(m_leftHandController.GetButton(SixenseButtons.BUMPER) && m_leftHandController.GetButton(SixenseButtons.TRIGGER)){
+			if(m_leftHandController.GetButton(SixenseButtons.BUMPER) && m_leftHandController.GetButton(SixenseButtons.TWO)){
 			
 				if(m_toolControlRef.currentTool(BaseTool.ToolHand.LEFT).GetType() == typeof(PhysGrabberTool)){
 					PhysGrabberTool physTool = m_toolControlRef.currentTool(BaseTool.ToolHand.LEFT) as PhysGrabberTool;
@@ -129,7 +129,7 @@ public class HydraController : MonoBehaviour {
 				m_instrumentControlRef.PrimeTesla();
 			}
 			
-			if(m_rightHandController.GetButton(SixenseButtons.BUMPER) && m_rightHandController.GetButton(SixenseButtons.TRIGGER)){
+			if(m_rightHandController.GetButton(SixenseButtons.BUMPER) && m_rightHandController.GetButton(SixenseButtons.TWO)){
 			
 				if(m_toolControlRef.currentTool(BaseTool.ToolHand.RIGHT).GetType() == typeof(PhysGrabberTool)){
 					PhysGrabberTool physTool = m_toolControlRef.currentTool(BaseTool.ToolHand.RIGHT) as PhysGrabberTool;
@@ -144,11 +144,11 @@ public class HydraController : MonoBehaviour {
 	public void SetCommonTools(SixenseInput.Controller handControl, BaseTool.ToolHand hand){
 		if(handControl != null){
 			//Left hand
-			if(handControl.GetButtonDown(SixenseButtons.TRIGGER)){
+			if(handControl.GetButtonDown(SixenseButtons.TWO)){
 				m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand);
 			}
 			
-			if(handControl.GetButtonDown(SixenseButtons.BUMPER) && !handControl.GetButton(SixenseButtons.TRIGGER)){
+			if(handControl.GetButtonDown(SixenseButtons.BUMPER) && !handControl.GetButton(SixenseButtons.TWO)){
 				if(m_toolControlRef.currentTool(hand) == null)
 					m_toolControlRef.PushTool(typeof(ParamSelectTool), hand);
 				else
@@ -164,7 +164,7 @@ public class HydraController : MonoBehaviour {
 			}
 			
 			//Back to idle on tool release
-			if(handControl.GetButtonUp(SixenseButtons.TRIGGER) ||
+			if(handControl.GetButtonUp(SixenseButtons.TWO) ||
 				handControl.GetButtonUp(SixenseButtons.BUMPER) ||
 				handControl.GetButtonUp(SixenseButtons.ONE))
 			{
@@ -175,7 +175,7 @@ public class HydraController : MonoBehaviour {
 				else if(hand == BaseTool.ToolHand.RIGHT)
 					handObj = m_rightHand;
 				
-				if(handControl.GetButton(SixenseButtons.TRIGGER) || handControl.GetButton(SixenseButtons.BUMPER)){
+				if(handControl.GetButton(SixenseButtons.TWO) || handControl.GetButton(SixenseButtons.BUMPER)){
 					Debug.Log("Still in physics mode!");
 				} else {
 					if(handObj != null){
