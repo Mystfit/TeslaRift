@@ -19,7 +19,8 @@ public class BaseAttachment : MonoBehaviour {
 
 	// Use this for initialization
 	protected virtual void Start () {
-		m_instrumentControlRef = GameObject.Find ("__PerformanceControllers").GetComponent<InstrumentController>();	}	
+		m_instrumentControlRef = GameObject.Find("__InstrumentSpawner").GetComponent<InstrumentController>();	
+	}	
 	
 	// Update is called once per frame
 	void Update () {

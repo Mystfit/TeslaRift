@@ -34,6 +34,7 @@ namespace UnityOSC
 		#region Constructors
 		public OSCServer (int localPort)
 		{
+			m_listeners = new List<OSCListener>();
 			_localPort = localPort;
 			Connect();
 		}
@@ -44,6 +45,7 @@ namespace UnityOSC
 		private int _localPort;
 		private Thread _receiverThread;
 		private OSCPacket _lastReceivedPacket;
+		private List<OSCListener> m_listeners;
 		#endregion
 		
 		#region Properties
@@ -81,6 +83,10 @@ namespace UnityOSC
 		#endregion
 	
 		#region Methods
+		
+		public void AddListener(OSCListener listener){
+			m_listeners.Add(listener);
+		}
 		
 		/// <summary>
 		/// Opens the server at the given port and starts the listener thread.
@@ -148,6 +154,12 @@ namespace UnityOSC
 			{
 				_lastReceivedPacket = Receive();
 				_lastReceivedPacket.TimeStamp = long.Parse(String.Concat(DateTime.Now.Ticks));
+				
+				//Forward message to listeners
+				if(_lastReceivedPacket != null){
+					foreach(OSCListener listener in m_listeners)
+						listener.SendUpdate(_lastReceivedPacket);
+				}
 			}
 		}
 		#endregion

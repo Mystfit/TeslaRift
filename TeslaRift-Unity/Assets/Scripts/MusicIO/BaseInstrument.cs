@@ -115,6 +115,8 @@ public class BaseInstrument {
 		List<OSCMessage> completed = new List<OSCMessage>();
 		foreach(OSCMessage msg in m_messageQueue){
 			OSCHandler.Instance.SendBuiltMessageToClient(m_client, msg.Address, msg);
+			OSCHandler.Instance.SendBuiltMessageToClient("loopback", msg.Address, msg);
+			
 			completed.Add(msg);
 		}
 		m_messageQueue.Clear();

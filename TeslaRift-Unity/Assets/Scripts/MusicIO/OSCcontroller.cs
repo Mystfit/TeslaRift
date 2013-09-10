@@ -30,29 +30,43 @@ public class OSCcontroller : MonoBehaviour {
 	
 	public string targetIp = "127.0.0.1";
 	public string targetPort = "2345";
-	public string clientName = "Live";
-	
-	public string serverName = "Unity";
-	public string serverPort = "2347";
+	public string loopbackPort = "3000";
+	public string clientName = "Unity";
 	public bool loopback = false;
+	public bool isServer = true;
 	
 	private Dictionary<string, ServerLog> servers;
+	
+	private List<OSCListener> m_listeners;
+	
+	private long lastTimeStamp;
 		
 	// Script initialization
 	void Start() {	
 		OSCHandler.Instance.Init(); //init OSCs
-		OSCHandler.Instance.CreateClient(clientName, System.Net.IPAddress.Parse(targetIp), int.Parse(targetPort));
+		
+		if(isServer)
+			OSCHandler.Instance.CreateClient(clientName, System.Net.IPAddress.Parse(targetIp), int.Parse(targetPort));
+		else
+			OSCHandler.Instance.CreateServer(clientName, int.Parse(targetPort));
 		
 		if(loopback){
-			OSCHandler.Instance.CreateServer(serverName, int.Parse(serverPort));
+			OSCHandler.Instance.CreateClient("loopback", System.Net.IPAddress.Parse("127.0.0.1"), int.Parse(loopbackPort));
+			OSCHandler.Instance.CreateServer("loopback", int.Parse(loopbackPort));
 		}
 		
-		
+		m_listeners = new List<OSCListener>();
 		servers = new Dictionary<string, ServerLog>();
 	}
 	
 	void OnApplicationQuit() {
-		
+		 foreach( KeyValuePair<string, ServerLog> item in servers )
+			item.Value.server.Close();
+	}
+	
+	public void AddListener(OSCListener listener){
+		foreach( KeyValuePair<string, ServerLog> item in OSCHandler.Instance.Servers )
+			item.Value.server.AddListener(listener);
 	}
 
 	// NOTE: The received messages at each server are updated here
@@ -69,7 +83,31 @@ public class OSCcontroller : MonoBehaviour {
 			// show the last received from the log in the Debug console
 			if(item.Value.log.Count > 0) 
 			{
-				int lastPacketIndex = item.Value.packets.Count - 1;
+				
+				/*int lastPacketIndex = item.Value.packets.Count - 1;
+				
+				ServerLog currentServer = servers[item.Key];
+			
+				int packetCount = 0;
+				long timestamp;
+				
+				while(packetCount < lastPacketIndex )
+				{
+					OSCPacket packet = item.Value.packets[packetCount];
+					if(packet.TimeStamp > lastTimeStamp){
+						lastTimeStamp = currentServer.server.LastReceivedPacket.TimeStamp;
+						foreach(OSCListener listener in m_listeners)
+							listener.SendUpdate( currentServer.server.LastReceivedPacket );
+					}
+
+					packetCount++;
+				} 
+				*/
+				
+				
+				
+				
+				
 				
 				/*
 				UnityEngine.Debug.Log(String.Format("SERVER: {0} ADDRESS: {1} VALUE 0: {2}", 
@@ -79,34 +117,8 @@ public class OSCcontroller : MonoBehaviour {
 
 				*/
 				
-				//Debug.Log (new InstrumentMessage(item.Value.packets[lastPacketIndex].Address, (float)item.Value.packets[lastPacketIndex].Data[0]).ToString());
+				
 			}
 	    }
-	}
-	
-	
-	
-	public class InstrumentMessage {
-	
-		public string Client;
-		public string Name;
-		public string Parameter;
-		public float Value;
-		
-		public InstrumentMessage(string oscAddress, float value)
-		{
-			
-			string[] split = oscAddress.Split('/');
-			
-			Client = split[0];
-			Name = split[1];
-			Parameter = split[2];
-			Value = value;
-		}
-		
-		public string ToString(){
-		
-		return "Instrument Name:" + Name + " Parameter:" + Parameter + " Value:" + Value;
-		}
 	}
 }
