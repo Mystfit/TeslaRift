@@ -9,6 +9,8 @@ public class OSCListener : MonoBehaviour {
 	public string[] m_address;
 	
 	protected float[] m_paramValues;
+	protected bool m_isDirty = true;
+	protected void SetClean(){ m_isDirty = false; }
 	
 	// Use this for initialization
 	protected virtual void Start () {
@@ -31,6 +33,7 @@ public class OSCListener : MonoBehaviour {
 			if(m_address[i] == message.Address){
 				m_paramValues[i] = (float)message.Data[0];
 				Debug.Log("Matched " + message.Address + ", " + m_paramValues[i] );
+				m_isDirty= true;
 			}
 		
 		}

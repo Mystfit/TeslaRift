@@ -29,6 +29,7 @@ public class HydraController : MonoBehaviour {
 	private HydraStates m_rightHandState;
 	
 	private ToolController m_toolControlRef;
+	public GameObject instrumentController;
 	private InstrumentController m_instrumentControlRef;
 	
 	// Initialization
@@ -38,8 +39,8 @@ public class HydraController : MonoBehaviour {
 		m_rightHandState = HydraStates.RIGHT_IDLE;
 		
 		//Controllers
-		m_toolControlRef = GameObject.Find ("__PerformanceControllers").GetComponent<ToolController>();
-		m_instrumentControlRef = GameObject.Find ("__PerformanceControllers").GetComponent<InstrumentController>();
+		m_toolControlRef = this.GetComponent<ToolController>();
+		m_instrumentControlRef = instrumentController.GetComponent<InstrumentController>();
 	}
 	
 	public SixenseInput.Controller GetHandController(BaseTool.ToolHand hand){

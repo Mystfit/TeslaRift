@@ -4,12 +4,19 @@
 	<client>Unity</client>
 	
 	<instrumentList>	
-		<instrument name="PoleSphere" colour="0.15,0.90,0.10">
+		<instrument name="BlobSphereWaves" colour="0.15,0.90,0.10">
 			<param name="power" type="float"></param>
 			<param name="scale" type="float"></param>
 			<param name="poleA" type="3D"></param>
 			<param name="poleB" type="3D"></param>
 			<param name="poleC" type="3D"></param>
+		</instrument>
+		
+		<instrument name="BlobSphereMeta" colour="0.15,0.90,0.10">
+			<param name="blobAposX" type="float"></param>
+			<param name="blobAposY" type="float"></param>
+			<param name="blobBposX" type="float"></param>
+			<param name="blobBposY" type="float"></param>
 		</instrument>
 	</instrumentList>
 	

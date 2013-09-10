@@ -72,6 +72,7 @@
 			//float4 col = round( (sin(IN.uv_MainTex.y * _Scale) + 1) * 0.5);
 			//float4 col = clampedCol;
 			o.Albedo = col.rgb;
+			o.Alpha = 1.0;
 			//o.Alpha = col.r;
 			//o.Alpha = c.a;
 		}

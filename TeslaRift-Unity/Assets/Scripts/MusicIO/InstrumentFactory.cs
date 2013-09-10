@@ -10,12 +10,11 @@ public class InstrumentFactory : MonoBehaviour {
 	public TextAsset instrumentDefinitionFile;
 	public GameObject paramPanelPrefab;
 	public float panelDistance = 1.0f;
+	private InstrumentController m_instrumentControllerRef;
 	
-	private InstrumentController m_instrumentControllerRef = null;
-
 	// Use this for initialization
 	void Start () {
-		m_instrumentControllerRef = GameObject.Find("__PerformanceControllers").GetComponent<InstrumentController>();
+		m_instrumentControllerRef = this.GetComponent<InstrumentController>();
 		LoadInstrumentDefinitions();
 	}
 	
