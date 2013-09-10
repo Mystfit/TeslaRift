@@ -13,10 +13,9 @@
 		</instrument>
 		
 		<instrument name="BlobSphereMeta" colour="0.15,0.90,0.10">
-			<param name="blobAposX" type="float"></param>
-			<param name="blobAposY" type="float"></param>
-			<param name="blobBposX" type="float"></param>
-			<param name="blobBposY" type="float"></param>
+			<param name="orbitSpeed" type="float"></param>
+			<param name="orbitDistance" type="float"></param>
+			<param name="orbitPulse" type="float"></param>
 		</instrument>
 	</instrumentList>
 	
