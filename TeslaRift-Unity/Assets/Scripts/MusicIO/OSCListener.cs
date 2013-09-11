@@ -9,7 +9,7 @@ public class OSCListener : MonoBehaviour {
 	public string[] m_address;
 	
 	protected float[] m_paramValues;
-	protected bool m_isDirty = true;
+	protected bool m_isDirty = false;
 	protected void SetClean(){ m_isDirty = false; }
 	
 	// Use this for initialization

@@ -10,12 +10,14 @@
 			<param name="poleA" type="3D"></param>
 			<param name="poleB" type="3D"></param>
 			<param name="poleC" type="3D"></param>
-		</instrument>
-		
-		<instrument name="BlobSphereMeta" colour="0.15,0.90,0.10">
 			<param name="orbitSpeed" type="float"></param>
 			<param name="orbitDistance" type="float"></param>
 			<param name="orbitPulse" type="float"></param>
+		</instrument>
+		
+		<instrument name="TrailSpawner" colour="0.85,0.20,0.30">
+			<param name="spawn" type="toggle"></param>
+			<param name="trailsOn" type="toggle"></param>
 		</instrument>
 	</instrumentList>
 	

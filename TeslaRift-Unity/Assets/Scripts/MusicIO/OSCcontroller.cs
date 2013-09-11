@@ -36,7 +36,6 @@ public class OSCcontroller : MonoBehaviour {
 	public bool isServer = true;
 	
 	private Dictionary<string, ServerLog> servers;
-	
 	private List<OSCListener> m_listeners;
 	
 	private long lastTimeStamp;
@@ -83,6 +82,8 @@ public class OSCcontroller : MonoBehaviour {
 			// show the last received from the log in the Debug console
 			if(item.Value.log.Count > 0) 
 			{
+				//foreach(OSCListener listener in m_listeners)
+					//listener.SendUpdate( item.Value.server.LastReceivedPacket );
 				
 				/*int lastPacketIndex = item.Value.packets.Count - 1;
 				

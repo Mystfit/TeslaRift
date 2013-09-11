@@ -35,7 +35,9 @@ public class ParamAttachment : BaseAttachment {
 
 	}
 	
-	public void setSelected(bool state){ m_selected = state; }
+	public void setSelected(bool state){ 
+		m_selected = state; 
+	}
 	
 	public void Init(BaseInstrumentParam param){
 		m_paramRef = param;

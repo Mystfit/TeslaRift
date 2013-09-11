@@ -160,7 +160,7 @@ public class BaseInstrumentParam {
 	public bool isDirty { get { return m_isDirty; } }
 	public void setClean(){ m_isDirty = false; }
 	public bool enabled{ get { return m_enabled; } }
-	public void setEnabled(bool value){	
+	public virtual void setEnabled(bool value){	
 		m_enabled = value;
 	}
 }
@@ -175,11 +175,18 @@ public class ToggleParam : BaseInstrumentParam {
 	{
 	}
 	
+	public override void setEnabled (bool value)
+	{
+		base.setEnabled (value);
+		if(value == true) setVal(1.0f);
+		else setVal (0.0f);
+	}
+	
 	public override void setVal(float value){
 		if(value > 0.5f){
 			base.setVal(1.0f);
-		} else if(value <= 0.5f){
-			setVal(0.0f);
+		} else {
+			base.setVal(0.0f);
 		}
 	}
 }
