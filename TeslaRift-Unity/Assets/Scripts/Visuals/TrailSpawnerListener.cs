@@ -30,5 +30,5 @@ public class TrailSpawnerListener : OSCListener {
 			
 			SetClean();
 		}
-	}
+	} 
 }

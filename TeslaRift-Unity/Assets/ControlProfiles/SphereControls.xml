@@ -19,6 +19,15 @@
 			<param name="spawn" type="toggle"></param>
 			<param name="trailsOn" type="toggle"></param>
 		</instrument>
+		
+		<instrument name="SphereControl" colour="0.5,0.2,0.8">
+			<param name="Xooo1" type="toggle"></param>
+			<param name="XXoo2" type="toggle"></param>
+			<param name="XXoo3" type="toggle"></param>
+			<param name="XXXo4" type="toggle"></param>
+		</instrument>
+		
+		
 	</instrumentList>
 	
 </instrumentDefinitions>

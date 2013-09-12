@@ -32,6 +32,8 @@ public class HydraController : MonoBehaviour {
 	public GameObject instrumentController;
 	private InstrumentController m_instrumentControlRef;
 	
+	private ArduinoController m_gloveController;
+	
 	// Initialization
 	//------------------
 	void Start() {
@@ -41,6 +43,7 @@ public class HydraController : MonoBehaviour {
 		//Controllers
 		m_toolControlRef = this.GetComponent<ToolController>();
 		m_instrumentControlRef = instrumentController.GetComponent<InstrumentController>();
+		m_gloveController = this.GetComponent<ArduinoController>();
 	}
 	
 	public SixenseInput.Controller GetHandController(BaseTool.ToolHand hand){
@@ -102,14 +105,15 @@ public class HydraController : MonoBehaviour {
 		//SetCommonTools(m_leftHandController, BaseTool.ToolHand.LEFT);
 		SetCommonTools(m_rightHandController, BaseTool.ToolHand.RIGHT);
 		
-		//SetIndividualToolsLeft();
+		SetIndividualToolsLeft(m_rightHandController, BaseTool.ToolHand.LEFT);
 		SetIndividualToolsRight();
 	}
 	
-	public void SetIndividualToolsLeft(){
+	//Arduino controlled glove
+	public void SetIndividualToolsLeft(SixenseInput.Controller handControl, BaseTool.ToolHand hand){
 		if(m_leftHandController != null)
 		{
-			if(m_leftHandController.GetButtonDown(SixenseButtons.TWO)){
+			/*if(m_leftHandController.GetButtonDown(SixenseButtons.TWO)){
 				m_instrumentControlRef.DeselectAllParameters();
 			}
 			
@@ -119,6 +123,55 @@ public class HydraController : MonoBehaviour {
 					PhysGrabberTool physTool = m_toolControlRef.currentTool(BaseTool.ToolHand.LEFT) as PhysGrabberTool;
 					physTool.ApplyForceToInstruments(PhysGrabberTool.PhysDirection.BLOW);
 				}
+			}*/
+			
+			if( m_gloveController.GetButtonDown(ArduinoController.GloveButton.ONE)) {
+				m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand);
+			}
+			
+			//if(handControl.GetButtonDown(SixenseButtons.BUMPER) && !handControl.GetButton(SixenseButtons.TWO)){
+			/*if( m_gloveController.GetButtonDown(ArduinoController.GloveButton.THREE) 
+				&& !m_gloveController.GetButtonDown(ArduinoController.GloveButton.ONE)) {
+				if(m_toolControlRef.currentTool(hand) == null)
+					m_toolControlRef.PushTool(typeof(ParamSelectTool), hand);
+				else
+					Debug.Log("Existing tool still active");
+			}*/
+
+			//if(handControl.GetButtonDown(SixenseButtons.ONE)){
+			if( m_gloveController.GetButtonDown(ArduinoController.GloveButton.TWO)) {
+				if(m_toolControlRef.currentTool(hand) == null)
+					m_toolControlRef.PushTool(typeof(SingleModifierTool), hand);
+				else
+					Debug.Log("Existing tool still active");
+				
+			}
+			
+			//Back to idle on tool release
+			//if(handControl.GetButtonUp(SixenseButtons.TWO) ||
+			//	handControl.GetButtonUp(SixenseButtons.BUMPER) ||
+			//	handControl.GetButtonUp(SixenseButtons.ONE))
+			if( m_gloveController.GetButtonUp(ArduinoController.GloveButton.ONE) ||
+				m_gloveController.GetButtonUp(ArduinoController.GloveButton.TWO) )
+			{
+				GameObject handObj = null;
+				
+				if(hand == BaseTool.ToolHand.LEFT)
+					handObj = m_leftHand;
+				else if(hand == BaseTool.ToolHand.RIGHT)
+					handObj = m_rightHand;
+				
+				if(handControl.GetButton(SixenseButtons.TWO) || handControl.GetButton(SixenseButtons.BUMPER)){
+					Debug.Log("Still in physics mode!");
+				} else {
+					if(handObj != null){
+						BaseTool tool = handObj.GetComponent(typeof(BaseTool)) as BaseTool;
+						if(tool != null)
+							tool.TransitionOut();
+						
+						m_toolControlRef.PopTool(hand);
+					}
+				}
 			}
 		}
 	}
@@ -126,9 +179,9 @@ public class HydraController : MonoBehaviour {
 	public void SetIndividualToolsRight(){
 		if(m_rightHandController != null)
 		{
-			if(m_rightHandController.GetButtonDown(SixenseButtons.TWO)){
+			/*if(m_rightHandController.GetButtonDown(SixenseButtons.TWO)){
 				m_instrumentControlRef.PrimeTesla();
-			}
+			}*/
 			
 			if(m_rightHandController.GetButton(SixenseButtons.BUMPER) && m_rightHandController.GetButton(SixenseButtons.TWO)){
 			

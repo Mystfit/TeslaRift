@@ -1,4 +1,5 @@
 #define UNIDUINO_API_LEVEL_SET
+#define UNIDUINO_API_LEVEL_SET
 using UnityEngine;
 using System.Collections;
 
