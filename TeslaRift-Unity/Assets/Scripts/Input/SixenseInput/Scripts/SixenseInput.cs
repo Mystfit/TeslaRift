@@ -46,7 +46,9 @@ public enum SixenseButtons
 /// This script should be bound to a GameObject in the scene so that its Start(), Update() and OnApplicationQuit() methods are called.  This can be done by adding the SixenseInput prefab to a scene.  The public static interface to the Controller objects provides a user friendly way to integrate Sixense controllers into your application.
 /// </remarks>
 public class SixenseInput : MonoBehaviour
-{
+{	
+	protected ArduinoController m_leftArduino;
+	
 	/// <summary>
 	/// Controller objects provide access to Sixense controllers data.
 	/// </summary>
@@ -257,6 +259,8 @@ public class SixenseInput : MonoBehaviour
 		{
 			m_Controllers[i] = new Controller();
 		}
+		
+		m_leftArduino = this.GetComponent<ArduinoController>();
 	}
 	
 	/// <summary>
@@ -325,8 +329,9 @@ public class SixenseInput : MonoBehaviour
 					{
 						for ( int i = 0; i < MAX_CONTROLLERS; i++ )
 						{
-							if ( ( m_Controllers[i] != null ) && Input.GetKeyDown(KeyCode.Space) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
+							//if ( ( m_Controllers[i] != null ) && Input.GetKeyDown(KeyCode.Space) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
 							//if ( ( m_Controllers[i] != null ) && Controllers[i].GetButtonDown( SixenseButtons.TRIGGER ) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
+							if ( ( m_Controllers[i] != null ) && m_leftArduino.GetButtonDown(ArduinoController.GloveButton.ONE) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
 							{
 								Controllers[i].HandBind = SixenseHands.LEFT;
 								SixensePlugin.sixenseAutoEnableHemisphereTracking( i );
@@ -348,8 +353,9 @@ public class SixenseInput : MonoBehaviour
 					{
 						for ( int i = 0; i < MAX_CONTROLLERS; i++ )
 						{
-							if ( ( m_Controllers[i] != null ) && Input.GetKeyDown(KeyCode.Space) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
+							//if ( ( m_Controllers[i] != null ) && Input.GetKeyDown(KeyCode.Space) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
 							//if ( ( m_Controllers[i] != null ) && Controllers[i].GetButtonDown( SixenseButtons.TRIGGER ) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
+							if ( ( m_Controllers[i] != null ) && Controllers[i].GetButtonDown( SixenseButtons.BUMPER ) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
 							{
 								Controllers[i].HandBind = SixenseHands.RIGHT;
 								SixensePlugin.sixenseAutoEnableHemisphereTracking( i );

@@ -19,7 +19,7 @@ public class SphereStateController : OSCListener {
 	protected override void Start () {
 		base.Start();
 		
-		m_stages = new BaseStage[4];
+		m_stages = new BaseStage[4]; 
 		m_stages[(int)ActiveStage.STAGE1] = new Stage1();
 		m_stages[(int)ActiveStage.STAGE2] = new Stage2();
 		m_stages[(int)ActiveStage.STAGE3] = new Stage3();

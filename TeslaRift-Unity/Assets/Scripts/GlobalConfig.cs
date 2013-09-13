@@ -16,6 +16,8 @@ public class GlobalConfig : MonoBehaviour {
 		} else {
 			GameObject.Find("ClientCamera").SetActive(false);
 		}
+		
+		GameObject.Find("OVRPlayerController").GetComponent<OVRPlayerController>().SetAllowMouseRotation(false);
 	}
 	
 	// Update is called once per frame

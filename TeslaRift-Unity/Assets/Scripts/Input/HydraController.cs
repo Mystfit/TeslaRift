@@ -125,7 +125,7 @@ public class HydraController : MonoBehaviour {
 				}
 			}*/
 			
-			if( m_gloveController.GetButtonDown(ArduinoController.GloveButton.ONE)) {
+			if( m_gloveController.GetButtonDown(ArduinoController.GloveButton.TWO)) {
 				m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand);
 			}
 			
@@ -139,7 +139,7 @@ public class HydraController : MonoBehaviour {
 			}*/
 
 			//if(handControl.GetButtonDown(SixenseButtons.ONE)){
-			if( m_gloveController.GetButtonDown(ArduinoController.GloveButton.TWO)) {
+			if( m_gloveController.GetButtonDown(ArduinoController.GloveButton.ONE)) {
 				if(m_toolControlRef.currentTool(hand) == null)
 					m_toolControlRef.PushTool(typeof(SingleModifierTool), hand);
 				else

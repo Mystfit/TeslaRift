@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<instrumentDefinitions>	
+	<source>visuals</source>
+	<client>Unity</client>
+	
+	<instrumentList>	
+		<instrument name="stagecontrol" colour="0.9,0.1,0.4">
+			<param name="+" type="toggle"></param>
+			<param name="++" type="toggle"></param>
+			<param name="+++" type="toggle"></param>
+			<param name="++++" type="toggle"></param>
+		</instrument>
+		
+		<instrument name="stage1" colour="0.4,0.2,0.8">
+			<param name="distance" type="float"></param>
+			<param name="spike" type="toggle"></param>
+			<param name="oscillate" type="float"></param>
+			<param name="vibrato" type="float"></param>
+			<param name="meshtarget" type="toggle"></param>
+			<param name="shadertarget" type="toggle"></param>
+			<param name="spawnertarget" type="toggle"></param>
+		</instrument>
+		
+		
+		
+		
+	</instrumentList>
+	
+</instrumentDefinitions>

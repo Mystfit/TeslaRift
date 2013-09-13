@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+/*
 public class MetaballListener : OSCListener {
 	
 	private enum Param : int { 
@@ -127,3 +127,4 @@ class BlobPosition
 	}
 	
 }
+*/

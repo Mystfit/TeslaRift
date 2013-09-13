@@ -21,6 +21,9 @@ public class Stage4 : BaseStage {
 	protected override void UpdateShader(){
 	}
 	
+	protected override void Spike(TargetSphereComponent target){
+	}
+	
 	public override void TransitionIn(){
 		base.TransitionIn();
 	}

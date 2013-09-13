@@ -8,7 +8,8 @@ public class ArduinoController : MonoBehaviour {
      
     public enum GloveButton { 
 		ONE = 0, 
-		TWO
+		TWO,
+		THREE
 	}
 	
 	private enum ButtonState {ON = 0, OFF};
