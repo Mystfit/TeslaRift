@@ -23,7 +23,8 @@ public class BaseStage : OSCListener {
 	protected bool[] m_targetComponent;
 	protected float[] m_distance;
 	protected float[] m_oscillate;
-	protected float[] m_vibrato;
+	protected float m_vibrato;
+	protected float m_sharedOscillator;
 	
 	public enum TransitionState {
 		IN_STATE = 0,
@@ -31,6 +32,7 @@ public class BaseStage : OSCListener {
 		ENTERING_STATE
 	}
 	private TransitionState m_transitionState = TransitionState.IN_STATE;
+		
 	
 	protected override void Start ()
 	{
@@ -45,7 +47,7 @@ public class BaseStage : OSCListener {
 
 		m_distance = new float[m_numTargets];
 		m_oscillate = new float[m_numTargets];
-		m_vibrato = new float[m_numTargets];
+		//m_vibrato = new float[m_numTargets];
 		m_targetComponent = new bool[m_numTargets];
 		
 		base.Start ();
@@ -66,11 +68,13 @@ public class BaseStage : OSCListener {
 				if(m_targetComponent[i]){
 					m_distance[i] = m_paramValues[(int)Param.DISTANCE];
 					m_oscillate[i] = m_paramValues[(int)Param.OSCILLATE];
-					m_vibrato[i] = m_paramValues[(int)Param.VIBRATO];
+					//m_vibrato[i] = m_paramValues[(int)Param.VIBRATO];
 					
 					if(m_paramValues[(int)Param.SPIKE] == 1.0f) Spike((TargetSphereComponent) i);
 				}	
 			}
+			
+			m_vibrato = m_paramValues[(int)Param.VIBRATO];
 		
 			SetClean();
 		}
@@ -80,6 +84,8 @@ public class BaseStage : OSCListener {
 			UpdateSphereShape();
 			UpdateShader();
 		}
+		
+		m_sharedOscillator = Mathf.Sin(Time.time * 40.0f) * m_vibrato;
 	}
 	
 	protected virtual void Spike(TargetSphereComponent target){

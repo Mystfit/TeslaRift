@@ -69,16 +69,7 @@ public class SixenseObjectController : MonoBehaviour {
 	{
 		
 		if ( controller.GetButtonDown( SixenseButtons.START ) || Input.GetKeyDown(KeyCode.P)){
-			// enable position and orientation control
-			m_enabled = !m_enabled;
-			
-			// delta controller position is relative to this point
-			m_baseControllerPosition = new Vector3( controller.Position.x * Sensitivity.x,
-													controller.Position.y * Sensitivity.y,
-													controller.Position.z * Sensitivity.z );
-			
-			// this is the new start position
-			m_initialPosition = this.gameObject.transform.localPosition;
+			ActivateHand (controller);
 		}
 		
 		if ( m_enabled )
@@ -86,6 +77,19 @@ public class SixenseObjectController : MonoBehaviour {
 			UpdatePosition( controller );
 			UpdateRotation( controller );
 		}
+	}
+	
+	public void ActivateHand( SixenseInput.Controller controller){
+		// enable position and orientation control
+		m_enabled = !m_enabled;
+			
+		// delta controller position is relative to this point
+		m_baseControllerPosition = new Vector3( controller.Position.x * Sensitivity.x,
+													controller.Position.y * Sensitivity.y,
+													controller.Position.z * Sensitivity.z );
+			
+		// this is the new start position
+		m_initialPosition = this.gameObject.transform.localPosition;
 	}
 	
 	

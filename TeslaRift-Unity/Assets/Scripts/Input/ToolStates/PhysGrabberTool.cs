@@ -26,12 +26,16 @@ public class PhysGrabberTool : BaseTool {
 	}
 	
 	public override void TransitionOut(){
-		if(m_heldObject != null){
+		if(m_joint != null)
+			Destroy(m_joint);
+		
+		FixedJoint[] jointList = this.GetComponents<FixedJoint>(); 
+		for(int i = 0 ; i < jointList.Length; i++){
+			DestroyImmediate( jointList[i] );
+		}
 			
-			if(m_joint != null){
-				Destroy(m_joint);
-				m_heldObject.rigidbody.velocity = m_deltaVelocity * 50;	
-			}
+		if(m_heldObject != null){
+			m_heldObject.rigidbody.velocity = m_deltaVelocity * 50;	
 			m_heldObject = null;
 			m_toolHandState = BaseTool.HandState.RELEASING;
 		}
