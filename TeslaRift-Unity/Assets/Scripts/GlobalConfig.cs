@@ -11,8 +11,8 @@ public class GlobalConfig : MonoBehaviour {
 			GameObject.Find("__HydraController").SetActive(false);
 			GameObject.Find("__InstrumentSpawner").SetActive(false);
 			GameObject.Find("OVRPlayerController").SetActive(false);
-			GameObject.Find("__PerformanceControllers").GetComponent<OSCcontroller>().isServer = false;
-			GameObject.Find("__PerformanceControllers").GetComponent<OSCcontroller>().loopback = false;
+			GameObject.Find("__IOController").GetComponent<OSCcontroller>().isServer = false;
+			GameObject.Find("__IOController").GetComponent<OSCcontroller>().loopback = false;
 		} else {
 			GameObject.Find("ClientCamera").SetActive(false);
 		}

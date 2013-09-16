@@ -6,6 +6,8 @@ public class BaseTool : MonoBehaviour {
 	
 	protected HydraController m_hydraRef = null;
 	protected InstrumentController m_instrumentControlRef = null;
+	protected ToolController m_toolControlRef = null;
+
 	
 	//Variables
 	protected List<object> m_targets = null;
@@ -27,7 +29,7 @@ public class BaseTool : MonoBehaviour {
 	public virtual void Start(){
 		m_hydraRef = GameObject.Find("__HydraController").GetComponent<HydraController>();
 		m_instrumentControlRef = GameObject.Find ("__InstrumentSpawner").GetComponent<InstrumentController>();
-
+		m_toolControlRef = GameObject.Find ("__HydraController").GetComponent<ToolController>();
 		m_targets = new List<object>();		
 	}
 	

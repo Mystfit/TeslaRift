@@ -7,12 +7,20 @@ public class WaveInFFTDisplay : MonoBehaviour
 
 	public void UpdateDisplay (float[] samples, float barScale)
 	{
-		if (null == bars || bars.Length != samples.Length) {
+		float[] crunchedSamples = new float[4];
+		
+		for(int i = 0; i < 4; i++){
+			for(int j = i * (samples.Length / 4); j < (i+1) * (samples.Length / 4); j++){
+				crunchedSamples[i] += samples[j];
+			}
+		}
+			
+		if (null == bars || bars.Length != crunchedSamples.Length) {
 			if (null != bars)
 				foreach (var bar in bars)
 					Destroy (bar);
 			
-			bars = new Transform[samples.Length];
+			bars = new Transform[crunchedSamples.Length];
 			for (int i = 0; i < bars.Length; i++) {
 				bars[i] = GameObject.CreatePrimitive (PrimitiveType.Cube).transform;
 				{
@@ -24,8 +32,8 @@ public class WaveInFFTDisplay : MonoBehaviour
 		}
 		
 		for (int i = 0; i < bars.Length; i++) {
-			bars[i].localPosition = new Vector3 (i, barScale * samples[i] * 0.5f);
-			bars[i].localScale = new Vector3 (1, barScale * samples[i], 1);
+			bars[i].localPosition = new Vector3 (i, barScale * crunchedSamples[i] * 0.5f);
+			bars[i].localScale = new Vector3 (1, barScale * crunchedSamples[i], 1);
 		}
 	}
 }

@@ -4,7 +4,7 @@ using System.Collections;
 
 public class WaveInFFTDemo : MonoBehaviour
 {
-	const int NUM_SAMPLES = 128;
+	const int NUM_SAMPLES = 128; //128
 
 	float[] calcSamples = new float[NUM_SAMPLES];
 	WaveInFFTDisplay calcDisplay;
@@ -13,6 +13,10 @@ public class WaveInFFTDemo : MonoBehaviour
 	WaveInFFTDisplay dataDisplay;
 
 	WaveInFFT waveInFFT;
+	
+	void Start(){
+		waveInFFT.StartDevice(0);
+	}
 
 	void Awake ()
 	{
@@ -25,9 +29,9 @@ public class WaveInFFTDemo : MonoBehaviour
 	void Update ()
 	{
 		waveInFFT.GetSpectrumData (calcSamples, 0);
-		calcDisplay.UpdateDisplay (calcSamples, NUM_SAMPLES * 0.5f);
+		calcDisplay.UpdateDisplay (calcSamples, 4 * 0.5f);
 		
 		audio.GetSpectrumData (dataSamples, 0, FFTWindow.Rectangular);
-		dataDisplay.UpdateDisplay (dataSamples, NUM_SAMPLES * 0.5f);
+		dataDisplay.UpdateDisplay (dataSamples, 4 * 0.5f);
 	}
 }

@@ -10,6 +10,9 @@ public class ToolController : MonoBehaviour {
 	protected ChoreographController m_choreoRef = null;
 	protected InstrumentController m_instrumentControlRef = null;
 	protected HydraController m_hydraRef = null;
+	
+	private BaseGenerator m_selectedGenerator;	//Selected generators are kept in the controller to pass to the
+												//appropriate select tools
 
 	
 	// Use this for initialization
@@ -49,6 +52,12 @@ public class ToolController : MonoBehaviour {
 		PopTool(hand);
 		
 		BaseTool activeAttachedTool =  m_hydraRef.GetHand(hand).AddComponent(toolType) as BaseTool;
+		
+		//Pass selected generators to the param select tool
+		if(activeAttachedTool.GetType() == typeof(ParamSelectTool)){
+			ParamSelectTool tool = activeAttachedTool as ParamSelectTool;
+			tool.SetSelectedGenerator(m_selectedGenerator);
+		}
 		activeAttachedTool.Init(hand);
 	}
 	
@@ -61,6 +70,10 @@ public class ToolController : MonoBehaviour {
 	
 	public BaseTool currentTool(BaseTool.ToolHand hand){
 		return m_hydraRef.GetHand(hand).GetComponent<BaseTool>();
+	}
+	
+	public void SetSelectedGenerator(BaseGenerator gen){
+		m_selectedGenerator = gen;
 	}
 	
 	// Update is called once per frame

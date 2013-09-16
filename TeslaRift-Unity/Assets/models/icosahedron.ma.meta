@@ -4,10 +4,19 @@ ModelImporter:
   serializedVersion: 15
   fileIDToRecycleName:
     100000: //RootNode
+    100002: pSolid1
+    100004: pSolid2
     400000: //RootNode
+    400002: pSolid1
+    400004: pSolid2
     2300000: //RootNode
+    2300002: pSolid1
+    2300004: pSolid2
     3300000: //RootNode
+    3300002: pSolid1
+    3300004: pSolid2
     4300000: pSolid1
+    4300002: pSolid2
     9500000: //RootNode
   materials:
     importMaterials: 1

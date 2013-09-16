@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class ParamSelectTool : BaseTool {
 	
 	public GameObject m_heldObject = null;
+	private BaseGenerator m_selectedGenerator;
 	
 	private List<ParamAttachment> m_selectedParams;
 	
@@ -25,7 +26,12 @@ public class ParamSelectTool : BaseTool {
 	
 	public override void TransitionOut ()
 	{
+		m_toolControlRef.SetSelectedGenerator(null);	//Deselect any active generators
 		base.TransitionOut ();
+	}
+	
+	public void SetSelectedGenerator(BaseGenerator gen){
+		m_selectedGenerator = gen;
 	}
 	
 	public void CheckForSelection(){
@@ -42,6 +48,14 @@ public class ParamSelectTool : BaseTool {
 					if( m_selectedParams.IndexOf(attach) < 0){
 						m_selectedParams.Add(attach);
 						attach.ToggleSelected();
+						
+						//Attach the selected generator to the parameter
+						if(m_selectedGenerator != null){
+							attach.AddGenerator(m_selectedGenerator);
+							m_selectedGenerator.gameObject.GetComponent<GeneratorLine>()
+								.CreateConnection(m_selectedGenerator.transform, attach.transform);
+						}
+						
 					}
 				}
 				

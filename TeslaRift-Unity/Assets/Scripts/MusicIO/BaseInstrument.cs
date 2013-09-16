@@ -95,6 +95,7 @@ public class BaseInstrument {
 	
 	public virtual void processParameters(){
 		foreach(BaseInstrumentParam param in m_params){
+			param.updateGenerators();
 			if(param.isDirty){
 				
 				if(param.GetType() == typeof(NoteParam)){
@@ -147,6 +148,7 @@ public class BaseInstrumentParam {
 	public BaseInstrumentParam(string name, BaseInstrument paramOwner){
 		m_name = name;
 		m_owner = paramOwner;
+		m_generators = new List<BaseGenerator>();
 	}
 	
 	//Getters / Setters
@@ -154,8 +156,8 @@ public class BaseInstrumentParam {
 	public BaseInstrument owner{ get { return m_owner; } }
 	public float val { get { return m_fValue; }	}
 	public virtual void setVal(float value){ 
-		m_fValue = value; 
 		m_isDirty = true;
+		m_fValue = value; 
 	}
 	public bool isDirty { get { return m_isDirty; } }
 	public void setClean(){ m_isDirty = false; }
@@ -163,6 +165,27 @@ public class BaseInstrumentParam {
 	public virtual void setEnabled(bool value){	
 		m_enabled = value;
 	}
+	
+	//Generators
+	protected List<BaseGenerator> m_generators;
+	
+	public void attachGenerator(BaseGenerator generator){
+		m_generators.Add(generator);
+	}
+	
+	public void removeGenerator(BaseGenerator generator){
+		m_generators.Remove(generator);
+	}
+	
+	public void updateGenerators(){
+		float summedGenerators = 0.0f;
+		
+		foreach(BaseGenerator gen in m_generators)
+			summedGenerators += gen.val;
+		
+		if(m_generators.Count > 0)
+			setVal(m_fValue + summedGenerators);
+	}	
 }
 
 
@@ -173,6 +196,7 @@ public class ToggleParam : BaseInstrumentParam {
 	public ToggleParam(string name, BaseInstrument paramOwner)
 			: base(name, paramOwner)
 	{
+		m_generators = new List<BaseGenerator>();
 	}
 	
 	public override void setEnabled (bool value)

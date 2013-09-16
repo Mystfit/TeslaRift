@@ -18,6 +18,10 @@ public class ParamAttachment : BaseAttachment {
 	public override void ToggleSelected(){
 		SetSelected(!m_selected);
 	}
+	
+	public void AddGenerator(BaseGenerator gen){
+		m_paramRef.attachGenerator(gen);
+	}
 		
 	public override void SetSelected (bool state)
 	{

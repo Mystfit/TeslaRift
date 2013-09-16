@@ -92,8 +92,7 @@ public class Stage1 : BaseStage {
 		//Set shader parameters
 		float oscillateSin = Mathf.Sin(Time.deltaTime * m_oscillate[(int)TargetSphereComponent.SHADER]);
 		float oscillateCos = Mathf.Cos(Time.deltaTime * m_oscillate[(int)TargetSphereComponent.SHADER]);
-		Debug.Log (m_sharedOscillator);
-
+		
 		this.renderer.material.SetFloat("_Scale", m_distance[(int)TargetSphereComponent.SHADER] * m_bandScale + (m_sharedOscillator * 0.1f));
 		this.renderer.material.SetFloat("_Power", oscillateSin * m_powerScale + (m_sharedOscillator * 0.1f));
 		this.renderer.material.SetVector("_PointA", new Vector4( m_distance[(int)TargetSphereComponent.SHADER] * m_poleScale, 0.5f, 0.0f, 0.0f));

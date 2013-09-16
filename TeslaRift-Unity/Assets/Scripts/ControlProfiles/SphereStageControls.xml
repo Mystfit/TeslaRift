@@ -13,12 +13,15 @@
 		
 		<instrument name="stage1" colour="0.4,0.2,0.8">
 			<param name="distance" type="float"></param>
-			<param name="spike" type="toggle"></param>
 			<param name="oscillate" type="float"></param>
+			<param name="spike" type="toggle"></param>
 			<param name="vibrato" type="float"></param>
-			<param name="meshtarget" type="toggle"></param>
-			<param name="shadertarget" type="toggle"></param>
-			<param name="spawnertarget" type="toggle"></param>
+		</instrument>
+		
+		<instrument name="stageTargets" colour="0.3,0.5,0.8">
+			<param name="mesh" type="toggle"></param>
+			<param name="shader" type="toggle"></param>
+			<param name="spawner" type="toggle"></param>
 		</instrument>
 		
 	</instrumentList>
