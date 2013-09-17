@@ -22,6 +22,10 @@ public class ParamAttachment : BaseAttachment {
 	public void AddGenerator(BaseGenerator gen){
 		m_paramRef.attachGenerator(gen);
 	}
+	
+	public void DisconnectGenerators(){
+		m_paramRef.removeGenerators();
+	}
 		
 	public override void SetSelected (bool state)
 	{
@@ -32,12 +36,10 @@ public class ParamAttachment : BaseAttachment {
 		else
 			m_instrumentControlRef.DeselectParameter(m_paramRef);
 		
-		//Debug colours
 		if(state)
-			transform.GetComponentInChildren<Renderer>().material.SetColor("_Color", Color.red);
+			gameObject.GetComponent<PanelToggle>().Toggle(true);
 		else
-			transform.GetComponentInChildren<Renderer>().material.SetColor("_Color", Color.black);
-
+			gameObject.GetComponent<PanelToggle>().Toggle(false);
 	}
 	
 	public void setSelected(bool state){ 

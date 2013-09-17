@@ -4,26 +4,25 @@ using System.Collections;
 public class BaseStage : OSCListener {
 	
 	public enum Param { 
-		DISTANCE = 0,
-		SPIKE = 1,
-		OSCILLATE = 2,
-		VIBRATO = 3,
-		MESHTARGET = 4,
-		SHADERTARGET = 5,
-		SPAWNERTARGET = 6
+		MSH_DISTANCE = 0,
+		MSH_SPIKE,
+		MSH_OSCILLATE,
+		MSH_VIBRATO,
+		SH_DISTANCE,
+		SH_SPIKE,
+		SH_OSCILLATE,
+		SH_VIBRATO,
+		SPN_DISTANCE,
+		SPN_SPIKE,
+		SPN_OSCILLATE,
+		SPN_VIBRATO
 	}
 	
-	protected enum TargetSphereComponent {
-		SHADER = 0,
-		MESH,
-		SPAWNER
-	}
-	protected int m_numTargets = 3;
-	
-	protected bool[] m_targetComponent;
 	protected float[] m_distance;
 	protected float[] m_oscillate;
-	protected float m_vibrato;
+	protected float[] m_vibrato;
+	
+	protected int m_numTargets = 3;
 	protected float m_sharedOscillator;
 	
 	public enum TransitionState {
@@ -31,24 +30,21 @@ public class BaseStage : OSCListener {
 		LEAVING_STATE,
 		ENTERING_STATE
 	}
+	
+	public enum TargetSphereComponent {
+		MESH = 0,
+		SHADER,
+		SPAWNER
+	};
+	
 	private TransitionState m_transitionState = TransitionState.IN_STATE;
 		
 	
 	protected override void Start ()
 	{
-		/*m_address[(int)Param.DISTANCE] = "/visual/" + OSCinstrumentName + "/distance";
-		m_address[(int)Param.SPIKE] = "/visual/" + OSCinstrumentName + "/spike";
-		m_address[(int)Param.OSCILLATE] = "/visual/" + OSCinstrumentName + "/oscillate";
-		m_address[(int)Param.VIBRATO] = "/visual/" + OSCinstrumentName + "/vibrato";
-		m_address[(int)Param.MESHTARGET] = "/visual/" + OSCinstrumentName + "/meshTarget";
-		m_address[(int)Param.SHADERTARGET] = "/visual/" + OSCinstrumentName + "/shaderTarget";
-		m_address[(int)Param.SPAWNERTARGET] = "/visual/" + OSCinstrumentName + "/spawnerTarget";
-		*/
-
 		m_distance = new float[m_numTargets];
 		m_oscillate = new float[m_numTargets];
-		//m_vibrato = new float[m_numTargets];
-		m_targetComponent = new bool[m_numTargets];
+		m_vibrato = new float[m_numTargets];
 		
 		base.Start ();
 	}
@@ -60,22 +56,28 @@ public class BaseStage : OSCListener {
 		//Get OSC state
 		if(m_isDirty){
 			
+			/*
 			m_targetComponent[(int)TargetSphereComponent.MESH] = (m_paramValues[(int)Param.MESHTARGET] == 1.0f) ? true : false;
 			m_targetComponent[(int)TargetSphereComponent.SHADER] = (m_paramValues[(int)Param.SHADERTARGET] == 1.0f) ? true : false;
 			m_targetComponent[(int)TargetSphereComponent.SPAWNER] = (m_paramValues[(int)Param.SPAWNERTARGET] == 1.0f) ? true : false;
+			*/
 			
-			for(int i = 0; i < m_numTargets; i++){
-				if(m_targetComponent[i]){
-					m_distance[i] = m_paramValues[(int)Param.DISTANCE];
-					m_oscillate[i] = m_paramValues[(int)Param.OSCILLATE];
-					//m_vibrato[i] = m_paramValues[(int)Param.VIBRATO];
-					
-					if(m_paramValues[(int)Param.SPIKE] == 1.0f) Spike((TargetSphereComponent) i);
-				}	
-			}
+			m_distance[0] = m_paramValues[(int)Param.MSH_DISTANCE];
+			m_distance[1] = m_paramValues[(int)Param.SH_DISTANCE];
+			m_distance[2] = m_paramValues[(int)Param.SPN_DISTANCE];
 			
-			m_vibrato = m_paramValues[(int)Param.VIBRATO];
+			m_oscillate[0] = m_paramValues[(int)Param.MSH_OSCILLATE];
+			m_oscillate[1] = m_paramValues[(int)Param.SH_OSCILLATE];
+			m_oscillate[2] = m_paramValues[(int)Param.SPN_OSCILLATE];
+			
+			m_vibrato[0] = m_paramValues[(int)Param.MSH_VIBRATO];
+			m_vibrato[1] = m_paramValues[(int)Param.SH_VIBRATO];
+			m_vibrato[2] = m_paramValues[(int)Param.SPN_VIBRATO];
 		
+			if(m_paramValues[(int)Param.MSH_SPIKE] == 1.0f) Spike(TargetSphereComponent.MESH );
+			if(m_paramValues[(int)Param.SH_SPIKE] == 1.0f) Spike(TargetSphereComponent.SHADER );
+			if(m_paramValues[(int)Param.SPN_SPIKE] == 1.0f) Spike(TargetSphereComponent.SPAWNER );
+			
 			SetClean();
 		}
 		
@@ -84,8 +86,7 @@ public class BaseStage : OSCListener {
 			UpdateSphereShape();
 			UpdateShader();
 		}
-		
-		m_sharedOscillator = Mathf.Sin(Time.time * 40.0f) * m_vibrato;
+		m_sharedOscillator = Mathf.Sin(Time.time * 40.0f);
 	}
 	
 	protected virtual void Spike(TargetSphereComponent target){

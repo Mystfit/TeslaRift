@@ -32,6 +32,12 @@ public class BaseInstrument {
 	public string Owner{ get {return m_owner; } } 
 	public string Client{ get {return m_client; } }
 	
+	//Reset instrument to default
+	//-----------------------------
+	public void Reset(){
+
+	}
+	
 	// Parameter functions
 	//-----------------
 	public void addParam(string name, string valueType){
@@ -95,7 +101,7 @@ public class BaseInstrument {
 	
 	public virtual void processParameters(){
 		foreach(BaseInstrumentParam param in m_params){
-			param.updateGenerators();
+			param.UpdateGenerators();
 			if(param.isDirty){
 				
 				if(param.GetType() == typeof(NoteParam)){
@@ -137,10 +143,13 @@ public class BaseInstrumentParam {
 	
 	protected string m_name = "";
 	protected float m_fValue = 0.0f;
+	protected float m_overrideValue = 0.0f;
 	protected BaseInstrument m_owner = null;
 	protected bool m_enabled = true;
 	protected bool m_isMidiNoteParam = false;
 	protected bool m_isDirty = false;
+	
+	protected BaseGenerator m_generatorInput;
 
 	//OSC addresses
 	protected bool m_expectingReturnMessage = false;
@@ -159,6 +168,10 @@ public class BaseInstrumentParam {
 		m_isDirty = true;
 		m_fValue = value; 
 	}
+	public void setOverrideVal(float val){
+		m_isDirty = true;
+		m_overrideValue = val;
+	}
 	public bool isDirty { get { return m_isDirty; } }
 	public void setClean(){ m_isDirty = false; }
 	public bool enabled{ get { return m_enabled; } }
@@ -166,25 +179,32 @@ public class BaseInstrumentParam {
 		m_enabled = value;
 	}
 	
-	//Generators
+	
+	//Generator references
+	//-----------------
 	protected List<BaseGenerator> m_generators;
 	
 	public void attachGenerator(BaseGenerator generator){
 		m_generators.Add(generator);
 	}
 	
+	public void removeGenerators(){
+		for(int i = 0; i < m_generators.Count; i++){
+			removeGenerator(m_generators[i]);
+		}
+	}
 	public void removeGenerator(BaseGenerator generator){
 		m_generators.Remove(generator);
 	}
 	
-	public void updateGenerators(){
+	public void UpdateGenerators(){
 		float summedGenerators = 0.0f;
 		
 		foreach(BaseGenerator gen in m_generators)
 			summedGenerators += gen.val;
 		
 		if(m_generators.Count > 0)
-			setVal(m_fValue + summedGenerators);
+			setVal(summedGenerators * m_overrideValue);
 	}	
 }
 
@@ -207,11 +227,13 @@ public class ToggleParam : BaseInstrumentParam {
 	}
 	
 	public override void setVal(float value){
-		if(value > 0.5f){
-			base.setVal(1.0f);
+		float result = value;
+		if(value > m_overrideValue){
+			result = 1.0f;
 		} else {
-			base.setVal(0.0f);
+			result = 0.0f;
 		}
+		base.setVal(result);
 	}
 }
 

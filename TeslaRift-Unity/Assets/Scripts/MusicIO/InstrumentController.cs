@@ -25,6 +25,23 @@ public class InstrumentController : MonoBehaviour {
 		m_selectedParams = new List<BaseInstrumentParam>();
 	}
 	
+	public void ResetInstrumentParameters(BaseInstrument instrument){
+		instrument.Reset();
+		foreach(BaseInstrumentParam param in instrument.paramList){
+			if(m_selectedParams.IndexOf(param) > -1){
+				m_selectedParams.Remove(param);
+				param.setEnabled(false);
+			}
+		}
+	}
+	
+	public void ResetInstrument(BaseInstrument instrument){
+		ResetInstrumentParameters(instrument);
+		foreach(BaseInstrumentParam param in instrument.paramList){
+			param.removeGenerators();
+		}
+	}
+	
 	void Update () {
 		foreach(BaseInstrument instrument in m_instruments){
 			
@@ -58,9 +75,13 @@ public class InstrumentController : MonoBehaviour {
 			if(param.GetType() == typeof(NoteParam)){
 				NoteParam chord = param as NoteParam;
 				chord.setNote(value, 1.0f, 0, 1);
-			} if(param.GetType() == typeof(ToggleParam)){
-				//ignore toggles, they fire when selected
+			}else if(param.GetType() == typeof(ToggleParam)){
+				ToggleParam toggle = param as ToggleParam;
+				toggle.setOverrideVal(value);
+				toggle.setVal(value);
+				Debug.Log ("Override is:" + value + " Clamped is:" + param.val);
 			} else {
+				param.setOverrideVal(value);
 				param.setVal(value);
 			}
 		}

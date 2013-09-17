@@ -66,12 +66,7 @@ public class SixenseObjectController : MonoBehaviour {
 	
 	
 	protected virtual void UpdateObject(  SixenseInput.Controller controller )
-	{
-		
-		if ( controller.GetButtonDown( SixenseButtons.START ) || Input.GetKeyDown(KeyCode.P)){
-			ActivateHand (controller);
-		}
-		
+	{	
 		if ( m_enabled )
 		{
 			UpdatePosition( controller );
@@ -81,7 +76,7 @@ public class SixenseObjectController : MonoBehaviour {
 	
 	public void ActivateHand( SixenseInput.Controller controller){
 		// enable position and orientation control
-		m_enabled = !m_enabled;
+		m_enabled = true;
 			
 		// delta controller position is relative to this point
 		m_baseControllerPosition = new Vector3( controller.Position.x * Sensitivity.x,

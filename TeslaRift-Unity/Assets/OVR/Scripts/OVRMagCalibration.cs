@@ -41,6 +41,7 @@ public class OVRMagCalibration
 	private Vector3 CurEulerRef = Vector3.zero;	
 	
 	private bool  	MagShowGeometry     = false;
+	private bool 	m_triggerCalibration = false;
 	
 	public OVRCameraController CameraController = null;
 	public GameObject GeometryReference 		= null;
@@ -157,6 +158,13 @@ public class OVRMagCalibration
 		}
 	}
 	
+	public void CalibrateMag(){
+		if(!m_triggerCalibration){
+			MagAutoCalibrate = true;
+			m_triggerCalibration = true;
+		}
+	}
+	
 	// UpdateMagYawDriftCorrection
 	public void UpdateMagYawDriftCorrection()
 	{
@@ -174,6 +182,11 @@ public class OVRMagCalibration
 		{
 			MagAutoCalibrate = false;
 			calibrateInput = true;
+		}
+		
+		if( m_triggerCalibration == true){
+			calibrateInput = true;
+			m_triggerCalibration = false;
 		}
 		
 		if(calibrateInput == true) 

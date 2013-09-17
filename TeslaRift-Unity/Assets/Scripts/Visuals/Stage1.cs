@@ -42,7 +42,7 @@ public class Stage1 : BaseStage {
 	
 	protected override void UpdateSpawner(){
 		foreach(SpawnParent spawn in m_spawns){
-			spawn.speed = m_oscillate[(int)TargetSphereComponent.SPAWNER] +  + m_sharedOscillator;
+			spawn.speed = m_oscillate[(int)TargetSphereComponent.SPAWNER] + m_sharedOscillator * m_vibrato[(int) TargetSphereComponent.SPAWNER];
 			spawn.distance =  m_distance[(int)TargetSphereComponent.SPAWNER] * m_spawnDistance;
 			spawn.returnSpeed = m_oscillate[(int)TargetSphereComponent.SPAWNER] * 25.0f;
 			
@@ -63,7 +63,7 @@ public class Stage1 : BaseStage {
 		for(int i = 1; i <= m_blobPositions.Length; i++){
 			m_blobPositions[i-1].velocity = i * m_oscillate[(int)TargetSphereComponent.MESH] * ((i % 2) * 2 - 1) * m_orbitSpeedScale;
 			m_blobPositions[i-1].orbitDistance =  i * m_distance[(int)TargetSphereComponent.MESH] * m_orbitDistanceScale;
-			m_blobPositions[i-1].orbitPulse = i * Mathf.Sin(m_sharedOscillator * 0.1f);
+			m_blobPositions[i-1].orbitPulse = i * Mathf.Sin(m_sharedOscillator * m_vibrato[(int)TargetSphereComponent.MESH] * 0.1f);
 			m_blobPositions[i-1].Update();				
 		}
 		
@@ -93,8 +93,8 @@ public class Stage1 : BaseStage {
 		float oscillateSin = Mathf.Sin(Time.deltaTime * m_oscillate[(int)TargetSphereComponent.SHADER]);
 		float oscillateCos = Mathf.Cos(Time.deltaTime * m_oscillate[(int)TargetSphereComponent.SHADER]);
 		
-		this.renderer.material.SetFloat("_Scale", m_distance[(int)TargetSphereComponent.SHADER] * m_bandScale + (m_sharedOscillator * 0.1f));
-		this.renderer.material.SetFloat("_Power", oscillateSin * m_powerScale + (m_sharedOscillator * 0.1f));
+		this.renderer.material.SetFloat("_Scale", m_distance[(int)TargetSphereComponent.SHADER] * m_bandScale + (m_sharedOscillator * m_vibrato[(int)TargetSphereComponent.SHADER] * 0.1f));
+		this.renderer.material.SetFloat("_Power", oscillateSin * m_powerScale + (m_sharedOscillator * m_vibrato[(int)TargetSphereComponent.SHADER] * 0.1f));
 		this.renderer.material.SetVector("_PointA", new Vector4( m_distance[(int)TargetSphereComponent.SHADER] * m_poleScale, 0.5f, 0.0f, 0.0f));
 		this.renderer.material.SetVector("_PointB", new Vector4( oscillateCos, oscillateSin, 0.0f, 0.0f ));
 		this.renderer.material.SetVector("_PointC", new Vector4( 0.5f, m_distance[(int)TargetSphereComponent.SHADER] * m_poleScale, 0.0f, 0.0f));

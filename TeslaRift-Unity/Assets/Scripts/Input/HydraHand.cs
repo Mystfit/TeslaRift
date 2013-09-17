@@ -21,6 +21,9 @@ public class HydraHand : SixenseObjectController
 		base.Start();
 	}
 	
+	public void SetEnabled(bool state){
+		m_enabled = state;
+	}
 	
 	protected override void UpdateObject( SixenseInput.Controller controller )
 	{			

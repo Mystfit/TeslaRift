@@ -7,20 +7,31 @@ public class ParamSelectTool : BaseTool {
 	
 	public GameObject m_heldObject = null;
 	private BaseGenerator m_selectedGenerator;
+	private bool m_disconnectGenerators = false;
 	
 	private List<ParamAttachment> m_selectedParams;
 	
 	public ParamSelectTool() {
 	}
 	
-	public override void Start(){
-		base.Start();
+	public override void Awake(){
+		base.Awake();
 		m_selectedParams = new List<ParamAttachment>();
 		m_toolHandState = BaseTool.HandState.SEARCHING;
 	}
 	
 	public override void Update(){
-		CheckForSelection();
+	
+		//Select parameter
+		switch(m_toolHandState){
+		case HandState.SEARCHING:
+			CheckForSelection();
+			break;
+		case HandState.RELEASING:	
+			break;
+		case HandState.HOLDING:
+			break;
+		}
 		base.Update();
 	}
 	
@@ -37,55 +48,55 @@ public class ParamSelectTool : BaseTool {
 	public void CheckForSelection(){
 		if(m_hydraRef != null){
 			
-			RaycastHit hit;
-			int mask = ~LayerMask.NameToLayer("ParamSelectable");
-			Vector3 dir = m_instrumentControlRef.LastSelectedGameInstrument.transform.position - m_hydraRef.GetHand(m_hand).transform.position;
-			if(Physics.Raycast(m_hydraRef.GetHand(m_hand).transform.position, dir, out hit, dir.magnitude, mask )){
-				Debug.Log("Ray hit " + hit.collider);
-				
-				ParamAttachment attach = hit.collider.gameObject.GetComponent<ParamAttachment>();
-				if(attach != null){
-					if( m_selectedParams.IndexOf(attach) < 0){
-						m_selectedParams.Add(attach);
-						attach.ToggleSelected();
-						
-						//Attach the selected generator to the parameter
-						if(m_selectedGenerator != null){
-							attach.AddGenerator(m_selectedGenerator);
-							m_selectedGenerator.gameObject.GetComponent<GeneratorLine>()
-								.CreateConnection(m_selectedGenerator.transform, attach.transform);
+			//Only look for selections if we have something to search on!
+			//TODO: Replace with collision/distance based checking
+			if(m_instrumentControlRef.LastSelectedGameInstrument != null)
+			{
+				//Check for panel collisions
+				RaycastHit hit;
+				int mask = ~LayerMask.NameToLayer("ParamSelectable");
+				Vector3 dir = m_instrumentControlRef.LastSelectedGameInstrument.transform.position - m_hydraRef.GetHand(m_hand).transform.position;
+				if(Physics.Raycast(m_hydraRef.GetHand(m_hand).transform.position, dir, out hit, dir.magnitude, mask )){
+					
+					//Toggle the panel and attach any generators if required
+					ParamAttachment attach = hit.collider.gameObject.GetComponent<ParamAttachment>();
+					if(attach != null){
+						if( m_selectedParams.IndexOf(attach) < 0){
+							m_selectedParams.Add(attach);
+							attach.ToggleSelected();
+							
+							//Attach the selected generator to the parameter
+							if(!m_disconnectGenerators){
+								if(m_selectedGenerator != null){
+	
+									//Reattach line between param and generator
+									attach.AddGenerator(m_selectedGenerator);
+									m_toolControlRef.SetSelectedGenerator(null);
+									attach.gameObject.AddComponent<GeneratorLine>()
+										.CreateConnection(m_selectedGenerator.transform, attach.transform);
+								}
+							} else {
+								//Remove all generators from panel
+								Debug.Log ("Disconnecting generators from " + attach);
+								attach.DisconnectGenerators();
+								GeneratorLine[] lines =  attach.gameObject.GetComponents<GeneratorLine>();
+								foreach(GeneratorLine line in lines){
+									line.Remove();
+								}
+							}						
 						}
-						
 					}
+					
+					m_toolHandState = BaseTool.HandState.HOLDING;
 				}
 				
-				m_toolHandState = BaseTool.HandState.HOLDING;
+				Debug.DrawRay(m_hydraRef.GetHand(m_hand).transform.position, dir, Color.red);
 			}
 			
-			Debug.DrawRay(m_hydraRef.GetHand(m_hand).transform.position, dir, Color.red);
-
-			//Select parameter
-			switch(m_toolHandState){
-			case HandState.SEARCHING:
-				//if(m_hydraRef.HandTarget(m_hand)){
-					//if(m_hydraRef.HandTarget(m_hand) != m_heldObject){
-						
-						//if(m_hydraRef.HandTarget(m_hand).CompareTag("ParamPanel")){
-							//m_heldObject = m_hydraRef.HandTarget(m_hand);
-							//m_heldObject.GetComponent<ParamAttachment>().ToggleSelected();
-							//m_toolHandState = BaseTool.HandState.HOLDING;
-						//}
-					//}
-				//}
-				break;
-			case HandState.RELEASING:	
-				if(m_heldObject != null){
-					m_heldObject = null;
-				}
-				break;
-			case HandState.HOLDING:
-				break;
-			}
 		}
+	}
+	
+	public void SetDisconnectGenerators(bool state){
+		m_disconnectGenerators = state;
 	}
 }

@@ -4,10 +4,27 @@ ModelImporter:
   serializedVersion: 15
   fileIDToRecycleName:
     100000: //RootNode
+    100002: hexBase
+    100004: hexContainer
+    100006: hexInner
+    100008: hexOuter
     400000: //RootNode
+    400002: hexBase
+    400004: hexContainer
+    400006: hexInner
+    400008: hexOuter
     2300000: //RootNode
+    2300002: hexBase
+    2300004: hexInner
+    2300006: hexOuter
     3300000: //RootNode
+    3300002: hexBase
+    3300004: hexInner
+    3300006: hexOuter
     4300000: pPrism1
+    4300002: hexOuter
+    4300004: hexBase
+    4300006: hexInner
     9500000: //RootNode
   materials:
     importMaterials: 1

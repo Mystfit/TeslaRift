@@ -17,6 +17,8 @@ public class BaseTool : MonoBehaviour {
 	protected ToolHand m_hand;
 	public ToolHand Hand{get { return m_hand; }}
 	
+	public enum Mode{PRIMARY = 0, SECONDARY, TERTIARY};
+	
 	//Hand states
 	public enum HandState{ IDLE = 0, SEARCHING, HOLDING, RELEASING};
 	protected HandState m_toolHandState = HandState.IDLE;
@@ -26,11 +28,12 @@ public class BaseTool : MonoBehaviour {
 	public BaseTool(){
 	}
 	
-	public virtual void Start(){
+	public virtual void Awake(){
 		m_hydraRef = GameObject.Find("__HydraController").GetComponent<HydraController>();
 		m_instrumentControlRef = GameObject.Find ("__InstrumentSpawner").GetComponent<InstrumentController>();
 		m_toolControlRef = GameObject.Find ("__HydraController").GetComponent<ToolController>();
-		m_targets = new List<object>();		
+		m_targets = new List<object>();	
+		TransitionIn();
 	}
 	
 	public virtual void Update () {

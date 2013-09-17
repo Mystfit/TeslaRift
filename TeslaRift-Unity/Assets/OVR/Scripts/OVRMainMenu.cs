@@ -299,6 +299,10 @@ public class OVRMainMenu : MonoBehaviour
 		ScenesVisible = false;
 	}
 	
+	public void CalibrateMag(){
+		MagCal.CalibrateMag();
+	}
+	
 	// Update
 	void Update()
 	{		

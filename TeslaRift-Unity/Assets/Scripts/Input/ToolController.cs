@@ -15,7 +15,6 @@ public class ToolController : MonoBehaviour {
 												//appropriate select tools
 
 	
-	// Use this for initialization
 	void Start () {
 		
 		m_choreoRef = this.gameObject.GetComponent<ChoreographController>();
@@ -23,49 +22,49 @@ public class ToolController : MonoBehaviour {
 		m_hydraRef = GameObject.Find("__HydraController").GetComponent<HydraController>();
 	}
 	
-	//Manual tool addition. Testing only
-	/*
-	public void SetManualTool(GameObject target, ToolHand hand){
-	
-		InstrumentAttachment instrumentRef = target.GetComponent<InstrumentAttachment>();
-		
-		if(instrumentRef != null)
-		{
-			SingleModifierTool playingTool = new SingleModifierTool();
-			playingTool.setInstrument( m_instrumentControlRef.GetInstrumentByName(instrumentRef.instrumentTarget ));
-			playingTool.setTargets(m_instrumentControlRef.GetInstrumentByName(instrumentRef.instrumentTarget ).paramList);
-			playingTool.playTestChord();
-			pushTool(playingTool, hand);
-		}	
-	}
-	
-	public void StopTool(ToolHand hand){
-		if(hand == ToolHand.LEFT){
-			SingleModifierTool tempTool = m_LToolStack.Peek() as SingleModifierTool;
-			tempTool.stopTestChord();
-		} else if( hand == ToolController.ToolHand.RIGHT){
-		}
-	}*/
-
-	
+	//Tool creation
+	//-------------
 	public void PushTool(System.Type toolType, BaseTool.ToolHand hand){
+		PushTool(toolType, hand, BaseTool.Mode.PRIMARY);
+	}
+
+	public void PushTool(System.Type toolType, BaseTool.ToolHand hand, BaseTool.Mode mode){
+		
 		PopTool(hand);
 		
 		BaseTool activeAttachedTool =  m_hydraRef.GetHand(hand).AddComponent(toolType) as BaseTool;
 		
+		//Mode specific cases
+		//-------------------
+	
 		//Pass selected generators to the param select tool
 		if(activeAttachedTool.GetType() == typeof(ParamSelectTool)){
 			ParamSelectTool tool = activeAttachedTool as ParamSelectTool;
 			tool.SetSelectedGenerator(m_selectedGenerator);
+			if(mode == BaseTool.Mode.SECONDARY)
+			{	
+				tool.SetDisconnectGenerators(true);
+			}
 		}
+		
+		if(activeAttachedTool.GetType() == typeof(ResetTool)){
+			ResetTool tool = activeAttachedTool as ResetTool;
+			if(mode == BaseTool.Mode.SECONDARY)
+			{	
+				tool.SetResetAll();
+			}
+		}
+		
 		activeAttachedTool.Init(hand);
 	}
 	
 	public void PopTool(BaseTool.ToolHand hand){
 		BaseTool activeAttachedTool = m_hydraRef.GetHand(hand).GetComponent(typeof(BaseTool)) as BaseTool;
+		if(activeAttachedTool)
+			activeAttachedTool.TransitionOut();
 		
 		if(activeAttachedTool != null)
-			DestroyImmediate(activeAttachedTool);		//Should probably handle this in the transition
+			Destroy(activeAttachedTool);		//Should probably handle this in the transition
 	}
 	
 	public BaseTool currentTool(BaseTool.ToolHand hand){
@@ -74,6 +73,10 @@ public class ToolController : MonoBehaviour {
 	
 	public void SetSelectedGenerator(BaseGenerator gen){
 		m_selectedGenerator = gen;
+	}
+	
+	public BaseGenerator GetSelectedGenerator(){
+		return m_selectedGenerator;
 	}
 	
 	// Update is called once per frame

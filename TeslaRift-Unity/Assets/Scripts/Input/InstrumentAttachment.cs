@@ -18,11 +18,35 @@ public class InstrumentAttachment : BaseAttachment {
 	public override void SetSelected (bool state)
 	{
 		base.SetSelected (state);
-		//m_instrumentRef.setEnabled(true);
 	}
 	
 	public void Init(BaseInstrument instrument){
 		m_instrumentRef = instrument;
+	}
+	
+	public void ResetParameters(){
+		PanelToggle[] panelList = transform.GetComponentsInChildren<PanelToggle>();
+		foreach(PanelToggle panel in panelList)
+			panel.Toggle(false);
+		
+		m_instrumentControlRef.ResetInstrumentParameters(m_instrumentRef);
+	}
+	
+	public void ResetInstrument(){
+		PanelToggle[] panelList = transform.GetComponentsInChildren<PanelToggle>();
+		
+		
+		foreach(PanelToggle panel in panelList){
+			//Turn text off
+			panel.Toggle(false);
+			
+			//Turn lines off
+			GeneratorLine[] lines = panel.gameObject.GetComponents<GeneratorLine>();
+			foreach(GeneratorLine line in lines)
+				line.Remove();
+		}
+
+		m_instrumentControlRef.ResetInstrument(m_instrumentRef);
 	}
 	
 	public BaseInstrument instrumentRef{ get {return m_instrumentRef; } }

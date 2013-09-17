@@ -321,26 +321,7 @@ public class SixenseInput : MonoBehaviour
 				break;
 			case ControllerManagerState.BIND_CONTROLLER_ONE:
 				{
-					if ( numControllersBound > 0 )
-					{
-						m_ControllerManagerState = ControllerManagerState.BIND_CONTROLLER_TWO;
-					}
-					else
-					{
-						for ( int i = 0; i < MAX_CONTROLLERS; i++ )
-						{
-							//if ( ( m_Controllers[i] != null ) && Input.GetKeyDown(KeyCode.Space) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
-							//if ( ( m_Controllers[i] != null ) && Controllers[i].GetButtonDown( SixenseButtons.TRIGGER ) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
-							if ( ( m_Controllers[i] != null ) && m_leftArduino.GetButtonDown(ArduinoController.GloveButton.ONE) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
-							{
-								Controllers[i].HandBind = SixenseHands.LEFT;
-								SixensePlugin.sixenseAutoEnableHemisphereTracking( i );
-								m_ControllerManagerState = ControllerManagerState.BIND_CONTROLLER_TWO;
-								Controllers[i].SetEnabled(true);
-								break;
-							}
-						}
-					}
+					m_ControllerManagerState = ControllerManagerState.BIND_CONTROLLER_TWO;
 				}
 				break;
 			case ControllerManagerState.BIND_CONTROLLER_TWO:
@@ -353,15 +334,10 @@ public class SixenseInput : MonoBehaviour
 					{
 						for ( int i = 0; i < MAX_CONTROLLERS; i++ )
 						{
-							//if ( ( m_Controllers[i] != null ) && Input.GetKeyDown(KeyCode.Space) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
-							//if ( ( m_Controllers[i] != null ) && Controllers[i].GetButtonDown( SixenseButtons.TRIGGER ) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
-							if ( ( m_Controllers[i] != null ) && Controllers[i].GetButtonDown( SixenseButtons.BUMPER ) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
+							if ( ( m_Controllers[i] != null ) && Controllers[i].GetButtonDown( SixenseButtons.START ) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
 							{
-								Controllers[i].HandBind = SixenseHands.RIGHT;
-								SixensePlugin.sixenseAutoEnableHemisphereTracking( i );
-								m_ControllerManagerState = ControllerManagerState.NONE;
-								Controllers[i].SetEnabled(true);
-								break;
+								//Hardcoded binding redirct
+								RebindHands();
 							}
 						}
 					}
@@ -371,6 +347,22 @@ public class SixenseInput : MonoBehaviour
 				break;
 			}
 		}
+	}
+	
+	/// <summary>
+	/// Manually rebinds the hands. HACKY
+	/// </summary>
+	public void RebindHands(){
+		Controllers[0].HandBind = SixenseHands.LEFT;
+		Controllers[1].HandBind = SixenseHands.RIGHT;
+		
+		SixensePlugin.sixenseAutoEnableHemisphereTracking( 0 );
+		SixensePlugin.sixenseAutoEnableHemisphereTracking( 1 );
+
+		m_ControllerManagerState = ControllerManagerState.NONE;
+		
+		Controllers[0].SetEnabled(true);
+		Controllers[1].SetEnabled(true);
 	}
 	
 	/// <summary>

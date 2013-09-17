@@ -1,6 +1,6 @@
 //Maya ASCII 2013 scene
 //Name: rotary.ma
-//Last modified: Tue, Sep 17, 2013 01:58:36 AM
+//Last modified: Tue, Sep 17, 2013 02:05:40 AM
 //Codeset: 1252
 requires maya "2013";
 requires "stereoCamera" "10.0";
