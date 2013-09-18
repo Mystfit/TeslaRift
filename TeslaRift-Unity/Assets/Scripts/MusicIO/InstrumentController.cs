@@ -77,11 +77,10 @@ public class InstrumentController : MonoBehaviour {
 				chord.setNote(value, 1.0f, 0, 1);
 			}else if(param.GetType() == typeof(ToggleParam)){
 				ToggleParam toggle = param as ToggleParam;
-				toggle.setOverrideVal(value);
-				toggle.setVal(value);
-				Debug.Log ("Override is:" + value + " Clamped is:" + param.val);
+				toggle.setTriggerThreshold(value);
+				//toggle.setVal(value);
 			} else {
-				param.setOverrideVal(value);
+				//param.setTriggerThreshold(value);
 				param.setVal(value);
 			}
 		}

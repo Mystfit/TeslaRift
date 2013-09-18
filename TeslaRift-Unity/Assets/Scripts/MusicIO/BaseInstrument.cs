@@ -143,7 +143,7 @@ public class BaseInstrumentParam {
 	
 	protected string m_name = "";
 	protected float m_fValue = 0.0f;
-	protected float m_overrideValue = 0.0f;
+	protected float m_triggerThreshold = 0.0f;
 	protected BaseInstrument m_owner = null;
 	protected bool m_enabled = true;
 	protected bool m_isMidiNoteParam = false;
@@ -168,9 +168,9 @@ public class BaseInstrumentParam {
 		m_isDirty = true;
 		m_fValue = value; 
 	}
-	public void setOverrideVal(float val){
+	public void setTriggerThreshold(float val){
 		m_isDirty = true;
-		m_overrideValue = val;
+		m_triggerThreshold = val;
 	}
 	public bool isDirty { get { return m_isDirty; } }
 	public void setClean(){ m_isDirty = false; }
@@ -204,7 +204,7 @@ public class BaseInstrumentParam {
 			summedGenerators += gen.val;
 		
 		if(m_generators.Count > 0)
-			setVal(summedGenerators * m_overrideValue);
+			setVal(summedGenerators);
 	}	
 }
 
@@ -228,11 +228,13 @@ public class ToggleParam : BaseInstrumentParam {
 	
 	public override void setVal(float value){
 		float result = value;
-		if(value > m_overrideValue){
+		if(value > m_triggerThreshold){
 			result = 1.0f;
 		} else {
 			result = 0.0f;
 		}
+		Debug.Log("Toggle threshold value:" + m_triggerThreshold + " Value:" + value + "Clamped:" + result );
+
 		base.setVal(result);
 	}
 }
