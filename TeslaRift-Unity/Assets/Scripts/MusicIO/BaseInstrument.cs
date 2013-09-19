@@ -40,7 +40,9 @@ public class BaseInstrument {
 	
 	// Parameter functions
 	//-----------------
-	public void addParam(string name, string valueType){
+	public void addParam(string name, string valueType, Color color){
+	
+		//Parameter type definitions
 		if(valueType == "chord")
 			m_params.Add(new NoteParam(name, this)); 
 		else if(valueType == "toggle")
@@ -48,8 +50,9 @@ public class BaseInstrument {
 		else
 			m_params.Add(new BaseInstrumentParam(name, this)); 
 		
-		//Other types for parameters need to be defined here. Mainly interaction types!"
-		//Toggle
+		if(color != null){
+			m_params[m_params.Count-1].SetColor(color);
+		}
 	}
 	
 	public BaseInstrumentParam getParamByName(string name){
@@ -144,10 +147,14 @@ public class BaseInstrumentParam {
 	protected string m_name = "";
 	protected float m_fValue = 0.0f;
 	protected float m_triggerThreshold = 0.0f;
+	protected float m_scaler = 1.0f;
 	protected BaseInstrument m_owner = null;
 	protected bool m_enabled = true;
 	protected bool m_isMidiNoteParam = false;
 	protected bool m_isDirty = false;
+	
+	public Color darkColor;
+	public Color lightColor;
 	
 	protected BaseGenerator m_generatorInput;
 
@@ -158,6 +165,12 @@ public class BaseInstrumentParam {
 		m_name = name;
 		m_owner = paramOwner;
 		m_generators = new List<BaseGenerator>();
+	}
+	
+	public void SetColor(Color color){
+		//Color definitions
+		lightColor = color;
+		darkColor = lightColor * 0.7f;
 	}
 	
 	//Getters / Setters
@@ -172,6 +185,8 @@ public class BaseInstrumentParam {
 		m_isDirty = true;
 		m_triggerThreshold = val;
 	}
+	public float scale{ get { return m_scaler; }}
+	public void SetScale(float value){ m_scaler = value; }
 	public bool isDirty { get { return m_isDirty; } }
 	public void setClean(){ m_isDirty = false; }
 	public bool enabled{ get { return m_enabled; } }
@@ -204,7 +219,7 @@ public class BaseInstrumentParam {
 			summedGenerators += gen.val;
 		
 		if(m_generators.Count > 0)
-			setVal(summedGenerators);
+			setVal(summedGenerators * m_scaler);
 	}	
 }
 

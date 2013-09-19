@@ -31,7 +31,7 @@ public class InstrumentFactory : MonoBehaviour {
 		XmlNodeList instrumentList = instrumentDoc.GetElementsByTagName("instrument"); //instrument array
 		XmlNode source = instrumentDoc.SelectSingleNode("/instrumentDefinitions/source");
 		XmlNode client = instrumentDoc.SelectSingleNode("/instrumentDefinitions/client");
-		
+
 		//Create instrument objects		
 		foreach(XmlNode instrument in instrumentList){			
 			BaseInstrument instrumentDef = new BaseInstrument( client.InnerText, source.InnerText, instrument.Attributes["name"].Value );
@@ -42,16 +42,29 @@ public class InstrumentFactory : MonoBehaviour {
 			foreach(XmlElement param in instrument.ChildNodes){
 				XmlAttribute name = param.Attributes["name"];
 				XmlAttribute type = param.Attributes["type"];
+				XmlAttribute color = param.Attributes["colour"];
+				
+				Color paramColor;
+				if(color != null){
+					string[] paramColorStr = color.Value.Split(',');
+					paramColor = new Color(
+						Convert.ToSingle(paramColorStr[0]), 
+						Convert.ToSingle(paramColorStr[1]), 
+						Convert.ToSingle(paramColorStr[2])
+					);
+				} else {
+					paramColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+				}
+
 				string typeStr = type != null ? type.Value : "";
 				
-				instrumentDef.addParam(name.Value, typeStr);
+				instrumentDef.addParam(name.Value, typeStr, paramColor);
 			}
 			
 			m_instrumentControllerRef.AddInstrument(instrumentDef);
 			
 			//Create associated gameobject for instrument
 			CreateInstrumentGameObject(instrumentDef, instrColor);
-			
 		}
 	}
 	
@@ -60,7 +73,6 @@ public class InstrumentFactory : MonoBehaviour {
 		instrumentGame.name = GAMEINSTRUMENT_PREFIX + instrument.Name;
 		instrumentGame.AddComponent<InstrumentAttachment>().Init(instrument);
 		instrumentGame.renderer.material.SetColor("_Color", instrumentColor);
-		Debug.Log(instrumentColor);
 		
 		Vector3[] points = Utils.PointsOnSphere(instrument.paramList.Count, (int)instrument.paramList.Count);
 		
@@ -75,7 +87,8 @@ public class InstrumentFactory : MonoBehaviour {
 			
 			paramPlane.GetComponentInChildren<TextMesh>().text = instrument.paramList[i].name;
 			
-			paramPlane.AddComponent<ParamAttachment>().Init(instrument.paramList[i]);
+			ParamAttachment attach = paramPlane.AddComponent<ParamAttachment>();
+			attach.Init(instrument.paramList[i]);
 		}
 	}
 }

@@ -6,8 +6,8 @@ public class InstrumentAttachment : BaseAttachment {
 	private BaseInstrument m_instrumentRef;
 
 	// Use this for initialization
-	protected override void Start () {
-		base.Start();
+	protected override void Awake () {
+		base.Awake();
 	}
 	
 	// Update is called once per frame
@@ -25,20 +25,19 @@ public class InstrumentAttachment : BaseAttachment {
 	}
 	
 	public void ResetParameters(){
-		PanelToggle[] panelList = transform.GetComponentsInChildren<PanelToggle>();
-		foreach(PanelToggle panel in panelList)
-			panel.Toggle(false);
+		ParamAttachment[] panelList = transform.GetComponentsInChildren<ParamAttachment>();
+		foreach(ParamAttachment panel in panelList)
+			panel.SetSelected(false);
 		
 		m_instrumentControlRef.ResetInstrumentParameters(m_instrumentRef);
 	}
 	
 	public void ResetInstrument(){
-		PanelToggle[] panelList = transform.GetComponentsInChildren<PanelToggle>();
+		ParamAttachment[] panelList = transform.GetComponentsInChildren<ParamAttachment>();
 		
-		
-		foreach(PanelToggle panel in panelList){
+		foreach(ParamAttachment panel in panelList){
 			//Turn text off
-			panel.Toggle(false);
+			panel.SetSelected(false);
 			
 			//Turn lines off
 			GeneratorLine[] lines = panel.gameObject.GetComponents<GeneratorLine>();

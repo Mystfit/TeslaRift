@@ -78,9 +78,11 @@ public class InstrumentController : MonoBehaviour {
 			}else if(param.GetType() == typeof(ToggleParam)){
 				ToggleParam toggle = param as ToggleParam;
 				toggle.setTriggerThreshold(value);
+				//toggle.SetScale(value);
 				//toggle.setVal(value);
 			} else {
 				//param.setTriggerThreshold(value);
+				param.SetScale(value);
 				param.setVal(value);
 			}
 		}

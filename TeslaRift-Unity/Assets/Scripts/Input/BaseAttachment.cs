@@ -18,7 +18,7 @@ public class BaseAttachment : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	protected virtual void Start () {
+	protected virtual void Awake () {
 		m_instrumentControlRef = GameObject.Find("__InstrumentSpawner").GetComponent<InstrumentController>();	
 	}	
 	
