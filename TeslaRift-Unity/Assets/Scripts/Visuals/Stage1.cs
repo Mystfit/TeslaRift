@@ -8,8 +8,6 @@ public class Stage1 : BaseStage {
 	public float m_bandScale = 1.0f;
 	public float m_powerScale = 10.0f;
 	public float m_poleScale = 1.0f;
-	public float m_returnSpeedScale = 8.0f;
-	public float m_trailLengthScale = 5.0f;
 	
 	//Mesh Variables
 	protected MCBlob m_blob;
@@ -44,8 +42,10 @@ public class Stage1 : BaseStage {
 	
 	protected override void UpdateSpawner(){
 		foreach(SpawnParent spawn in m_spawns){
-			SetSpawnProperties(spawn);
-	
+			spawn.speed = m_oscillate[(int)TargetSphereComponent.SPAWNER] + m_sharedOscillator * m_vibrato[(int) TargetSphereComponent.SPAWNER];
+			spawn.distance =  m_distance[(int)TargetSphereComponent.SPAWNER] * m_spawnDistance;
+			spawn.returnSpeed = m_oscillate[(int)TargetSphereComponent.SPAWNER] * 25.0f;
+			
 			if(spawn.isQueuedToDelete)
 				m_removeSpawns.Add(spawn);
 		}
@@ -124,7 +124,7 @@ public class Stage1 : BaseStage {
 		spawnParent.transform.rotation = Random.rotation;
 		SpawnParent s = spawnParent.AddComponent<SpawnParent>();
 		
-		Vector3[] spawnPoints = Utils.PointsOnSphere( (int)((float)m_numParticlesScaler * (m_vibrato[(int)TargetSphereComponent.SPAWNER]) + 1), 1.0f);
+		Vector3[] spawnPoints = Utils.PointsOnSphere( (int)((float)m_numParticlesScaler * m_oscillate[(int)TargetSphereComponent.SPAWNER]) + 1, 1.0f);
 		
 		foreach(Vector3 pos in spawnPoints){
 			//GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere)
@@ -132,24 +132,16 @@ public class Stage1 : BaseStage {
 			
 			//if(!m_trailsOn)
 			sphere.GetComponent<TrailRenderer>().enabled = true;
+			
 			sphere.transform.localPosition = pos;
 			sphere.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 			s.AddPoint(sphere);
-			
 		}
-		SetSpawnProperties(s);
+		
 		s.transform.position = transform.position;
 		s.transform.parent = transform;
 		s.ScaleOut();
 		m_spawns.Add(s);
-	}
-	
-	private void SetSpawnProperties(SpawnParent s){
-		s.speed = m_oscillate[(int)TargetSphereComponent.SPAWNER];
-		s.distance =  m_distance[(int)TargetSphereComponent.SPAWNER] * m_spawnDistance;
-		s.spawnSpeed = (m_distance[(int)TargetSphereComponent.SPAWNER] + 1.0f) * 2.0f;
-		s.returnSpeed = m_distance[(int)TargetSphereComponent.SPAWNER] * m_returnSpeedScale;
-		s.length = m_distance[(int)TargetSphereComponent.SPAWNER] * m_trailLengthScale;
 	}
 }
 

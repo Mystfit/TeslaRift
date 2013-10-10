@@ -2,42 +2,40 @@
 <instrumentDefinitions>	
 	<source>tesla</source>
 	<client>Live</client>
+	<scenes>14</scenes>
 	
 	<instrumentList>	
 		<instrument name="TeslaArp" colour="0.15,0.90,0.10">
-			<param name="noteParams" type="chord"></param>	
-			<param name="arp" type="toggle"></param>
-			<param name="stop" type="toggle"></param>
-			<param name="clip1" type="clip"></param>
-			<param name="clip2" type="clip"></param>
-			<param name="gate" type="float"></param>
+			<parameters>
+				<param name="noteParams" type="chord"></param>	
+				<param name="arp" type="toggle"></param>
+				<param name="stop" type="toggle"></param>
+				<param name="clip1" type="clip"></param>
+				<param name="clip2" type="clip"></param>
+				<param name="gate" type="float"></param>
+			</parameters>
+			<clips>
+				<clip name="dummyClip1" type="loop" scene="2"></clip>
+				<clip name="dummyClip2" type="loop" scene="4"></clip>
+				<clip name="dummyClip3" type="loop" scene="5"></clip>
+				<clip name="dummyClip4" type="loop" scene="6"></clip>
+				<clip name="dummyClip5" type="loop" scene="9"></clip>
+				<clip name="dummyClip6" type="loop" scene="10"></clip>
+			</clips>
 		</instrument>
 		
-		<instrument name="TeslaBass" colour="0.4,0.95,0.15">
-			<param name="noteParams" type="chord"></param>	
-			<param name="stop" type="toggle"></param>
-			<param name="clip1" type="clip"></param>
-			<param name="clip2" type="clip"></param>
+		<instrument name="DistortBass" colour="0.15,0.50,0.50">
+			<parameters>
+				<param name="noteParams" type="chord"></param>	
+				<param name="distort" type="float"></param>
+				<param name="stutter" type="float"></param>
+			</parameters>
+			<clips>
+				<clip name="extClip1" type="loop" scene="1"></clip>
+				<clip name="extClip2" type="loop" scene="2"></clip>
+				<clip name="extClip3" type="loop" scene="3"></clip>
+			</clips>
 		</instrument>
-		
-		<instrument name="TeslaLive" colour="0.6,0.85,0.2">
-			<param name="noteParams" type="chord"></param>	 
-			<param name="bend" type="float"></param>
-		</instrument>
-		
-		<instrument name="7Sisters" colour="0.1,0.1,0.95">
-			<param name="noteParams" type="chord"></param>
-			<param name="clip1-mystchords" type="clip"></param>
-			<param name="clip2" type="clip"></param>
-			<param name="stop" type="toggle"></param>
-		</instrument>
-		
-		<instrument name="Session" colour="0.8,0.1,0.4">	
-			<param name="MystChords" type="toggle"></param>
-			<param name="MajorRise" type="toggle"></param>
-			<param name="MinorNormal" type="toggle"></param>
-		</instrument>
-	
 	</instrumentList>
 	
 </instrumentDefinitions>

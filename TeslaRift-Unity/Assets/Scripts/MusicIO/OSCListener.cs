@@ -32,7 +32,7 @@ public class OSCListener : MonoBehaviour {
 		for(int i = 0; i < m_address.Length; i++){
 			if(m_address[i] == message.Address){
 				m_paramValues[i] = (float)message.Data[0];
-				//Debug.Log("Matched " + message.Address + ", " + m_paramValues[i] );
+				Debug.Log("Matched " + message.Address + ", " + m_paramValues[i] );
 				m_isDirty= true;
 			}
 		

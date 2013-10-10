@@ -4,25 +4,34 @@ using System.Collections.Generic;
 
 public class InstrumentController : MonoBehaviour {
 	
+	private static InstrumentController m_instance;
+	
 	public enum MusicObject{ INSTRUMENT = 0, PARAMETER};
 	
 	protected List<BaseInstrument> m_instruments;
 	protected BaseInstrument m_selectedInstrument;
 	protected GameObject m_lastSelectedGameInstrument = null;
-	protected bool m_teslaInstrumentActive = false;		//Tesla specific killswitch
+	protected bool m_teslaInstrumentActive = false;			//Tesla specific killswitch
 	protected bool m_teslaStateDirty = true;
 	
-	protected List<BaseInstrumentParam> m_selectedParams;
+	protected List<BaseInstrumentParam> m_selectedParams;	//Currently selected parameters across all instruments
 	
-	public InstrumentController(){
-		
-	}
+	//Number of scenes expected in Live
+	private int m_totalScenes = 0;
+	public void SetNumScenes(int numScenes){ m_totalScenes = numScenes; }
+	
+	//Prefix source name in front of OSC messages
+	private string m_sourceName;
+	public void SetSourceName(string sourceName){ m_sourceName = sourceName; }
+
+	public static InstrumentController instance{ get { return m_instance; }}
 	
 	//Unity
 	//-----
-	void Start () {
+	void Awake () {
 		m_instruments = new List<BaseInstrument>();
 		m_selectedParams = new List<BaseInstrumentParam>();
+		m_instance = this;
 	}
 	
 	public void ResetInstrumentParameters(BaseInstrument instrument){
@@ -34,7 +43,7 @@ public class InstrumentController : MonoBehaviour {
 			}
 		}
 	}
-	
+		
 	public void ResetInstrument(BaseInstrument instrument){
 		ResetInstrumentParameters(instrument);
 		foreach(BaseInstrumentParam param in instrument.paramList){
@@ -44,26 +53,7 @@ public class InstrumentController : MonoBehaviour {
 	
 	void Update () {
 		foreach(BaseInstrument instrument in m_instruments){
-			
-			//Tesla specific killswitch
-			if(instrument.Name == "TeslaArp" || instrument.Name == "TeslaBass" || instrument.Name == "TeslaLive"){
-				if(m_teslaStateDirty){		
-					BaseInstrument tesla = GetInstrumentByName("TeslaLive");
-					if(m_teslaInstrumentActive)
-						tesla.addMessageToQueue("killswitch", 1.0f);
-					else 
-						tesla.addMessageToQueue("killswitch", 0.0f);
-					
-					tesla.update();
-					m_teslaStateDirty = false;
-				} else {
-					if(m_teslaInstrumentActive)
-						instrument.update();
-				}
-
-			} else {
-				instrument.update();
-			}
+			instrument.update();
 		}
 	}
 	
@@ -77,12 +67,11 @@ public class InstrumentController : MonoBehaviour {
 				chord.setNote(value, 1.0f, 0, 1);
 			}else if(param.GetType() == typeof(ToggleParam)){
 				ToggleParam toggle = param as ToggleParam;
-				toggle.setTriggerThreshold(value);
-				//toggle.SetScale(value);
-				//toggle.setVal(value);
+				toggle.setOverrideVal(value);
+				toggle.setVal(value);
+				Debug.Log ("Override is:" + value + " Clamped is:" + param.val);
 			} else {
-				//param.setTriggerThreshold(value);
-				param.SetScale(value);
+				param.setOverrideVal(value);
 				param.setVal(value);
 			}
 		}
@@ -168,5 +157,16 @@ public class InstrumentController : MonoBehaviour {
 	public void PrimeTesla(){
 		m_teslaInstrumentActive = !m_teslaInstrumentActive;
 		m_teslaStateDirty = true;
+	}
+	
+	//Global scene control
+	public void ChangeScene(int scene){
+		//float targetScene =Mathf.Clamp( (float)scene/(float)m_totalScenes, 0.0f, 1.0f);
+		//int targetScene = Mathf.Clamp( Mathf.RoundToInt(Utils.Remap((float)scene, 1.0f, (float)m_totalScenes, 0.0f, 127.0f )), 0, 127 );
+		int targetScene = scene-1;
+		
+		UnityOSC.OSCMessage msg = new UnityOSC.OSCMessage("/" + m_sourceName + "/scene", targetScene); 
+		OSCHandler.Instance.SendBuiltMessageToClient(OSCcontroller.Instance.clientName, msg.Address, msg);
+		OSCHandler.Instance.SendBuiltMessageToClient(OSCcontroller.Instance.loopbackName, msg.Address, msg);
 	}
 }

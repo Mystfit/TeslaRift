@@ -29,6 +29,11 @@ public static class Utils
     	return (value < min) ? min : (value > max) ? max : value;  
 	}
 	
+	public static float Remap (float value, float from1, float to1, float from2, float to2) {
+    	return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+	}
+
+	
 	//Generates points on the surface of a sphere
 	public static Vector3[] PointsOnSphere(int n, float scale){
 		return PointsOnSphere(n, scale, 0.0f);

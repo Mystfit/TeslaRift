@@ -31,7 +31,8 @@ public class OSCcontroller : MonoBehaviour {
 	public string targetIp = "127.0.0.1";
 	public string targetPort = "2345";
 	public string loopbackPort = "3000";
-	public string clientName = "Unity";
+	public string clientName = "Live";
+	public string loopbackName = "loopback";
 	public bool loopback = false;
 	public bool isServer = true;
 	
@@ -39,9 +40,15 @@ public class OSCcontroller : MonoBehaviour {
 	private List<OSCListener> m_listeners;
 	
 	private long lastTimeStamp;
+	
+	private static OSCcontroller m_instance;
+	
+	public static OSCcontroller Instance { get { return m_instance; }}
 		
 	// Script initialization
-	void Start() {	
+	void Awake() {	
+		m_instance = this;
+		
 		OSCHandler.Instance.Init(); //init OSCs
 		
 		if(isServer)
@@ -50,12 +57,13 @@ public class OSCcontroller : MonoBehaviour {
 			OSCHandler.Instance.CreateServer(clientName, int.Parse(targetPort));
 		
 		if(loopback){
-			OSCHandler.Instance.CreateClient("loopback", System.Net.IPAddress.Parse("127.0.0.1"), int.Parse(loopbackPort));
-			OSCHandler.Instance.CreateServer("loopback", int.Parse(loopbackPort));
+			OSCHandler.Instance.CreateClient(loopbackName, System.Net.IPAddress.Parse("127.0.0.1"), int.Parse(loopbackPort));
+			OSCHandler.Instance.CreateServer(loopbackName, int.Parse(loopbackPort));
 		}
 		
 		m_listeners = new List<OSCListener>();
 		servers = new Dictionary<string, ServerLog>();
+		
 	}
 	
 	void OnApplicationQuit() {

@@ -4,11 +4,8 @@
 	<client>Unity</client>
 	
 	<instrumentList>	
-		<instrument name="stagecontrol" colour="0.8,0.7,0.2">
-			<param name="+" type="toggle" colour="1.0,1.0,1.0"></param>
-			<param name="++" type="toggle" colour="1.0,1.0,1.0"></param>
-			<param name="+++" type="toggle" colour="1.0,1.0,1.0"></param>
-			<param name="++++" type="toggle" colour="1.0,1.0,1.0"></param>
+		<instrument name="clock" colour="0.8,0.7,0.2">
+			<param name="tap" type="toggle" colour="0.965,0.365,0.163"></param>
 		</instrument>
 		
 		<instrument name="stage1mesh" colour="0.4,0.2,0.8">

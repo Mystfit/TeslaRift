@@ -171,7 +171,6 @@ public class OSCHandler : MonoBehaviour
 		                                         FormatMilliseconds(DateTime.Now.Millisecond), " : ",
 		                                         testaddress," ", DataToString(message.Data)));
 		_clients[clientId].messages.Add(message);
-		
 		_clients[clientId].client.Send(message);
 	}
 	
