@@ -77,6 +77,8 @@ public class BaseInstrument {
 
 	
 	public List<BaseInstrumentParam> paramList{ get { return m_params; } }
+	public List<InstrumentClip> clipList{ get { return m_clips; } }
+
 	
 	public void addMidiNoteMessageToQueue(string paramName, float pitch, float velocity, float voice, int trigger){
 		object[] noteArr = {pitch, velocity , voice};
@@ -90,9 +92,6 @@ public class BaseInstrument {
 		//InstrumentController.instance.ChangeScene(scene);
 		OSCMessage msg = new OSCMessage("/" + m_owner + "/" + m_name + "/launch", scene);	//-1 is for MaxForLive trackgrabber index starting at 0
 		m_messageQueue.Add(msg);
-
-		//msg = new OSCMessage("/" + m_owner + "/" + m_name + "/launch", 0);
-		//m_messageQueue.Add(msg);
 	}
 	
 	

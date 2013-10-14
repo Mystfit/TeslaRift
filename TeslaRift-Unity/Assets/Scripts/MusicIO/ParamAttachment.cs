@@ -7,7 +7,7 @@ public class ParamAttachment : BaseAttachment {
 
 	// Use this for initialization
 	protected override void Start () {
-		transform.GetComponentInChildren<Renderer>().material.SetColor("_Color", Color.black);
+		//transform.GetComponentInChildren<Renderer>().material.SetColor("_Color", Color.black);
 		base.Start();
 	}
 	

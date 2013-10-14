@@ -10,8 +10,6 @@
 				<param name="noteParams" type="chord"></param>	
 				<param name="arp" type="toggle"></param>
 				<param name="stop" type="toggle"></param>
-				<param name="clip1" type="clip"></param>
-				<param name="clip2" type="clip"></param>
 				<param name="gate" type="float"></param>
 			</parameters>
 			<clips>
