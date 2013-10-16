@@ -10,14 +10,11 @@ public class InstrumentFactory : MonoBehaviour {
 	public GameObject instrumentPrefab = null;
 	public TextAsset instrumentDefinitionFile;
 	public GameObject paramPanelPrefab;
-	public float panelDistance = 1.0f;
+	public float radialInnerRadius = 0.05f;	
+	public float radialOuterRadius = 0.5f;
+
 	private InstrumentController m_instrumentControllerRef;
-	public enum PanelMode {
-		SURROUND = 0, 
-		LAYERS
-	}
-	public PanelMode m_panelLayout;
-	
+
 	void Start () {
 		m_instrumentControllerRef = this.GetComponent<InstrumentController>();
 		LoadInstrumentDefinitions();
@@ -78,16 +75,7 @@ public class InstrumentFactory : MonoBehaviour {
 			
 			m_instrumentControllerRef.AddInstrument(instrumentDef);
 			
-			//Panel layout generators
-			switch(m_panelLayout){
-			case PanelMode.LAYERS:
-				CreateLayeredInstrument(instrumentDef, instrColor);
-				break;
-			case PanelMode.SURROUND:
-				CreateSurroundInstrument(instrumentDef, instrColor);
-				break;
-			}
-			
+			CreateLayeredInstrument(instrumentDef, instrColor);
 		}
 	}
 	
@@ -111,7 +99,7 @@ public class InstrumentFactory : MonoBehaviour {
 		
 		if(instrument.paramList.Count > 0){
 			//Creates a gameobject containing each triangle panel
-			GameObject paramLayer = CreatePolygonLayer(instrument.paramList, panelDistance );
+			GameObject paramLayer = CreatePolygonLayer(instrument.paramList, radialOuterRadius, radialInnerRadius );
 			paramLayer.transform.position = instrumentGame.transform.position;
 			paramLayer.transform.rotation = instrumentGame.transform.rotation;
 			paramLayer.transform.parent = instrumentGame.transform;
@@ -129,7 +117,7 @@ public class InstrumentFactory : MonoBehaviour {
 	/*
 	 * Creates a layer of triangular panels representing selectable parameters
 	 */
-	private GameObject CreatePolygonLayer(List<BaseInstrumentParam> attachList, float radius){
+	private GameObject CreatePolygonLayer(List<BaseInstrumentParam> attachList, float radius, float innerRadius){
 		GameObject panelLayer = new GameObject("panelLayer");
 		GameObject textPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/paramLabel.prefab", typeof(GameObject)) as GameObject;
 		GameObject trianglePanelPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/trianglePanel.prefab", typeof(GameObject)) as GameObject;
@@ -137,16 +125,17 @@ public class InstrumentFactory : MonoBehaviour {
 
 		for(int i = 0; i < attachList.Count; i++){
 			//Create a tiangle panel for this parameter
-			Mesh panelMesh = CreatePolygonPanel(0, attachList.Count, radius);
+			Mesh panelMesh = CreatePolygonPanel(0, attachList.Count, radius, innerRadius);
 			GameObject panel = Instantiate(trianglePanelPrefab) as GameObject;
+			
 			panel.GetComponent<MeshFilter>().mesh = panelMesh;
 			panel.GetComponent<MeshCollider>().sharedMesh = panelMesh;
 			panel.GetComponentInChildren<TextMesh>().text = attachList[i].name;
 			panel.transform.parent = panelLayer.transform;	
 			panel.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 360/(float)attachList.Count*(float)i);
-			panel.AddComponent<ParamAttachment>().Init(attachList[i]);
-			
-			
+			panel.transform.GetChild(0).GetChild(0).localPosition = new Vector3(0.0f, radius-0.05f, 0.0f);
+			panel.transform.GetChild(0).localRotation =  Quaternion.Euler(0.0f, 0.0f, 270.0f + (360/(float)attachList.Count)*0.5f);
+			panel.AddComponent<ParamAttachment>().Init(attachList[i]);	
 		}
 		return panelLayer;
 	}
@@ -155,108 +144,100 @@ public class InstrumentFactory : MonoBehaviour {
 	/*
 	 * Creates a single parameter panel as either a triangle or a quad
 	 */
-	private Mesh CreatePolygonPanel(int panelNum, int totalPanels, float radius){
+	private Mesh CreatePolygonPanel(int panelNum, int totalPanels, float radius, float innerRadius){
 		
 		Mesh layerMesh = new Mesh(); 
 		float angleInc = Mathf.PI*2 / totalPanels;
 		float borderAngle = 1.25f;
 		Vector3 depth = new Vector3(0.0f,0.0f,0.01f);
 		
-		Vector3[] vertices = new Vector3[6];
-		Vector3[] normals = new Vector3[6];
-		Vector2[] uvs = new Vector2[6];
-		int[] indices = new int[24];
+		Vector3[] vertices = new Vector3[8];
+		Vector3[] normals = new Vector3[8];
+		Vector2[] uvs = new Vector2[8];
+		int[] indices = new int[36];
 		
 		if(totalPanels > 2){	// 1 or 2 sides will need a square shaped layer.
 			
-			Vector3 a = new Vector3(Mathf.Cos((angleInc)* panelNum + Mathf.Deg2Rad * borderAngle -(angleInc*0.5f) ) * radius, Mathf.Sin((angleInc) * panelNum + Mathf.Deg2Rad * borderAngle -(angleInc*0.5f) ) * radius, 0.0f);
-			Vector3 b = new Vector3(Mathf.Cos((angleInc)*(panelNum+1) - Mathf.Deg2Rad * borderAngle -(angleInc*0.5f)) * radius, Mathf.Sin((angleInc) * (panelNum+1) -Mathf.Deg2Rad * borderAngle -(angleInc*0.5f)) * radius, 0.0f);
-			Vector3 c = new Vector3(
-				((Mathf.Cos((angleInc -(angleInc*0.5f))*panelNum+Mathf.Deg2Rad*5.0f ) * borderAngle*0.005f) + (Mathf.Cos((angleInc -(angleInc*0.5f))*(panelNum+1)-Mathf.Deg2Rad*5.0f) * borderAngle*0.005f)) * 0.5f,
-				((Mathf.Sin((angleInc -(angleInc*0.5f))*panelNum+Mathf.Deg2Rad*5.0f ) * borderAngle*0.005f) + (Mathf.Sin((angleInc -(angleInc*0.5f))*(panelNum+1)-Mathf.Deg2Rad*5.0f) * borderAngle*0.005f)) * 0.5f,
-				0.0f
-			);
+			Vector3 a = new Vector3(Mathf.Cos((angleInc)* panelNum + Mathf.Deg2Rad * borderAngle ) * radius, Mathf.Sin((angleInc) * panelNum + Mathf.Deg2Rad * borderAngle ) * radius, 0.0f);
+			Vector3 b = new Vector3(Mathf.Cos((angleInc)*(panelNum+1) - Mathf.Deg2Rad * borderAngle) * radius, Mathf.Sin((angleInc) * (panelNum+1) -Mathf.Deg2Rad * borderAngle ) * radius, 0.0f);
+			Vector3 c = new Vector3(Mathf.Cos((angleInc)* panelNum + Mathf.Deg2Rad * borderAngle ) * innerRadius, Mathf.Sin((angleInc) * panelNum + Mathf.Deg2Rad * borderAngle ) * innerRadius, 0.0f);
+			Vector3 d = new Vector3(Mathf.Cos((angleInc)*(panelNum+1) - Mathf.Deg2Rad * borderAngle) * innerRadius, Mathf.Sin((angleInc) * (panelNum+1) -Mathf.Deg2Rad * borderAngle ) * innerRadius, 0.0f);
+			
 			vertices[0] = a;
 			vertices[1] = b;
 			vertices[2] = c;
-			vertices[3] = a + depth;
-			vertices[4] = b + depth;
-			vertices[5] = c + depth;
+			vertices[3] = d;
+			vertices[4] = a + depth;
+			vertices[5] = b + depth;
+			vertices[6] = c + depth;
+			vertices[7] = d + depth;
+
 			normals[0] = -Vector3.forward;
 			normals[1] = -Vector3.forward;
 			normals[2] = -Vector3.forward;
 			normals[3] = -Vector3.forward;
 			normals[4] = -Vector3.forward;
 			normals[5] = -Vector3.forward;
-			uvs[0] = new Vector2( (((Mathf.Cos(angleInc*panelNum) * radius) + radius*0.5f) / radius*2), 
-				(((Mathf.Sin(angleInc*panelNum) * radius) + radius*0.5f) / radius*2)  );
-			uvs[1] = new Vector2( (((Mathf.Cos(angleInc*panelNum+1) * radius) + radius*0.5f) / radius*2), 
-				(((Mathf.Sin(angleInc*panelNum+1) * radius) + radius*0.5f) / radius*2)  );
-			uvs[2] = new Vector2(0.5f, 0.5f);
-			uvs[3] = uvs[0];
+			normals[6] = -Vector3.forward;
+			normals[7] = -Vector3.forward;
+
+			uvs[0] = new Vector2(0,0);
+			uvs[1] = new Vector2(0,1); 
+			uvs[2] = new Vector2(1,0);
+			uvs[3] = new Vector2(1,1);
 			uvs[4] = uvs[1];
 			uvs[5] = uvs[2];
+			uvs[6] = uvs[2];
+			uvs[7] = uvs[3];
+
 			
-			//Top
+			//Front
 			indices[0] = 0;
 			indices[1] = 2;
 			indices[2] = 1;
+			indices[3] = 2;
+			indices[4] = 3;
+			indices[5] = 1;
 			
-			//Bottom
-			indices[3] = 3;
-			indices[4] = 4;
-			indices[5] = 5;
+			//Back
+			indices[6] = 4;
+			indices[7] = 6;
+			indices[8] = 5;
+			indices[9] = 6;
+			indices[10] = 7;
+			indices[11] = 5;
 			
-			//Topright side
-			indices[6] = 0;
-			indices[7] = 1;
-			indices[8] = 4;
-			indices[9] = 4;
-			indices[10] = 3;
-			indices[11] = 0;
-			
-			//Topleft side
+			//Top
 			indices[12] = 1;
-			indices[13] = 2;
-			indices[14] = 5;
+			indices[13] = 5;
+			indices[14] = 0;
 			indices[15] = 5;
 			indices[16] = 4;
-			indices[17] = 1;
+			indices[17] = 0;
 			
-			//Bottom side
-			indices[18] = 2;
-			indices[19] = 0;
-			indices[20] = 3;
-			indices[21] = 3;
+			//Right
+			indices[18] = 3;
+			indices[19] = 7;
+			indices[20] = 1;
+			indices[21] = 7;
 			indices[22] = 5;
-			indices[23] = 2;
+			indices[23] = 1;
 			
-		} else {
-			if(totalPanels == 1){
-				vertices = new Vector3[4];
-				normals = new Vector3[4];
-				uvs = new Vector2[4];
-				indices = new int[6];
-				
-				vertices[0] = new Vector3(radius * -1.0f, radius * -1.0f, 0.0f);
-				vertices[1] = new Vector3(radius, radius * -1.0f, 0.0f);
-				vertices[2] = new Vector3(radius * -1.0f, radius, 0.0f);
-				vertices[3] = new Vector3(radius, radius, 0.0f);
-				normals[0] = -Vector3.forward;
-				normals[1] = -Vector3.forward;
-				normals[2] = -Vector3.forward;
-				normals[3] = -Vector3.forward;
-				uvs[0] = new Vector2(0.0f,0.0f);
-				uvs[1] = new Vector2(1.0f,0.0f);
-				uvs[2] = new Vector2(0.0f,1.0f);
-				uvs[3] = new Vector2(1.0f,1.0f);
-				indices[0] = 0;
-				indices[1] = 2;
-				indices[2] = 1;
-				indices[3] = 2;
-				indices[4] = 3;
-				indices[5] = 1;
-			}
+			//Bottom
+			indices[24] = 2;
+			indices[25] = 6;
+			indices[26] = 3;
+			indices[27] = 6;
+			indices[28] = 7;
+			indices[29] = 3;
+			
+			//Left
+			indices[30] = 0;
+			indices[31] = 4;
+			indices[32] = 2;
+			indices[33] = 4;
+			indices[34] = 6;
+			indices[35] = 2;	
 		}
 		
 		layerMesh.vertices = vertices;
@@ -266,35 +247,5 @@ public class InstrumentFactory : MonoBehaviour {
 		layerMesh.RecalculateNormals();
 		
 		return layerMesh;
-	}
-	
-	
-	/*
-	 * Legacy panel creation. Surrounds instrument with equally spaced parameter panels
-	 */
-	private void CreateSurroundInstrument(BaseInstrument instrument, Color instrumentColor){
-		//Create an instrument prefab
-		GameObject instrumentGame = Instantiate(instrumentPrefab, transform.position, Quaternion.identity ) as GameObject;
-		instrumentGame.name = GAMEINSTRUMENT_PREFIX + instrument.Name;
-		
-		//Add an instrument attachmet to interface with the MusicIO controllers
-		instrumentGame.AddComponent<InstrumentAttachment>().Init(instrument);
-		instrumentGame.renderer.material.SetColor("_Color", instrumentColor);
-		
-		//Place parameter panels evenly around the outside of the instrument. NEEDS REDESIGN
-		Vector3[] points = Utils.PointsOnSphere(instrument.paramList.Count, (int)instrument.paramList.Count);
-		
-		for(int i = 0; i < points.Length; i++){
-			Vector3 point = points[i];
-			Vector3 pos = instrumentGame.transform.position + point * panelDistance;
-			GameObject paramPlane = Instantiate(paramPanelPrefab, pos, Quaternion.identity) as GameObject;
-			
-			paramPlane.transform.parent = instrumentGame.transform;
-			paramPlane.transform.LookAt(instrumentGame.transform);
-			paramPlane.layer = LayerMask.NameToLayer("ParamSelectable");
-			
-			paramPlane.GetComponentInChildren<TextMesh>().text = instrument.paramList[i].name;
-			paramPlane.AddComponent<ParamAttachment>().Init(instrument.paramList[i]);
-		}
 	}
 }

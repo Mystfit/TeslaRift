@@ -3,17 +3,13 @@ using System.Collections;
 
 public class PanelToggle : MonoBehaviour {
 	
-	
-	// Use this for initialization
-	void Start () {	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-	
 	public void Toggle(bool state){
-		
+		if(state){
+			renderer.material.SetColor("_Color", Color.blue);
+			transform.GetComponentInChildren<TextMesh>().color = Color.white;
+		}else{
+			renderer.material.SetColor("_Color", Color.white);
+			transform.GetComponentInChildren<TextMesh>().color = Color.black;
+		}
 	}
 }

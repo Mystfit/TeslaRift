@@ -63,19 +63,18 @@ public class OSCcontroller : MonoBehaviour {
 		
 		m_listeners = new List<OSCListener>();
 		servers = new Dictionary<string, ServerLog>();
-		
 	}
 	
-	void OnApplicationQuit() {
-		 foreach( KeyValuePair<string, ServerLog> item in servers )
-			item.Value.server.Close();
-	}
 	
+	/*
+	 * Adds a listener for the server to watch for incoming messages
+	 */
 	public void AddListener(OSCListener listener){
 		foreach( KeyValuePair<string, ServerLog> item in OSCHandler.Instance.Servers )
 			item.Value.server.AddListener(listener);
 	}
-
+	
+	
 	// NOTE: The received messages at each server are updated here
     // Hence, this update depends on your application architecture
     // How many frames per second or Update() calls per frame?
@@ -90,34 +89,6 @@ public class OSCcontroller : MonoBehaviour {
 			// show the last received from the log in the Debug console
 			if(item.Value.log.Count > 0) 
 			{
-				//foreach(OSCListener listener in m_listeners)
-					//listener.SendUpdate( item.Value.server.LastReceivedPacket );
-				
-				/*int lastPacketIndex = item.Value.packets.Count - 1;
-				
-				ServerLog currentServer = servers[item.Key];
-			
-				int packetCount = 0;
-				long timestamp;
-				
-				while(packetCount < lastPacketIndex )
-				{
-					OSCPacket packet = item.Value.packets[packetCount];
-					if(packet.TimeStamp > lastTimeStamp){
-						lastTimeStamp = currentServer.server.LastReceivedPacket.TimeStamp;
-						foreach(OSCListener listener in m_listeners)
-							listener.SendUpdate( currentServer.server.LastReceivedPacket );
-					}
-
-					packetCount++;
-				} 
-				*/
-				
-				
-				
-				
-				
-				
 				/*
 				UnityEngine.Debug.Log(String.Format("SERVER: {0} ADDRESS: {1} VALUE 0: {2}", 
 				                                    item.Key, // Server name
@@ -125,8 +96,6 @@ public class OSCcontroller : MonoBehaviour {
 				                                    item.Value.packets[lastPacketIndex].Data[0].ToString())); //First data value
 
 				*/
-				
-				
 			}
 	    }
 	}

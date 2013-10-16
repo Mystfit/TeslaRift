@@ -3,17 +3,17 @@ using System.Collections;
 
 public class InstrumentAttachment : BaseAttachment {
 	
+	//Debug clip changing
 	public bool triggerClip;
 	public int clipIndex;
 	
 	private BaseInstrument m_instrumentRef;
-
-	// Use this for initialization
+	
+	
 	protected override void Start () {
 		base.Start();
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		//Debug tests for clip changing
 		if(triggerClip == true){
@@ -57,6 +57,4 @@ public class InstrumentAttachment : BaseAttachment {
 	}
 	
 	public BaseInstrument instrumentRef{ get {return m_instrumentRef; } }
-	
-	
 }
