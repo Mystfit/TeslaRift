@@ -4,15 +4,16 @@ using System.Collections;
 public class ParamAttachment : BaseAttachment {
 
 	private BaseInstrumentParam m_paramRef;
+	
+	public bool isHovering = false;
 
-	// Use this for initialization
 	protected override void Start () {
-		//transform.GetComponentInChildren<Renderer>().material.SetColor("_Color", Color.black);
 		base.Start();
 	}
 	
-	// Update is called once per frame
 	void Update () {
+		if(!m_paramRef.enabled)
+			SetSelected(false);
 	}
 	
 	public override void ToggleSelected(){
@@ -40,6 +41,13 @@ public class ParamAttachment : BaseAttachment {
 			gameObject.GetComponent<PanelToggle>().Toggle(true);
 		else
 			gameObject.GetComponent<PanelToggle>().Toggle(false);
+	}
+	
+	public void SetHovering(bool state){
+		if(state)
+			gameObject.GetComponent<PanelToggle>().HoverToggle(true);
+		else
+			gameObject.GetComponent<PanelToggle>().HoverToggle(false);
 	}
 	
 	public void setSelected(bool state){ 

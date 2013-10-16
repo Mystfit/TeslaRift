@@ -12,7 +12,7 @@ using UnityOSC;
 //**
 public class BaseInstrument {
 	
-	protected List<InstrumentClip> m_clips;
+	protected List<BaseInstrumentParam> m_clips;
 	protected List<BaseInstrumentParam> m_params;
 	protected List<OSCMessage> m_messageQueue;
 	
@@ -20,12 +20,14 @@ public class BaseInstrument {
 	string m_name = "";
 	string m_owner = "";
 	
+	protected InstrumentClip m_loadedClip;		// Last played clip
+	
 	public BaseInstrument(string instrumentClient, string instrumentOwner, string instrumentName){
 		m_name = instrumentName;
 		m_owner = instrumentOwner;
 		m_client = instrumentClient;
 		
-		m_clips = new List<InstrumentClip>();
+		m_clips = new List<BaseInstrumentParam>();
 		m_params = new List<BaseInstrumentParam>();
 		m_messageQueue = new List<OSCMessage>();
 	}
@@ -44,11 +46,11 @@ public class BaseInstrument {
 	// Clip functions
 	//---------------
 	public void addClip(string name, string type, int scene){
-		m_clips.Add(new InstrumentClip(name, type, scene));
+		m_clips.Add(new InstrumentClip(name, this, scene));
 	}
 	
 	public InstrumentClip GetClipByIndex(int index){ 
-		return m_clips[index];
+		return m_clips[index] as InstrumentClip;
 	}
 	
 	
@@ -77,7 +79,7 @@ public class BaseInstrument {
 
 	
 	public List<BaseInstrumentParam> paramList{ get { return m_params; } }
-	public List<InstrumentClip> clipList{ get { return m_clips; } }
+	public List<BaseInstrumentParam> clipList{ get { return m_clips; } }
 
 	
 	public void addMidiNoteMessageToQueue(string paramName, float pitch, float velocity, float voice, int trigger){
@@ -152,16 +154,13 @@ public class BaseInstrument {
 }
 
 
-public class InstrumentClip
+public class InstrumentClip : BaseInstrumentParam
 {
-	public string name;
-	public string type;
 	public int scene;
 	public bool isPlaying;
 	
-	public InstrumentClip(string clipName, string clipType, int clipScene){
-		name = clipName;
-		type = clipType;
+	public InstrumentClip(string name, BaseInstrument paramOwner, int clipScene) : base(name, paramOwner)
+	{
 		scene = clipScene;
 	}
 }

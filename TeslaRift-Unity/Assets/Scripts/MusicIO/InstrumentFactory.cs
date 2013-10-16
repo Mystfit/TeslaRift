@@ -38,8 +38,8 @@ public class InstrumentFactory : MonoBehaviour {
 		XmlNode client = instrumentDoc.SelectSingleNode("/instrumentDefinitions/client");
 		XmlNode scenes = instrumentDoc.SelectSingleNode("/instrumentDefinitions/scenes");
 
-		InstrumentController.instance.SetSourceName(source.InnerText);
-		InstrumentController.instance.SetNumScenes( int.Parse(scenes.InnerText));
+		InstrumentController.Instance.SetSourceName(source.InnerText);
+		InstrumentController.Instance.SetNumScenes( int.Parse(scenes.InnerText));
 		
 		//Create instrument objects		
 		foreach(XmlNode instrument in instrumentList){		
@@ -99,7 +99,7 @@ public class InstrumentFactory : MonoBehaviour {
 		
 		if(instrument.paramList.Count > 0){
 			//Creates a gameobject containing each triangle panel
-			GameObject paramLayer = CreatePolygonLayer(instrument.paramList, radialOuterRadius, radialInnerRadius );
+			GameObject paramLayer = CreatePolygonLayer(instrument.paramList, radialOuterRadius, radialInnerRadius);
 			paramLayer.transform.position = instrumentGame.transform.position;
 			paramLayer.transform.rotation = instrumentGame.transform.rotation;
 			paramLayer.transform.parent = instrumentGame.transform;
@@ -107,6 +107,21 @@ public class InstrumentFactory : MonoBehaviour {
 			
 			//Orients panels to fan around center
 			foreach(Transform child in paramLayer.transform.GetComponentsInChildren<Transform>()){
+				//child.LookAt(instrumentGame.transform);
+				//child.gameObject.renderer.material.SetColor("_Color", Color.white);
+			}
+		}
+		
+		if(instrument.clipList.Count > 0){
+			//Creates a gameobject containing each triangle panel
+			GameObject clipLayer = CreatePolygonLayer(instrument.clipList, radialOuterRadius, radialInnerRadius );
+			clipLayer.transform.position = instrumentGame.transform.position;
+			clipLayer.transform.rotation = instrumentGame.transform.rotation;
+			clipLayer.transform.parent = instrumentGame.transform;
+			clipLayer.transform.position += new Vector3(0.0f, 0.0f, -0.2f);
+			
+			//Orients panels to fan around center
+			foreach(Transform child in clipLayer.transform.GetComponentsInChildren<Transform>()){
 				//child.LookAt(instrumentGame.transform);
 				//child.gameObject.renderer.material.SetColor("_Color", Color.white);
 			}
@@ -131,6 +146,7 @@ public class InstrumentFactory : MonoBehaviour {
 			panel.GetComponent<MeshFilter>().mesh = panelMesh;
 			panel.GetComponent<MeshCollider>().sharedMesh = panelMesh;
 			panel.GetComponentInChildren<TextMesh>().text = attachList[i].name;
+				
 			panel.transform.parent = panelLayer.transform;	
 			panel.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 360/(float)attachList.Count*(float)i);
 			panel.transform.GetChild(0).GetChild(0).localPosition = new Vector3(0.0f, radius-0.05f, 0.0f);
@@ -139,6 +155,8 @@ public class InstrumentFactory : MonoBehaviour {
 		}
 		return panelLayer;
 	}
+				
+		
 	
 	
 	/*
@@ -148,8 +166,10 @@ public class InstrumentFactory : MonoBehaviour {
 		
 		Mesh layerMesh = new Mesh(); 
 		float angleInc = Mathf.PI*2 / totalPanels;
-		float borderAngle = 1.25f;
+		float borderAngle = 2.25f;
 		Vector3 depth = new Vector3(0.0f,0.0f,0.01f);
+		Vector3 lowEdge = new Vector3(0.0f,0.0f,-0.03f);
+
 		
 		Vector3[] vertices = new Vector3[8];
 		Vector3[] normals = new Vector3[8];
@@ -165,12 +185,12 @@ public class InstrumentFactory : MonoBehaviour {
 			
 			vertices[0] = a;
 			vertices[1] = b;
-			vertices[2] = c;
-			vertices[3] = d;
+			vertices[2] = c + lowEdge;
+			vertices[3] = d + lowEdge;
 			vertices[4] = a + depth;
 			vertices[5] = b + depth;
-			vertices[6] = c + depth;
-			vertices[7] = d + depth;
+			vertices[6] = c + depth + lowEdge;
+			vertices[7] = d + depth + lowEdge;
 
 			normals[0] = -Vector3.forward;
 			normals[1] = -Vector3.forward;
@@ -201,11 +221,11 @@ public class InstrumentFactory : MonoBehaviour {
 			
 			//Back
 			indices[6] = 4;
-			indices[7] = 6;
-			indices[8] = 5;
+			indices[7] = 5;
+			indices[8] = 6;
 			indices[9] = 6;
-			indices[10] = 7;
-			indices[11] = 5;
+			indices[10] = 5;
+			indices[11] = 7;
 			
 			//Top
 			indices[12] = 1;

@@ -13,10 +13,17 @@ public enum HydraStates
 	RIGHT_HOLDING
 }
 
+public enum ProximityType{ 
+	INSTRUMENT_INTERIOR = 0,
+	INSTRUMENT_PROXIMITY,
+	GENERATOR
+}
+
 public class HydraController : MonoBehaviour {
 	
 	private static HydraController m_instance;
-	
+	public static HydraController Instance{ get { return m_instance; }}
+
 	//Member variables
 	//-----------------------
 	private SixenseInput.Controller m_leftHandController;
@@ -24,13 +31,12 @@ public class HydraController : MonoBehaviour {
 	public GameObject m_leftHand;
 	public GameObject m_rightHand;
 	
-	private GameObject m_leftCollisionTarget = null;
-	private GameObject m_rightCollisionTarget = null;
-	private List<GameObject> m_leftCollisionTargets;
-	private List<GameObject> m_rightCollisionTargets;
-	
-	private HydraStates m_leftHandState;
-	private HydraStates m_rightHandState;
+	//Collision lists
+	//---------------
+	private List<GameObject> m_leftInstrumentProximity;
+	private List<GameObject> m_rightInstrumentProximity;
+	private List<GameObject> m_leftInstrumentInterior;
+	private List<GameObject> m_rightInstrumentInterior;
 	
 	private ToolController m_toolControlRef;
 	public GameObject instrumentController;
@@ -38,61 +44,36 @@ public class HydraController : MonoBehaviour {
 	
 	private ArduinoController m_gloveController;
 	
-	public static HydraController Instance{ get { return m_instance; }}
-	
 	// Initialization
 	//------------------
 	void Awake() {
-		m_leftHandState = HydraStates.LEFT_IDLE;
-		m_rightHandState = HydraStates.RIGHT_IDLE;
-		
-		m_leftCollisionTargets = new List<GameObject>();
-		m_rightCollisionTargets = new List<GameObject>();
+		//Collision lists
+		m_leftInstrumentProximity = new List<GameObject>();
+		m_rightInstrumentProximity = new List<GameObject>();
+		m_leftInstrumentInterior = new List<GameObject>();
+		m_rightInstrumentInterior = new List<GameObject>();
 		
 		//Controllers
-		m_toolControlRef = this.GetComponent<ToolController>();
-		m_instrumentControlRef = instrumentController.GetComponent<InstrumentController>();
+		m_toolControlRef = ToolController.Instance;
+		m_instrumentControlRef = InstrumentController.Instance;
 		m_gloveController = this.GetComponent<ArduinoController>();
 		m_instance = this;
 	}
 	
+	
+	/*
+	 * Returns left/right hand controllers
+	 */
 	public SixenseInput.Controller GetHandController(BaseTool.ToolHand hand){
 		if(hand == BaseTool.ToolHand.LEFT)
 			return m_leftHandController;
 		return m_rightHandController;
 	}
 	
-	public GameObject HandTarget(BaseTool.ToolHand hand){
-		/*if(hand == BaseTool.ToolHand.LEFT)
-			return m_leftCollisionTarget;
-		return m_rightCollisionTarget;*/
-		
-		List<GameObject> targetList = null;
-		GameObject targetHand = null;
-		
-		if(hand == BaseTool.ToolHand.LEFT){
-			targetList = m_leftCollisionTargets;
-			targetHand = m_leftHand;
-		} else if(hand == BaseTool.ToolHand.RIGHT){
-			targetList = m_rightCollisionTargets;
-			targetHand = m_rightHand;
-		}
-		
-		float closestDistance = -1.0f;
-		GameObject closestObject = null;
-		
-		if(targetList != null && targetHand != null){
-			foreach(GameObject obj in targetList){
-				float dist = Vector3.Distance(obj.transform.position, targetHand.transform.position);
-				if(dist < closestDistance || closestDistance < 0){
-					closestDistance = dist;
-					closestObject = obj;
-				}
-			}
-		}
-		return closestObject;
-	}
 	
+	/*
+	 * Gets the left/right hand gameObject
+	 */
 	public GameObject GetHand(BaseTool.ToolHand hand){
 		if(hand == BaseTool.ToolHand.LEFT)
 			return m_leftHand;
@@ -101,69 +82,90 @@ public class HydraController : MonoBehaviour {
 	}
 	
 	
-	//Collision Handlers
-	//-------------------
-	public void TriggerCollision(GameObject target, SixenseHands hand){
-		if(!target.CompareTag("Instrument")
-			&& !target.CompareTag("ParamPanel")
-			&& !target.CompareTag("Generator"))
-		{
-			return;
-		}
-
-		
-		if(hand == SixenseHands.LEFT){
-			m_leftCollisionTarget = target;
-		}else{
-			m_rightCollisionTarget = target;
-		}
+	/*
+	 * Returns the the closest object to the hand in a specific proximity list
+	 */
+	public GameObject HandTarget(BaseTool.ToolHand hand, ProximityType proximityTarget){
+		return GetClosestObjectInList( GetCollisionList(proximityTarget, BaseTool.ToolHandToSixenseHand(hand) ), GetHand(hand) );
 	}
 	
-	public void UnTriggerCollision(GameObject target, SixenseHands hand){
-		if(!target.CompareTag("Instrument") 
-			&& !target.CompareTag("ParamPanel") 
-			&& !target.CompareTag("Generator"))
-		{
-			return;
-		}
-		
-		if(hand == SixenseHands.LEFT)
-			m_leftCollisionTarget = null;
-		else
-			m_rightCollisionTarget = null;
-				
-	}
 	
-	public void AddInstrumentCollision(GameObject instrument, GameObject handObj){
-		SixenseHands hand = handObj.GetComponent<HydraHand>().Hand;
-		Debug.Log ("Proximity check");
+	/*
+	 * Finds the nearest GameObject to a list of GameObjects
+	 */
+	public GameObject GetClosestObjectInList(List<GameObject> targetList, GameObject target){
+		float closestDistance = -1.0f;
+		GameObject closestObject = null;
 		
-		if(hand == SixenseHands.LEFT){
-			if(!m_leftCollisionTargets.Contains(instrument)){
-				m_leftCollisionTargets.Add(instrument);
-				Debug.Log ("Proximity trigger: " + instrument.name);
-			}
-		} else if(hand == SixenseHands.RIGHT){
-			if(!m_rightCollisionTargets.Contains(instrument)){
-				m_rightCollisionTargets.Add(instrument);
-				Debug.Log ("Proximity trigger: " + instrument.name);
+		if(targetList != null && target != null){
+			foreach(GameObject obj in targetList){
+				float dist = Vector3.Distance(obj.transform.position, target.transform.position);
+				if(dist < closestDistance || closestDistance < 0){
+					closestDistance = dist;
+					closestObject = obj;
+				}
 			}
 		}
+		
+		return closestObject;
 	}
 	
-	public void RemoveInstrumentCollision(GameObject instrument, GameObject handObj){
-		SixenseHands hand = handObj.GetComponent<HydraHand>().Hand;
+	
+	
+	/*
+	 * Adds a proximity target to a list of active colliders with a hand 
+	 */
+	public void AddCollision(GameObject proximityTarget, SixenseHands hand, ProximityType proximityType){		
+		List<GameObject> targetList = GetCollisionList(proximityType, hand);
 		
-		if(hand == SixenseHands.LEFT){
-			m_leftCollisionTargets.Remove(instrument);
-		} else if(hand == SixenseHands.RIGHT){
-			m_rightCollisionTargets.Remove(instrument);
+		if(!targetList.Contains(proximityTarget)){
+			targetList.Add(proximityTarget);
+			Debug.Log ("Proximity trigger: " + proximityTarget.name + " Proximity type:"  + proximityType);
 		}
 	}
 	
 	
-	// Updaters
-	//-----------------------
+	/*
+	 * Removes a proximity target from a list of active colliders with a hand 
+	 */
+	public void RemoveCollision(GameObject proximityTarget, SixenseHands hand, ProximityType proximityType){		
+		List<GameObject> targetList = GetCollisionList(proximityType, hand);
+		targetList.Remove(proximityTarget);
+	}
+	
+	
+	/*
+	 * Gets a secific proximity collider list
+	 */
+	public List<GameObject> GetCollisionList(ProximityType proximityType, SixenseHands hand){
+		
+		List<GameObject> targetList = null;
+		
+		switch(proximityType){
+			case ProximityType.INSTRUMENT_INTERIOR:
+				if(hand == SixenseHands.LEFT)
+					targetList = m_leftInstrumentInterior;
+				else if(hand == SixenseHands.RIGHT)
+					targetList = m_rightInstrumentInterior;
+				break;
+			case ProximityType.INSTRUMENT_PROXIMITY:
+				if(hand == SixenseHands.LEFT)
+					targetList = m_leftInstrumentProximity;
+				else if(hand == SixenseHands.RIGHT)
+					targetList = m_rightInstrumentProximity;
+				break;
+			case ProximityType.GENERATOR:
+				break;
+		}
+	
+		return targetList;
+	}
+	
+	
+	
+	/*
+	 * Updaters
+	 */
 	void Update () {
 		if(m_leftHandController == null)
 			m_leftHandController = SixenseInput.GetController( SixenseHands.LEFT );
@@ -286,7 +288,7 @@ public class HydraController : MonoBehaviour {
 			//Parameter selector / Generator attachment
 			//--------------------
 			else if(handControl.GetButtonDown(SixenseButtons.BUMPER)){
-				m_toolControlRef.PushTool(typeof(ParamSelectTool), hand);
+				m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand);
 			} 
 			
 			//Value modifier

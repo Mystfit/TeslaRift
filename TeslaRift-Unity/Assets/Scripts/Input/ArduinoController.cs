@@ -21,8 +21,8 @@ public class ArduinoController : MonoBehaviour {
 
 	private int[] m_pins = {6,7};
      
-    void Start( )
-    {
+    void Awake( )
+    {		
         arduino = Arduino.global;
         arduino.Setup(ConfigurePins);
 		

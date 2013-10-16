@@ -5,7 +5,8 @@ using System.Collections.Generic;
 public class InstrumentController : MonoBehaviour {
 	
 	private static InstrumentController m_instance;
-	
+	public static InstrumentController Instance{ get { return m_instance; }}
+
 	public enum MusicObject{ INSTRUMENT = 0, PARAMETER};
 	
 	protected List<BaseInstrument> m_instruments;
@@ -23,8 +24,6 @@ public class InstrumentController : MonoBehaviour {
 	//Prefix source name in front of OSC messages
 	private string m_sourceName;
 	public void SetSourceName(string sourceName){ m_sourceName = sourceName; }
-
-	public static InstrumentController instance{ get { return m_instance; }}
 	
 	//Unity
 	//-----

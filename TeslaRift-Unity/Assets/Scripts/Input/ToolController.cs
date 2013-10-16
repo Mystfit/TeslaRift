@@ -6,6 +6,9 @@ using System.Collections.Generic;
 
 public class ToolController : MonoBehaviour {
 	
+	protected static ToolController m_instance;
+	public static ToolController Instance{ get { return m_instance; }}
+	
 	protected BaseTool m_currentTool = null;
 	protected ChoreographController m_choreoRef = null;
 	protected InstrumentController m_instrumentControlRef = null;
@@ -15,8 +18,8 @@ public class ToolController : MonoBehaviour {
 												//appropriate select tools
 
 	
-	void Start () {
-		
+	void Awake () {
+		m_instance = this;
 		m_choreoRef = this.gameObject.GetComponent<ChoreographController>();
 		m_instrumentControlRef = this.gameObject.GetComponent<InstrumentController>();
 		m_hydraRef = GameObject.Find("__HydraController").GetComponent<HydraController>();

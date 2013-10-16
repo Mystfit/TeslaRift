@@ -37,10 +37,10 @@ public class ResetTool : BaseTool {
 			//Attach
 			switch(m_toolHandState){
 			case HandState.SEARCHING:
-				if(m_hydraRef.HandTarget(m_hand)){
-					if(m_hydraRef.HandTarget(m_hand) != m_heldObject){
-						if(m_hydraRef.HandTarget(m_hand).CompareTag("Instrument")){
-							m_heldObject = m_hydraRef.HandTarget(m_hand);
+				if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR)){
+					if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR) != m_heldObject){
+						if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR).CompareTag("Instrument")){
+							m_heldObject = m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR);
 							
 							//Either reset all the parameters or params + generators depending on the tool mode
 							if(m_resetAll)

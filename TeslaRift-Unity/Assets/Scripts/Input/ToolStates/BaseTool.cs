@@ -28,12 +28,20 @@ public class BaseTool : MonoBehaviour {
 	public BaseTool(){
 	}
 	
+	public static SixenseHands ToolHandToSixenseHand(BaseTool.ToolHand hand){
+		if(hand == ToolHand.LEFT)
+			return SixenseHands.LEFT;
+		if(hand == ToolHand.RIGHT)
+			return SixenseHands.RIGHT;
+		return SixenseHands.UNKNOWN;
+	}
+	
 	public virtual void Awake(){
-		m_hydraRef = GameObject.Find("__HydraController").GetComponent<HydraController>();
-		m_instrumentControlRef = GameObject.Find ("__InstrumentSpawner").GetComponent<InstrumentController>();
-		m_toolControlRef = GameObject.Find ("__HydraController").GetComponent<ToolController>();
+		m_hydraRef = HydraController.Instance;
+		m_instrumentControlRef = InstrumentController.Instance;
+		m_toolControlRef = ToolController.Instance;
 		m_targets = new List<object>();	
-		TransitionIn();
+		
 	}
 	
 	public virtual void Update () {
@@ -42,6 +50,7 @@ public class BaseTool : MonoBehaviour {
 	//Initializer
 	public void Init(ToolHand hand){
 		m_hand = hand;
+		TransitionIn();
 	}
 	
 	//Instrument tools

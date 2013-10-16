@@ -47,13 +47,14 @@ public class HydraHand : SixenseObjectController
 			GUI.Box( new Rect( Screen.width / 2 + horizOffset, Screen.height - 40, labelWidth, 30 ),  "Press " + handStr + " START to control " + gameObject.name );		
 		}*/		
 	}
-
+	
+	/*
 	void OnTriggerEnter (Collider collidee) {		
 		m_hydra.TriggerCollision(collidee.gameObject, Hand);
 	}
 	
 	void OnTriggerExit (Collider collidee) {	
 		m_hydra.UnTriggerCollision(collidee.gameObject, Hand);
-	}
+	}*/
 }
 

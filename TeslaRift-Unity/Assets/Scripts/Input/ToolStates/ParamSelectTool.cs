@@ -46,7 +46,9 @@ public class ParamSelectTool : BaseTool {
 	}
 	
 	public void CheckForSelection(){
-		if(m_hydraRef != null){
+		
+		//Param selections happen inside the proximity range
+		if(HydraController.Instance.HandTarget(m_hand, ProximityType.INSTRUMENT_PROXIMITY)){
 			
 			//Only look for selections if we have something to search on!
 			//TODO: Replace with collision/distance based checking

@@ -90,20 +90,20 @@ public class PhysGrabberTool : BaseTool {
 			//Attach
 			switch(m_toolHandState){
 			case HandState.SEARCHING:
-				if(m_hydraRef.HandTarget(m_hand)){
-					if(m_hydraRef.HandTarget(m_hand) != m_heldObject){
+				if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR)){
+					if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR) != m_heldObject){
 						
-						if(m_hydraRef.HandTarget(m_hand).CompareTag("Instrument")){
-							m_heldObject = m_hydraRef.HandTarget(m_hand);
+						if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR).CompareTag("Instrument")){
+							m_heldObject = m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR);
 							m_joint = gameObject.AddComponent<FixedJoint>();
 							m_joint.connectedBody = m_heldObject.GetComponent<Rigidbody>();
 							m_instrumentControlRef.SetLastSelectedGameInstrument(m_heldObject);
 							m_toolHandState = BaseTool.HandState.HOLDING;
 						}
 						
-						else if(m_hydraRef.HandTarget(m_hand).CompareTag("Generator")){
+						else if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR).CompareTag("Generator")){
 							if(m_toolControlRef.GetSelectedGenerator() == null){		//Only one attached generator at a time
-								m_heldObject = m_hydraRef.HandTarget(m_hand);
+								m_heldObject = m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR);
 								m_selectedGenerator = m_heldObject.GetComponent<BaseGenerator>();
 								m_toolControlRef.SetSelectedGenerator(m_selectedGenerator);
 								m_toolHandState = BaseTool.HandState.HOLDING;
