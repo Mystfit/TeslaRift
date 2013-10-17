@@ -29,7 +29,7 @@ public class PhysGrabberTool : BaseTool {
 	public override void TransitionIn ()
 	{
 		Debug.Log(this.m_toolControlRef);
-		if( m_toolControlRef.GetSelectedGenerator() != null ){
+		if( m_toolControlRef.SelectedGenerator != null ){
 			m_toolControlRef.SetSelectedGenerator(null);
 			GeneratorLine[] lines = gameObject.GetComponents<GeneratorLine>();
 			foreach(GeneratorLine line in lines)
@@ -102,7 +102,7 @@ public class PhysGrabberTool : BaseTool {
 						}
 						
 						else if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR).CompareTag("Generator")){
-							if(m_toolControlRef.GetSelectedGenerator() == null){		//Only one attached generator at a time
+							if(m_toolControlRef.SelectedGenerator == null){		//Only one attached generator at a time
 								m_heldObject = m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR);
 								m_selectedGenerator = m_heldObject.GetComponent<BaseGenerator>();
 								m_toolControlRef.SetSelectedGenerator(m_selectedGenerator);
@@ -124,7 +124,7 @@ public class PhysGrabberTool : BaseTool {
 					m_deltaVelocity = m_heldObject.transform.position - m_lastHeldPosition;
 					m_lastHeldPosition =  m_heldObject.transform.position;
 				}
-				if(m_toolControlRef.GetSelectedGenerator() != null){		//Remove selected generator if holding
+				if(m_toolControlRef.SelectedGenerator != null){		//Remove selected generator if holding
 				}
 				break;
 			}

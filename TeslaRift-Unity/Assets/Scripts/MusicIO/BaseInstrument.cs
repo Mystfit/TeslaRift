@@ -76,12 +76,18 @@ public class BaseInstrument {
 		}
 		return result;
 	}
-
 	
+	
+	/*
+	 * Parameter/Clip lists
+	 */
 	public List<BaseInstrumentParam> paramList{ get { return m_params; } }
 	public List<BaseInstrumentParam> clipList{ get { return m_clips; } }
 
 	
+	/*
+	 * Queues a midi note OSC message
+	 */
 	public void addMidiNoteMessageToQueue(string paramName, float pitch, float velocity, float voice, int trigger){
 		object[] noteArr = {pitch, velocity , voice};
 		List<object> noteList = new List<object>(noteArr);
@@ -90,6 +96,10 @@ public class BaseInstrument {
 		this.addMessageToQueue("noteOn", trigger);
 	}
 	
+	
+	/*
+	 * Queues a clip activation OSC message
+	 */
 	public void addClipMessageToQueue(int scene){
 		//InstrumentController.instance.ChangeScene(scene);
 		OSCMessage msg = new OSCMessage("/" + m_owner + "/" + m_name + "/launch", scene);	//-1 is for MaxForLive trackgrabber index starting at 0
@@ -97,8 +107,9 @@ public class BaseInstrument {
 	}
 	
 	
-	// Message queue
-	//-----------------
+	/*
+	 * Queues a generic float OSC message
+	 */
 	public void addMessageToQueue<T>(string paramName, List<T> values){
 		OSCMessage msg = new OSCMessage("/" + m_owner + "/" + m_name + "/" + paramName);
 		foreach(T value in values){
@@ -154,13 +165,4 @@ public class BaseInstrument {
 }
 
 
-public class InstrumentClip : BaseInstrumentParam
-{
-	public int scene;
-	public bool isPlaying;
-	
-	public InstrumentClip(string name, BaseInstrument paramOwner, int clipScene) : base(name, paramOwner)
-	{
-		scene = clipScene;
-	}
-}
+

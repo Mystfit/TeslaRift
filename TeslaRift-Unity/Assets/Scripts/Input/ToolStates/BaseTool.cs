@@ -17,8 +17,11 @@ public class BaseTool : MonoBehaviour {
 	protected ToolHand m_hand;
 	public ToolHand Hand{get { return m_hand; }}
 	
-	public enum Mode{PRIMARY = 0, SECONDARY, TERTIARY};
-	
+	//Tool modes
+	public enum ToolMode{PRIMARY = 0, SECONDARY, TERTIARY};
+	protected ToolMode m_mode = ToolMode.PRIMARY;
+	public ToolMode Mode{ get { return m_mode; }}
+
 	//Hand states
 	public enum HandState{ IDLE = 0, SEARCHING, HOLDING, RELEASING};
 	protected HandState m_toolHandState = HandState.IDLE;
@@ -44,12 +47,15 @@ public class BaseTool : MonoBehaviour {
 		
 	}
 	
+
+	
 	public virtual void Update () {
 	}
 	
 	//Initializer
-	public void Init(ToolHand hand){
+	public virtual void Init(ToolHand hand, BaseTool.ToolMode mode){
 		m_hand = hand;
+		m_mode = mode;
 		TransitionIn();
 	}
 	

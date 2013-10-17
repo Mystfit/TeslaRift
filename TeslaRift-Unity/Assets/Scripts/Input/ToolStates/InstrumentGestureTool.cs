@@ -6,7 +6,8 @@ public class InstrumentGestureTool : BaseTool {
 	GameObject m_heldObject;
 	
 	public enum GestureState{
-		INTERIOR = 0,
+		INTERIOR_INITIALIZED = 0,
+		INTERIOR,
 		INTERIOR_TO_PROXIMITY,
 		PROXIMITY,
 		PROXIMITY_TO_INTERIOR,
@@ -17,26 +18,56 @@ public class InstrumentGestureTool : BaseTool {
 	protected GestureState m_gestureState;
 	public GestureState GetGestureState{ get { return m_gestureState; }}
 	
+	protected InstrumentAttachment.RadialType m_openRadialType;
+	protected bool bOpenRadial = false;
+	public bool IsRadialOpen{ get { return bOpenRadial; }}
+	
 	protected ParamAttachment m_selectedParam;
+	protected InstrumentAttachment m_selectedInstrumentAttach;
 
 	public override void Awake ()
 	{
 		base.Awake ();
 	}
+	
+	public override void Init (ToolHand hand, ToolMode mode)
+	{
+		base.Init (hand, mode);
+		
+		m_selectedInstrumentAttach = m_heldObject.GetComponent<InstrumentAttachment>();
+		m_gestureState = GestureState.INTERIOR_INITIALIZED;
+		
+		if(mode == BaseTool.ToolMode.PRIMARY)
+			m_openRadialType = InstrumentAttachment.RadialType.PARAM;
+		else if(mode == BaseTool.ToolMode.SECONDARY)
+			m_openRadialType = InstrumentAttachment.RadialType.CLIP;
+	}
 
 	public override void Update ()
 	{
-		
+		Debug.Log("Entering:" + m_gestureState);
+
 		CheckProximityStatus();
 		
 		switch(m_gestureState){
+			
+		case GestureState.INTERIOR_INITIALIZED:
+			break;
 			
 		case GestureState.INTERIOR:
 			break;
 			
 		case GestureState.INTERIOR_TO_PROXIMITY:
+			
+			if(m_heldObject){
+				//On first pass, open radial menu
+				if(bOpenRadial)
+					m_selectedInstrumentAttach.OpenRadial(m_openRadialType);
+				
+			}
+			
 			m_gestureState = GestureState.PROXIMITY;
-			//On first pass, open radial menu
+			
 			break;
 			
 		case GestureState.PROXIMITY:
@@ -62,6 +93,9 @@ public class InstrumentGestureTool : BaseTool {
 			break;
 		}
 		
+		Debug.Log("Exiting:" + m_gestureState);
+
+		
 		
 		
 		base.Update ();
@@ -69,7 +103,6 @@ public class InstrumentGestureTool : BaseTool {
 	}
 	
 	protected void CheckProximityStatus(){
-		
 		GameObject activeInterior = HydraController.Instance.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR);
 		GameObject activeProximity = HydraController.Instance.HandTarget(m_hand, ProximityType.INSTRUMENT_PROXIMITY);
 		
@@ -80,10 +113,14 @@ public class InstrumentGestureTool : BaseTool {
 					m_gestureState = GestureState.PROXIMITY_TO_INTERIOR;
 			} else {
 				//Inside proximity
-				if(m_gestureState == GestureState.INTERIOR)
+				if(m_gestureState == GestureState.INTERIOR || m_gestureState == GestureState.INTERIOR_INITIALIZED){
+					//First gesture. Flag the radial menu to be opened.
+					if(m_gestureState == GestureState.INTERIOR_INITIALIZED)
+						bOpenRadial = true;
 					m_gestureState = GestureState.INTERIOR_TO_PROXIMITY;
-				else if(m_gestureState == GestureState.EXTERIOR)
+				} else if(m_gestureState == GestureState.EXTERIOR){
 					m_gestureState = GestureState.EXTERIOR_TO_PROXIMITY;
+				}
 			}
 		} else {
 			//Outside proximity
@@ -149,6 +186,11 @@ public class InstrumentGestureTool : BaseTool {
 				break;
 			}
 		}
+		
+		if(m_selectedInstrumentAttach != null){
+			m_selectedInstrumentAttach.CloseRadial(m_openRadialType);
+		}
+
 		
 		m_heldObject = null;
 	}

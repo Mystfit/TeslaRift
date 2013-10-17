@@ -11,14 +11,26 @@ public class ParamSelectTool : BaseTool {
 	
 	private List<ParamAttachment> m_selectedParams;
 	
+	
 	public ParamSelectTool() {
 	}
+	
+	
+	public override void Init(ToolHand hand, BaseTool.ToolMode mode){
+		base.Init(hand, mode);
+		if(mode == BaseTool.ToolMode.SECONDARY){
+			m_selectedGenerator = ToolController.Instance.SelectedGenerator;
+			SetDisconnectGenerators(true);
+		}
+	}
+	
 	
 	public override void Awake(){
 		base.Awake();
 		m_selectedParams = new List<ParamAttachment>();
 		m_toolHandState = BaseTool.HandState.SEARCHING;
 	}
+	
 	
 	public override void Update(){
 	
@@ -35,15 +47,18 @@ public class ParamSelectTool : BaseTool {
 		base.Update();
 	}
 	
+	
 	public override void TransitionOut ()
 	{
 		m_toolControlRef.SetSelectedGenerator(null);	//Deselect any active generators
 		base.TransitionOut ();
 	}
 	
+	
 	public void SetSelectedGenerator(BaseGenerator gen){
 		m_selectedGenerator = gen;
 	}
+	
 	
 	public void CheckForSelection(){
 		
@@ -97,6 +112,7 @@ public class ParamSelectTool : BaseTool {
 			
 		}
 	}
+	
 	
 	public void SetDisconnectGenerators(bool state){
 		m_disconnectGenerators = state;

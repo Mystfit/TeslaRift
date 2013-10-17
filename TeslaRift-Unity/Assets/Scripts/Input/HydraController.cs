@@ -120,7 +120,7 @@ public class HydraController : MonoBehaviour {
 		
 		if(!targetList.Contains(proximityTarget)){
 			targetList.Add(proximityTarget);
-			Debug.Log ("Proximity trigger: " + proximityTarget.name + " Proximity type:"  + proximityType);
+			//Debug.Log ("Proximity trigger: " + proximityTarget.name + " Proximity type:"  + proximityType);
 		}
 	}
 	
@@ -276,13 +276,13 @@ public class HydraController : MonoBehaviour {
 			//--------------------
 			if(handControl.GetButtonDown(SixenseButtons.BUMPER) && handControl.GetButton(SixenseButtons.FOUR)){
 				Debug.Log("BANG");
-				m_toolControlRef.PushTool(typeof(ParamSelectTool), hand, BaseTool.Mode.SECONDARY);	//Secondary mode does a full reset
+				m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.SECONDARY);	//Secondary mode does a full reset
 			}
 			
 			//Full instrument reset
 			//---------------------
 			else if(handControl.GetButtonDown(SixenseButtons.BUMPER) && handControl.GetButton(SixenseButtons.THREE)){
-				m_toolControlRef.PushTool(typeof(ResetTool), hand, BaseTool.Mode.SECONDARY);
+				m_toolControlRef.PushTool(typeof(ResetTool), hand, BaseTool.ToolMode.SECONDARY);
 			}
 			
 			//Parameter selector / Generator attachment

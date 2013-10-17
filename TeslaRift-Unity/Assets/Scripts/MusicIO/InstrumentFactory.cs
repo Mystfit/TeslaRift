@@ -88,75 +88,57 @@ public class InstrumentFactory : MonoBehaviour {
 		GameObject instrumentGame = Instantiate(instrumentPrefab, transform.position, Quaternion.identity ) as GameObject;
 		instrumentGame.name = GAMEINSTRUMENT_PREFIX + instrument.Name;
 
-		//Add an instrument attachmet to interface with the MusicIO controllers
-		instrumentGame.AddComponent<InstrumentAttachment>().Init(instrument);
+		//Add an instrument attachment to interface with the MusicIO controllers
+		InstrumentAttachment attach = instrumentGame.AddComponent<InstrumentAttachment>();
+		attach.Init(instrument);
+		
 		instrumentGame.renderer.material.SetColor("_Color", instrumentColor);
-				
-		//Build a mesh for each layer with the number of parameters/clips
-		if(instrument.clipList.Count > 0){
-			
-		}
 		
-		if(instrument.paramList.Count > 0){
-			//Creates a gameobject containing each triangle panel
-			GameObject paramLayer = CreatePolygonLayer(instrument.paramList, radialOuterRadius, radialInnerRadius);
-			paramLayer.transform.position = instrumentGame.transform.position;
-			paramLayer.transform.rotation = instrumentGame.transform.rotation;
-			paramLayer.transform.parent = instrumentGame.transform;
-			paramLayer.transform.position += new Vector3(0.0f, 0.0f, -0.2f);
-			
-			//Orients panels to fan around center
-			foreach(Transform child in paramLayer.transform.GetComponentsInChildren<Transform>()){
-				//child.LookAt(instrumentGame.transform);
-				//child.gameObject.renderer.material.SetColor("_Color", Color.white);
-			}
-		}
+		//Create parameter radial menu
+		if(instrument.paramList.Count > 0)
+			attach.AddRadial( CreateRadialSelector(instrument.paramList, instrumentGame), InstrumentAttachment.RadialType.PARAM );			
 		
-		if(instrument.clipList.Count > 0){
-			//Creates a gameobject containing each triangle panel
-			GameObject clipLayer = CreatePolygonLayer(instrument.clipList, radialOuterRadius, radialInnerRadius );
-			clipLayer.transform.position = instrumentGame.transform.position;
-			clipLayer.transform.rotation = instrumentGame.transform.rotation;
-			clipLayer.transform.parent = instrumentGame.transform;
-			clipLayer.transform.position += new Vector3(0.0f, 0.0f, -0.2f);
-			
-			//Orients panels to fan around center
-			foreach(Transform child in clipLayer.transform.GetComponentsInChildren<Transform>()){
-				//child.LookAt(instrumentGame.transform);
-				//child.gameObject.renderer.material.SetColor("_Color", Color.white);
-			}
-		}
+		//Create clip radial menu
+		if(instrument.clipList.Count > 0)
+			attach.AddRadial(  CreateRadialSelector(instrument.clipList, instrumentGame), InstrumentAttachment.RadialType.CLIP );
 	}
 	
 	
 	/*
-	 * Creates a layer of triangular panels representing selectable parameters
+	 * Creates a radial menu selector from a list of parameters/clips
 	 */
-	private GameObject CreatePolygonLayer(List<BaseInstrumentParam> attachList, float radius, float innerRadius){
+	private GameObject CreateRadialSelector(List<BaseInstrumentParam> parameterList, GameObject parentObj)
+	{
 		GameObject panelLayer = new GameObject("panelLayer");
 		GameObject textPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/paramLabel.prefab", typeof(GameObject)) as GameObject;
 		GameObject trianglePanelPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/trianglePanel.prefab", typeof(GameObject)) as GameObject;
 		Material panelMaterial = Resources.LoadAssetAtPath("Assets/materials/whiteMat.mat", typeof(Material)) as Material;
 
-		for(int i = 0; i < attachList.Count; i++){
+		for(int i = 0; i < parameterList.Count; i++){
 			//Create a tiangle panel for this parameter
-			Mesh panelMesh = CreatePolygonPanel(0, attachList.Count, radius, innerRadius);
+			Mesh panelMesh = CreatePolygonPanel(0, parameterList.Count, radialOuterRadius, radialInnerRadius);
 			GameObject panel = Instantiate(trianglePanelPrefab) as GameObject;
 			
 			panel.GetComponent<MeshFilter>().mesh = panelMesh;
 			panel.GetComponent<MeshCollider>().sharedMesh = panelMesh;
-			panel.GetComponentInChildren<TextMesh>().text = attachList[i].name;
+			panel.GetComponentInChildren<TextMesh>().text = parameterList[i].name;
 				
 			panel.transform.parent = panelLayer.transform;	
-			panel.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 360/(float)attachList.Count*(float)i);
-			panel.transform.GetChild(0).GetChild(0).localPosition = new Vector3(0.0f, radius-0.05f, 0.0f);
-			panel.transform.GetChild(0).localRotation =  Quaternion.Euler(0.0f, 0.0f, 270.0f + (360/(float)attachList.Count)*0.5f);
-			panel.AddComponent<ParamAttachment>().Init(attachList[i]);	
+			panel.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 360/(float)parameterList.Count*(float)i);
+			//panel.transform.localScale = new Vector3(0.0f, 0.0f, 0.0f);
+			panel.transform.GetChild(0).GetChild(0).localPosition = new Vector3(0.0f, radialOuterRadius - 0.25f, 0.0f);
+			panel.transform.GetChild(0).localRotation =  Quaternion.Euler(0.0f, 0.0f, 270.0f + (360/(float)parameterList.Count)*0.5f);
+			panel.AddComponent<ParamAttachment>().Init(parameterList[i]);	
 		}
+		
+		panelLayer.transform.position = parentObj.transform.position;
+		panelLayer.transform.rotation = parentObj.transform.rotation;
+		panelLayer.transform.parent = parentObj.transform;
+		panelLayer.transform.position += new Vector3(0.0f, 0.0f, -0.2f);
+		panelLayer.SetActive(false);
+		
 		return panelLayer;
 	}
-				
-		
 	
 	
 	/*

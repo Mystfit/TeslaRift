@@ -10,6 +10,13 @@ public class ResetTool : BaseTool {
 	public ResetTool() {
 	}
 	
+	public override void Init(ToolHand hand, ToolMode mode){
+		base.Init(hand, mode);
+		if(mode == BaseTool.ToolMode.SECONDARY)
+			SetResetAll();
+	}
+		
+	
 	public override void Awake(){
 		base.Awake();
 		m_toolHandState = BaseTool.HandState.SEARCHING;

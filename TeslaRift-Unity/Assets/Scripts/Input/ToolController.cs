@@ -14,8 +14,9 @@ public class ToolController : MonoBehaviour {
 	protected InstrumentController m_instrumentControlRef = null;
 	protected HydraController m_hydraRef = null;
 	
-	private BaseGenerator m_selectedGenerator;	//Selected generators are kept in the controller to pass to the
-												//appropriate select tools
+	private BaseGenerator m_selectedGenerator;
+	public BaseGenerator SelectedGenerator{ get { return m_selectedGenerator; }}
+	public void SetSelectedGenerator(BaseGenerator gen){ m_selectedGenerator = gen; }
 
 	
 	void Awake () {
@@ -28,37 +29,13 @@ public class ToolController : MonoBehaviour {
 	//Tool creation
 	//-------------
 	public void PushTool(System.Type toolType, BaseTool.ToolHand hand){
-		PushTool(toolType, hand, BaseTool.Mode.PRIMARY);
+		PushTool(toolType, hand, BaseTool.ToolMode.PRIMARY);
 	}
 
-	public void PushTool(System.Type toolType, BaseTool.ToolHand hand, BaseTool.Mode mode){
-		
+	public void PushTool(System.Type toolType, BaseTool.ToolHand hand, BaseTool.ToolMode mode){
 		PopTool(hand);
-		
 		BaseTool activeAttachedTool =  m_hydraRef.GetHand(hand).AddComponent(toolType) as BaseTool;
-		
-		//Mode specific cases
-		//-------------------
-	
-		//Pass selected generators to the param select tool
-		if(activeAttachedTool.GetType() == typeof(ParamSelectTool)){
-			ParamSelectTool tool = activeAttachedTool as ParamSelectTool;
-			tool.SetSelectedGenerator(m_selectedGenerator);
-			if(mode == BaseTool.Mode.SECONDARY)
-			{	
-				tool.SetDisconnectGenerators(true);
-			}
-		}
-		
-		if(activeAttachedTool.GetType() == typeof(ResetTool)){
-			ResetTool tool = activeAttachedTool as ResetTool;
-			if(mode == BaseTool.Mode.SECONDARY)
-			{	
-				tool.SetResetAll();
-			}
-		}
-		
-		activeAttachedTool.Init(hand);
+		activeAttachedTool.Init(hand, mode);
 	}
 	
 	public void PopTool(BaseTool.ToolHand hand){
@@ -72,14 +49,6 @@ public class ToolController : MonoBehaviour {
 	
 	public BaseTool currentTool(BaseTool.ToolHand hand){
 		return m_hydraRef.GetHand(hand).GetComponent<BaseTool>();
-	}
-	
-	public void SetSelectedGenerator(BaseGenerator gen){
-		m_selectedGenerator = gen;
-	}
-	
-	public BaseGenerator GetSelectedGenerator(){
-		return m_selectedGenerator;
 	}
 	
 	// Update is called once per frame

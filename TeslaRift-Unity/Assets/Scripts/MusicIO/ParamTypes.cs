@@ -3,12 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-//**
-//	ToggleParameter
-// 
-// - On/off parameter toggle
-//
-//**
+/*
+ *	ToggleParameter
+ *   On/off toggles. Fires message on change
+ */
 public class ToggleParam : BaseInstrumentParam {
 	
 	public ToggleParam(string name, BaseInstrument paramOwner)
@@ -36,12 +34,10 @@ public class ToggleParam : BaseInstrumentParam {
 }
 
 
-//**
-//	Noteparameter
-// 
-// - Multi-note chord channel for midi instruments.
-//
-//**
+/*
+ *	Noteparameter
+ *   Multi-note chord channel for midi instruments.
+ */
 public class NoteParam : BaseInstrumentParam {
 	
 	protected List<Note> m_chordNotes;
@@ -83,12 +79,10 @@ public class NoteParam : BaseInstrumentParam {
 }
 
 
-//**
-//	Note class
-// 
-// - Single midi note
-//
-//**
+/*
+ *	Note
+ *  Single note in a chord
+ */
 public class Note : BaseInstrumentParam {
 	
 	public float velocity = 0;
@@ -110,6 +104,21 @@ public class Note : BaseInstrumentParam {
 	public Note(string name, BaseInstrument paramOwner, bool isExpectingReturnMessage)
 			: base(name, paramOwner)
 	{
-		
+	}
+}
+
+
+/*
+ *	InstrumentClip
+ *  A clip on this instrument channel
+ */
+public class InstrumentClip : BaseInstrumentParam
+{
+	public int scene;
+	public bool isPlaying;
+	
+	public InstrumentClip(string name, BaseInstrument paramOwner, int clipScene) : base(name, paramOwner)
+	{
+		scene = clipScene;
 	}
 }

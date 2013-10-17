@@ -38,7 +38,7 @@ public class GeneratorSelectTool : BaseTool {
 			case HandState.SEARCHING:
 				if(m_hydraRef.HandTarget(m_hand, ProximityType.GENERATOR)){
 					if(m_hydraRef.HandTarget(m_hand, ProximityType.GENERATOR) != m_heldObject){
-						if(m_toolControlRef.GetSelectedGenerator() == null){		//Only one attached generator at a time
+						if(m_toolControlRef.SelectedGenerator == null){		//Only one attached generator at a time
 							if(m_hydraRef.HandTarget(m_hand, ProximityType.GENERATOR).CompareTag("Generator")){
 								m_heldObject = m_hydraRef.HandTarget(m_hand, ProximityType.GENERATOR);
 								m_selectedGenerator = m_heldObject.GetComponent<BaseGenerator>();
