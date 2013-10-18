@@ -14,12 +14,18 @@ public class InstrumentAttachment : BaseAttachment {
 	public GameObject m_clipRadial;
 	public GameObject m_paramRadial;
 	
+	//Selected references
+	protected ParamAttachment m_selectedParam;
+
 	public enum RadialType {
 		CLIP = 0,
 		PARAM,
 		CLOSED
 	}
-
+	protected RadialType m_openRadialType;
+	protected bool bOpenRadial = false;
+	public bool IsRadialOpen{ get { return bOpenRadial; }}
+	
 	
 	protected override void Start () {
 		base.Start();
@@ -68,7 +74,74 @@ public class InstrumentAttachment : BaseAttachment {
 			iTween.ScaleTo(m_paramRadial, iTween.Hash("scale", new Vector3(.0f, .0f, 0.0f), "time", 0.4f, "easetype", "easeInCubic", "delay", 2.0f));
 		}
 	}
-
+	
+	
+	/*
+	 * Check for ray collisions with parameters
+	 */
+	public void CheckForSelection(){
+		
+		//Check for panel collisions
+		RaycastHit hit;
+		GameObject hand =  HydraController.Instance.GetHand(m_hand);
+		int mask = ~LayerMask.NameToLayer("ParamSelectable");
+		Vector3 dir = hand.transform.position - transform.position;
+		
+		if(Physics.Raycast(transform.position, dir, out hit, dir.magnitude*10.0f, mask )){
+			
+			//Toggle the panel and attach any generators if required
+			ParamAttachment attach = hit.collider.gameObject.GetComponent<ParamAttachment>();
+			
+			if(attach != null){
+				if(m_selectedParam != null)
+					m_selectedParam.SetHovering(false);
+				m_selectedParam = attach;
+				m_selectedParam.SetHovering(true);
+			}
+		}
+		
+		Debug.DrawRay(transform.position, dir, Color.red);
+	}
+	
+	
+	/*
+	 *  Gesture handlers
+	 */
+	public override void Gesture_First ()
+	{
+		base.Gesture_First ();
+		OpenRadial(m_openRadialType);
+	}
+	
+	public override void Gesture_IdleProximity ()
+	{
+		base.Gesture_IdleProximity ();
+		CheckForSelection();
+	}
+	
+	public override void Gesture_PullOutPushIn()
+	{
+		base.Gesture_PullOutPushIn ();
+		InstrumentController.Instance.ResetInstrumentParameters( instrumentRef );
+		m_selectedParam.ToggleSelected();	//Activate parameter
+		CloseRadial(m_openRadialType);
+		Gesture_Exit();
+	}
+	
+	
+	public override void Gesture_PullOut ()
+	{
+		base.Gesture_PullOut ();
+		m_selectedParam.ToggleSelected();
+		CloseRadial(m_openRadialType);
+		Gesture_Exit();
+	}
+	
+	
+	public override void Gesture_Twist (float amount)
+	{
+		base.Gesture_Twist (amount);
+	}
 	
 	
 	/*
