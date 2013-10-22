@@ -52,6 +52,13 @@ public class OVRCameraControllerEditor : Editor
 
 		{
 #if CUSTOM_LAYOUT
+			OVREditorGUIUtility.Separator();			
+			
+			m_Component.VerticalFOV         = EditorGUILayout.FloatField("Vertical FOV", m_Component.VerticalFOV);
+			m_Component.IPD         		= EditorGUILayout.FloatField("IPD", m_Component.IPD);
+			
+			OVREditorGUIUtility.Separator();
+			
 			m_Component.CameraRootPosition  = EditorGUILayout.Vector3Field("Camera Root Position", m_Component.CameraRootPosition);
 			m_Component.NeckPosition 		= EditorGUILayout.Vector3Field("Neck Position", m_Component.NeckPosition);
 			m_Component.EyeCenterPosition 	= EditorGUILayout.Vector3Field("Eye Center Position", m_Component.EyeCenterPosition);
@@ -71,6 +78,7 @@ public class OVRCameraControllerEditor : Editor
 
 			// Remove Portrait Mode from Inspector window for now
 			//m_Component.PortraitMode        = EditorGUILayout.Toggle ("Portrait Mode", m_Component.PortraitMode);
+			m_Component.EnableOrientation   = EditorGUILayout.Toggle ("Enable Orientation", m_Component.EnableOrientation);
 			m_Component.PredictionOn        = EditorGUILayout.Toggle ("Prediction On", m_Component.PredictionOn);
 			m_Component.CallInPreRender     = EditorGUILayout.Toggle ("Call in Pre-Render", m_Component.CallInPreRender);
 			m_Component.WireMode     		= EditorGUILayout.Toggle ("Wire-Frame Mode", m_Component.WireMode);

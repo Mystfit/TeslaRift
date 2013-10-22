@@ -48,14 +48,17 @@ public class BaseAttachment : MonoBehaviour {
 		bIsFirstGesture = true;
 		SetToolMode(BaseTool.ToolMode.PRIMARY);
 	}
+	
+	public virtual void Init<T>(T managedReference){
+	}
 
 	// Use this for initialization
-	protected virtual void Start () {
+	public virtual void Start () {
 		m_instrumentControlRef = InstrumentController.Instance;	
 	}	
 	
 	// Update is called once per frame
-	void Update () {
+	public virtual void Update () {
 	
 	}
 }

@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using MusicIO;
 
 public class BaseTool : MonoBehaviour {
-	
+		
 	protected HydraController m_hydraRef = null;
 	protected InstrumentController m_instrumentControlRef = null;
 	protected ToolController m_toolControlRef = null;

@@ -12,9 +12,6 @@ agreement provided at the time of installation or download, or which
 otherwise accompanies this software in either electronic or hard copy form.
 
 ************************************************************************************/
-
-//#define MSAA_ENABLED // Not available in Unity 4 as of yet
-
 using UnityEngine;
 using System.Runtime.InteropServices;
 
@@ -37,7 +34,8 @@ public class OVRCamera : OVRComponent
 	// Color only material, used for drawing quads on-screen
 	private Material 		ColorOnlyMaterial   = null;
 	private Color			QuadColor 			= Color.red;
-	// Scaled size of final render buffer
+	
+	// Scaled size of render buffer (allows for super-sampling + MSAA)
 	// A value of 1 will not create a render buffer but will render directly to final
 	// backbuffer
  	private float			CameraTextureScale 	= 1.0f;
@@ -97,24 +95,21 @@ public class OVRCamera : OVRComponent
 		if(CameraController == null)
 			Debug.LogWarning("WARNING: OVRCameraController not found!");
 		
-		// NOTE: MSAA TEXTURES NOT AVAILABLE YET
 		// Set CameraTextureScale (increases the size of the texture we are rendering into
 		// for a better pixel match when post processing the image through lens distortion)
-#if MSAA_ENABLED
-		CameraTextureScale = OVRDevice.DistortionScale();
-#endif		
+		
+		//CameraTextureScale = OVRDevice.DistortionScale();
+
 		// If CameraTextureScale is not 1.0f, create a new texture and assign to target texture
 		// Otherwise, fall back to normal camera rendering
-		if((CameraTexture == null) && (CameraTextureScale > 1.0f))
+		if((CameraTexture == null) && (CameraTextureScale != 1.0f))
 		{
 			int w = (int)(Screen.width / 2.0f * CameraTextureScale);
 			int h = (int)(Screen.height * CameraTextureScale);
 			CameraTexture = new RenderTexture(  w, h, 24);
 			
-#if MSAA_ENABLED
-			// NOTE: AA on RenderTexture not available yet
-			//CameraTexture.antiAliasing = QualitySettings.antiAliasing;
-#endif
+			// Use MSAA settings in QualitySettings for new RenderTexture
+			CameraTexture.antiAliasing = QualitySettings.antiAliasing;
 		}
 	}
 
@@ -163,9 +158,7 @@ public class OVRCamera : OVRComponent
 	
 	// OnRenderImage
 	void  OnRenderImage (RenderTexture source, RenderTexture destination)
-	{	
-		Graphics.Blit(source, destination);
-		
+	{			
 		// Use either source input or CameraTexutre, if it exists
 		RenderTexture SourceTexture = source;
 		
@@ -239,12 +232,15 @@ public class OVRCamera : OVRComponent
 			*/	
 			// Read shared data from CameraController	
 			if(CameraController != null)
-			{				
-				// Read sensor here (prediction on or off)
-				if(CameraController.PredictionOn == false)
-					OVRDevice.GetOrientation(0, ref CameraOrientation);
-				else
-					OVRDevice.GetPredictedOrientation(0, ref CameraOrientation);				
+			{		
+				if(CameraController.EnableOrientation == true)
+				{
+					// Read sensor here (prediction on or off)
+					if(CameraController.PredictionOn == false)
+						OVRDevice.GetOrientation(0, ref CameraOrientation);
+					else
+						OVRDevice.GetPredictedOrientation(0, ref CameraOrientation);
+				}
 			}
 			
 			// This needs to go as close to reading Rift orientation inputs

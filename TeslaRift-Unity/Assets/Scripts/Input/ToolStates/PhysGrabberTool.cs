@@ -23,6 +23,11 @@ public class PhysGrabberTool : BaseTool {
 	
 	public override void Update(){
 		CheckForSelection();
+		
+		if(m_mode == BaseTool.ToolMode.SECONDARY){
+			ApplyForceToInstruments(PhysDirection.SUCK, 0.4f);
+		}
+		
 		base.Update();
 	}
 	

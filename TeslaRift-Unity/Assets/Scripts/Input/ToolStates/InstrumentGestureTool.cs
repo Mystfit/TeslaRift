@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class InstrumentGestureTool : BaseTool {
-	
+		
 	GameObject m_heldObject;
 	BaseAttachment m_attachment;
 	

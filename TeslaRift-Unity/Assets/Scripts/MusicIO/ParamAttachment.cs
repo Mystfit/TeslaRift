@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using MusicIO;
 
 public class ParamAttachment : BaseAttachment {
 
@@ -7,13 +8,14 @@ public class ParamAttachment : BaseAttachment {
 	
 	public bool isHovering = false;
 
-	protected override void Start () {
+	public override void Start () {
 		base.Start();
 	}
 	
-	void Update () {
+	public override void Update () {
 		if(!m_paramRef.enabled)
 			SetSelected(false);
+		base.Update();
 	}
 	
 	public override void ToggleSelected(){
@@ -54,8 +56,8 @@ public class ParamAttachment : BaseAttachment {
 		m_selected = state; 
 	}
 	
-	public void Init(BaseInstrumentParam param){
-		m_paramRef = param;
+	public override void Init<T>(T param){
+		m_paramRef = (BaseInstrumentParam)(object)param;
 	}
 	
 	public BaseInstrumentParam paramRef{ get {return m_paramRef; } }

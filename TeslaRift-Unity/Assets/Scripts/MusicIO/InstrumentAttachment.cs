@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using MusicIO;
+	
 public class InstrumentAttachment : BaseAttachment {
 	
 	//Debug clip changing
@@ -13,6 +14,7 @@ public class InstrumentAttachment : BaseAttachment {
 	//Radial menu references
 	public GameObject m_clipRadial;
 	public GameObject m_paramRadial;
+	protected Quaternion m_dirToTool;
 	
 	//Selected references
 	protected ParamAttachment m_selectedParam;
@@ -27,22 +29,24 @@ public class InstrumentAttachment : BaseAttachment {
 	public bool IsRadialOpen{ get { return bOpenRadial; }}
 	
 	
-	protected override void Start () {
+	public override void Start () {
 		base.Start();
 	}
 	
 	
-	public void Init(BaseInstrument instrument){
-		m_instrumentRef = instrument;
+	public override void Init<T>(T instrument){		
+		m_instrumentRef = (BaseInstrument)(object)instrument;
 	}
 	
 	
-	void Update () {
+	public override void Update () {
 		//Debug tests for clip changing
 		if(triggerClip == true){
 			triggerClip = false;
 			m_instrumentRef.addClipMessageToQueue(m_instrumentRef.GetClipByIndex(clipIndex).scene);
 		}
+		
+		base.Update();
 	}
 	
 	public void AddRadial(GameObject radialMenu, RadialType type){
@@ -53,7 +57,7 @@ public class InstrumentAttachment : BaseAttachment {
 	}
 	
 	
-	public void OpenRadial(RadialType type){
+	public void OpenRadial(RadialType type, Quaternion rotation){
 		if(type == RadialType.CLIP){
 			m_clipRadial.SetActive(true);
 			iTween.Stop(m_clipRadial);
@@ -86,6 +90,7 @@ public class InstrumentAttachment : BaseAttachment {
 		GameObject hand =  HydraController.Instance.GetHand(m_hand);
 		int mask = ~LayerMask.NameToLayer("ParamSelectable");
 		Vector3 dir = hand.transform.position - transform.position;
+		m_dirToTool = Quaternion.Euler(dir);
 		
 		if(Physics.Raycast(transform.position, dir, out hit, dir.magnitude*10.0f, mask )){
 			
@@ -110,7 +115,7 @@ public class InstrumentAttachment : BaseAttachment {
 	public override void Gesture_First ()
 	{
 		base.Gesture_First ();
-		OpenRadial(m_openRadialType);
+		OpenRadial(m_openRadialType, m_dirToTool);
 	}
 	
 	public override void Gesture_IdleProximity ()
@@ -123,7 +128,9 @@ public class InstrumentAttachment : BaseAttachment {
 	{
 		base.Gesture_PullOutPushIn ();
 		InstrumentController.Instance.ResetInstrumentParameters( instrumentRef );
-		m_selectedParam.ToggleSelected();	//Activate parameter
+		if(m_selectedParam != null)
+			m_selectedParam.ToggleSelected();	//Activate parameter
+		
 		CloseRadial(m_openRadialType);
 		Gesture_Exit();
 	}
@@ -175,3 +182,4 @@ public class InstrumentAttachment : BaseAttachment {
 		m_instrumentControlRef.ResetInstrument(m_instrumentRef);
 	}
 }
+

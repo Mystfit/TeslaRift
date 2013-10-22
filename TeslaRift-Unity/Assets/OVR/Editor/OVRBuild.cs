@@ -116,13 +116,13 @@ class OculusBuildDemo
 	static void PerformBuildStandaloneLinux ()
 	{
 		string[] scenes = { "Assets/Tuscany/Scenes/VRDemo_Tuscany.unity" };
-		BuildPipeline.BuildPlayer(scenes, "Linux_OculusUnityDemoScene.app", BuildTarget.StandaloneLinux, BuildOptions.None);
+		BuildPipeline.BuildPlayer(scenes, "Linux_OculusUnityDemoScene", BuildTarget.StandaloneLinux, BuildOptions.None);
     }
 	
 	static void PerformBuildStandaloneLinux64 ()
 	{
 		string[] scenes = { "Assets/Tuscany/Scenes/VRDemo_Tuscany.unity" };
-		BuildPipeline.BuildPlayer(scenes, "Linux_OculusUnityDemoScene.app", BuildTarget.StandaloneLinux64, BuildOptions.None);
+		BuildPipeline.BuildPlayer(scenes, "Linux_OculusUnityDemoScene", BuildTarget.StandaloneLinux64, BuildOptions.None);
     }
 
 	//---------------------------------------------
