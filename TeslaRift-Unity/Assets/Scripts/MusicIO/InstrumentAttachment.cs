@@ -19,12 +19,7 @@ public class InstrumentAttachment : BaseAttachment {
 	//Selected references
 	protected ParamAttachment m_selectedParam;
 
-	public enum RadialType {
-		CLIP = 0,
-		PARAM,
-		CLOSED
-	}
-	protected RadialType m_openRadialType;
+	protected ParameterType m_openRadialType;
 	protected bool bOpenRadial = false;
 	public bool IsRadialOpen{ get { return bOpenRadial; }}
 	
@@ -49,31 +44,31 @@ public class InstrumentAttachment : BaseAttachment {
 		base.Update();
 	}
 	
-	public void AddRadial(GameObject radialMenu, RadialType type){
-		if(type == RadialType.CLIP)
+	public void AddRadial(GameObject radialMenu, ParameterType type){
+		if(type == ParameterType.CLIP)
 			m_clipRadial = radialMenu; 
-		else if(type == RadialType.PARAM)
+		else if(type == ParameterType.PARAM)
 			m_paramRadial = radialMenu; 
 	}
 	
 	
-	public void OpenRadial(RadialType type, Quaternion rotation){
-		if(type == RadialType.CLIP){
+	public void OpenRadial(ParameterType type, Quaternion rotation){
+		if(type == ParameterType.CLIP){
 			m_clipRadial.SetActive(true);
 			iTween.Stop(m_clipRadial);
 			iTween.ScaleTo(m_clipRadial, iTween.Hash("scale", new Vector3(1.0f, 1.0f, 1.0f), "time", 0.4f, "easetype", "easeOutCubic"));
-		} else if(type == RadialType.PARAM){
+		} else if(type == ParameterType.PARAM){
 			m_paramRadial.SetActive(true);
 			iTween.Stop(m_paramRadial);
 			iTween.ScaleTo(m_paramRadial, iTween.Hash("scale", new Vector3(1.0f, 1.0f, 1.0f), "time", 0.4f, "easetype", "easeOutCubic"));
 		}
 	}
 	
-	public void CloseRadial(RadialType type){
-		if(type == RadialType.CLIP){
+	public void CloseRadial(ParameterType type){
+		if(type == ParameterType.CLIP){
 			//m_clipRadial.SetActive(true);
 			iTween.ScaleTo(m_clipRadial, iTween.Hash("scale", new Vector3(0.0f, 0.0f, 0.0f), "time", 0.4f, "easetype", "easeInCubic",  "delay", 2.0f));
-		} else if(type == RadialType.PARAM){
+		} else if(type == ParameterType.PARAM){
 			//m_paramRadial.SetActive(true);
 			iTween.ScaleTo(m_paramRadial, iTween.Hash("scale", new Vector3(.0f, .0f, 0.0f), "time", 0.4f, "easetype", "easeInCubic", "delay", 2.0f));
 		}

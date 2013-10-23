@@ -3,6 +3,12 @@ using System.Collections;
 
 public class BaseAttachment : MonoBehaviour {
 	
+	public enum ParameterType {
+		CLIP = 0,
+		PARAM,
+		CLOSED
+	}
+	
 	protected InstrumentController m_instrumentControlRef = null;
 	
 	protected bool m_selected = false;

@@ -13,9 +13,11 @@ public class ParamAttachment : BaseAttachment {
 	}
 	
 	public override void Update () {
-		if(!m_paramRef.enabled)
-			SetSelected(false);
-		base.Update();
+		if(m_paramRef != null){
+			if(!m_paramRef.enabled)
+				SetSelected(false);
+			base.Update();
+		}
 	}
 	
 	public override void ToggleSelected(){

@@ -97,11 +97,11 @@ public class InstrumentFactory : MonoBehaviour {
 		
 		//Create parameter radial menu
 		if(instrument.paramList.Count > 0)
-			attach.AddRadial( CreateRadialSelector(instrument.paramList, instrumentGame), InstrumentAttachment.RadialType.PARAM );			
+			attach.AddRadial( CreateRadialSelector(instrument.paramList, instrumentGame), BaseAttachment.ParameterType.PARAM );			
 		
 		//Create clip radial menu
 		if(instrument.clipList.Count > 0)
-			attach.AddRadial(  CreateRadialSelector(instrument.clipList, instrumentGame), InstrumentAttachment.RadialType.CLIP );
+			attach.AddRadial(  CreateRadialSelector(instrument.clipList, instrumentGame), BaseAttachment.ParameterType.CLIP );
 	}
 	
 	
