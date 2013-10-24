@@ -11,8 +11,9 @@ public class InstrumentFactory : MonoBehaviour {
 	public GameObject instrumentPrefab = null;
 	public TextAsset instrumentDefinitionFile;
 	public GameObject paramPanelPrefab;
-	public float radialInnerRadius = 0.05f;	
-	public float radialOuterRadius = 0.5f;
+	public float m_radialInnerRadius = 0.05f;	
+	public float m_radialOuterRadius = 0.5f;
+	public float m_panelOrbitDistance = 0.2f;
 
 	private InstrumentController m_instrumentControllerRef;
 
@@ -117,7 +118,7 @@ public class InstrumentFactory : MonoBehaviour {
 
 		for(int i = 0; i < parameterList.Count; i++){
 			//Create a tiangle panel for this parameter
-			Mesh panelMesh = CreatePolygonPanel(0, parameterList.Count, radialOuterRadius, radialInnerRadius);
+			Mesh panelMesh = CreatePolygonPanel(0, parameterList.Count, m_radialOuterRadius, m_radialInnerRadius);
 			GameObject panel = Instantiate(trianglePanelPrefab) as GameObject;
 			
 			panel.GetComponent<MeshFilter>().mesh = panelMesh;
@@ -126,8 +127,10 @@ public class InstrumentFactory : MonoBehaviour {
 				
 			panel.transform.parent = panelLayer.transform;	
 			panel.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 360/(float)parameterList.Count*(float)i);
-			//panel.transform.localScale = new Vector3(0.0f, 0.0f, 0.0f);
-			panel.transform.GetChild(0).GetChild(0).localPosition = new Vector3(0.0f, radialOuterRadius - 0.25f, 0.0f);
+			panel.transform.localPosition = new Vector3(0.0f, 0.0f, m_panelOrbitDistance);
+			
+			//Label position
+			panel.transform.GetChild(0).GetChild(0).localPosition = new Vector3(0.0f, m_radialOuterRadius - 0.25f);
 			panel.transform.GetChild(0).localRotation =  Quaternion.Euler(0.0f, 0.0f, 270.0f + (360/(float)parameterList.Count)*0.5f);
 			panel.AddComponent<ParamAttachment>().Init(parameterList[i]);	
 		}
@@ -135,7 +138,7 @@ public class InstrumentFactory : MonoBehaviour {
 		panelLayer.transform.position = parentObj.transform.position;
 		panelLayer.transform.rotation = parentObj.transform.rotation;
 		panelLayer.transform.parent = parentObj.transform;
-		panelLayer.transform.position += new Vector3(0.0f, 0.0f, -0.2f);
+		//panelLayer.transform.position += new Vector3(0.0f, 0.0f, );
 		panelLayer.SetActive(false);
 		
 		return panelLayer;

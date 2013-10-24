@@ -23,7 +23,7 @@ public class BaseAttachment : MonoBehaviour {
 	
 	protected BaseTool.ToolMode m_mode;
 	public BaseTool.ToolMode mode{ get { return m_mode; }}
-	public void SetToolMode(BaseTool.ToolMode mode){ m_mode = mode; }
+	public virtual void SetToolMode(BaseTool.ToolMode mode){ m_mode = mode; }
 	
 	public virtual void ToggleSelected(){ 
 		SetSelected(!m_selected); 

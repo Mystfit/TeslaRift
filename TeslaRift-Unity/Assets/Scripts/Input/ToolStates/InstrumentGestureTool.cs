@@ -99,7 +99,6 @@ public class InstrumentGestureTool : BaseTool {
 		}
 	}
 	
-	
 
 	public override void TransitionIn ()
 	{

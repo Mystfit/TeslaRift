@@ -14,7 +14,9 @@ public class InstrumentAttachment : BaseAttachment {
 	//Radial menu references
 	public GameObject m_clipRadial;
 	public GameObject m_paramRadial;
-	protected Quaternion m_dirToTool;
+	
+	protected Quaternion m_dirToToolRotation;
+	protected Vector3 m_dirToTool;
 	
 	//Selected references
 	protected ParamAttachment m_selectedParam;
@@ -41,8 +43,23 @@ public class InstrumentAttachment : BaseAttachment {
 			m_instrumentRef.addClipMessageToQueue(m_instrumentRef.GetClipByIndex(clipIndex).scene);
 		}
 		
+		//Update vector between hand and target
+		m_dirToTool = HydraController.Instance.GetHand(m_hand).transform.position - transform.position;
+		m_dirToToolRotation = Quaternion.LookRotation(m_dirToTool, Vector3.up);
+
+		
 		base.Update();
 	}
+	
+		
+	public override void SetToolMode(BaseTool.ToolMode mode){
+		if(mode == BaseTool.ToolMode.PRIMARY)
+			m_openRadialType = BaseAttachment.ParameterType.CLIP;
+		else
+			m_openRadialType = BaseAttachment.ParameterType.PARAM;
+		base.SetToolMode(mode);
+	}
+	
 	
 	public void AddRadial(GameObject radialMenu, ParameterType type){
 		if(type == ParameterType.CLIP)
@@ -54,10 +71,12 @@ public class InstrumentAttachment : BaseAttachment {
 	
 	public void OpenRadial(ParameterType type, Quaternion rotation){
 		if(type == ParameterType.CLIP){
+			m_clipRadial.transform.rotation = rotation;
 			m_clipRadial.SetActive(true);
 			iTween.Stop(m_clipRadial);
 			iTween.ScaleTo(m_clipRadial, iTween.Hash("scale", new Vector3(1.0f, 1.0f, 1.0f), "time", 0.4f, "easetype", "easeOutCubic"));
 		} else if(type == ParameterType.PARAM){
+			m_paramRadial.transform.rotation = rotation;
 			m_paramRadial.SetActive(true);
 			iTween.Stop(m_paramRadial);
 			iTween.ScaleTo(m_paramRadial, iTween.Hash("scale", new Vector3(1.0f, 1.0f, 1.0f), "time", 0.4f, "easetype", "easeOutCubic"));
@@ -82,12 +101,9 @@ public class InstrumentAttachment : BaseAttachment {
 		
 		//Check for panel collisions
 		RaycastHit hit;
-		GameObject hand =  HydraController.Instance.GetHand(m_hand);
 		int mask = ~LayerMask.NameToLayer("ParamSelectable");
-		Vector3 dir = hand.transform.position - transform.position;
-		m_dirToTool = Quaternion.Euler(dir);
 		
-		if(Physics.Raycast(transform.position, dir, out hit, dir.magnitude*10.0f, mask )){
+		if(Physics.Raycast(transform.position, m_dirToTool, out hit, m_dirToTool.magnitude*10.0f, mask )){
 			
 			//Toggle the panel and attach any generators if required
 			ParamAttachment attach = hit.collider.gameObject.GetComponent<ParamAttachment>();
@@ -100,7 +116,7 @@ public class InstrumentAttachment : BaseAttachment {
 			}
 		}
 		
-		Debug.DrawRay(transform.position, dir, Color.red);
+		Debug.DrawRay(transform.position, m_dirToTool, Color.red);
 	}
 	
 	
@@ -110,7 +126,7 @@ public class InstrumentAttachment : BaseAttachment {
 	public override void Gesture_First ()
 	{
 		base.Gesture_First ();
-		OpenRadial(m_openRadialType, m_dirToTool);
+		OpenRadial(m_openRadialType, m_dirToToolRotation);
 	}
 	
 	public override void Gesture_IdleProximity ()

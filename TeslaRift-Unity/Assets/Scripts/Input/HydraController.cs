@@ -272,17 +272,19 @@ public class HydraController : MonoBehaviour {
 				m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand);
 			}
 			
+			//Gesture selector secondary
+			//--------------------
+			else if(Input.GetKeyDown(KeyCode.W) && Input.GetKey(KeyCode.LeftShift) ){  //handControl.GetButtonDown(SixenseButtons.BUMPER) && handControl.GetButton(SixenseButtons.FOUR)
+				m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.SECONDARY);	//Secondary mode does a full reset
+			}
+			
+			
 			//Gesture Selector Primary
 			//--------------------
 			else if( Input.GetKeyDown(KeyCode.W) ){ //handControl.GetButtonDown(SixenseButtons.BUMPER)
 				m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand);
 			} 
 			
-			//Gesture selector secondary
-			//--------------------
-			else if(Input.GetKeyDown(KeyCode.W) && Input.GetKey(KeyCode.LeftShift) ){  //handControl.GetButtonDown(SixenseButtons.BUMPER) && handControl.GetButton(SixenseButtons.FOUR)
-				m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.SECONDARY);	//Secondary mode does a full reset
-			}
 			
 			//Full instrument reset
 			//---------------------
