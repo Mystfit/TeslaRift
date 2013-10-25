@@ -2,49 +2,57 @@
 using System.Collections;
 using MusicIO;
 
-public class ParamAttachment : BaseAttachment {
-
-	private BaseInstrumentParam m_paramRef;
+public class ParamAttachment : BaseAttachment<BaseInstrumentParam> {
 	
 	public bool isHovering = false;
-
+		
+	
+	/*
+	 * Initialization
+	 */
 	public override void Start () {
 		base.Start();
 	}
 	
+	
 	public override void Update () {
-		if(m_paramRef != null){
-			if(!m_paramRef.enabled)
+		if( GetMusicRef() != null){
+			if(!GetMusicRef().enabled)
 				SetSelected(false);
 			base.Update();
 		}
 	}
 	
-	public override void ToggleSelected(){
-		SetSelected(!m_selected);
-	}
 	
+	/*
+	 * Assigned generators
+	 */
 	public void AddGenerator(BaseGenerator gen){
-		m_paramRef.attachGenerator(gen);
+		GetMusicRef().attachGenerator(gen);
 	}
 	
 	public void DisconnectGenerators(){
-		m_paramRef.removeGenerators();
+		GetMusicRef().removeGenerators();
 	}
-		
+	
+	
+	/*
+	 * Selection controls
+	 */
+	public override void ToggleSelected(){
+		SetSelected(!m_selected);
+	}
+
 	public override void SetSelected (bool state)
 	{
 		base.SetSelected (state);
 		
-		if(state)
-			m_instrumentControlRef.SelectParameter(m_paramRef);
-		else
-			m_instrumentControlRef.DeselectParameter(m_paramRef);
-		
-		if(state)
+		if(state){
+			InstrumentController.Instance.SelectParameter( GetMusicRef() );
 			gameObject.GetComponent<PanelToggle>().Toggle(true);
-		else
+		} else{ 
 			gameObject.GetComponent<PanelToggle>().Toggle(false);
+		}
 	}
 	
 	public void SetHovering(bool state){
@@ -54,14 +62,8 @@ public class ParamAttachment : BaseAttachment {
 			gameObject.GetComponent<PanelToggle>().HoverToggle(false);
 	}
 	
-	public void setSelected(bool state){ 
-		m_selected = state; 
-	}
 	
-	public override void Init<T>(T param){
-		m_paramRef = (BaseInstrumentParam)(object)param;
-	}
-	
-	public BaseInstrumentParam paramRef{ get {return m_paramRef; } }
-	
+	/*
+	 * Gesture overrides
+	 */
 }

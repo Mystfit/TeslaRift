@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class BufferFrame : MonoBehaviour {
 	
-	protected BaseAttachment.ParameterType m_paramType;
+	protected ParameterType m_paramType;
 	protected List<GameObject> m_frameComponents;
 	protected Object m_guiQuadPrefab;
 	
@@ -25,18 +25,11 @@ public class BufferFrame : MonoBehaviour {
 	private bool bRotated = false;
 	
 	
-	void Start () {
-		
-		m_guiQuadPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/GuiFrameQuad.prefab", typeof(GameObject)) as GameObject;
+	void Awake () {
 		m_frameComponents = new List<GameObject>();
 		
 		for(int i = 0; i < 6; i++)
-		{
-			GameObject guiPanel = GameObject.Instantiate( m_guiQuadPrefab, Vector3.zero, Quaternion.Euler( new Vector3 ( 0.0f, 0.0f, 0.0f ) ) ) as GameObject;
-			guiPanel.transform.position = transform.position;
-			guiPanel.transform.parent = transform;
-			m_frameComponents.Add(guiPanel);
-		}
+			m_frameComponents.Add(transform.GetChild(i).gameObject);
 		
 		m_lastWidth = m_frameWidth;
 		m_lastHeight = m_frameHeight;

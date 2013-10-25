@@ -12,7 +12,7 @@ namespace MusicIO
 	// - Definition of one parameter for an external instrument
 	//
 	//**
-	public class BaseInstrumentParam {
+	public class BaseInstrumentParam : BaseMusicObject {
 		
 		protected string m_name = "";
 		protected float m_fValue = 0.0f;
@@ -54,7 +54,7 @@ namespace MusicIO
 		
 		
 		//Generator references
-		//-----------------
+		//--------------------
 		protected List<BaseGenerator> m_generators;
 		
 		public void attachGenerator(BaseGenerator generator){

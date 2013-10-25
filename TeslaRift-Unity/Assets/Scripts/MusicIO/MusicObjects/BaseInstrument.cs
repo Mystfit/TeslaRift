@@ -14,7 +14,7 @@ namespace MusicIO
 	// - All instruments derive from this for common instrument properties
 	//
 	//**
-	public class BaseInstrument {
+	public class BaseInstrument : BaseMusicObject {
 		
 		protected List<BaseInstrumentParam> m_clips;
 		protected List<BaseInstrumentParam> m_params;

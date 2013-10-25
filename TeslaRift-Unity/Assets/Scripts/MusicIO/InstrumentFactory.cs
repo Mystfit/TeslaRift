@@ -38,10 +38,8 @@ public class InstrumentFactory : MonoBehaviour {
 		XmlNodeList instrumentList = instrumentDoc.GetElementsByTagName("instrument"); //instrument array
 		XmlNode source = instrumentDoc.SelectSingleNode("/instrumentDefinitions/source");
 		XmlNode client = instrumentDoc.SelectSingleNode("/instrumentDefinitions/client");
-		XmlNode scenes = instrumentDoc.SelectSingleNode("/instrumentDefinitions/scenes");
 
 		InstrumentController.Instance.SetSourceName(source.InnerText);
-		InstrumentController.Instance.SetNumScenes( int.Parse(scenes.InnerText));
 		
 		//Create instrument objects		
 		foreach(XmlNode instrument in instrumentList){		
@@ -98,11 +96,11 @@ public class InstrumentFactory : MonoBehaviour {
 		
 		//Create parameter radial menu
 		if(instrument.paramList.Count > 0)
-			attach.AddRadial( CreateRadialSelector(instrument.paramList, instrumentGame), BaseAttachment.ParameterType.PARAM );			
+			attach.AddRadial( CreateRadialSelector(instrument.paramList, instrumentGame), ParameterType.PARAM );			
 		
 		//Create clip radial menu
 		if(instrument.clipList.Count > 0)
-			attach.AddRadial(  CreateRadialSelector(instrument.clipList, instrumentGame), BaseAttachment.ParameterType.CLIP );
+			attach.AddRadial(  CreateRadialSelector(instrument.clipList, instrumentGame), ParameterType.CLIP );
 	}
 	
 	
@@ -112,8 +110,8 @@ public class InstrumentFactory : MonoBehaviour {
 	private GameObject CreateRadialSelector(List<BaseInstrumentParam> parameterList, GameObject parentObj)
 	{
 		GameObject panelLayer = new GameObject("panelLayer");
-		GameObject textPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/paramLabel.prefab", typeof(GameObject)) as GameObject;
-		GameObject trianglePanelPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/trianglePanel.prefab", typeof(GameObject)) as GameObject;
+		GameObject textPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/GUI/paramLabel.prefab", typeof(GameObject)) as GameObject;
+		GameObject trianglePanelPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/GUI/trianglePanel.prefab", typeof(GameObject)) as GameObject;
 		Material panelMaterial = Resources.LoadAssetAtPath("Assets/materials/whiteMat.mat", typeof(Material)) as Material;
 
 		for(int i = 0; i < parameterList.Count; i++){

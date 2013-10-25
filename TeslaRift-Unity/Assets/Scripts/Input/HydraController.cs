@@ -190,12 +190,6 @@ public class HydraController : MonoBehaviour {
 				m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand);
 			}
 			
-			//Arduino selector
-			//----------------
-			if( m_gloveController.GetButtonDown(ArduinoController.GloveButton.TWO)) {
-				m_toolControlRef.PushTool(typeof(ParamSelectTool), hand);
-			}
-			
 			//Arduino idle
 			//------------
 			if(m_gloveController.GetButtonUp(ArduinoController.GloveButton.TWO) ||
@@ -291,15 +285,7 @@ public class HydraController : MonoBehaviour {
 			else if(Input.GetKeyDown(KeyCode.S) && Input.GetKey(KeyCode.LeftShift)){  //handControl.GetButtonDown(SixenseButtons.BUMPER) && handControl.GetButton(SixenseButtons.THREE)
 				m_toolControlRef.PushTool(typeof(ResetTool), hand, BaseTool.ToolMode.SECONDARY);
 			}
-			
-			//Value modifier
-			//--------------
-			else if( Input.GetKeyDown(KeyCode.D) ){  //handControl.GetButtonDown(SixenseButtons.ONE)
-				if(m_toolControlRef.currentTool(hand) == null)
-					m_toolControlRef.PushTool(typeof(SingleModifierTool), hand);
-				else
-					Debug.Log("Existing tool still active");
-			}
+
 			
 			//Return to idle
 			//--------------

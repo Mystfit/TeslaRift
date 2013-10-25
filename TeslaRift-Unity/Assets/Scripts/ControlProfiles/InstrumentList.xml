@@ -2,7 +2,6 @@
 <instrumentDefinitions>	
 	<source>tesla</source>
 	<client>Live</client>
-	<scenes>14</scenes>
 	
 	<instrumentList>	
 		<instrument name="TeslaArp" colour="0.15,0.90,0.10">
