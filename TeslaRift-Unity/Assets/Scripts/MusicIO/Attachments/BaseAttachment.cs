@@ -10,7 +10,7 @@ public enum ParameterType {
 }
 
 
-public class BaseAttachment<T> : MonoBehaviour {
+public class BaseAttachment<T> : MonoBehaviour where T : BaseMusicObject {
 
 	/*
 	 * First gesture states
@@ -35,15 +35,12 @@ public class BaseAttachment<T> : MonoBehaviour {
 	public virtual void SetToolMode(BaseTool.ToolMode mode){ m_mode = mode; }
 	
 	protected T m_musicRef;
-	public virtual T GetMusicRef(){
-		return default(T);
-	}
-	
+	public virtual T musicRef{ get { return m_musicRef;}}
 	
 	/*
 	 * Selection
 	 */
-	protected bool m_selected = false;
+	protected bool m_selected;
 	public bool selected{ get { return m_selected; }}
 	
 	public virtual void ToggleSelected(){ 

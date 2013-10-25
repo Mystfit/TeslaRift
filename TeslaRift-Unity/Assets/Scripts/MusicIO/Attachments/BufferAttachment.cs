@@ -22,11 +22,6 @@ public class BufferAttachment : BaseAttachment<ControlBuffer> {
 		base.Update();
 	}
 	
-	public override MusicIO.ControlBuffer GetMusicRef()
-	{
-		return m_bufferRef;
-	}
-	
 	
 	//Tool interface implementations
 	//-----------------------------------

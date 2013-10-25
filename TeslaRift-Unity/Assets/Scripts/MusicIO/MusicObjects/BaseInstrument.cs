@@ -40,6 +40,7 @@ namespace MusicIO
 		public string Owner{ get {return m_owner; } } 
 		public string Client{ get {return m_client; } }
 		
+		
 		//Reset instrument to default
 		//-----------------------------
 		public void Reset(){

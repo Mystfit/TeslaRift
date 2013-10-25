@@ -31,7 +31,7 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 		//Debug tests for clip changing
 		if(triggerClip == true){
 			triggerClip = false;
-			GetMusicRef().addClipMessageToQueue(GetMusicRef().GetClipByIndex(clipIndex).scene);
+			musicRef.addClipMessageToQueue( musicRef.GetClipByIndex(clipIndex).scene );
 		}
 		
 		//Update vector between hand and target
@@ -98,7 +98,7 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 	public override void Gesture_PushIn()
 	{
 		base.Gesture_PushIn();
-		InstrumentController.Instance.ResetInstrumentParameters( GetMusicRef() );
+		InstrumentController.Instance.ResetInstrumentParameters( musicRef );
 		if(m_selectedParam != null)
 			m_selectedParam.ToggleSelected();	//Activate parameter
 		
@@ -109,7 +109,7 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 	public override void Gesture_PullOut ()
 	{
 		base.Gesture_PullOut ();
-		InstrumentController.Instance.SelectParameter(m_selectedParam.GetMusicRef());
+		InstrumentController.Instance.SelectParameter( m_selectedParam.musicRef );
 		CloseRadial(m_openRadialType, false);
 		Gesture_Exit();
 	}
@@ -202,7 +202,7 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 		foreach(PanelToggle panel in panelList)
 			panel.Toggle(false);
 		
-		InstrumentController.Instance.ResetInstrumentParameters( GetMusicRef() );
+		InstrumentController.Instance.ResetInstrumentParameters( musicRef );
 	}
 	
 	
@@ -222,7 +222,7 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 				line.Remove();
 		}
 
-		InstrumentController.Instance.ResetInstrument( GetMusicRef() );
+		InstrumentController.Instance.ResetInstrument( musicRef );
 	}
 }
 

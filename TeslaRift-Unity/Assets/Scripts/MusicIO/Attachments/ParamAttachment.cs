@@ -16,8 +16,8 @@ public class ParamAttachment : BaseAttachment<BaseInstrumentParam> {
 	
 	
 	public override void Update () {
-		if( GetMusicRef() != null){
-			if(!GetMusicRef().enabled)
+		if( musicRef != null){
+			if(!musicRef.enabled)
 				SetSelected(false);
 			base.Update();
 		}
@@ -28,11 +28,11 @@ public class ParamAttachment : BaseAttachment<BaseInstrumentParam> {
 	 * Assigned generators
 	 */
 	public void AddGenerator(BaseGenerator gen){
-		GetMusicRef().attachGenerator(gen);
+		musicRef.attachGenerator(gen);
 	}
 	
 	public void DisconnectGenerators(){
-		GetMusicRef().removeGenerators();
+		musicRef.removeGenerators();
 	}
 	
 	
@@ -48,7 +48,7 @@ public class ParamAttachment : BaseAttachment<BaseInstrumentParam> {
 		base.SetSelected (state);
 		
 		if(state){
-			InstrumentController.Instance.SelectParameter( GetMusicRef() );
+			InstrumentController.Instance.SelectParameter( musicRef );
 			gameObject.GetComponent<PanelToggle>().Toggle(true);
 		} else{ 
 			gameObject.GetComponent<PanelToggle>().Toggle(false);
