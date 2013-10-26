@@ -10,8 +10,7 @@ public enum ParameterType {
 }
 
 
-public class BaseAttachment<T> : MonoBehaviour where T : BaseMusicObject {
-
+public abstract class BaseAttachment : MonoBehaviour{
 	/*
 	 * First gesture states
 	 */
@@ -33,10 +32,7 @@ public class BaseAttachment<T> : MonoBehaviour where T : BaseMusicObject {
 	protected BaseTool.ToolMode m_mode;
 	public BaseTool.ToolMode mode{ get { return m_mode; }}
 	public virtual void SetToolMode(BaseTool.ToolMode mode){ m_mode = mode; }
-	
-	protected T m_musicRef;
-	public virtual T musicRef{ get { return m_musicRef;}}
-	
+		
 	/*
 	 * Selection
 	 */
@@ -52,22 +48,7 @@ public class BaseAttachment<T> : MonoBehaviour where T : BaseMusicObject {
 		m_selected = state;
 	}
 	
-	
-	/*
-	 * Initialization
-	 */
-	public virtual void Start () {
-	}	
-	
-	public virtual void Update () {
-	
-	}
-	
-	public virtual void Init(T managedReference){
-		m_musicRef = managedReference;
-	}
-	
-	
+
 	/*
 	 * Gesture implementations
 	 */
@@ -106,4 +87,17 @@ public class BaseAttachment<T> : MonoBehaviour where T : BaseMusicObject {
 		bIsFirstGesture = true;
 		SetToolMode(BaseTool.ToolMode.PRIMARY);	//Reset tool modes in case we forget to intialize
 	}
+}
+
+
+/*
+ * Derived classes from BaseAttachment can specify what type of music specific object they are meant to represent
+ */
+public class BaseAttachment<T> : BaseAttachment {
+	
+	protected T m_musicRef;
+	public virtual void Init(T managedReference){
+		m_musicRef = managedReference;
+	}
+	public T musicRef{ get { return m_musicRef; }}
 }

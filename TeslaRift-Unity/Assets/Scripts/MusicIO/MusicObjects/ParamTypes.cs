@@ -126,4 +126,13 @@ namespace MusicIO
 		}
 	}
 	
+	
+	/*
+	 * Generic parameter
+	 */
+	public class GenericMusicParam : BaseInstrumentParam {
+		public GenericMusicParam(string name, BaseInstrument paramOwner) : base(name, paramOwner)
+		{
+		}
+	}
 }

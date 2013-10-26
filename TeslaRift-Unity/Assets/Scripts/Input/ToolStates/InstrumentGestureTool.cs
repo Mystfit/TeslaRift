@@ -7,7 +7,7 @@ using MusicIO;
 public class InstrumentGestureTool : BaseTool {
 		
 	GameObject m_heldObject;
-	//BaseAttachment<BaseMusicObject> m_attachment;
+	BaseAttachment m_attachment;
 	
 	public enum GestureState{
 		INTERIOR_INITIALIZED = 0,
@@ -46,7 +46,11 @@ public class InstrumentGestureTool : BaseTool {
 		switch(m_gestureState){
 
 		case GestureState.INTERIOR:
-			m_heldObject.SendMessage("Gesture_IdleInterior");
+			m_attachment.Gesture_IdleInterior();
+			
+			if(m_attachment.IsFirstGesture)
+				m_attachment.Gesture_First();
+
 			break;
 			
 		case GestureState.INTERIOR_TO_PROXIMITY:
@@ -56,27 +60,27 @@ public class InstrumentGestureTool : BaseTool {
 			break;
 			
 		case GestureState.PROXIMITY:
-			//Cast rays checking for selected panel
-			m_heldObject.SendMessage("Gesture_IdleProximity");
+			m_attachment.Gesture_IdleProximity();
+			
+			if(m_attachment.IsFirstGesture)
+				m_attachment.Gesture_First();
+			
 			break;
 			
 		case GestureState.PROXIMITY_TO_INTERIOR:
 			m_gestureTimer = m_betweenGestureDelay;
 			m_gestureState = GestureState.INTERIOR;
 			m_lastGestureState = GestureState.PROXIMITY_TO_INTERIOR;
-
-			//Ready to send activate message on gesture release
 			break;
 			
 		case GestureState.PROXIMITY_TO_EXTERIOR:
 			m_gestureTimer = m_betweenGestureDelay;
 			m_gestureState = GestureState.EXTERIOR;
 			m_lastGestureState = GestureState.PROXIMITY_TO_EXTERIOR;
-			//Ready to send queue message on gesture release
 			break;
 			
 		case GestureState.EXTERIOR:
-			m_heldObject.SendMessage("Gesture_IdleExterior");
+			m_attachment.Gesture_IdleExterior();
 			break;
 			
 		case GestureState.EXTERIOR_TO_PROXIMITY:
@@ -112,7 +116,6 @@ public class InstrumentGestureTool : BaseTool {
 				//Inside proximity
 				if(m_gestureState == GestureState.INTERIOR){
 					m_gestureState = GestureState.INTERIOR_TO_PROXIMITY;
-					m_heldObject.SendMessage("Gesture_First");
 				} else if(m_gestureState == GestureState.EXTERIOR){
 					m_gestureState = GestureState.EXTERIOR_TO_PROXIMITY;
 				}
@@ -130,18 +133,17 @@ public class InstrumentGestureTool : BaseTool {
 		base.TransitionIn ();
 		
 		m_heldObject = HydraController.Instance.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR);
-		
+		m_attachment = m_heldObject.GetComponent<BaseAttachment>();
+
 		//Not holding anything? We can ditch this tool
 		if(m_heldObject == null)
 			ToolController.Instance.PopTool(m_hand);
 		
-		
-		//m_attachment = m_heldObject.GetComponent< BaseAttachment<BaseMusicObject> >();
 		//m_attachment.SetToolMode(m_mode);
 		//m_attachment.SetActiveHand(m_hand);
 		m_gestureState = GestureState.INTERIOR;
-		m_heldObject.SendMessage("SetToolMode", m_mode);
-		m_heldObject.SendMessage("SetActiveHand", m_hand);
+		m_attachment.SetToolMode( m_mode);
+		m_attachment.SetActiveHand( m_hand);
 	}
 	
 	public override void TransitionOut ()
@@ -152,13 +154,13 @@ public class InstrumentGestureTool : BaseTool {
 			
 		//Idle gestures
 		case GestureState.INTERIOR:
-			m_heldObject.SendMessage("Gesture_ExitIdleInterior");
+			m_attachment.Gesture_ExitIdleInterior();
 			break;
 		case GestureState.PROXIMITY:			
-			m_heldObject.SendMessage("Gesture_ExitIdleProximity");
+			m_attachment.Gesture_ExitIdleProximity();
 			break;
 		case GestureState.EXTERIOR:				
-			m_heldObject.SendMessage("Gesture_ExitIdleExterior");
+			m_attachment.Gesture_ExitIdleExterior();
 			break;
 			
 		//Moving gestures
@@ -167,10 +169,10 @@ public class InstrumentGestureTool : BaseTool {
 		case GestureState.INTERIOR_TO_PROXIMITY:
 			break;
 		case GestureState.PROXIMITY_TO_EXTERIOR:
-			m_heldObject.SendMessage("Gesture_PullOut");
+			m_attachment.Gesture_PullOut();
 			break;
 		case GestureState.PROXIMITY_TO_INTERIOR:
-			m_heldObject.SendMessage("Gesture_PushIn");
+			m_attachment.Gesture_PushIn();
 			break;
 		}
 

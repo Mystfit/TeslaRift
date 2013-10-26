@@ -23,11 +23,7 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 	public bool IsRadialOpen{ get { return bOpenRadial; }}
 	
 	
-	public override void Start () {
-		base.Start();
-	}
-
-	public override void Update () {
+	void Update () {
 		//Debug tests for clip changing
 		if(triggerClip == true){
 			triggerClip = false;
@@ -37,11 +33,8 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 		//Update vector between hand and target
 		m_dirToTool = HydraController.Instance.GetHand(m_hand).transform.position - transform.position;
 		m_dirToToolRotation = Quaternion.LookRotation(m_dirToTool, Vector3.up);
-
-		base.Update();
 	}
-	
-	
+
 	
 	//Tool interface implementations
 	//-----------------------------------
@@ -109,7 +102,10 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 	public override void Gesture_PullOut ()
 	{
 		base.Gesture_PullOut ();
-		InstrumentController.Instance.SelectParameter( m_selectedParam.musicRef );
+		
+		//Create a floating instrument clip to put inside a buffer frame
+		InstrumentController.Instance.AddToActiveBuffer( InstrumentFactory.CreateFloatingAttachment(m_selectedParam) );
+		
 		CloseRadial(m_openRadialType, false);
 		Gesture_Exit();
 	}
@@ -144,7 +140,8 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 			iTween.Stop(m_clipRadial);
 			iTween.RotateTo(m_clipRadial, iTween.Hash("rotation", rotation, "time", 0.4f, "easetype", "easeOutCubic"));
 			iTween.ScaleTo(m_clipRadial, iTween.Hash("scale", new Vector3(1.0f, 1.0f, 1.0f), "time", 0.4f, "easetype", "easeOutCubic"));
-		} else if(type == ParameterType.PARAM){
+		} 
+		else if(type == ParameterType.PARAM){
 			m_paramRadial.transform.rotation = rotation;
 			m_paramRadial.SetActive(true);
 			iTween.Stop(m_paramRadial);

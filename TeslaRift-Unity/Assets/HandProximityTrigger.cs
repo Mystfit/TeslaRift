@@ -24,7 +24,6 @@ public class HandProximityTrigger : MonoBehaviour {
 		if(collider.gameObject.layer == LayerMask.NameToLayer("SoundCollideable")){
 			SixenseHands hand = collider.gameObject.GetComponent<HydraHand>().Hand;
 			HydraController.Instance.AddCollision(proximityRoot, hand, proximityTarget);
-
 		}
 	}
 	

@@ -4,20 +4,32 @@ using System.Collections.Generic;
 
 public class BufferFrame : MonoBehaviour {
 	
+	/*
+	 * Frame objects
+	 */
 	protected ParameterType m_paramType;
 	protected List<GameObject> m_frameComponents;
 	protected Object m_guiQuadPrefab;
 	
+	/*
+	 * Externally set dimensions
+	 */
 	public float m_frameThickness = 0.01f;
 	public float m_easeTime = 0.5f;
 	public float m_braceLength = 0.01f;
 	public float m_frameHeight = 1.0f;
 	public float m_frameWidth = 1.0f;
 	
+	/*
+	 * Debug toggles
+	 */
 	public bool m_toggleUpdate = false;
 	public bool m_toggleHorizontal = false;
 	public bool m_toggleVertical = false;
-
+	
+	/*
+	 * Active dimensions
+	 */
 	private float m_currentWidth;
 	private float m_currentHeight;
 	private float m_lastWidth;
@@ -28,8 +40,15 @@ public class BufferFrame : MonoBehaviour {
 	void Awake () {
 		m_frameComponents = new List<GameObject>();
 		
-		for(int i = 0; i < 6; i++)
-			m_frameComponents.Add(transform.GetChild(i).gameObject);
+		//Get the panel group and add to the list
+		Transform panels = transform;
+		for(int i = 0; i < transform.childCount; i++){
+			if(transform.GetChild(i).gameObject.name == "Panels")
+				panels = transform.GetChild(i);
+		}
+				
+		for(int i = 0; i < panels.childCount; i++)
+			m_frameComponents.Add(panels.GetChild(i).gameObject);
 		
 		m_lastWidth = m_frameWidth;
 		m_lastHeight = m_frameHeight;

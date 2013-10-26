@@ -15,8 +15,8 @@ public class InstrumentController : MonoBehaviour {
 	protected GameObject m_lastSelectedGameInstrument = null;
 	
 	//Buffer references
-	protected List<ControlBuffer> m_buffers;
-	protected ControlBuffer m_selectedBuffer;
+	protected List<BufferAttachment> m_buffers;
+	protected BufferAttachment m_selectedBuffer;
 	
 	//Prefix source name in front of OSC messages
 	private string m_sourceName;
@@ -27,7 +27,7 @@ public class InstrumentController : MonoBehaviour {
 	//-------------------------------------
 	void Awake () {
 		m_instruments = new List<BaseInstrument>();
-		m_buffers = new List<ControlBuffer>();
+		m_buffers = new List<BufferAttachment>();
 		m_instance = this;
 	}
 	
@@ -44,14 +44,14 @@ public class InstrumentController : MonoBehaviour {
 	 */
 	public void ResetInstrumentParameters(BaseInstrument instrument){
 		instrument.Reset();
-		foreach(BaseInstrumentParam param in instrument.paramList){
+		foreach(GenericMusicParam param in instrument.paramList){
 			param.setEnabled(false);
 		}
 	}
 		
 	public void ResetInstrument(BaseInstrument instrument){
 		ResetInstrumentParameters(instrument);
-		foreach(BaseInstrumentParam param in instrument.paramList){
+		foreach(GenericMusicParam param in instrument.paramList){
 			param.removeGenerators();
 		}
 	}
@@ -64,38 +64,21 @@ public class InstrumentController : MonoBehaviour {
 	/*
 	 * Adds a new buffer
 	 */
-	public void AddBuffer(ControlBuffer buffer){
+	public void AddBuffer(BufferAttachment buffer){
 		m_buffers.Add(buffer);
 	}
 	
-	
+	public void AddToActiveBuffer(FloatingAttachment attach){
+		m_selectedBuffer.AddMusicObjectToBuffer(attach);
+	}
+
 	/*
 	 * Selects a buffer
 	 */
-	public void SelectBuffer(ControlBuffer buffer){
+	public void SelectBuffer(BufferAttachment buffer){
 		m_selectedBuffer = buffer;
 	}
-	
-	
-	
-	// Parameter selection and modification
-	//-------------------------------------
-	
-	public void SelectParameter(BaseInstrumentParam param){
-		m_selectedBuffer.AddParamToBuffer(param);
-	}
 
-	
-	
-	
-	/*
-	 * Deselects all selected parameters
-	 */
-	public void DeselectAllParameters(){
-		m_selectedBuffer.ClearBuffer();		//Won't reset visual states! Move this into a dedicated tool
-	}
-	
-	
 	//Instrument selection
 	//--------------------
 	public BaseInstrument SelectedInstrument{ get { return m_selectedInstrument; } }

@@ -50,7 +50,7 @@ namespace MusicIO
 		
 		// Clip functions
 		//---------------
-		public void addClip(string name, string type, int scene){
+		public void AddClip(string name, string type, int scene){
 			m_clips.Add(new InstrumentClip(name, this, scene));
 		}
 		
@@ -61,25 +61,23 @@ namespace MusicIO
 		
 		// Parameter functions
 		//-----------------
-		public void addParam(string name, string valueType){
+		public void AddParam(string name, string valueType){
 			if(valueType == "chord")
 				m_params.Add(new NoteParam(name, this)); 
 			else if(valueType == "toggle")
 				m_params.Add(new ToggleParam(name, this));
 			else
-				m_params.Add(new BaseInstrumentParam(name, this)); 
+				m_params.Add(new GenericMusicParam(name, this)); 
 		}
 	
 		
 		public BaseInstrumentParam getParamByName(string name){
-			BaseInstrumentParam result = null;
 			foreach(BaseInstrumentParam param in m_params){
 				if(param.name == name){
 					return param;
-					//result = param;
 				} 
 			}
-			return result;
+			return null;
 		}
 		
 		

@@ -6,23 +6,13 @@ public class ParamAttachment : BaseAttachment<BaseInstrumentParam> {
 	
 	public bool isHovering = false;
 		
-	
-	/*
-	 * Initialization
-	 */
-	public override void Start () {
-		base.Start();
-	}
-	
-	
-	public override void Update () {
+	void Update () {
 		if( musicRef != null){
 			if(!musicRef.enabled)
 				SetSelected(false);
-			base.Update();
 		}
 	}
-	
+		
 	
 	/*
 	 * Assigned generators
@@ -48,7 +38,6 @@ public class ParamAttachment : BaseAttachment<BaseInstrumentParam> {
 		base.SetSelected (state);
 		
 		if(state){
-			InstrumentController.Instance.SelectParameter( musicRef );
 			gameObject.GetComponent<PanelToggle>().Toggle(true);
 		} else{ 
 			gameObject.GetComponent<PanelToggle>().Toggle(false);

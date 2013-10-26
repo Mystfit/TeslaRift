@@ -14,11 +14,25 @@ public class InstrumentFactory : MonoBehaviour {
 	public float m_radialInnerRadius = 0.05f;	
 	public float m_radialOuterRadius = 0.5f;
 	public float m_panelOrbitDistance = 0.2f;
-
+	
 	private InstrumentController m_instrumentControllerRef;
+	
+	/*
+	 * Prefabs
+	 */
+	protected static GameObject m_floatingClipPrefab;
+	protected static GameObject m_textPrefab;
+	protected static GameObject m_trianglePanelPrefab;
+	protected static Material m_panelMaterial;
 
 	void Start () {
 		m_instrumentControllerRef = this.GetComponent<InstrumentController>();
+		
+		//Load prefabs
+		m_floatingClipPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/floatingClip.prefab", typeof(GameObject)) as GameObject;
+		m_textPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/GUI/paramLabel.prefab", typeof(GameObject)) as GameObject;
+		m_trianglePanelPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/GUI/trianglePanel.prefab", typeof(GameObject)) as GameObject;
+		
 		LoadInstrumentDefinitions();
 	}
 	
@@ -57,20 +71,20 @@ public class InstrumentFactory : MonoBehaviour {
 				XmlAttribute type = param.Attributes["type"];
 				string typeStr = type != null ? type.Value : "";
 				
-				instrumentDef.addParam(name.Value, typeStr);
+				instrumentDef.AddParam(name.Value, typeStr);
 			}
 			
 			//Clip creation
 			XmlNodeList clipList = instrument.SelectSingleNode("clips").SelectNodes("clip");
 			
-			//Add params to instrument
+			//Add clips to instrument
 			foreach(XmlElement clip in clipList){
 				XmlAttribute name = clip.Attributes["name"];
 				XmlAttribute type = clip.Attributes["type"];
 				XmlAttribute scene = clip.Attributes["scene"];
 				string typeStr = type != null ? type.Value : "";
 				
-				instrumentDef.addClip(name.Value, typeStr, int.Parse(scene.Value));
+				instrumentDef.AddClip(name.Value, typeStr, int.Parse(scene.Value));
 			}
 			
 			m_instrumentControllerRef.AddInstrument(instrumentDef);
@@ -110,14 +124,12 @@ public class InstrumentFactory : MonoBehaviour {
 	private GameObject CreateRadialSelector(List<BaseInstrumentParam> parameterList, GameObject parentObj)
 	{
 		GameObject panelLayer = new GameObject("panelLayer");
-		GameObject textPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/GUI/paramLabel.prefab", typeof(GameObject)) as GameObject;
-		GameObject trianglePanelPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/GUI/trianglePanel.prefab", typeof(GameObject)) as GameObject;
-		Material panelMaterial = Resources.LoadAssetAtPath("Assets/materials/whiteMat.mat", typeof(Material)) as Material;
+		
 
 		for(int i = 0; i < parameterList.Count; i++){
 			//Create a tiangle panel for this parameter
 			Mesh panelMesh = CreatePolygonPanel(0, parameterList.Count, m_radialOuterRadius, m_radialInnerRadius);
-			GameObject panel = Instantiate(trianglePanelPrefab) as GameObject;
+			GameObject panel = Instantiate(m_trianglePanelPrefab) as GameObject;
 			
 			panel.GetComponent<MeshFilter>().mesh = panelMesh;
 			panel.GetComponent<MeshCollider>().sharedMesh = panelMesh;
@@ -251,5 +263,14 @@ public class InstrumentFactory : MonoBehaviour {
 		layerMesh.RecalculateNormals();
 		
 		return layerMesh;
+	}
+	
+	public static FloatingAttachment CreateFloatingAttachment(ParamAttachment attach){
+		BaseInstrumentParam param = attach.musicRef as BaseInstrumentParam;
+		
+		GameObject paramObj = GameObject.Instantiate(m_floatingClipPrefab) as GameObject;
+		FloatingAttachment floatAttach = paramObj.AddComponent<FloatingAttachment>();
+		floatAttach.Init(param);
+		return floatAttach;
 	}
 }
