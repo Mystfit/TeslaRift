@@ -27,7 +27,7 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 		//Debug tests for clip changing
 		if(triggerClip == true){
 			triggerClip = false;
-			musicRef.addClipMessageToQueue( musicRef.GetClipByIndex(clipIndex).scene );
+			musicRef.GetClipByIndex(clipIndex).Play();
 		}
 		
 		//Update vector between hand and target

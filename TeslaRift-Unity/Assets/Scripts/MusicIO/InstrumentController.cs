@@ -23,6 +23,9 @@ public class InstrumentController : MonoBehaviour {
 	private string m_sourceName;
 	public void SetSourceName(string sourceName){ m_sourceName = sourceName; }
 	
+	//Send a message through every parameter to populate OSCulator
+	public bool bindOSCulator;
+	
 	
 	// Unity
 	//-------------------------------------
@@ -37,6 +40,18 @@ public class InstrumentController : MonoBehaviour {
 	void Update () {
 		foreach(BaseInstrument instrument in m_instruments){
 			instrument.update();
+		}
+		
+		if(bindOSCulator){
+			bindOSCulator = false;
+			foreach(BaseInstrument instrument in m_instruments){
+				foreach(BaseInstrumentParam param in instrument.paramList){
+					param.setVal(1.0f);
+				}
+				
+				foreach(InstrumentClip clip in instrument.clipList)
+					clip.Play();
+			}
 		}
 	}
 	
@@ -118,10 +133,7 @@ public class InstrumentController : MonoBehaviour {
 		foreach(BaseInstrument instrument in m_instruments){
 			if(instrument.Name == targetInstrument)
 				return instrument;
-		}
-		
-		
-			
+		}	
 		return null;
 	}
 	

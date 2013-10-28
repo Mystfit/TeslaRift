@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class PhysGrabberTool : BaseTool {
@@ -17,7 +17,7 @@ public class PhysGrabberTool : BaseTool {
 	}
 	
 	public override void Awake(){
-		base.Awake();
+		base.Awake(); 
 		m_toolHandState = BaseTool.HandState.SEARCHING;
 	}
 	

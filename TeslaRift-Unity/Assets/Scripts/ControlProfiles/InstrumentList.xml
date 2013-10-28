@@ -4,35 +4,32 @@
 	<client>Live</client>
 	
 	<instrumentList>	
-		<instrument name="TeslaArp" colour="0.15,0.90,0.10">
+		<instrument name="TeslaArp" colour="94,255,41">
 			<parameters>
-				<param name="noteParams" type="chord"></param>	
 				<param name="arp" type="toggle"></param>
-				<param name="stop" type="toggle"></param>
 				<param name="gate" type="float"></param>
 			</parameters>
 			<clips>
-				<clip name="dummyClip1" type="loop" scene="2"></clip>
-				<clip name="dummyClip2" type="loop" scene="4"></clip>
-				<clip name="dummyClip3" type="loop" scene="5"></clip>
-				<clip name="dummyClip4" type="loop" scene="6"></clip>
-				<clip name="dummyClip5" type="loop" scene="9"></clip>
-				<clip name="dummyClip6" type="loop" scene="10"></clip>
+				<clip name="chord1" type="loop" scene="1"></clip>
+				<clip name="MystChord1" type="loop" scene="4"></clip>
+				<clip name="MystChord2" type="loop" scene="5"></clip>
+				<clip name="LightCycle1" type="loop" scene="6"></clip>
+				<clip name="Minor1" type="loop" scene="9"></clip>
 			</clips>
 		</instrument>
+
 		
-		<instrument name="DistortBass" colour="0.15,0.50,0.50">
+		<instrument name="AudioLoops" colour="41,201,255">
 			<parameters>
-				<param name="noteParams" type="chord"></param>	
-				<param name="distort" type="float"></param>
-				<param name="stutter" type="float"></param>
 			</parameters>
 			<clips>
-				<clip name="extClip1" type="loop" scene="1"></clip>
-				<clip name="extClip2" type="loop" scene="2"></clip>
-				<clip name="extClip3" type="loop" scene="3"></clip>
+				<clip name="TapHat" type="loop" scene="1"></clip>
+				<clip name="DigitalArmy" type="loop" scene="2"></clip>
+				<clip name="RadioProcessing" type="loop" scene="3"></clip>
 			</clips>
 		</instrument>
 	</instrumentList>
+		
+		
 	
 </instrumentDefinitions>

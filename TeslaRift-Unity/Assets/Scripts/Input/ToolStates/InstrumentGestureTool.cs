@@ -193,5 +193,8 @@ public class InstrumentGestureTool : BaseTool {
 		}
 		
 		m_heldObject = null;
+	
+		if(m_attachment != null)
+			m_attachment.Gesture_Exit();
 	}
 }

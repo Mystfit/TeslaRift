@@ -58,7 +58,7 @@ public class InstrumentFactory : MonoBehaviour {
 		//Create instrument objects		
 		foreach(XmlNode instrument in instrumentList){		
 			string[] colorStr = instrument.Attributes["colour"].Value.Split(',');
-			Color instrColor = new Color(Convert.ToSingle(colorStr[0]), Convert.ToSingle(colorStr[1]), Convert.ToSingle(colorStr[2]));
+			Color instrColor = new Color(Convert.ToSingle(colorStr[0])/255, Convert.ToSingle(colorStr[1])/255, Convert.ToSingle(colorStr[2])/255);
 			
 			BaseInstrument instrumentDef = new BaseInstrument( client.InnerText, source.InnerText, instrument.Attributes["name"].Value, instrColor );
 

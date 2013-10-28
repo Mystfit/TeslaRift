@@ -98,7 +98,8 @@ public class BufferAttachment : BaseAttachment<ControlBuffer> {
 	 * Gets the current coordinates of a row by index
 	 */
 	public Vector3 GetRowLocalCoordinates(int index, List<BaseAttachment> attachList){
-		return  new Vector3(0.0f, (((m_clipRowSize+m_clipBufferEdges)*attachList.Count)*0.5f) - ((attachList.Count - index)* (m_clipRowSize + m_clipBufferEdges)), 0.0f);
+		Debug.Log("Local coord: " + ((m_clipRowSize+m_clipBufferEdges)*attachList.Count)*0.5f);
+		return  new Vector3(0.0f, (((m_clipRowSize+m_clipBufferEdges)*attachList.Count)*0.5f) - (index* (m_clipRowSize + m_clipBufferEdges)), 0.0f);
 	}
 	
 	/*
@@ -249,7 +250,7 @@ public class BufferAttachment : BaseAttachment<ControlBuffer> {
 			));
 		}
 		
-		m_frame.AnimateSize(m_frame.width, GetActiveAttachList().Count * (m_clipBufferEdges + m_clipRowSize) - (m_clipBufferEdges + m_clipRowSize) );
+		m_frame.AnimateSize(m_frame.width, GetActiveAttachList().Count * (m_clipBufferEdges + m_clipRowSize) );
 	}
 	
 	/*
@@ -289,8 +290,8 @@ public class BufferAttachment : BaseAttachment<ControlBuffer> {
 	 */
 	public void TriggerAllClips(){
 		foreach(FloatingAttachment attach in m_attachedClips){
-			InstrumentClip clip = attach.musicRef as InstrumentClip;
-			clip.owner.addClipMessageToQueue(clip.scene);
+			InstrumentClip clip = attach.musicRef as InstrumentClip;			
+			clip.Play();
 		}
 	}
 	
@@ -328,5 +329,10 @@ public class BufferAttachment : BaseAttachment<ControlBuffer> {
 	public override void Gesture_First ()
 	{
 		InstrumentController.Instance.SelectBuffer(this);
+	}
+	
+	public override void Gesture_PushIn ()
+	{
+		TriggerAllClips();
 	}
 }
