@@ -5,8 +5,7 @@ using MusicIO;
 
 public enum ParameterType {
 		CLIP = 0,
-		PARAM,
-		CLOSED
+		PARAM
 }
 
 

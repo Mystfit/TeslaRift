@@ -23,13 +23,15 @@ namespace MusicIO
 		string m_client = "";
 		string m_name = "";
 		string m_owner = "";
+		Color m_color;
 		
 		protected InstrumentClip m_loadedClip;		// Last played clip
 		
-		public BaseInstrument(string instrumentClient, string instrumentOwner, string instrumentName){
+		public BaseInstrument(string instrumentClient, string instrumentOwner, string instrumentName, Color color){
 			m_name = instrumentName;
 			m_owner = instrumentOwner;
 			m_client = instrumentClient;
+			m_color = color;
 			
 			m_clips = new List<BaseInstrumentParam>();
 			m_params = new List<BaseInstrumentParam>();
@@ -39,6 +41,7 @@ namespace MusicIO
 		public string Name{ get {return m_name; } }
 		public string Owner{ get {return m_owner; } } 
 		public string Client{ get {return m_client; } }
+		public Color color{ get { return m_color; }}
 		
 		
 		//Reset instrument to default

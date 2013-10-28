@@ -10,6 +10,7 @@ public class FloatingAttachment : BaseAttachment<BaseInstrumentParam> {
 	public override void Init (BaseInstrumentParam managedReference)
 	{
 		base.Init (managedReference);
+		renderer.material.SetColor("_Color", managedReference.owner.color);
 	}
 
 	

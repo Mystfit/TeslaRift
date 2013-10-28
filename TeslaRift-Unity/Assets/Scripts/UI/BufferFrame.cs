@@ -9,7 +9,11 @@ public class BufferFrame : MonoBehaviour {
 	 */
 	protected ParameterType m_paramType;
 	protected List<GameObject> m_frameComponents;
+	protected List<GameObject> m_outlineFrameComponents;
+
 	protected Object m_guiQuadPrefab;
+	public Transform m_guiPanels;
+	public Transform m_selectGuiPanels;
 	
 	/*
 	 * Externally set dimensions
@@ -19,6 +23,8 @@ public class BufferFrame : MonoBehaviour {
 	public float m_braceLength = 0.01f;
 	public float m_frameHeight = 1.0f;
 	public float m_frameWidth = 1.0f;
+	public float m_outlineOffset = 0.5f;
+	public float m_outlineDepth = -0.5f;
 	
 	/*
 	 * Debug toggles
@@ -26,34 +32,34 @@ public class BufferFrame : MonoBehaviour {
 	public bool m_toggleUpdate = false;
 	public bool m_toggleHorizontal = false;
 	public bool m_toggleVertical = false;
+	public bool m_toggleOutline = false;
 	
 	/*
 	 * Active dimensions
 	 */
+	private float m_currentOutlineOffset;
 	private float m_currentWidth;
 	private float m_currentHeight;
 	private float m_lastWidth;
 	private float m_lastHeight;
 	private bool bRotated = false;
+	private bool bIsOutlineVisible = false;
 	
 	
 	void Awake () {
 		m_frameComponents = new List<GameObject>();
-		
-		//Get the panel group and add to the list
-		Transform panels = transform;
-		for(int i = 0; i < transform.childCount; i++){
-			if(transform.GetChild(i).gameObject.name == "Panels")
-				panels = transform.GetChild(i);
-		}
+		m_outlineFrameComponents = new List<GameObject>();
 				
-		for(int i = 0; i < panels.childCount; i++)
-			m_frameComponents.Add(panels.GetChild(i).gameObject);
+		for(int i = 0; i < m_guiPanels.childCount; i++)
+			m_frameComponents.Add(m_guiPanels.GetChild(i).gameObject);
+		
+		for(int i = 0; i < m_selectGuiPanels.childCount; i++)
+			m_outlineFrameComponents.Add(m_selectGuiPanels.GetChild(i).gameObject);
 		
 		m_lastWidth = m_frameWidth;
 		m_lastHeight = m_frameHeight;
 				
-		UpdatePanel();
+		AnimateSize(m_frameWidth, m_frameHeight);
 	}
 	
 	
@@ -73,20 +79,26 @@ public class BufferFrame : MonoBehaviour {
 			m_toggleHorizontal = false;
 			RotateToHorizontal();
 		}
+		
+		if(m_toggleOutline){
+			m_toggleOutline = false;
+			bIsOutlineVisible = !bIsOutlineVisible;
+			ShowOutline(bIsOutlineVisible);
+		}
 	}
 	
 	
 	/*
 	 * Updates a quad panel transform by x/y/width/height
 	 */
-	protected void UpdateQuadTransform(GameObject quad, float x, float y, float width, float height, bool mirrored){
+	protected void UpdateQuadTransform(GameObject quad, float x, float y, float z, float width, float height, bool mirrored){
 		if(mirrored){
 			quad.transform.localRotation = Quaternion.Euler( new Vector3(0.0f, 0.0f, 180.0f) );
-			quad.transform.localPosition = new Vector3(x, y, 0.0f);
+			quad.transform.localPosition = new Vector3(x, y, z);
 			quad.transform.localScale = new Vector3(width, height, 0.0f);
 		} else {
 			quad.transform.localRotation = Quaternion.Euler( new Vector3(0.0f, 0.0f, 0.0f) );
-			quad.transform.localPosition = new Vector3(x - m_frameThickness, y - height, 0.0f);
+			quad.transform.localPosition = new Vector3(x - m_frameThickness, y - height, z);
 			quad.transform.localScale = new Vector3(width, height, 0.0f);
 		}
 	}
@@ -96,12 +108,26 @@ public class BufferFrame : MonoBehaviour {
 	 * Updates the whole quad frame
 	 */
 	protected void UpdatePanel(){
-		UpdateQuadTransform(m_frameComponents[0], -m_currentWidth*0.5f,  m_currentHeight*0.5f,  m_braceLength,    m_frameThickness, false);					//Top brace
-		UpdateQuadTransform(m_frameComponents[1], -m_currentWidth*0.5f,  m_currentHeight*0.5f,  m_frameThickness, m_currentHeight,  false);					//Side
-		UpdateQuadTransform(m_frameComponents[2], -m_currentWidth*0.5f, -m_currentHeight*0.5f,  m_braceLength, 	 m_frameThickness, false);		//Bottom brace
-		UpdateQuadTransform(m_frameComponents[3], m_currentWidth*0.5f,   m_currentHeight*0.5f,  m_braceLength, 	 m_frameThickness, true);			//Top brace mirrored
-		UpdateQuadTransform(m_frameComponents[4], m_currentWidth*0.5f,   m_currentHeight*0.5f,  m_frameThickness, m_currentHeight,  true);			//Side mirrored
-		UpdateQuadTransform(m_frameComponents[5], m_currentWidth*0.5f,  -m_currentHeight*0.5f,  m_braceLength, 	 m_frameThickness, true);	//Bottom brace mirrored
+		//Inner shapes
+		UpdateQuadTransform(m_frameComponents[0], -m_currentWidth*0.5f - (m_frameThickness*0.5f),   m_currentHeight*0.5f - (m_frameThickness*0.5f), 0.0f,  m_braceLength,    m_frameThickness, false);		//Top brace
+		UpdateQuadTransform(m_frameComponents[1], -m_currentWidth*0.5f - (m_frameThickness*0.5f),   m_currentHeight*0.5f - (m_frameThickness*0.5f), 0.0f,  m_frameThickness, m_currentHeight,  false);		//Side
+		UpdateQuadTransform(m_frameComponents[2], -m_currentWidth*0.5f - (m_frameThickness*0.5f),  -m_currentHeight*0.5f + (m_frameThickness*0.5f), 0.0f,  m_braceLength, 	 m_frameThickness, false);		//Bottom brace
+		UpdateQuadTransform(m_frameComponents[3],  m_currentWidth*0.5f + (m_frameThickness*0.5f),   m_currentHeight*0.5f - (m_frameThickness*0.5f), 0.0f,  m_braceLength, 	 m_frameThickness, true);		//Top brace mirrored
+		UpdateQuadTransform(m_frameComponents[4],  m_currentWidth*0.5f + (m_frameThickness*0.5f),   m_currentHeight*0.5f - (m_frameThickness*0.5f), 0.0f,  m_frameThickness, m_currentHeight,  true);		//Side mirrored
+		UpdateQuadTransform(m_frameComponents[5],  m_currentWidth*0.5f + (m_frameThickness*0.5f),  -m_currentHeight*0.5f + (m_frameThickness*0.5f), 0.0f,  m_braceLength, 	 m_frameThickness, true);		//Bottom brace mirrored
+	}
+	
+	
+	/*
+	 * Updates the outer selection outline
+	 */
+	protected void UpdatePanelOutline(){
+		UpdateQuadTransform(m_outlineFrameComponents[0], -(m_currentWidth*0.5f) - m_currentOutlineOffset - (m_frameThickness*0.5f),   (m_currentHeight*0.5f) + m_currentOutlineOffset - (m_frameThickness*0.5f),  m_outlineDepth,  m_braceLength,    m_frameThickness, 					   false);		//Top brace
+		UpdateQuadTransform(m_outlineFrameComponents[1], -(m_currentWidth*0.5f) - m_currentOutlineOffset - (m_frameThickness*0.5f),   (m_currentHeight*0.5f) + m_currentOutlineOffset - (m_frameThickness*0.5f),  m_outlineDepth,  m_frameThickness, m_currentHeight + m_currentOutlineOffset*2.0f,  false);		//Side
+		UpdateQuadTransform(m_outlineFrameComponents[2], -(m_currentWidth*0.5f) - m_currentOutlineOffset - (m_frameThickness*0.5f),  -(m_currentHeight*0.5f) - m_currentOutlineOffset + (m_frameThickness*0.5f),  m_outlineDepth,  m_braceLength, 	  m_frameThickness, 					   false);		//Bottom brace
+		UpdateQuadTransform(m_outlineFrameComponents[3],  (m_currentWidth*0.5f) + m_currentOutlineOffset + (m_frameThickness*0.5f),   (m_currentHeight*0.5f) + m_currentOutlineOffset - (m_frameThickness*0.5f), m_outlineDepth,  m_braceLength, 	  m_frameThickness, 					   true);		//Top brace mirrored
+		UpdateQuadTransform(m_outlineFrameComponents[4],  (m_currentWidth*0.5f) + m_currentOutlineOffset + (m_frameThickness*0.5f),   (m_currentHeight*0.5f) + m_currentOutlineOffset - (m_frameThickness*0.5f), m_outlineDepth,  m_frameThickness, m_currentHeight + m_currentOutlineOffset*2.0f,  true);		//Side mirrored
+		UpdateQuadTransform(m_outlineFrameComponents[5],  (m_currentWidth*0.5f) + m_currentOutlineOffset + (m_frameThickness*0.5f),  -(m_currentHeight*0.5f) - m_currentOutlineOffset + (m_frameThickness*0.5f), m_outlineDepth,  m_braceLength, 	  m_frameThickness, 					   true);		//Bottom brace mirrored
 	}
 	
 	
@@ -164,11 +190,51 @@ public class BufferFrame : MonoBehaviour {
 	
 	
 	/*
+	 * Animates outline in and out
+	 */
+	public void ShowOutline(bool state){
+		float fromVal = 0.0f;
+		float toVal = 0.0f;
+		
+		bIsOutlineVisible = state;
+		
+		if(state){
+			fromVal = 0.0f;
+			toVal = m_outlineOffset;
+			m_selectGuiPanels.gameObject.SetActive(bIsOutlineVisible);
+		} else {
+			fromVal = m_outlineOffset;
+			toVal = 0.0f;
+		}
+		
+		iTween.ValueTo(gameObject, iTween.Hash(
+			"from", fromVal, 
+			"to", toVal, 
+			"time", m_easeTime,
+			"onupdate", "SetOutlineOffset", 
+			"onupdatetarget", gameObject, 
+			"oncomplete", "OutlineAnimationComplete",
+			"easetype", "easeInOutSine"
+		));
+	}
+	
+	
+	/*
 	 * Size animation callback
 	 */
 	private void AnimationComplete(){
 		m_lastWidth = m_currentWidth;
 		m_lastHeight = m_currentHeight;
+	}
+	
+	
+	/*
+	 * Outline animation callback
+	 */
+	private void OutlineAnimationComplete(){
+		if(!bIsOutlineVisible){
+			m_selectGuiPanels.gameObject.SetActive(bIsOutlineVisible);
+		}
 	}
 	
 	
@@ -182,6 +248,7 @@ public class BufferFrame : MonoBehaviour {
 	public void SetThickness(float thickness){
 		m_frameThickness = thickness;
 		UpdatePanel();
+		UpdatePanelOutline();
 	}
 	
 	
@@ -191,6 +258,7 @@ public class BufferFrame : MonoBehaviour {
 	public void SetWidth(float width){
 		m_currentWidth = width;
 		UpdatePanel();
+		UpdatePanelOutline();
 	}
 	
 	
@@ -200,5 +268,19 @@ public class BufferFrame : MonoBehaviour {
 	public void SetHeight(float height){
 		m_currentHeight = height;
 		UpdatePanel();
+		UpdatePanelOutline();
 	}
+	
+	/*
+	 * Sets outline offset
+	 */
+	public void SetOutlineOffset(float offset){
+		m_currentOutlineOffset = offset;
+		UpdatePanelOutline();
+	}
+	
+	
+	//Getters
+	public float width{ get { return m_frameWidth; }}
+	public float height{ get { return m_frameHeight; }}
 }

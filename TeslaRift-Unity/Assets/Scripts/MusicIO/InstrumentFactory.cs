@@ -57,9 +57,11 @@ public class InstrumentFactory : MonoBehaviour {
 		
 		//Create instrument objects		
 		foreach(XmlNode instrument in instrumentList){		
-			BaseInstrument instrumentDef = new BaseInstrument( client.InnerText, source.InnerText, instrument.Attributes["name"].Value );
 			string[] colorStr = instrument.Attributes["colour"].Value.Split(',');
 			Color instrColor = new Color(Convert.ToSingle(colorStr[0]), Convert.ToSingle(colorStr[1]), Convert.ToSingle(colorStr[2]));
+			
+			BaseInstrument instrumentDef = new BaseInstrument( client.InnerText, source.InnerText, instrument.Attributes["name"].Value, instrColor );
+
 			
 			
 			//Instrument parameter creation
@@ -89,7 +91,7 @@ public class InstrumentFactory : MonoBehaviour {
 			
 			m_instrumentControllerRef.AddInstrument(instrumentDef);
 			
-			CreateLayeredInstrument(instrumentDef, instrColor);
+			InstrumentController.Instance.AddInstrumentGame( CreateLayeredInstrument(instrumentDef, instrColor) );
 		}
 	}
 	
@@ -97,7 +99,7 @@ public class InstrumentFactory : MonoBehaviour {
 	/*
 	 * Creates a layered GameInstrument with rotary panel parameters seperated by layer
 	 */
-	private void CreateLayeredInstrument(BaseInstrument instrument, Color instrumentColor){
+	private GameObject CreateLayeredInstrument(BaseInstrument instrument, Color instrumentColor){
 		//Create an instrument prefab
 		GameObject instrumentGame = Instantiate(instrumentPrefab, transform.position, Quaternion.identity ) as GameObject;
 		instrumentGame.name = GAMEINSTRUMENT_PREFIX + instrument.Name;
@@ -115,6 +117,8 @@ public class InstrumentFactory : MonoBehaviour {
 		//Create clip radial menu
 		if(instrument.clipList.Count > 0)
 			attach.AddRadial(  CreateRadialSelector(instrument.clipList, instrumentGame), ParameterType.CLIP );
+		
+		return instrumentGame;
 	}
 	
 	
@@ -268,7 +272,7 @@ public class InstrumentFactory : MonoBehaviour {
 	public static FloatingAttachment CreateFloatingAttachment(ParamAttachment attach){
 		BaseInstrumentParam param = attach.musicRef as BaseInstrumentParam;
 		
-		GameObject paramObj = GameObject.Instantiate(m_floatingClipPrefab) as GameObject;
+		GameObject paramObj = GameObject.Instantiate(m_floatingClipPrefab, attach.transform.position, attach.transform.rotation) as GameObject;
 		FloatingAttachment floatAttach = paramObj.AddComponent<FloatingAttachment>();
 		floatAttach.Init(param);
 		return floatAttach;

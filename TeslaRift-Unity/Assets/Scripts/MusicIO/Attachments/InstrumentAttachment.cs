@@ -85,6 +85,11 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 		CloseRadial(m_openRadialType, true);
 	}
 	
+	public override void Gesture_Twist (float amount)
+	{
+		base.Gesture_Twist (amount);
+	}
+	
 	/*
 	 * ExitGestures
 	 */
@@ -104,15 +109,11 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 		base.Gesture_PullOut ();
 		
 		//Create a floating instrument clip to put inside a buffer frame
-		InstrumentController.Instance.AddToActiveBuffer( InstrumentFactory.CreateFloatingAttachment(m_selectedParam) );
+		if(m_selectedParam != null)
+			InstrumentController.Instance.AddToActiveBuffer( InstrumentFactory.CreateFloatingAttachment(m_selectedParam) );
 		
 		CloseRadial(m_openRadialType, false);
 		Gesture_Exit();
-	}
-	
-	public override void Gesture_Twist (float amount)
-	{
-		base.Gesture_Twist (amount);
 	}
 	
 	
