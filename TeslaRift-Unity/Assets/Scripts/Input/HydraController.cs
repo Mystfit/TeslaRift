@@ -186,13 +186,13 @@ public class HydraController : MonoBehaviour {
 		{
 			//Arduino grabber
 			//---------------
-			if( m_gloveController.GetButtonDown(ArduinoController.GloveButton.ONE)) {
+			/*if( m_gloveController.GetButtonDown(ArduinoController.GloveButton.ONE)) {
 				m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand);
-			}
+			}*/
 			
 			//Arduino idle
 			//------------
-			if(m_gloveController.GetButtonUp(ArduinoController.GloveButton.TWO) ||
+			/*if(m_gloveController.GetButtonUp(ArduinoController.GloveButton.TWO) ||
 				m_gloveController.GetButtonUp(ArduinoController.GloveButton.ONE))
 			{
 				GameObject handObj = null;
@@ -206,7 +206,7 @@ public class HydraController : MonoBehaviour {
 					BaseTool tool = handObj.GetComponent(typeof(BaseTool)) as BaseTool;
 					m_toolControlRef.PopTool(hand);
 				}
-			}
+			}*/
 		}
 	}
 	
