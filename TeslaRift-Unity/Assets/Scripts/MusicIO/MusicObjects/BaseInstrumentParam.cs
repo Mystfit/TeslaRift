@@ -15,6 +15,7 @@ namespace MusicIO
 	public class BaseInstrumentParam : BaseMusicObject {
 		
 		protected string m_name = "";
+		protected string m_deviceName = "";
 		protected float m_fValue = 0.0f;
 		protected float m_overrideValue = 0.0f;
 		protected BaseInstrument m_owner = null;
@@ -35,6 +36,8 @@ namespace MusicIO
 		
 		//Getters / Setters
 		public string name{	get { return m_name; } }
+		public string deviceName{ get { return m_deviceName; } }
+		public void setDeviceName(string name){m_deviceName = name; }
 		public BaseInstrument owner{ get { return m_owner; } }
 		public float val { get { return m_fValue; }	}
 		public virtual void setVal(float value){ 

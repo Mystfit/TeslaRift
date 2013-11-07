@@ -110,6 +110,17 @@ public static class Utils
 	 
 		return result;
 	}
+	
+	/*
+	 * Color converters
+	 */
+	public static string intToHex(int input){
+		return input.ToString("X");
+	}
+	
+	public static Color intToColor(int input){
+		return new Color( (float)((input >> 16) & 255) / 255, (float)((input >> 8) & 255) / 255, (float)((input) & 255) / 255 );
+	}
 }
 
 

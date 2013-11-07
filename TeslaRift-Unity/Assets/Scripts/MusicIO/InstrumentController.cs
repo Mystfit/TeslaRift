@@ -23,6 +23,10 @@ public class InstrumentController : MonoBehaviour {
 	private string m_sourceName;
 	public void SetSourceName(string sourceName){ m_sourceName = sourceName; }
 	
+	//Inspector toggles
+	public bool m_blastAllParameters;
+
+	
 	
 	// Unity
 	//-------------------------------------
@@ -37,6 +41,19 @@ public class InstrumentController : MonoBehaviour {
 	void Update () {
 		foreach(BaseInstrument instrument in m_instruments){
 			instrument.update();
+		}
+		
+		if(m_blastAllParameters){
+			m_blastAllParameters = false;
+			foreach(BaseInstrument instrument in m_instruments){
+				foreach(BaseInstrumentParam param in instrument.paramList){
+					param.setVal(1.0f);
+				}
+				
+				foreach(InstrumentClip clip in instrument.clipList){
+					clip.Play();
+				}
+			}
 		}
 	}
 	

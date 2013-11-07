@@ -124,6 +124,10 @@ namespace MusicIO
 		{
 			scene = clipScene;
 		}
+		
+		public void Play(){
+			this.owner.addClipMessageToQueue(this.scene);
+		}
 	}
 	
 	

@@ -12,8 +12,8 @@
 				<param name="gate" type="float"></param>
 			</parameters>
 			<clips>
-				<clip name="dummyClip1" type="loop" scene="2"></clip>
-				<clip name="dummyClip2" type="loop" scene="4"></clip>
+				<clip name="clip1" type="loop" scene="1"></clip>
+				<clip name="clip2" type="loop" scene="2"></clip>
 				<clip name="dummyClip3" type="loop" scene="5"></clip>
 				<clip name="dummyClip4" type="loop" scene="6"></clip>
 				<clip name="dummyClip5" type="loop" scene="9"></clip>

@@ -290,7 +290,7 @@ public class BufferAttachment : BaseAttachment<ControlBuffer> {
 	public void TriggerAllClips(){
 		foreach(FloatingAttachment attach in m_attachedClips){
 			InstrumentClip clip = attach.musicRef as InstrumentClip;
-			clip.owner.addClipMessageToQueue(clip.scene);
+			clip.Play();
 		}
 	}
 	
@@ -328,5 +328,10 @@ public class BufferAttachment : BaseAttachment<ControlBuffer> {
 	public override void Gesture_First ()
 	{
 		InstrumentController.Instance.SelectBuffer(this);
+	}
+	
+	public override void Gesture_PushIn ()
+	{
+		TriggerAllClips();
 	}
 }

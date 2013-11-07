@@ -5,11 +5,13 @@ using MusicIO;
 public class ParamAttachment : BaseAttachment<BaseInstrumentParam> {
 	
 	public bool isHovering = false;
+	public string parameterName;
 		
 	void Update () {
 		if( musicRef != null){
 			if(!musicRef.enabled)
 				SetSelected(false);
+			parameterName = musicRef.name;
 		}
 	}
 		

@@ -4,8 +4,12 @@ using System.Collections.Generic;
 using System.Xml;
 using System;
 using MusicIO;
+using System.IO;
 
 public class InstrumentFactory : MonoBehaviour {
+	
+	public string m_client;		//Target OSC for instruments
+	public string m_source;		//Source we are sending messages from (first adress prefix in outgoing OSC)
 	
 	public static string GAMEINSTRUMENT_PREFIX = "GInstr_";
 	public GameObject instrumentPrefab = null;
@@ -14,6 +18,7 @@ public class InstrumentFactory : MonoBehaviour {
 	public float m_radialInnerRadius = 0.05f;	
 	public float m_radialOuterRadius = 0.5f;
 	public float m_panelOrbitDistance = 0.2f;
+	public string m_liveSessionFile;
 	
 	private InstrumentController m_instrumentControllerRef;
 	
@@ -33,67 +38,91 @@ public class InstrumentFactory : MonoBehaviour {
 		m_textPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/GUI/paramLabel.prefab", typeof(GameObject)) as GameObject;
 		m_trianglePanelPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/GUI/trianglePanel.prefab", typeof(GameObject)) as GameObject;
 		
-		LoadInstrumentDefinitions();
-	}
-	
-	void Update () {
-	
+		//LoadInstrumentDefinitions();
+		LoadLiveSessionXml();
 	}
 	
 	
 	/*
-	 * Loads instrument definitions from XML
+	 * Creates instruments from Live's dumped session xml
 	 */
-	private void LoadInstrumentDefinitions(){
+	private void LoadLiveSessionXml(){
+		
 		//Load xml
-		XmlDocument instrumentDoc = new XmlDocument ();
-		instrumentDoc.LoadXml ( instrumentDefinitionFile.text );
+		XmlReaderSettings settings = new XmlReaderSettings();
+		settings.IgnoreWhitespace = true;
 		
-		XmlNodeList instrumentList = instrumentDoc.GetElementsByTagName("instrument"); //instrument array
-		XmlNode source = instrumentDoc.SelectSingleNode("/instrumentDefinitions/source");
-		XmlNode client = instrumentDoc.SelectSingleNode("/instrumentDefinitions/client");
-
-		InstrumentController.Instance.SetSourceName(source.InnerText);
+		StreamReader sr = new StreamReader( Application.dataPath + "../../../Live/MidiRemote/" + m_liveSessionFile );
+		XmlReader xmlRead = XmlReader.Create(sr, settings);
 		
-		//Create instrument objects		
-		foreach(XmlNode instrument in instrumentList){		
-			string[] colorStr = instrument.Attributes["colour"].Value.Split(',');
-			Color instrColor = new Color(Convert.ToSingle(colorStr[0]), Convert.ToSingle(colorStr[1]), Convert.ToSingle(colorStr[2]));
-			
-			BaseInstrument instrumentDef = new BaseInstrument( client.InnerText, source.InnerText, instrument.Attributes["name"].Value, instrColor );
+		XmlDocument sessionXml = new XmlDocument ();
+		sessionXml.Load( xmlRead );
+		
+		//Get track, return, master information
+		XmlNodeList trackList = sessionXml.GetElementsByTagName("track"); //instrument array	
+		XmlNodeList returnList = sessionXml.GetElementsByTagName("trackReturn"); //instrument array	
+		
 
+		InstrumentController.Instance.SetSourceName(m_source);
+		
+		CreateInstrumentFromXmlList( trackList);
+		CreateInstrumentFromXmlList( returnList);
+	}
+	
+	
+	/*
+	 * Creates instruments from xml lists
+	 */
+	private void CreateInstrumentFromXmlList(XmlNodeList xmlList){
+		//Tracks are converted to instruments
+		foreach(XmlNode track in xmlList){	
+			//Get track definition
+			Color color = Utils.intToColor( int.Parse(track.Attributes["color"].Value) );			
+			BaseInstrument instrumentDef = new BaseInstrument( m_client, m_source, track.Attributes["name"].Value, color );
 			
-			
-			//Instrument parameter creation
-			XmlNodeList paramList = instrument.SelectSingleNode("parameters").SelectNodes("param");
-			
-			//Add params to instrument
-			foreach(XmlElement param in paramList){
-				XmlAttribute name = param.Attributes["name"];
-				XmlAttribute type = param.Attributes["type"];
-				string typeStr = type != null ? type.Value : "";
+			//Get devices present in track
+			XmlNodeList deviceList = track.SelectNodes("device"); //device array	
+			foreach(XmlNode device in deviceList){
+				//Get params in device
+				XmlNodeList paramList = device.SelectNodes("parameter"); //parameter array	
 				
-				instrumentDef.AddParam(name.Value, typeStr);
+				foreach(XmlNode parameter in paramList){
+					string name = parameter.Attributes["name"].Value as String;
+					name = name.Replace("/", "-");
+					name = name.Replace(" ", "_");
+					float min = Convert.ToSingle(parameter.Attributes["min"].Value);
+					float max = Convert.ToSingle(parameter.Attributes["max"].Value);
+					instrumentDef.AddParam(name, "float", min, max, device.Attributes["name"].Value);
+				}
+	
 			}
 			
-			//Clip creation
-			XmlNodeList clipList = instrument.SelectSingleNode("clips").SelectNodes("clip");
+			//Get clips in track
+			XmlNodeList clipList = track.SelectNodes("clip");
+			foreach(XmlNode clip in clipList){
+				string name = clip.Attributes["name"].Value as String;
+				int index = int.Parse( clip.Attributes["index"].Value );
+				bool looping = Convert.ToBoolean( clip.Attributes["looping"].Value );
+				instrumentDef.AddClip(name, looping, index);
+			}
 			
-			//Add clips to instrument
-			foreach(XmlElement clip in clipList){
-				XmlAttribute name = clip.Attributes["name"];
-				XmlAttribute type = clip.Attributes["type"];
-				XmlAttribute scene = clip.Attributes["scene"];
-				string typeStr = type != null ? type.Value : "";
-				
-				instrumentDef.AddClip(name.Value, typeStr, int.Parse(scene.Value));
+			//Get sends in track
+			XmlNodeList sendsList = track.SelectNodes("sends");
+			foreach(XmlNode send in sendsList){
+				string name = send.Attributes["name"].Value as String;
+				name = name.Replace("/", "-");
+				name = name.Replace(" ", "_");
+				name = "Send-" + name;
+				float min = Convert.ToSingle(send.Attributes["min"].Value);
+				float max = Convert.ToSingle(send.Attributes["max"].Value);
+				instrumentDef.AddParam(name, "float", min, max);
 			}
 			
 			m_instrumentControllerRef.AddInstrument(instrumentDef);
-			
-			InstrumentController.Instance.AddInstrumentGame( CreateLayeredInstrument(instrumentDef, instrColor) );
+			InstrumentController.Instance.AddInstrumentGame( CreateLayeredInstrument(instrumentDef, color) );
 		}
 	}
+
 	
 	
 	/*
@@ -111,12 +140,19 @@ public class InstrumentFactory : MonoBehaviour {
 		instrumentGame.renderer.material.SetColor("_Color", instrumentColor);
 		
 		//Create parameter radial menu
-		if(instrument.paramList.Count > 0)
-			attach.AddRadial( CreateRadialSelector(instrument.paramList, instrumentGame), ParameterType.PARAM );			
+		if(instrument.paramList.Count > 0){
+			GameObject panelLayer = CreateRadialSelector(instrument.paramList, instrumentGame);
+			panelLayer.name = "paramLayer";
+			attach.AddRadial( panelLayer, ParameterType.PARAM );			
+		}
 		
 		//Create clip radial menu
-		if(instrument.clipList.Count > 0)
-			attach.AddRadial(  CreateRadialSelector(instrument.clipList, instrumentGame), ParameterType.CLIP );
+		if(instrument.clipList.Count > 0){
+			GameObject panelLayer = CreateRadialSelector(instrument.clipList, instrumentGame);
+			panelLayer.name = "clipLayer";
+			attach.AddRadial( panelLayer, ParameterType.CLIP );
+		}
+		
 		
 		return instrumentGame;
 	}
@@ -134,6 +170,7 @@ public class InstrumentFactory : MonoBehaviour {
 			//Create a tiangle panel for this parameter
 			Mesh panelMesh = CreatePolygonPanel(0, parameterList.Count, m_radialOuterRadius, m_radialInnerRadius);
 			GameObject panel = Instantiate(m_trianglePanelPrefab) as GameObject;
+			panel.name = (parameterList[i].deviceName != "") ? parameterList[i].deviceName + "/" + parameterList[i].name : parameterList[i].name;
 			
 			panel.GetComponent<MeshFilter>().mesh = panelMesh;
 			panel.GetComponent<MeshCollider>().sharedMesh = panelMesh;
@@ -169,20 +206,36 @@ public class InstrumentFactory : MonoBehaviour {
 		float borderAngle = 2.25f;
 		Vector3 depth = new Vector3(0.0f,0.0f,0.01f);
 		Vector3 lowEdge = new Vector3(0.0f,0.0f,-0.03f);
-
 		
 		Vector3[] vertices = new Vector3[8];
 		Vector3[] normals = new Vector3[8];
 		Vector2[] uvs = new Vector2[8];
 		int[] indices = new int[36];
 		
+		Vector3 a = Vector3.zero;
+		Vector3 b = Vector3.zero;
+		Vector3 c = Vector3.zero;
+		Vector3 d = Vector3.zero;
+		
 		if(totalPanels > 2){	// 1 or 2 sides will need a square shaped layer.
-			
-			Vector3 a = new Vector3(Mathf.Cos((angleInc)* panelNum + Mathf.Deg2Rad * borderAngle ) * radius, Mathf.Sin((angleInc) * panelNum + Mathf.Deg2Rad * borderAngle ) * radius, 0.0f);
-			Vector3 b = new Vector3(Mathf.Cos((angleInc)*(panelNum+1) - Mathf.Deg2Rad * borderAngle) * radius, Mathf.Sin((angleInc) * (panelNum+1) -Mathf.Deg2Rad * borderAngle ) * radius, 0.0f);
-			Vector3 c = new Vector3(Mathf.Cos((angleInc)* panelNum + Mathf.Deg2Rad * borderAngle ) * innerRadius, Mathf.Sin((angleInc) * panelNum + Mathf.Deg2Rad * borderAngle ) * innerRadius, 0.0f);
-			Vector3 d = new Vector3(Mathf.Cos((angleInc)*(panelNum+1) - Mathf.Deg2Rad * borderAngle) * innerRadius, Mathf.Sin((angleInc) * (panelNum+1) -Mathf.Deg2Rad * borderAngle ) * innerRadius, 0.0f);
-			
+			a = new Vector3(Mathf.Cos((angleInc)* panelNum + Mathf.Deg2Rad * borderAngle ) * radius, Mathf.Sin((angleInc) * panelNum + Mathf.Deg2Rad * borderAngle ) * radius, 0.0f);
+			b = new Vector3(Mathf.Cos((angleInc)*(panelNum+1) - Mathf.Deg2Rad * borderAngle) * radius, Mathf.Sin((angleInc) * (panelNum+1) -Mathf.Deg2Rad * borderAngle ) * radius, 0.0f);
+			c = new Vector3(Mathf.Cos((angleInc)* panelNum + Mathf.Deg2Rad * borderAngle ) * innerRadius, Mathf.Sin((angleInc) * panelNum + Mathf.Deg2Rad * borderAngle ) * innerRadius, 0.0f);
+			d = new Vector3(Mathf.Cos((angleInc)*(panelNum+1) - Mathf.Deg2Rad * borderAngle) * innerRadius, Mathf.Sin((angleInc) * (panelNum+1) -Mathf.Deg2Rad * borderAngle ) * innerRadius, 0.0f);
+		} else if(totalPanels == 2){
+			float topOffset = (panelNum == 0) ? 1.0f : 0.0f;
+			float bottomOffset = (panelNum == 0) ? 0.0f : 1.0f;
+			a = new Vector3(-radius, -(radius * topOffset) ,0.0f);
+			b = new Vector3(radius, -(radius * topOffset),0.0f);
+			c = new Vector3(-radius, radius * bottomOffset,0.0f);
+			d = new Vector3(radius, radius * bottomOffset,0.0f);
+		} else if(totalPanels == 1){
+			a = new Vector3(-radius, -radius ,0.0f);
+			b = new Vector3(radius, -radius ,0.0f);
+			c = new Vector3(-radius, radius ,0.0f);
+			d = new Vector3(radius, radius ,0.0f);
+		}
+		
 			vertices[0] = a;
 			vertices[1] = b;
 			vertices[2] = c + lowEdge;
@@ -209,7 +262,6 @@ public class InstrumentFactory : MonoBehaviour {
 			uvs[5] = uvs[2];
 			uvs[6] = uvs[2];
 			uvs[7] = uvs[3];
-
 			
 			//Front
 			indices[0] = 0;
@@ -258,7 +310,7 @@ public class InstrumentFactory : MonoBehaviour {
 			indices[33] = 4;
 			indices[34] = 6;
 			indices[35] = 2;	
-		}
+		
 		
 		layerMesh.vertices = vertices;
 		layerMesh.normals = normals;

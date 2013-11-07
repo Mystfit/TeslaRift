@@ -53,7 +53,7 @@ namespace MusicIO
 		
 		// Clip functions
 		//---------------
-		public void AddClip(string name, string type, int scene){
+		public void AddClip(string name, bool looping, int scene){
 			m_clips.Add(new InstrumentClip(name, this, scene));
 		}
 		
@@ -62,15 +62,23 @@ namespace MusicIO
 		}
 		
 		
+		public void AddParam(string name, string valueType, float min, float max){
+			AddParam(name, valueType, min, max, "");
+		}
+		
+		
 		// Parameter functions
 		//-----------------
-		public void AddParam(string name, string valueType){
-			if(valueType == "chord")
+		public void AddParam(string name, string valueType, float min, float max, string deviceName){
+			if(valueType == "chord"){
 				m_params.Add(new NoteParam(name, this)); 
-			else if(valueType == "toggle")
+			} else if(valueType == "toggle"){
 				m_params.Add(new ToggleParam(name, this));
-			else
-				m_params.Add(new GenericMusicParam(name, this)); 
+			} else{
+				GenericMusicParam param = new GenericMusicParam(name, this);
+				param.setDeviceName(deviceName);
+				m_params.Add(param); 
+			}
 		}
 	
 		
@@ -149,7 +157,11 @@ namespace MusicIO
 							addMidiNoteMessageToQueue(note.name, note.val, note.velocity, note.noteIndex, note.noteTrigger );
 						}
 					} else {
-						addMessageToQueue(param.name, param.val);
+						string paramName = param.name;
+						if(param.deviceName != "")
+							paramName = param.deviceName + "/" + param.name;
+						
+						addMessageToQueue(paramName, param.val);
 					}
 						
 					param.setClean();

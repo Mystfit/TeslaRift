@@ -5,7 +5,7 @@ using Uniduino;
 public class TestFingers : MonoBehaviour {
 	
 	public GameObject[] fingers;
-	private int[] m_analogPins = {0,1,2,3};
+	private int[] m_analogPins = {1,0,3,2};
 	private Arduino arduino;
 
 	// Use this for initialization
@@ -14,7 +14,7 @@ public class TestFingers : MonoBehaviour {
 		
 		for(int i = 0; i < m_analogPins.Length; i++){
 			arduino.pinMode(m_analogPins[i], PinMode.ANALOG);
-			arduino.reportAnalog((byte)(m_analogPins[i]/8), 1);
+			arduino.reportAnalog(m_analogPins[i], 1);
 		}
 	}
 	
