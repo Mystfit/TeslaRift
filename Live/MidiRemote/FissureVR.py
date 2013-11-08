@@ -62,10 +62,28 @@ class FissureVR(ControlSurface):
         for myTrack in self.cInstance.song().tracks:
             trackChannel += 1
 
+            myTrackMixer = myTrack.mixer_device
+
+            self.log_message(myTrack.name)
+            self.log_message(myTrackMixer.volume)
+            self.log_message(myTrackMixer.panning)
+            self.log_message(myTrackMixer.panning)
+            self.log_message(myTrack.output_meter_level)
+            self.log_message(myTrack.mute)
+            self.log_message(myTrack.solo)
+            self.log_message(myTrack.can_be_armed)
+            #self.log_message(myTrack.arm)
+            self.log_message(myTrack.color)
+
             try:
                 myTrackMixer = myTrack.mixer_device
+
+                armed = False
+                if(myTrack.can_be_armed):
+                    armed = myTrack.arm
+
                 xmlString += "\t<track channel='" + str(trackChannel) + "' name='" + str(myTrack.name) + "' volume='" + str(myTrackMixer.volume) + "' pan='" + str(
-                    myTrackMixer.panning) + "' output_meter_level='" + str(myTrack.output_meter_level) + "' mute='" + str(myTrack.mute) + "' solo='" + str(myTrack.solo) + "' arm='" + str(myTrack.arm) + "' color='" + str(myTrack.color) + "'>\n"
+                    myTrackMixer.panning) + "' output_meter_level='" + str(myTrack.output_meter_level) + "' mute='" + str(myTrack.mute) + "' solo='" + str(myTrack.solo) + "' arm='" + str(armed) + "' color='" + str(myTrack.color) + "'>\n"
 
                 clipIndex = 0
 

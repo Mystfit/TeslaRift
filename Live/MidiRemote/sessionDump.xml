@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <song tempo = '110.0'>
-	<track channel='1' name='TeslaArp' volume='-3.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='16712965'>
+	<track channel='1' name='TeslaArp' volume='-4.8 dB' pan='C' output_meter_level='0.7709608078' mute='False' solo='False' arm='False' color='16712965'>
 		<clip index='1' name='chord1' color='12411136' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='4' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='5' name='MystChords' color='8754719' mute='False' looping='True' playing='True' triggered='False' />
@@ -49,7 +49,7 @@
 	</track>
 	<track channel='2' name='M-Traveller' volume='-3.4 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='16753961'>
 		<clip index='1' name='IntroSwell' color='16753524' mute='False' looping='False' playing='False' triggered='False' />
-		<clip index='2' name='IntroSwell' color='16753524' mute='False' looping='True' playing='True' triggered='False' />
+		<clip index='2' name='IntroSwell' color='16753524' mute='False' looping='True' playing='False' triggered='False' />
 		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
@@ -71,7 +71,7 @@
 	</track>
 	<track channel='3' name='BrassSwell' volume='1.3 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='16773172'>
 		<clip index='1' name='2 8-Brass Swell Around' color='12411136' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='2' name='2 8-Brass Swell Around' color='12411136' mute='False' looping='True' playing='True' triggered='False' />
+		<clip index='2' name='2 8-Brass Swell Around' color='12411136' mute='False' looping='True' playing='False' triggered='False' />
 		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
@@ -92,7 +92,7 @@
 		</device>
 	</track>
 	<track channel='4' name='Percussion' volume='-5.5 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='5480241'>
-		<clip index='1' name='TimeTables1' color='16149507' mute='False' looping='True' playing='True' triggered='False' />
+		<clip index='1' name='TimeTables1' color='16149507' mute='False' looping='True' playing='False' triggered='False' />
 		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
@@ -113,7 +113,7 @@
 		</device>
 	</track>
 	<track channel='5' name='AudioLoop1' volume='0.2 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='2490280'>
-		<clip index='1' name='TapHat' color='16753961' mute='False' looping='True' playing='True' triggered='False' />
+		<clip index='1' name='TapHat' color='16753961' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='2' name='DigitalArmy1' color='49071' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='3' name='RadioProcessing' color='12581632' mute='False' looping='True' playing='False' triggered='False' />
 		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
@@ -145,7 +145,7 @@
 		</device>
 	</track>
 	<track channel='7' name='Kaoss1' volume='-1.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='1769263'>
-		<clip index='1' name='BassCroak1' color='12411136' mute='False' looping='True' playing='True' triggered='False' />
+		<clip index='1' name='BassCroak1' color='12411136' mute='False' looping='True' playing='False' triggered='False' />
 		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
@@ -170,10 +170,15 @@
 			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
 		</device>
 	</track>
-	<track channel='9' name='R_LowBAss' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='True' color='9611263'>
+	<track channel='9' name='G-LowBass' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='9611263'>
+		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
+		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
+		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
+	</track>
+	<track channel='10' name='M-LowBass' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='9611263'>
 		<clip index='4' name='bass1' color='14183652' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='5' name='bass2' color='14183652' mute='False' looping='True' playing='False' triggered='False' />
-		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
+		<clip index='5' name='bass2' color='14183652' mute='False' looping='True' playing='True' triggered='False' />
+		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
 		<device name='Pitch'>
@@ -182,11 +187,56 @@
 			<parameter name='Lowest' value='60.0' min='0.0' max='127.0'/>
 			<parameter name='Range' value='127.0' min='0.0' max='127.0'/>
 		</device>
+		<device name='nK Receiver'>
+			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
+			<parameter name='Send A (*LowBass-fxA*)' value='127.0' min='0.0' max='127.0'/>
+			<parameter name='Send B (*LowBass-fxB*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Send C (*LowBass-fxC*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 4' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 5' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 6' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 7' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 8' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
+		</device>
+		<device name='ParamGrabber'>
+			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
+		</device>
+		<device name='TrackGrabber'>
+			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
+		</device>
 	</track>
-	<track channel='10' name='R_Sisters' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='5538020'>
-		<clip index='4' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='5' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
+	<track channel='11' name='H-LowBassRoute' volume='0.0 dB' pan='C' output_meter_level='0.874015748501' mute='False' solo='False' arm='False' color='9611263'>
+		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
+		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
+		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
+	</track>
+	<track channel='12' name='A-LowBass' volume='-0.5 dB' pan='C' output_meter_level='0.864736437798' mute='False' solo='False' arm='False' color='9611263'>
 		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
+		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
+		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
+		<device name='nK Track'>
+			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
+			<parameter name='Send A (*LowBass-fxA*)' value='127.0' min='0.0' max='127.0'/>
+			<parameter name='Send B (*LowBass-fxB*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Send C (*LowBass-fxC*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 4' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 5' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 6' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 7' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 8' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
+		</device>
+	</track>
+	<track channel='13' name='G-Sisters' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='5538020'>
+		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
+		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
+		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
+	</track>
+	<track channel='14' name='M-Sisters' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='5538020'>
+		<clip index='4' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
+		<clip index='5' name='MystChords' color='8754719' mute='False' looping='True' playing='True' triggered='False' />
+		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
 		<device name='Pitch'>
@@ -195,13 +245,117 @@
 			<parameter name='Lowest' value='0.0' min='0.0' max='127.0'/>
 			<parameter name='Range' value='59.0' min='0.0' max='127.0'/>
 		</device>
+		<device name='nK Receiver'>
+			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
+			<parameter name='Send A (*Sisters-fxA*)' value='127.0' min='0.0' max='127.0'/>
+			<parameter name='Send B (*Sisters-fxB*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Send C (*Sisters-fxC*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 4' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 5' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 6' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 7' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 8' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
+		</device>
+		<device name='ParamGrabber'>
+			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
+		</device>
+		<device name='TrackGrabber'>
+			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
+		</device>
 	</track>
-	<track channel='11' name='R-7sisters' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='9160191'>
+	<track channel='15' name='H-SistersRoute' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='5538020'>
+		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
+		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
+		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
+	</track>
+	<track channel='16' name='A-Sisters' volume='0.0 dB' pan='C' output_meter_level='0.746013462543' mute='False' solo='False' arm='False' color='5538020'>
+		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
+		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
+		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
+		<device name='nK Track'>
+			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
+			<parameter name='Send A (*Sisters-fxA*)' value='127.0' min='0.0' max='127.0'/>
+			<parameter name='Send B (*Sisters-fxB*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Send C (*Sisters-fxC*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 4' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 5' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 6' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 7' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 8' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
+		</device>
+	</track>
+	<track channel='17' name='G-7sisters' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='9160191'>
+		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
+		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
+		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
+	</track>
+	<track channel='18' name='M-7sisters' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='9160191'>
 		<clip index='4' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='5' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
+		<clip index='5' name='MystChords' color='8754719' mute='False' looping='True' playing='True' triggered='False' />
 		<clip index='6' name='6 LightCycleArp' color='5480241' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='9' name='4 R-7sisters' color='3101346' mute='False' looping='True' playing='False' triggered='False' />
+		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
+		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
+		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
+		<device name='Pitch'>
+			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
+			<parameter name='Pitch' value='0.0' min='-128.0' max='128.0'/>
+			<parameter name='Lowest' value='60.0' min='0.0' max='127.0'/>
+			<parameter name='Range' value='127.0' min='0.0' max='127.0'/>
+		</device>
+		<device name='nK Receiver'>
+			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
+			<parameter name='Send A (*7Sisters-fxA*)' value='127.0' min='0.0' max='127.0'/>
+			<parameter name='Send B (*7Sisters-fxB*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Send C (*7Sisters-fxC*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 4' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 5' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 6' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 7' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 8' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
+		</device>
+		<device name='ParamGrabber'>
+			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
+		</device>
+		<device name='TrackGrabber'>
+			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
+		</device>
+	</track>
+	<track channel='19' name='H-7SistersRoute' volume='0.0 dB' pan='C' output_meter_level='0.732283473015' mute='False' solo='False' arm='False' color='9160191'>
+		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
+		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
+		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
+	</track>
+	<track channel='20' name='A-7sisters' volume='-4.0 dB' pan='C' output_meter_level='0.739937722683' mute='False' solo='False' arm='False' color='9160191'>
 		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
+		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
+		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
+		<device name='nK Track'>
+			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
+			<parameter name='Send A (*7Sisters-fxA*)' value='127.0' min='0.0' max='127.0'/>
+			<parameter name='Send B (*7Sisters-fxB*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Send C (*7Sisters-fxC*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 4' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 5' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 6' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 7' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 8' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
+		</device>
+	</track>
+	<track channel='21' name='G-Orch' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='10204100'>
+		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
+		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
+		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
+		<device name='TrackGrabber'>
+			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
+		</device>
+	</track>
+	<track channel='22' name='M-Orch' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='10204100'>
+		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
 		<device name='Pitch'>
@@ -211,19 +365,24 @@
 			<parameter name='Range' value='127.0' min='0.0' max='127.0'/>
 		</device>
 	</track>
-	<track channel='12' name='ReasonOut' volume='-0.5 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='197631'>
+	<track channel='23' name='H-Orch' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='10204100'>
+		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
+		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
+		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
+	</track>
+	<track channel='24' name='A-Orch' volume='-4.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='10204100'>
 		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
 	</track>
-	<trackReturn name='A-Turnado1' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' color='15810688'>
+	<trackReturn name='A-Turnado1' volume='0.0 dB' pan='C' output_meter_level='0.867677271366' mute='False' solo='False' color='15810688'>
 		<device name='Turnado'>
 			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
 			<parameter name='Dictator' value='0.0' min='0.0' max='1.0'/>
 			<parameter name='Control 1' value='0.0' min='0.0' max='1.0'/>
 			<parameter name='Control 2' value='0.0' min='0.0' max='1.0'/>
 			<parameter name='Control 3' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 4' value='0.0' min='0.0' max='1.0'/>
+			<parameter name='Control 4' value='0.00999999977648' min='0.0' max='1.0'/>
 			<parameter name='Control 5' value='0.0' min='0.0' max='1.0'/>
 			<parameter name='Control 6' value='0.0' min='0.0' max='1.0'/>
 			<parameter name='Control 7' value='0.0' min='0.0' max='1.0'/>
@@ -258,7 +417,7 @@
 			<parameter name='Control 8' value='0.0' min='0.0' max='1.0'/>
 		</device>
 	</trackReturn>
-	<trackMaster name='Master' volume='2.0 dB' pan='C' output_meter_level='0.0' color='0'>
+	<trackMaster name='Master' volume='2.0 dB' pan='C' output_meter_level='0.918072938919' color='0'>
 		<device name='GrabberReceiver'>
 			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
 		</device>

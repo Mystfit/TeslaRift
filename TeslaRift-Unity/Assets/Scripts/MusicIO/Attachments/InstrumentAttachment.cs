@@ -159,9 +159,11 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 		float delay = (immediate) ? 0.0f : 2.0f;
 			
 		if(type == ParameterType.CLIP){
-			iTween.ScaleTo(m_clipRadial, iTween.Hash("scale", new Vector3(0.0f, 0.0f, 0.0f), "time", 0.4f, "easetype", "easeInCubic",  "delay", delay));
+			if(m_clipRadial != null)
+				iTween.ScaleTo(m_clipRadial, iTween.Hash("scale", new Vector3(0.0f, 0.0f, 0.0f), "time", 0.4f, "easetype", "easeInCubic",  "delay", delay));
 		} else if(type == ParameterType.PARAM){
-			iTween.ScaleTo(m_paramRadial, iTween.Hash("scale", new Vector3(.0f, .0f, 0.0f), "time", 0.4f, "easetype", "easeInCubic", "delay", delay));
+			if(m_paramRadial != null)
+				iTween.ScaleTo(m_paramRadial, iTween.Hash("scale", new Vector3(.0f, .0f, 0.0f), "time", 0.4f, "easetype", "easeInCubic", "delay", delay));
 		}
 	}
 	
