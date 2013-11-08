@@ -59,6 +59,24 @@ namespace RBF{
 			
 			return dimensionValues;
 		}
+		
+		public void calculateWeights(){
+			Matrix A = new Matrix(m_trainingPoints.Count, m_trainingPoints.Count);
+			
+			for(int i = 0; i < m_trainingPoints.Count; i++){
+				for(int j = 0; j < m_trainingPoints.Count; j++){
+					float[] distPoints = new float[m_numInputDimensions];
+					
+					for(int inputIndex = 0; inputIndex < m_numInputDimensions; inputIndex++)
+						distPoints[inputIndex] = m_trainingPoints[i].inputDim[inputIndex] - m_trainingPoints[j].inputDim[inputIndex];
+					
+					A[i,j] = gaussKernel(distance(distPoints), m_sigma);
+					
+					
+				}
+			}
+			
+		}
 	}
 	
 	/*
