@@ -1,23 +1,31 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 using DotNumerics.LinearAlgebra;
 
 namespace RBF{
+	
+	/*
+	 * Radial Basis Function interpolator engine.
+	 * Uses training points of input/output values to interpolate between given inputs
+	 * 
+	 * Ported from python
+	 */
 	public class RBFCore{
 		
-		private int m_numInputDimensions;
-		private int m_numOutputDimensions;
-		private double m_sigma;
+		private double m_sigma;							//Sigma value for gaussian RBF function
+		private List<RBFTraining> m_trainingPoints;		//Training points
+		private List<Matrix> m_weights;					//Weights for curve from training points
+		private int m_numInputDimensions;		
+		private int m_numOutputDimensions;		
+
+		public enum DimensionType{ INPUT = 0, OUTPUT};	
 		
-		private List<RBFTraining> m_trainingPoints;
-		private List<Matrix> m_weights;
 		
-		public enum DimensionType{ INPUT = 0, OUTPUT};
-		
-		
+		/*
+		 * Constructor
+		 */
 		public RBFCore(int numInputDimensions, int numOutputDimensions){
 			m_numInputDimensions = numInputDimensions;
 			m_numOutputDimensions = numOutputDimensions;
@@ -26,26 +34,21 @@ namespace RBF{
 		}
 		
 		
-		public void reset(){
-			m_numInputDimensions = 0;
-			m_numOutputDimensions = 0;
+		/*
+		 * Reset the RBF
+		 */
+		public void reset(int numInputDimensions, int numOutputDimensions){
+			m_numInputDimensions = numInputDimensions;
+			m_numOutputDimensions = numOutputDimensions;
 			m_trainingPoints.Clear();
 			m_weights.Clear();
 		}
+				
 		
-		
-		public void setSigma(double sigma){
-			m_sigma = sigma;
-		}
-		
-		
-		public void setDimensions(int numInputDimensions, int numOutputDimensions){
-			reset ();
-			m_numInputDimensions = numInputDimensions;
-			m_numOutputDimensions = numOutputDimensions;
-		}
-		
-		
+		/*
+		 * Adds a new training point
+		 * Only accepts training points that match the current input/output dimensions of the RBF
+		 */
 		public void addTrainingPoint(double[] inputDimensions, double[] outputDimensions){
 			if(inputDimensions.Length != m_numInputDimensions)
 				return;
@@ -55,6 +58,9 @@ namespace RBF{
 		}
 		
 		
+		/*
+		 * Returns every specific index from an input/output list
+		 */
 		private double[] getDimensionFromGroup(List<RBFTraining> dimGroup, DimensionType dimensionType, int index){
 			double[] dimensionValues = new double[dimGroup.Count];
 			
@@ -69,12 +75,16 @@ namespace RBF{
 		}
 		
 		
+		/*
+		 * Calculate weight values from training points
+		 */
 		public List<Matrix> calculateWeights(){
 			Matrix A = new Matrix(m_trainingPoints.Count);
 			
 			int i = 0;
 			int j = 0;
 			
+			//Constructs A matrix using RBF function (gaussian)
 			for(i = 0; i < m_trainingPoints.Count; i++){
 				for(j = 0; j < m_trainingPoints.Count; j++){
 					double[] distPoints = new double[m_numInputDimensions];
@@ -88,8 +98,15 @@ namespace RBF{
 			
 			Matrix Ainv = A.Inverse();						
 			
+			//Get weights from inverse A matrix and training outputs
 			for(i = 0; i < m_numOutputDimensions; i++){
-				Matrix col = doubleArrayToMatrixColumn(getDimensionFromGroup(m_trainingPoints, DimensionType.OUTPUT, i));
+				double[] groupDim = getDimensionFromGroup(m_trainingPoints, DimensionType.OUTPUT, i);
+				
+				//Converts double array to single column matrix
+				Matrix col = new Matrix( m_trainingPoints.Count, 1 );
+				for(j = 0; j < groupDim.Length; j++)
+					col[j,0] = groupDim[j];
+				
 				Matrix mult = Ainv.Multiply( col );
 				m_weights.Add( mult );
 			}
@@ -98,26 +115,12 @@ namespace RBF{
 		}
 		
 		
-		public Matrix doubleArrayToMatrixColumn(double[] arr){
-			Matrix col = new Matrix( m_trainingPoints.Count, 1 );
-			for(int i = 0; i < arr.Length; i++)
-				col[i,0] = arr[i];
-			return col;
-		}
-		
-		public Matrix matrixRotate( Matrix m){
-			Matrix outM = new Matrix(m.ColumnCount, m.RowCount);
-			for(int i = 0; i < m.RowCount; i++){
-				for(int j = 0; j < m.ColumnCount; j++){
-					outM[j,i] = m[i,j];
-				}
-			}
-			return outM;
-		}
-			
-		
+		/*
+		 * Calculate outputs from given inputs using calculated weights
+		 */
 		public double[] calculateOutput(double[] inputDimValues){
 			
+			//Only accepts the same number of input values as the RBF will take
 			if(inputDimValues.Length != m_numInputDimensions)
 				throw new ArgumentOutOfRangeException();
 			
@@ -142,6 +145,9 @@ namespace RBF{
 		}
 		
 		
+		/*
+		 * Sums the distance between each point in a list of points
+		 */
 		public double summedDistance(double[] points){
 			double dist = 0.0f;
 			
@@ -150,7 +156,32 @@ namespace RBF{
 			
 			return Math.Sqrt(dist);
 		}
+		
+		
+		//Getters
+		//---------------------
+		
+		/*
+		 * Expected number of input dimensions
+		 */
+		public int numInputs{ get { return m_numInputDimensions; }}
+		
+		/*
+		 * Expected number of output dimensions
+		 */
+		public int numOutputs{ get { return m_numOutputDimensions; }}
+		
+		/*
+		 * Sigma value for gaussian interpolation
+		 */
+		public void setSigma(double sigma){ 
+			m_sigma = sigma; 
+			if(m_trainingPoints.Count > 0)
+				calculateWeights();
+		}
 	}
+	
+	
 	
 	/*
 	 * Class representing a training point
@@ -169,6 +200,9 @@ namespace RBF{
 	}
 	
 	
+	/*
+	 * RBF functions
+	 */
 	public static class RBFFunctions{
 		public static double gaussKernel(double input, double sigma){
 			return Math.Exp( -Math.Pow(input, 2.0) / Math.Pow(sigma,2.0) );

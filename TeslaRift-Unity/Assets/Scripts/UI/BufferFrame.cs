@@ -10,10 +10,14 @@ public class BufferFrame : MonoBehaviour {
 	protected ParameterType m_paramType;
 	protected List<GameObject> m_frameComponents;
 	protected List<GameObject> m_outlineFrameComponents;
+	protected List<GameObject> m_gridColumns;
+	protected List<GameObject> m_gridRows;
+	protected GameObject m_gridParent;
 
-	protected Object m_guiQuadPrefab;
+	public Object m_guiQuadPrefab;
 	public Transform m_guiPanels;
 	public Transform m_selectGuiPanels;
+	public Transform m_backgroundQuad;
 	
 	/*
 	 * Externally set dimensions
@@ -25,6 +29,15 @@ public class BufferFrame : MonoBehaviour {
 	public float m_frameWidth = 1.0f;
 	public float m_outlineOffset = 0.5f;
 	public float m_outlineDepth = -0.5f;
+	
+	/*
+	 * Background and grid parameters
+	 */
+	public Color m_backgroundColor = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+	public bool m_hasGrid = false;
+	public int m_numGridColumns = 8;
+	public int m_numGridRows = 8;
+	public float m_gridLineWidth = 0.01f;
 	
 	/*
 	 * Debug toggles
@@ -49,6 +62,8 @@ public class BufferFrame : MonoBehaviour {
 	void Awake () {
 		m_frameComponents = new List<GameObject>();
 		m_outlineFrameComponents = new List<GameObject>();
+		m_gridColumns = new List<GameObject>();
+		m_gridRows = new List<GameObject>();
 				
 		for(int i = 0; i < m_guiPanels.childCount; i++)
 			m_frameComponents.Add(m_guiPanels.GetChild(i).gameObject);
@@ -60,6 +75,9 @@ public class BufferFrame : MonoBehaviour {
 		m_lastHeight = m_frameHeight;
 				
 		AnimateSize(m_frameWidth, m_frameHeight);
+		
+		CreateGrid(m_numGridRows, m_numGridColumns);
+		UpdateGridLines();
 	}
 	
 	
@@ -89,6 +107,52 @@ public class BufferFrame : MonoBehaviour {
 	
 	
 	/*
+	 * Creates a grid of lines
+	 */
+	public void CreateGrid(int numRows, int numCols){
+		
+		int i = 0;
+		m_gridParent = new GameObject("grid");
+		m_gridParent.transform.parent = transform;
+		
+		//Rows
+		for(i = 1; i < numRows; i++){
+			GameObject gridLine = GameObject.Instantiate(m_guiQuadPrefab) as GameObject;
+			m_gridRows.Add ( gridLine );
+			gridLine.transform.parent = m_gridParent.transform;
+		}
+		
+		//Columns
+		for(i = 1; i < numCols; i++){
+			GameObject gridLine = GameObject.Instantiate(m_guiQuadPrefab) as GameObject;
+			m_gridColumns.Add ( gridLine );
+			gridLine.transform.parent = m_gridParent.transform;
+		}
+	}
+	
+	
+	/*
+	 * Updates grid line positions and scales to fill the frame
+	 */
+	protected void UpdateGridLines(){
+		int i = 0;
+		float colSpacing = m_frameWidth / (m_gridColumns.Count+1);
+		float rowSpacing = m_frameHeight / (m_gridRows.Count+1);
+		m_gridParent.transform.localPosition = new Vector3(-(m_currentWidth*0.5f), -(m_currentHeight*0.5f), 0.0f);
+		
+		for(i = 0; i < m_gridRows.Count; i++){
+			m_gridRows[i].transform.localPosition = new Vector3( 0.0f, (i+1) * rowSpacing, 0.0f);
+			m_gridRows[i].transform.localScale = new Vector3(m_currentWidth, m_gridLineWidth, 0.0f);
+		}
+		
+		for(i = 0; i < m_gridColumns.Count; i++){
+			m_gridColumns[i].transform.localPosition = new Vector3( (i+1)*colSpacing, 0.0f, 0.0f);
+			m_gridColumns[i].transform.localScale = new Vector3(m_gridLineWidth, m_currentHeight , 0.0f);
+		}
+	}
+	
+	
+	/*
 	 * Updates a quad panel transform by x/y/width/height
 	 */
 	protected void UpdateQuadTransform(GameObject quad, float x, float y, float z, float width, float height, bool mirrored){
@@ -100,6 +164,13 @@ public class BufferFrame : MonoBehaviour {
 			quad.transform.localRotation = Quaternion.Euler( new Vector3(0.0f, 0.0f, 0.0f) );
 			quad.transform.localPosition = new Vector3(x - m_frameThickness, y - height, z);
 			quad.transform.localScale = new Vector3(width, height, 0.0f);
+		}
+	}
+	
+	protected void UpdateBackground(float width, float height){
+		if(m_backgroundQuad != null){
+			m_backgroundQuad.localScale = new Vector3(width, height - (m_frameThickness*2));
+			m_backgroundQuad.localPosition = new Vector3(-(m_frameThickness*0.5f), -(m_frameThickness*0.5f), 0.0f);
 		}
 	}
 	
@@ -115,6 +186,8 @@ public class BufferFrame : MonoBehaviour {
 		UpdateQuadTransform(m_frameComponents[3],  m_currentWidth*0.5f + (m_frameThickness*0.5f),   m_currentHeight*0.5f - (m_frameThickness*0.5f), 0.0f,  m_braceLength, 	 m_frameThickness, true);		//Top brace mirrored
 		UpdateQuadTransform(m_frameComponents[4],  m_currentWidth*0.5f + (m_frameThickness*0.5f),   m_currentHeight*0.5f - (m_frameThickness*0.5f), 0.0f,  m_frameThickness, m_currentHeight,  true);		//Side mirrored
 		UpdateQuadTransform(m_frameComponents[5],  m_currentWidth*0.5f + (m_frameThickness*0.5f),  -m_currentHeight*0.5f + (m_frameThickness*0.5f), 0.0f,  m_braceLength, 	 m_frameThickness, true);		//Bottom brace mirrored
+		UpdateBackground(m_currentWidth, m_currentHeight);
+		UpdateGridLines();
 	}
 	
 	
