@@ -7,24 +7,63 @@ using MusicIO;
 namespace RBF{
 	
 	public class RBFTrainingPoint : MonoBehaviour {
+	
+		protected float twistVal;		//Twist (w) input
 		
-		public float x;
-		public float y;
-		public float twist;
+		protected Transform m_parentContainer;		//Controlling panel for this training point
+		protected float m_containerWidth;			//Controlling panel width
+		protected float m_containerHeight;			//Controlling panel height
+		protected Dictionary<BaseInstrumentParam, float> m_paramValues;
 		
-		Dictionary<BaseInstrumentParam, float> m_paramValues;
-		
+		/*
+		 * Init
+		 */
 		void Start(){
 			m_paramValues = new Dictionary<BaseInstrumentParam, float>();
 		}
 	
+		
 		/*
 		 * Sets the input dimension values for this RBF training point
 		 */
-		public void SetInputValues(float x, float y, float twist){
-			this.x = x;
-			this.y = y;
-			this.twist = twist;
+		public void SetTwist(float twist){
+			this.twistVal = twist;
+		}
+		
+
+		/* 
+		 * Getters for normalized position of training point inside controlling panel
+		 */
+
+		public float xNormalized {get { return Utils.Normalize(transform.localPosition.x, m_containerWidth*-0.5f, m_containerWidth*0.5f); }}
+		public float yNormalized {get { return Utils.Normalize(transform.localPosition.y, m_containerHeight*-0.5f, m_containerHeight*0.5f); }}
+		public float twist {get { return twistVal; }}
+		
+		
+		/*
+		 * Sets the controlling container for this RBF point.
+		 */
+		public void SetParentContainer(Transform parent, float width, float height){
+			transform.position = parent.position;
+			transform.rotation = parent.rotation;
+			transform.parent = parent;
+			m_parentContainer = parent;
+			m_containerWidth = width;
+			m_containerHeight = height;
+		}
+		
+		
+		/*
+		 * Moves this point inside of the parent container
+		 */
+		public void MoveRelativeToContainer(Transform worldPos){
+			if(m_parentContainer != null){
+				Vector3 pos = m_parentContainer.transform.InverseTransformPoint(worldPos.transform.position);
+				transform.localPosition = new Vector3(
+					Mathf.Clamp(pos.x, m_containerWidth*-0.5f, m_containerHeight*0.5f ), 
+					Mathf.Clamp(pos.y, m_containerWidth*-0.5f, m_containerHeight*0.5f ), 0.0f
+				);		
+			}
 		}
 		
 		

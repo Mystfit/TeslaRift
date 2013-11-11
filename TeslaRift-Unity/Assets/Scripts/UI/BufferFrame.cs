@@ -46,6 +46,7 @@ public class BufferFrame : MonoBehaviour {
 	public bool m_toggleHorizontal = false;
 	public bool m_toggleVertical = false;
 	public bool m_toggleOutline = false;
+	public bool m_toggleBackground = false;
 	
 	/*
 	 * Active dimensions
@@ -73,11 +74,9 @@ public class BufferFrame : MonoBehaviour {
 		
 		m_lastWidth = m_frameWidth;
 		m_lastHeight = m_frameHeight;
-				
-		AnimateSize(m_frameWidth, m_frameHeight);
-		
-		CreateGrid(m_numGridRows, m_numGridColumns);
-		UpdateGridLines();
+						
+		if(m_hasGrid)
+			CreateGrid(m_numGridRows, m_numGridColumns);
 	}
 	
 	
@@ -103,6 +102,11 @@ public class BufferFrame : MonoBehaviour {
 			bIsOutlineVisible = !bIsOutlineVisible;
 			ShowOutline(bIsOutlineVisible);
 		}
+		
+		if(m_toggleBackground){
+			m_toggleBackground = false;
+			AnimateBackgroundColor(m_backgroundColor);
+		}
 	}
 	
 	
@@ -110,7 +114,6 @@ public class BufferFrame : MonoBehaviour {
 	 * Creates a grid of lines
 	 */
 	public void CreateGrid(int numRows, int numCols){
-		
 		int i = 0;
 		m_gridParent = new GameObject("grid");
 		m_gridParent.transform.parent = transform;
@@ -119,6 +122,7 @@ public class BufferFrame : MonoBehaviour {
 		for(i = 1; i < numRows; i++){
 			GameObject gridLine = GameObject.Instantiate(m_guiQuadPrefab) as GameObject;
 			m_gridRows.Add ( gridLine );
+			gridLine.transform.rotation = m_gridParent.transform.rotation;
 			gridLine.transform.parent = m_gridParent.transform;
 		}
 		
@@ -135,19 +139,22 @@ public class BufferFrame : MonoBehaviour {
 	 * Updates grid line positions and scales to fill the frame
 	 */
 	protected void UpdateGridLines(){
+		float targetHeight = (bRotated) ? m_frameWidth : m_frameHeight;
+		float targetWidth = (bRotated) ? m_frameHeight : m_frameWidth;
+		
 		int i = 0;
-		float colSpacing = m_frameWidth / (m_gridColumns.Count+1);
-		float rowSpacing = m_frameHeight / (m_gridRows.Count+1);
+		float colSpacing = targetWidth / (m_gridColumns.Count+1);
+		float rowSpacing = targetHeight / (m_gridRows.Count+1);
 		m_gridParent.transform.localPosition = new Vector3(-(m_currentWidth*0.5f), -(m_currentHeight*0.5f), 0.0f);
 		
 		for(i = 0; i < m_gridRows.Count; i++){
 			m_gridRows[i].transform.localPosition = new Vector3( 0.0f, (i+1) * rowSpacing, 0.0f);
-			m_gridRows[i].transform.localScale = new Vector3(m_currentWidth, m_gridLineWidth, 0.0f);
+			m_gridRows[i].transform.localScale = new Vector3(targetWidth, m_gridLineWidth, 0.0f);
 		}
 		
 		for(i = 0; i < m_gridColumns.Count; i++){
 			m_gridColumns[i].transform.localPosition = new Vector3( (i+1)*colSpacing, 0.0f, 0.0f);
-			m_gridColumns[i].transform.localScale = new Vector3(m_gridLineWidth, m_currentHeight , 0.0f);
+			m_gridColumns[i].transform.localScale = new Vector3(m_gridLineWidth, targetHeight , 0.0f);
 		}
 	}
 	
@@ -186,8 +193,11 @@ public class BufferFrame : MonoBehaviour {
 		UpdateQuadTransform(m_frameComponents[3],  m_currentWidth*0.5f + (m_frameThickness*0.5f),   m_currentHeight*0.5f - (m_frameThickness*0.5f), 0.0f,  m_braceLength, 	 m_frameThickness, true);		//Top brace mirrored
 		UpdateQuadTransform(m_frameComponents[4],  m_currentWidth*0.5f + (m_frameThickness*0.5f),   m_currentHeight*0.5f - (m_frameThickness*0.5f), 0.0f,  m_frameThickness, m_currentHeight,  true);		//Side mirrored
 		UpdateQuadTransform(m_frameComponents[5],  m_currentWidth*0.5f + (m_frameThickness*0.5f),  -m_currentHeight*0.5f + (m_frameThickness*0.5f), 0.0f,  m_braceLength, 	 m_frameThickness, true);		//Bottom brace mirrored
+		
+		if(m_hasGrid)
+			UpdateGridLines();
+		
 		UpdateBackground(m_currentWidth, m_currentHeight);
-		UpdateGridLines();
 	}
 	
 	
@@ -211,7 +221,7 @@ public class BufferFrame : MonoBehaviour {
 		bRotated = true;
 		
 		iTween.RotateTo(gameObject, iTween.Hash(
-			"rotation", new Vector3(0.0f, 0.0f, 90.0f),
+			"rotation", new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 90.0f),
 			"time", m_easeTime,
 			"easetype", "easeInOutSine"
 		));
@@ -226,7 +236,7 @@ public class BufferFrame : MonoBehaviour {
 		bRotated = false;
 		
 		iTween.RotateTo(gameObject, iTween.Hash(
-			"rotation", new Vector3(0.0f, 0.0f, 0.0f),
+			"rotation", new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 0.0f),
 			"time", m_easeTime,
 			"easetype", "easeInOutSine"
 		));
@@ -240,7 +250,7 @@ public class BufferFrame : MonoBehaviour {
 	public void AnimateSize(float width, float height){
 		float targetHeight = (bRotated) ? width : height;
 		float targetWidth = (bRotated) ? height : width;
-		
+				
 		iTween.ValueTo(gameObject, iTween.Hash(
 			"from", m_lastWidth, 
 			"to", targetWidth, 
@@ -255,6 +265,17 @@ public class BufferFrame : MonoBehaviour {
 			"to", targetHeight, 
 			"time", m_easeTime,
 			"onupdate", "SetHeight", 
+			"onupdatetarget", gameObject, 
+			"oncomplete", "AnimationComplete",
+			"easetype", "easeInOutSine"
+		));
+	}
+	
+	public void AnimateBackgroundColor(Color color){
+		iTween.ColorTo(m_backgroundQuad.gameObject, iTween.Hash(
+			"color", color, 
+			"time", m_easeTime,
+			"includechildren", true,
 			"onupdatetarget", gameObject, 
 			"oncomplete", "AnimationComplete",
 			"easetype", "easeInOutSine"

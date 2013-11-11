@@ -301,21 +301,6 @@ public class BufferAttachment : BaseAttachment<ControlBuffer> {
 	 */
 	public void SetSelectedParameterValues(float value){
 		foreach( FloatingAttachment attach in m_attachedParams){
-			
-		/*
-		 * Legacy parameter type specifics
-		 * 
-		 * if(param.GetType() == typeof(NoteParam)){
-			NoteParam chord = param as NoteParam;
-			chord.setNote(value, 1.0f, 0, 1);
-		}else if(param.GetType() == typeof(ToggleParam)){
-			ToggleParam toggle = param as ToggleParam;
-			toggle.setOverrideVal(value);
-			toggle.setVal(value);
-			Debug.Log ("Override is:" + value + " Clamped is:" + param.val);
-		}
-		*/
-		
 			attach.musicRef.setOverrideVal(value);
 			attach.musicRef.setVal(value);
 		}

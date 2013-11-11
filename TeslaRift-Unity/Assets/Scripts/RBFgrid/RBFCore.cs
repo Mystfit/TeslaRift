@@ -1,17 +1,28 @@
+/*
+ * RBF CORE
+ * 
+ * Radial Basis Function interpolator engine.
+ * Uses training points of input/output values to interpolate between given inputs
+ * Ported from python 
+ * 
+ * IMPLEMENTATION:
+ * 	
+ *		RBF.RBFCore rbf = new RBF.RBFCore(3, 2);
+ *		rbf.setSigma(2.0);
+ *		rbf.addTrainingPoint( new double[3]{1.0,1.0,1.0}, new double[2]{1.0, 2.0} );
+ *		rbf.addTrainingPoint( new double[3]{2.5,1.5,7}, new double[2]{2, 3.0} );
+ *		rbf.addTrainingPoint( new double[3]{5,10,0}, new double[2]{10, 5.0} );
+ *		rbf.addTrainingPoint( new double[3]{6,2,1}, new double[2]{10, 5.0});
+ *		rbf.calculateWeights();
+ *		double[] output = rbf.calculateOutput(new double[3]{1.0,1.0,1.0});
+ */		
+		
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
 using DotNumerics.LinearAlgebra;
 
 namespace RBF{
-	
-	/*
-	 * Radial Basis Function interpolator engine.
-	 * Uses training points of input/output values to interpolate between given inputs
-	 * 
-	 * Ported from python
-	 */
 	public class RBFCore{
 		
 		private double m_sigma;							//Sigma value for gaussian RBF function
