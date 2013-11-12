@@ -1,91 +1,54 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Uniduino;
+using RBF;
+using System;
  
 public class ArduinoController : MonoBehaviour {
  
     private Arduino arduino;
 	
-	public enum Finger{
-		ONE = 0,
-		TWO,
-		THREE,
-		FOUR
+	//Arduino pins
+	private int[] m_bendPins = {14,15,16,17};
+	private int m_bendCalibratePin = 18;
+	
+	private enum CalibrationState{
+		AWAITING_CALIBRATION = 0,
+		CALIBRATING,
+		CALIBRATED
 	}
-     
-	private enum ButtonState {ON = 0, OFF};
+	private CalibrationState m_calibrationState = CalibrationState.AWAITING_CALIBRATION;
+	private double[] m_bendValues;
 	
-	private bool[] m_buttonState;
-	private bool[] m_buttonStateDown;
-	private bool[] m_buttonStateUp;
-	private bool[] m_buttonStateLast;
-	private BendSensor[] m_bendSensors;
-	
-
-	private int[] m_pins = {6,7};
-	private int[] m_analogPins = {14,15,16,17};
-
-     
+	//RBF gestures
+	private RBFCore m_rbf;
+	public enum Gestures {
+		OPEN_PALM = 0,
+		CLOSED_GRASP,
+		INDEX_ONLY,
+		MIDDLE_ONLY,
+		PINKY_ONLY,
+		INDEX_MIDDLE,
+		INDEX_PINKY,
+		INDEX_MIDDLE_RING
+	}
+	private Gestures m_currentGesture;
+	private Gestures m_lastGesture;
+	private float[] m_gestureValues;	
+	private int m_calibratingGestureIndex;
+	private bool bIsCalibrateButtonDown = false;
+	private bool bIsCalibrateButtonLast = false;
+	public double m_gestureThreshold = 0.8;
+	public double m_sigma = 0.5;
+		
     void Start( )
     {		
         arduino = Arduino.global;
-        arduino.Setup(ConfigurePins);
-		
-		m_buttonState = new bool[m_analogPins.Length];
-		m_buttonStateLast = new bool[m_analogPins.Length];
-		m_buttonStateDown = new bool[m_analogPins.Length];
-		m_buttonStateUp = new bool[m_analogPins.Length];
-		m_bendSensors = new BendSensor[m_analogPins.Length];
+		arduino.Setup(ConfigurePins);
+		m_rbf.setSigma(m_sigma);
+		m_rbf = new RBFCore(m_bendPins.Length, Enum.GetNames(typeof(Gestures)).Length);
+		m_bendValues = new double[m_bendPins.Length];
     }
-	
-	void Update () 
-	{       
-		/*for(int i = 0; i < m_bendSensors.Length; i++){
-			//Invert the result due to pullup resistors inverting the button
-			//m_buttonState[i] = arduino.digitalRead(m_analogPins[i]) == 0 ? true : false;	
-			
-			BendSensor finger = m_bendSensors[i];
-			finger.buttonState = GetAnalogToBool(m_analogPins[i]);
-			
-			//Set button deltas
-			if(m_buttonStateLast[i] != m_buttonState[i]){
-				if(m_buttonState[i])
-					finger.down[i] = true;
-				else
-					m_buttonStateUp[i] = true;
-			} else {
-				if(m_buttonState[i])
-					m_buttonStateDown[i] = false;
-				else
-					m_buttonStateUp[i] = false;
-			}
-			
-			m_buttonStateLast[i] = m_buttonState[i];
-		}*/
-		
-		for(int i = 0; i < m_bendSensors.Length; i++){
-			//Invert the result due to pullup resistors inverting the button
-			//m_buttonState[i] = arduino.digitalRead(m_analogPins[i]) == 0 ? true : false;	
-			
-			BendSensor finger = m_bendSensors[i];
-			finger.analogVal = arduino.analogRead(m_analogPins[i]);
-			
-			//Set button deltas
-			if(finger.last != finger.state){
-				if(finger.state)
-					finger.down = true;
-				else
-					finger.up = true;
-			} else {
-				if(finger.state)
-					finger.down = false;
-				else
-					finger.up = false;
-			}
-			
-			finger.last = finger.state;
-		}
-	}
 	
 	
 	/*
@@ -93,57 +56,79 @@ public class ArduinoController : MonoBehaviour {
 	 */
 	protected void ConfigurePins( )
     {
-		//Enables pullup digital pins
-		/*
-		for(int i = 0; i < m_pins.Length; i++){
-			arduino.pinMode(m_pins[i], PinMode.INPUT);
-			arduino.digitalWrite(m_pins[i], Arduino.HIGH);
-    		arduino.reportDigital((byte)(m_pins[i]/8), 1);
-		}
-		*/
-		for(int i = 0; i < m_analogPins.Length; i++){
-			arduino.pinMode(m_analogPins[i], PinMode.ANALOG);
-			arduino.reportAnalog((byte)(m_pins[i]/8), 1);
+		for(int i = 0; i < m_bendPins.Length; i++){
+			arduino.pinMode(m_bendPins[i], PinMode.ANALOG);
+			arduino.reportAnalog((byte)(m_bendPins[i]/8), 1);
 		}
     }
 	
 	
-	/*
-	 * Get max/min values of analog bend sensors
-	 */
-	public void CalibrateAnalalog(){
-	
-	}
-	
-	public bool GetButton(Finger button){
-		return m_buttonState[(int)button];
-	}
-	
-	public bool GetButtonDown(Finger button){
-		return m_buttonStateDown[(int)button];
-	}
-	
-	public bool GetButtonUp(Finger button){
-		return m_buttonStateUp[(int)button];
-	}
-}
+	void Update () 
+	{       
+		bIsCalibrateButtonDown = Convert.ToBoolean(arduino.digitalRead(m_bendCalibratePin));
+		
+		for(int i = 0; i < m_bendValues.Length; i++)
+			m_bendValues[i] = (double)arduino.analogRead(m_bendPins[i]);
+			
+		//Calibration
+		switch(m_calibrationState){
+		
+		case CalibrationState.AWAITING_CALIBRATION:
+			if(arduino != null){
+				if(arduino.Connected){
+					if( Convert.ToBoolean(arduino.digitalRead(m_bendCalibratePin ) ) ){
+						m_calibrationState = CalibrationState.CALIBRATING;
+					}
+				}
+			}
+			break;
+		
+		case CalibrationState.CALIBRATING:
+			if(bIsCalibrateButtonDown = false && bIsCalibrateButtonLast != bIsCalibrateButtonDown)
+			{					
+				m_rbf.addTrainingPoint(m_bendValues, GetRBFCalibrationArray( m_calibratingGestureIndex));
 
-public class BendSensor {
-	public int analogMax;
-	public int analogMin;
-	public int analogVal;
-	public float scaledVal;
-	public bool down;
-	public bool up;
-	public bool last;
-	
-	public BendSensor(){
-	}
-	
-	public bool state{ 
-		get {
-			return true;
+				if(m_calibratingGestureIndex < Enum.GetNames(typeof(Gestures)).Length){
+					m_calibratingGestureIndex++;
+					//Need some sort of gui text display for the current finger gesture to calibrate.
+					//Best way would be to show the gesture on the model for the performer to imitate before calibrating
+				} else {
+					m_calibrationState = CalibrationState.CALIBRATED;
+					m_rbf.calculateWeights();
+				}
+			}
+			break;			
+		
+		case CalibrationState.CALIBRATED:
+			
+			double[] gestureOutput = m_rbf.calculateOutput(m_bendValues);
+			
+			double largestVal = 0.0;
+			int largestIndex = 0;
+			for(int i = 0; i < gestureOutput.Length; i++){
+				if(m_bendValues[i] > largestVal){
+					largestVal = m_bendValues[i];
+					largestIndex = i;
+				}
+			}
+			
+			if(largestVal > m_gestureThreshold){
+				m_lastGesture = m_currentGesture;
+				m_currentGesture = (Gestures)largestIndex;
+			}
+			break;
 		}
+		
+		bIsCalibrateButtonLast = bIsCalibrateButtonDown;
 	}
+					
 	
+	/*
+	 * Gets an array with the chosen gesture index set to 1.0. Used for finger RBF gesture matching
+	 */
+	protected double[] GetRBFCalibrationArray(int gestureIndex){
+		double[] calibrationArr = new double[Enum.GetNames(typeof(Gestures)).Length];
+		calibrationArr[gestureIndex] = 1.0;
+		return calibrationArr;
+	}
 }
