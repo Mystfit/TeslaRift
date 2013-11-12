@@ -5,32 +5,18 @@ using RBF;
 
 public class RBFControlAttachment : BaseAttachment {
 	
-	//DEBUG
-	public Transform testhandOverride;
-	
-	protected Transform m_holdingTarget;
 	public GameObject m_trainingPointPrefab;
-	
 	protected List<RBF.RBFTrainingPoint> m_trainingPoints;
 	protected BufferFrame m_frame;
+	
+	//Dragging target and source
+	protected RBF.RBFTrainingPoint m_dragTarget;
+	protected Transform m_dragSource;
 
 	void Start () {
 		m_frame = GetComponent<BufferFrame>();
 		m_trainingPoints = new List<RBFTrainingPoint>();
-		
 		CreateTrainingPoint();
-		
-		//DEBUG -- Should be set ONLY when dragging a training point around on the panel!
-		SetDragSource(testhandOverride);
-	}
-	
-	void Update () {
-		
-		// Test single training point
-		if(m_holdingTarget != null){
-			m_trainingPoints[0].MoveRelativeToContainer(m_holdingTarget);
-			Debug.Log(m_trainingPoints[0].xNormalized + ", " + m_trainingPoints[0].yNormalized);
-		}
 	}
 	
 	
@@ -42,23 +28,5 @@ public class RBFControlAttachment : BaseAttachment {
 		RBFTrainingPoint training = trainingObj.GetComponent<RBFTrainingPoint>();
 		training.SetParentContainer(transform, m_frame.width, m_frame.height);
 		m_trainingPoints.Add(training);
-	}
-	
-	
-	/*
-	 * Adds a global object for this panel to use as a drag position source
-	 */
-	public void SetDragSource(Transform target){
-		m_holdingTarget = target;
-	}
-	
-	/*
-	 * Removes the drag source
-	 */
-	public void RemoveDragSource(){
-		m_holdingTarget = null;
-	}
-	
-	
-	
+	}	
 }

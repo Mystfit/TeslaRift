@@ -118,10 +118,8 @@ public class HydraController : MonoBehaviour {
 	public void AddCollision(GameObject proximityTarget, SixenseHands hand, ProximityType proximityType){		
 		List<GameObject> targetList = GetCollisionList(proximityType, hand);
 		
-		if(!targetList.Contains(proximityTarget)){
+		if(!targetList.Contains(proximityTarget))
 			targetList.Add(proximityTarget);
-			//Debug.Log ("Proximity trigger: " + proximityTarget.name + " Proximity type:"  + proximityType);
-		}
 	}
 	
 	

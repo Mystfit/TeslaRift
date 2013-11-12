@@ -84,6 +84,15 @@ public class BaseTool : MonoBehaviour {
 	public void setTargets(List<object> targets){
 		m_targets = targets;
 	}
-	
+}
 
+
+/*
+ * String enum class defining interactable tag types
+ */
+public static class InteractableTypes
+{
+    public const string  GENERATOR = "Generator"; 
+    public const string INSTRUMENT = "Instrument"; 
+    public const string RBFPOINT = "RBFPoint";
 }

@@ -9,17 +9,30 @@ namespace RBF{
 	public class RBFTrainingPoint : MonoBehaviour {
 	
 		protected float twistVal;		//Twist (w) input
+		public enum UIState{
+			DRAGGING = 0,
+			STATIONARY
+		}
+		protected UIState m_pointState;
+		public UIState uiState { get { return m_pointState; }}
 		
 		protected Transform m_parentContainer;		//Controlling panel for this training point
 		protected float m_containerWidth;			//Controlling panel width
 		protected float m_containerHeight;			//Controlling panel height
+		protected Transform m_dragSource;
 		protected Dictionary<BaseInstrumentParam, float> m_paramValues;
 		
 		/*
 		 * Init
 		 */
 		void Start(){
+			m_pointState = UIState.STATIONARY;
 			m_paramValues = new Dictionary<BaseInstrumentParam, float>();
+		}
+		
+		void Update(){
+			if(uiState == UIState.DRAGGING)
+				MoveRelativeToContainer(m_dragSource);
 		}
 	
 		
@@ -28,6 +41,16 @@ namespace RBF{
 		 */
 		public void SetTwist(float twist){
 			this.twistVal = twist;
+		}
+		
+		public void SetDragSource(Transform source){
+			m_pointState = UIState.DRAGGING;
+			m_dragSource = source;
+		}
+		
+		public void RemoveDragSource(){
+			m_pointState = UIState.STATIONARY;
+			m_dragSource = null;
 		}
 		
 
