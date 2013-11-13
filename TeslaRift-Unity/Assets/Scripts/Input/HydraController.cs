@@ -172,42 +172,14 @@ public class HydraController : MonoBehaviour {
 			m_rightHandController = SixenseInput.GetController( SixenseHands.RIGHT );
 			
 		
-		//SetCommonTools(m_leftHandController, BaseTool.ToolHand.LEFT);
 		SetCommonTools(m_rightHandController, BaseTool.ToolHand.RIGHT);
-		SetIndividualToolsLeft(m_leftHandController, BaseTool.ToolHand.LEFT);
 		SetIndividualToolsRight(m_rightHandController, BaseTool.ToolHand.RIGHT);
 	}
 	
-	//Arduino controlled glove
-	public void SetIndividualToolsLeft(SixenseInput.Controller handControl, BaseTool.ToolHand hand){
-		if(m_leftHandController != null)
-		{
-			//Arduino grabber
-			//---------------
-			/*if( m_gloveController.GetButtonDown(ArduinoController.GloveButton.ONE)) {
-				m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand);
-			}*/
-			
-			//Arduino idle
-			//------------
-			/*if(m_gloveController.GetButtonUp(ArduinoController.GloveButton.TWO) ||
-				m_gloveController.GetButtonUp(ArduinoController.GloveButton.ONE))
-			{
-				GameObject handObj = null;
-				
-				if(hand == BaseTool.ToolHand.LEFT)
-					handObj = m_leftHand;
-				else if(hand == BaseTool.ToolHand.RIGHT)
-					handObj = m_rightHand;
-				
-				if(handObj != null){
-					BaseTool tool = handObj.GetComponent(typeof(BaseTool)) as BaseTool;
-					m_toolControlRef.PopTool(hand);
-				}
-			}*/
-		}
-	}
 	
+	/*
+	 * Sets tools for specifically th right controler (currently the only one being used. Will be changed)
+	 */
 	public void SetIndividualToolsRight(SixenseInput.Controller handControl, BaseTool.ToolHand hand){
 		if(m_rightHandController != null)
 		{	
@@ -226,32 +198,13 @@ public class HydraController : MonoBehaviour {
 			else if(m_rightHandController.GetButton(SixenseButtons.START) && m_rightHandController.GetButtonUp(SixenseButtons.BUMPER)){
 				gameObject.GetComponent<SixenseInput>().RebindHands();
 			} 
-			
-			else if(m_rightHandController.GetButton(SixenseButtons.START) && m_rightHandController.GetButtonUp(SixenseButtons.FOUR)){
-				//GameObject.Find("OVRPlayerController").GetComponent<OVRMainMenu>().CalibrateMag();
-			}
-			
-			
-			//Param deselector
-			//------------
-			if(Input.GetKeyDown(KeyCode.S)){  //handControl.GetButtonDown(SixenseButtons.THREE)
-				if(m_toolControlRef.currentTool(hand) == null)
-					m_toolControlRef.PushTool(typeof(ResetTool), hand);
-				else
-					Debug.Log("Existing tool still active");
-				
-			}
-			
-			//Physics pull
-			//------------
-			if( Input.GetKeyDown(KeyCode.Space) && Input.GetKey(KeyCode.LeftShift)){ //m_rightHandController.GetButton(SixenseButtons.TWO) && m_rightHandController.Trigger > 0.1f
-				m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand, BaseTool.ToolMode.SECONDARY);
-			}
 		}
 	}
 	
-	//Common tools between each hand
-	//-------------------------------
+	
+	/*
+	 * Common tools for each hand
+	 */
 	public void SetCommonTools(SixenseInput.Controller handControl, BaseTool.ToolHand hand){
 		if(handControl != null){
 			
@@ -260,39 +213,44 @@ public class HydraController : MonoBehaviour {
 						
 			//Physics selector
 			//------------
-			if( Input.GetKeyDown(KeyCode.Space) ){ //handControl.GetButtonDown(SixenseButtons.TWO)
+			if( Input.GetKeyDown(KeyCode.Space) ){ 
 				m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand);
 			}
 			
 			//Gesture selector secondary
 			//--------------------
-			else if(Input.GetKeyDown(KeyCode.W) && Input.GetKey(KeyCode.LeftShift) ){  //handControl.GetButtonDown(SixenseButtons.BUMPER) && handControl.GetButton(SixenseButtons.FOUR)
+			else if(Input.GetKeyDown(KeyCode.E)){  
 				m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.SECONDARY);	//Secondary mode does a full reset
 			}
 			
 			
 			//Gesture Selector Primary
 			//--------------------
-			else if( Input.GetKeyDown(KeyCode.W) ){ //handControl.GetButtonDown(SixenseButtons.BUMPER)
+			else if( Input.GetKeyDown(KeyCode.W) ){ 
 				m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand);
 			} 
+		
+			//Normal reset
+			//--------------------
+			else if(Input.GetKeyDown(KeyCode.S)){ 
+				m_toolControlRef.PushTool(typeof(ResetTool), hand);
+			}
 			
 			
 			//Full instrument reset
 			//---------------------
-			else if(Input.GetKeyDown(KeyCode.S) && Input.GetKey(KeyCode.LeftShift)){  //handControl.GetButtonDown(SixenseButtons.BUMPER) && handControl.GetButton(SixenseButtons.THREE)
+			else if(Input.GetKeyDown(KeyCode.D)){  
 				m_toolControlRef.PushTool(typeof(ResetTool), hand, BaseTool.ToolMode.SECONDARY);
 			}
-
+			
+			//Physics pull
+			//------------
+			else if( Input.GetKeyDown(KeyCode.RightShift) ){ 
+				m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand, BaseTool.ToolMode.SECONDARY);
+			}
 			
 			//Return to idle
 			//--------------
-			/*if(handControl.GetButtonUp(SixenseButtons.TWO) ||
-				handControl.GetButtonUp(SixenseButtons.BUMPER) ||
-				handControl.GetButtonUp(SixenseButtons.ONE) || 
-				handControl.GetButtonUp(SixenseButtons.THREE) || 
-				handControl.GetButtonUp(SixenseButtons.FOUR)) 
-			{*/
 			if(Input.GetKeyUp (KeyCode.Space) ||
 				Input.GetKeyUp(KeyCode.W) ||
 				Input.GetKeyUp(KeyCode.S) ||

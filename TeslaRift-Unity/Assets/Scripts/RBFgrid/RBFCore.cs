@@ -16,7 +16,8 @@
  *		rbf.calculateWeights();
  *		double[] output = rbf.calculateOutput(new double[3]{1.0,1.0,1.0});
  */		
-		
+
+using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -50,7 +51,7 @@ namespace RBF{
 		 */
 		public void reset(int numInputDimensions, int numOutputDimensions){
 			m_numInputDimensions = numInputDimensions;
-			m_numOutputDimensions = numOutputDimensions;
+			m_numOutputDimensions = numOutputDimensions;	
 			m_trainingPoints.Clear();
 			m_weights.Clear();
 		}
@@ -65,7 +66,7 @@ namespace RBF{
 				return;
 			if(outputDimensions.Length != m_numOutputDimensions)
 				return;
-			m_trainingPoints.Add( new RBFTraining(inputDimensions, outputDimensions) );
+			m_trainingPoints.Add( new RBFTraining((double[])inputDimensions.Clone(), (double[])outputDimensions.Clone()) );
 		}
 		
 		
@@ -95,6 +96,9 @@ namespace RBF{
 			int i = 0;
 			int j = 0;
 			
+			foreach(RBFTraining p in m_trainingPoints)
+				Debug.Log(p);
+			
 			//Constructs A matrix using RBF function (gaussian)
 			for(i = 0; i < m_trainingPoints.Count; i++){
 				for(j = 0; j < m_trainingPoints.Count; j++){
@@ -102,7 +106,7 @@ namespace RBF{
 					
 					for(int inputIndex = 0; inputIndex < m_numInputDimensions; inputIndex++)
 						distPoints[inputIndex] = m_trainingPoints[i].inputDim[inputIndex] - m_trainingPoints[j].inputDim[inputIndex];
-
+					
 					A[i,j] = RBFFunctions.gaussKernel(summedDistance(distPoints) , m_sigma );
 				}
 			}
@@ -121,7 +125,7 @@ namespace RBF{
 				Matrix mult = Ainv.Multiply( col );
 				m_weights.Add( mult );
 			}
-			
+						
 			return m_weights;
 		}
 		
