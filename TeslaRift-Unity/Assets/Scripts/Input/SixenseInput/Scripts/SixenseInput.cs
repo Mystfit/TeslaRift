@@ -47,7 +47,7 @@ public enum SixenseButtons
 /// </remarks>
 public class SixenseInput : MonoBehaviour
 {	
-	protected ArduinoController m_leftArduino;
+	protected GloveController m_leftArduino;
 	
 	/// <summary>
 	/// Controller objects provide access to Sixense controllers data.
@@ -260,7 +260,7 @@ public class SixenseInput : MonoBehaviour
 			m_Controllers[i] = new Controller();
 		}
 		
-		m_leftArduino = this.GetComponent<ArduinoController>();
+		m_leftArduino = this.GetComponent<GloveController>();
 	}
 	
 	/// <summary>

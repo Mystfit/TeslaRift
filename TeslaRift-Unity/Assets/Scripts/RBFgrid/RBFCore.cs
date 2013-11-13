@@ -96,9 +96,6 @@ namespace RBF{
 			int i = 0;
 			int j = 0;
 			
-			foreach(RBFTraining p in m_trainingPoints)
-				Debug.Log(p);
-			
 			//Constructs A matrix using RBF function (gaussian)
 			for(i = 0; i < m_trainingPoints.Count; i++){
 				for(j = 0; j < m_trainingPoints.Count; j++){

@@ -136,18 +136,22 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 	 */
 	public void OpenRadial(ParameterType type, Quaternion rotation){
 		if(type == ParameterType.CLIP){
-			m_clipRadial.transform.rotation = rotation;
-			m_clipRadial.SetActive(true);
-			iTween.Stop(m_clipRadial);
-			iTween.RotateTo(m_clipRadial, iTween.Hash("rotation", rotation, "time", 0.4f, "easetype", "easeOutCubic"));
-			iTween.ScaleTo(m_clipRadial, iTween.Hash("scale", new Vector3(1.0f, 1.0f, 1.0f), "time", 0.4f, "easetype", "easeOutCubic"));
+			if(m_clipRadial != null){
+				m_clipRadial.transform.rotation = rotation;
+				m_clipRadial.SetActive(true);
+				iTween.Stop(m_clipRadial);
+				iTween.RotateTo(m_clipRadial, iTween.Hash("rotation", rotation, "time", 0.4f, "easetype", "easeOutCubic"));
+				iTween.ScaleTo(m_clipRadial, iTween.Hash("scale", new Vector3(1.0f, 1.0f, 1.0f), "time", 0.4f, "easetype", "easeOutCubic"));
+			}
 		} 
 		else if(type == ParameterType.PARAM){
+			if(m_paramRadial != null){
 			m_paramRadial.transform.rotation = rotation;
 			m_paramRadial.SetActive(true);
 			iTween.Stop(m_paramRadial);
 			iTween.RotateTo(m_paramRadial, iTween.Hash("rotation", rotation, "time", 0.4f, "easetype", "easeOutCubic"));
 			iTween.ScaleTo(m_paramRadial, iTween.Hash("scale", new Vector3(1.0f, 1.0f, 1.0f), "time", 0.4f, "easetype", "easeOutCubic"));
+			}
 		}
 	}
 	

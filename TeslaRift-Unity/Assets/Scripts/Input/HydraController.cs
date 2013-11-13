@@ -42,7 +42,8 @@ public class HydraController : MonoBehaviour {
 	public GameObject instrumentController;
 	private InstrumentController m_instrumentControlRef;
 	
-	private ArduinoController m_gloveController;
+	private GloveController m_leftGlove;
+	private GloveController m_rightGlove;
 	
 	// Initialization
 	//------------------
@@ -56,8 +57,10 @@ public class HydraController : MonoBehaviour {
 		//Controllers
 		m_toolControlRef = ToolController.Instance;
 		m_instrumentControlRef = InstrumentController.Instance;
-		m_gloveController = this.GetComponent<ArduinoController>();
 		m_instance = this;
+		
+		m_leftGlove = m_leftHand.GetComponent<GloveController>();
+		//m_rightGlove = m_rightHand.GetComponent<GloveController>();
 	}
 	
 	
@@ -172,15 +175,15 @@ public class HydraController : MonoBehaviour {
 			m_rightHandController = SixenseInput.GetController( SixenseHands.RIGHT );
 			
 		
-		SetCommonTools(m_rightHandController, BaseTool.ToolHand.RIGHT);
-		SetIndividualToolsRight(m_rightHandController, BaseTool.ToolHand.RIGHT);
+		SetCommonTools(BaseTool.ToolHand.LEFT);
+		SetIndividualToolsRight(BaseTool.ToolHand.LEFT);
 	}
 	
 	
 	/*
 	 * Sets tools for specifically th right controler (currently the only one being used. Will be changed)
 	 */
-	public void SetIndividualToolsRight(SixenseInput.Controller handControl, BaseTool.ToolHand hand){
+	public void SetIndividualToolsRight(BaseTool.ToolHand hand){
 		if(m_rightHandController != null)
 		{	
 			//Hand calibration
@@ -205,59 +208,58 @@ public class HydraController : MonoBehaviour {
 	/*
 	 * Common tools for each hand
 	 */
-	public void SetCommonTools(SixenseInput.Controller handControl, BaseTool.ToolHand hand){
-		if(handControl != null){
-			
-			if( Input.GetKey (KeyCode.LeftControl) )
-				hand = BaseTool.ToolHand.LEFT;
-						
-			//Physics selector
-			//------------
-			if( Input.GetKeyDown(KeyCode.Space) ){ 
-				m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand);
-			}
-			
-			//Gesture selector secondary
-			//--------------------
-			else if(Input.GetKeyDown(KeyCode.E)){  
-				m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.SECONDARY);	//Secondary mode does a full reset
-			}
-			
-			
-			//Gesture Selector Primary
-			//--------------------
-			else if( Input.GetKeyDown(KeyCode.W) ){ 
-				m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand);
-			} 
+	public void SetCommonTools(BaseTool.ToolHand hand){
+					
+		//Physics selector
+		//------------
+		if(m_leftGlove.GetGestureDown("CLOSED_HAND") || Input.GetKeyDown(KeyCode.Space)){
+			m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand, BaseTool.ToolMode.PRIMARY);
+		}
 		
-			//Normal reset
-			//--------------------
-			else if(Input.GetKeyDown(KeyCode.S)){ 
-				m_toolControlRef.PushTool(typeof(ResetTool), hand);
-			}
-			
-			
-			//Full instrument reset
-			//---------------------
-			else if(Input.GetKeyDown(KeyCode.D)){  
-				m_toolControlRef.PushTool(typeof(ResetTool), hand, BaseTool.ToolMode.SECONDARY);
-			}
-			
-			//Physics pull
-			//------------
-			else if( Input.GetKeyDown(KeyCode.RightShift) ){ 
-				m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand, BaseTool.ToolMode.SECONDARY);
-			}
-			
-			//Return to idle
-			//--------------
-			if(Input.GetKeyUp (KeyCode.Space) ||
-				Input.GetKeyUp(KeyCode.W) ||
-				Input.GetKeyUp(KeyCode.S) ||
-				Input.GetKeyUp(KeyCode.D) )
-			{
-				m_toolControlRef.PopTool(hand);
-			}
+		//Physics pull
+		//------------
+		else if(m_leftGlove.GetGestureDown("PINKY") || Input.GetKeyDown(KeyCode.LeftShift)){
+			m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand, BaseTool.ToolMode.SECONDARY);
+		}
+		
+		//Gesture Selector Primary
+		//--------------------
+		else if(m_leftGlove.GetGestureDown("INDEX_POINT") || Input.GetKeyDown(KeyCode.W)){
+			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.PRIMARY);
+		}
+		
+					//Gesture selector secondary
+		//--------------------
+		else if(m_leftGlove.GetGestureDown("INDEX_MIDDLE") || Input.GetKeyDown(KeyCode.E)){
+			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.SECONDARY);	//Secondary mode does a full reset
+		}
+	
+		//Normal reset
+		//--------------------
+		/*else if(m_leftGlove.GetGestureDown("INDEX_POINT") || Input.GetKeyDown(KeyCode.W)){
+			m_toolControlRef.PushTool(typeof(ResetTool), hand);
+		}
+		
+		
+		//Full instrument reset
+		//---------------------
+		else if(Input.GetKeyDown(KeyCode.D)){  
+			m_toolControlRef.PushTool(typeof(ResetTool), hand, BaseTool.ToolMode.SECONDARY);
+		}*/
+		
+		//Return to idle
+		//--------------
+		
+		bool openHand = m_leftGlove.GetGestureDown("OPEN_HAND");
+		
+		if(Input.GetKeyUp (KeyCode.Space) ||
+			Input.GetKeyUp(KeyCode.W) ||
+			Input.GetKeyUp(KeyCode.S) ||
+			Input.GetKeyUp(KeyCode.E) ||
+			openHand )
+		{
+			m_toolControlRef.PopTool(hand);
 		}
 	}
+	
 }

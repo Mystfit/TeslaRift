@@ -40,11 +40,10 @@ public class ToolController : MonoBehaviour {
 	
 	public void PopTool(BaseTool.ToolHand hand){
 		BaseTool activeAttachedTool = m_hydraRef.GetHand(hand).GetComponent(typeof(BaseTool)) as BaseTool;
-		if(activeAttachedTool)
+		if(activeAttachedTool != null){
 			activeAttachedTool.TransitionOut();
-		
-		if(activeAttachedTool != null)
 			Destroy(activeAttachedTool);		//Should probably handle this in the transition
+		}
 	}
 	
 	public BaseTool currentTool(BaseTool.ToolHand hand){

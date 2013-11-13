@@ -153,9 +153,11 @@ public class InstrumentGestureTool : BaseTool {
 		} else {
 			m_attachment = m_heldObject.GetComponent<BaseAttachment>();
 			
-			m_gestureState = GestureState.INTERIOR;
-			m_attachment.SetToolMode( m_mode);
-			m_attachment.SetActiveHand( m_hand);
+			if(m_attachment != null){
+				m_gestureState = GestureState.INTERIOR;
+				m_attachment.SetToolMode( m_mode);
+				m_attachment.SetActiveHand( m_hand);
+			}
 		}
 	}
 	
