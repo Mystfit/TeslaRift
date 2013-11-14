@@ -37,6 +37,7 @@ public class GloveController : MonoBehaviour {
 	public bool m_toggleCalibration = false;
 	public bool m_toggleNextGestureCalibration = false;
 	public double m_sigma = 0.5;
+	public double m_gestureThreshold = 0.5;
 	public int m_gestureSwitchDelay = 0;
 		
     void Start( )
@@ -116,16 +117,16 @@ public class GloveController : MonoBehaviour {
 				double[] gestureOutput = m_rbf.calculateOutput(m_bendValues);
 				
 				double largestVal = 0.0;
-				int largestIndex = 0;
+				int activeIndex = 0;
 				
 				for(int i = 0; i < gestureOutput.Length; i++){
 					if(gestureOutput[i] > largestVal){
 						largestVal = gestureOutput[i];
-						largestIndex = i;
+						activeIndex = i;
 					}
 				}
 
-				m_currentGesture = m_gestures[largestIndex];
+				m_currentGesture = m_gestures[activeIndex];
 				
 				//Delay the reported gesture change by a frame count to let the RBF settle
 				if(m_currentGesture != m_lastGesture)

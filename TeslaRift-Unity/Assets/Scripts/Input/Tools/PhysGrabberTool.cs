@@ -33,6 +33,10 @@ public class PhysGrabberTool : BaseTool {
 		base.Update();
 	}
 	
+	
+	/*
+	 * Tool enter state
+	 */
 	public override void TransitionIn ()
 	{
 		Debug.Log(this.m_toolControlRef);
@@ -45,6 +49,10 @@ public class PhysGrabberTool : BaseTool {
 		}
 	}
 	
+	
+	/*
+	 * Tool exit state
+	 */
 	public override void TransitionOut(){
 		if(m_joint != null)
 			Destroy(m_joint);
@@ -83,6 +91,10 @@ public class PhysGrabberTool : BaseTool {
 		m_toolHandState = BaseTool.HandState.RELEASING;
 	}
 	
+	
+	/*
+	 * Moves all instruments towards or away from the tool
+	 */
 	public void ApplyForceToInstruments(PhysDirection physAction, float strength){
 		
 		GameObject[] instruments = GameObject.FindGameObjectsWithTag("Instrument");
@@ -106,6 +118,10 @@ public class PhysGrabberTool : BaseTool {
 		}
 	}
 	
+	
+	/*
+	 * Checks for collision with appropriate obejcts
+	 */
 	public void CheckForSelection(){
 		if(m_hydraRef != null){
 
@@ -145,6 +161,7 @@ public class PhysGrabberTool : BaseTool {
 							m_heldType = InteractableTypes.RBFPOINT;
 							RBF.RBFTrainingPoint m_selectedTrainingPoint = m_heldObject.GetComponent<RBF.RBFTrainingPoint>();
 							m_selectedTrainingPoint.SetDragSource(transform);
+							m_toolHandState = BaseTool.HandState.HOLDING;
 						}
 					}
 				}

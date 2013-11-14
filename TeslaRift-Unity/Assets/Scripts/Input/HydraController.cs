@@ -60,7 +60,7 @@ public class HydraController : MonoBehaviour {
 		m_instance = this;
 		
 		m_leftGlove = m_leftHand.GetComponent<GloveController>();
-		//m_rightGlove = m_rightHand.GetComponent<GloveController>();
+		m_rightGlove = m_rightHand.GetComponent<GloveController>();
 	}
 	
 	
@@ -80,8 +80,16 @@ public class HydraController : MonoBehaviour {
 	public GameObject GetHand(BaseTool.ToolHand hand){
 		if(hand == BaseTool.ToolHand.LEFT)
 			return m_leftHand;
-		else
-			return m_rightHand;
+		return m_rightHand;
+	}
+	
+	/*
+	 * Returns left/right glove controllers
+	 */
+	public GloveController GetGloveController(BaseTool.ToolHand hand){
+		if(hand == BaseTool.ToolHand.LEFT)
+			return m_leftGlove;
+		return m_rightGlove;
 	}
 	
 	
@@ -176,7 +184,7 @@ public class HydraController : MonoBehaviour {
 			
 		
 		SetCommonTools(BaseTool.ToolHand.LEFT);
-		SetIndividualToolsRight(BaseTool.ToolHand.LEFT);
+		SetIndividualToolsRight(BaseTool.ToolHand.RIGHT);
 	}
 	
 	
@@ -209,28 +217,30 @@ public class HydraController : MonoBehaviour {
 	 * Common tools for each hand
 	 */
 	public void SetCommonTools(BaseTool.ToolHand hand){
+		
+		GloveController m_glove = GetGloveController(hand);
 					
 		//Physics selector
 		//------------
-		if(m_leftGlove.GetGestureDown("CLOSED_HAND") || Input.GetKeyDown(KeyCode.Space)){
+		if(m_glove.GetGestureDown("CLOSED_HAND") || Input.GetKeyDown(KeyCode.Space)){
 			m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand, BaseTool.ToolMode.PRIMARY);
 		}
 		
 		//Physics pull
 		//------------
-		else if(m_leftGlove.GetGestureDown("PINKY") || Input.GetKeyDown(KeyCode.LeftShift)){
+		else if(m_glove.GetGestureDown("PINKY") || Input.GetKeyDown(KeyCode.LeftShift)){
 			m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand, BaseTool.ToolMode.SECONDARY);
 		}
 		
 		//Gesture Selector Primary
 		//--------------------
-		else if(m_leftGlove.GetGestureDown("INDEX_POINT") || Input.GetKeyDown(KeyCode.W)){
+		else if(m_glove.GetGestureDown("INDEX_POINT") || Input.GetKeyDown(KeyCode.W)){
 			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.PRIMARY);
 		}
 		
 					//Gesture selector secondary
 		//--------------------
-		else if(m_leftGlove.GetGestureDown("INDEX_MIDDLE") || Input.GetKeyDown(KeyCode.E)){
+		else if(m_glove.GetGestureDown("INDEX_MIDDLE") || Input.GetKeyDown(KeyCode.E)){
 			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.SECONDARY);	//Secondary mode does a full reset
 		}
 	
@@ -250,7 +260,7 @@ public class HydraController : MonoBehaviour {
 		//Return to idle
 		//--------------
 		
-		bool openHand = m_leftGlove.GetGestureDown("OPEN_HAND");
+		bool openHand = m_glove.GetGestureDown("IDLE_HAND");
 		
 		if(Input.GetKeyUp (KeyCode.Space) ||
 			Input.GetKeyUp(KeyCode.W) ||

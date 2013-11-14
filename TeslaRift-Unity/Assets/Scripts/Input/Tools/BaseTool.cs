@@ -8,6 +8,10 @@ public class BaseTool : MonoBehaviour {
 	protected HydraController m_hydraRef = null;
 	protected InstrumentController m_instrumentControlRef = null;
 	protected ToolController m_toolControlRef = null;
+	
+	//For inspector previewing of active states
+	public HandState activeGestureState;
+
 
 	
 	//Variables
@@ -32,25 +36,25 @@ public class BaseTool : MonoBehaviour {
 	public BaseTool(){
 	}
 	
+	public virtual void Awake(){
+		m_hydraRef = HydraController.Instance;
+		m_instrumentControlRef = InstrumentController.Instance;
+		m_toolControlRef = ToolController.Instance;
+		m_toolHandState = BaseTool.HandState.SEARCHING;
+		m_targets = new List<object>();	
+		
+	}
+	
+	public virtual void Update () {
+		activeGestureState = m_toolHandState;
+	}
+	
 	public static SixenseHands ToolHandToSixenseHand(BaseTool.ToolHand hand){
 		if(hand == ToolHand.LEFT)
 			return SixenseHands.LEFT;
 		if(hand == ToolHand.RIGHT)
 			return SixenseHands.RIGHT;
 		return SixenseHands.UNKNOWN;
-	}
-	
-	public virtual void Awake(){
-		m_hydraRef = HydraController.Instance;
-		m_instrumentControlRef = InstrumentController.Instance;
-		m_toolControlRef = ToolController.Instance;
-		m_targets = new List<object>();	
-		
-	}
-	
-
-	
-	public virtual void Update () {
 	}
 	
 	//Initializer
