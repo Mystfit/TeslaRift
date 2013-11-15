@@ -119,10 +119,6 @@ public class InstrumentGestureTool : BaseTool {
 			
 		case GestureState.PROXIMITY:
 			m_attachment.Gesture_IdleProximity();
-			
-			if(m_attachment.IsFirstGesture)
-				m_attachment.Gesture_First();
-			
 			break;
 			
 		case GestureState.PROXIMITY_TO_INTERIOR:
@@ -208,10 +204,11 @@ public class InstrumentGestureTool : BaseTool {
 				m_attachment.Gesture_PushIn();
 				break;
 			}
+			m_attachment.Gesture_Exit();
 		}
-		
+
 		m_toolHandState = BaseTool.HandState.SEARCHING;
 		m_heldObject = null;
-		m_attachment = null;
+		//m_attachment = null;
 	}
 }

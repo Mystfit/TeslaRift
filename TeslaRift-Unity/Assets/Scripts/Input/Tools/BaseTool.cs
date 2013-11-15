@@ -11,6 +11,7 @@ public class BaseTool : MonoBehaviour {
 	
 	//For inspector previewing of active states
 	public HandState activeGestureState;
+	public ToolMode toolMode;
 
 
 	
@@ -46,7 +47,8 @@ public class BaseTool : MonoBehaviour {
 	}
 	
 	public virtual void Update () {
-		activeGestureState = m_toolHandState;
+		activeGestureState = m_toolHandState;	//Inspector level previewing of state
+		toolMode = m_mode;
 	}
 	
 	public static SixenseHands ToolHandToSixenseHand(BaseTool.ToolHand hand){

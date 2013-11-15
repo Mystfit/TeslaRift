@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using RBF;
 using System.Collections;
 
 public class PhysGrabberTool : BaseTool {
@@ -6,7 +7,7 @@ public class PhysGrabberTool : BaseTool {
 	public GameObject m_heldObject = null;
 	public string m_heldType;
 	public BaseGenerator m_selectedGenerator = null;
-	public RBF.RBFTrainingPoint m_selectedTrainingPoint = null;
+	public RBF.RBFTrainingPointAttachment m_selectedTrainingPoint = null;
 	
 	private Vector3 m_lastHeldPosition;
 	private Vector3 m_deltaVelocity;
@@ -80,7 +81,7 @@ public class PhysGrabberTool : BaseTool {
 			break;
 		case InteractableTypes.RBFPOINT:
 			if(m_heldObject != null){
-				RBF.RBFTrainingPoint m_selectedTrainingPoint = m_heldObject.GetComponent<RBF.RBFTrainingPoint>();
+				RBF.RBFTrainingPointAttachment m_selectedTrainingPoint = m_heldObject.GetComponent<RBF.RBFTrainingPointAttachment>();
 				if(m_selectedTrainingPoint != null){
 					m_selectedTrainingPoint.RemoveDragSource();
 				}
@@ -159,7 +160,7 @@ public class PhysGrabberTool : BaseTool {
 						else if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR).CompareTag(InteractableTypes.RBFPOINT)){
 							m_heldObject = closestObject;
 							m_heldType = InteractableTypes.RBFPOINT;
-							RBF.RBFTrainingPoint m_selectedTrainingPoint = m_heldObject.GetComponent<RBF.RBFTrainingPoint>();
+							RBFTrainingPointAttachment m_selectedTrainingPoint = m_heldObject.GetComponent<RBFTrainingPointAttachment>();
 							m_selectedTrainingPoint.SetDragSource(transform);
 							m_toolHandState = BaseTool.HandState.HOLDING;
 						}

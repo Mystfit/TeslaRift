@@ -18,6 +18,8 @@ public class BufferFrame : MonoBehaviour {
 	public Transform m_guiPanels;
 	public Transform m_selectGuiPanels;
 	public Transform m_backgroundQuad;
+	public HandProximityTrigger m_interiorTrigger;
+	public HandProximityTrigger m_exteriorTrigger;
 	
 	/*
 	 * Externally set dimensions
@@ -351,6 +353,8 @@ public class BufferFrame : MonoBehaviour {
 	 */
 	public void SetWidth(float width){
 		m_currentWidth = width;
+		m_interiorTrigger.UpdateCollider(width, m_currentHeight);
+		m_exteriorTrigger.UpdateCollider(width, m_currentHeight);
 		UpdatePanel();
 		UpdatePanelOutline();
 	}
@@ -361,6 +365,8 @@ public class BufferFrame : MonoBehaviour {
 	 */
 	public void SetHeight(float height){
 		m_currentHeight = height;
+		m_interiorTrigger.UpdateCollider(m_currentWidth, height);
+		m_exteriorTrigger.UpdateCollider(m_currentWidth, height);
 		UpdatePanel();
 		UpdatePanelOutline();
 	}

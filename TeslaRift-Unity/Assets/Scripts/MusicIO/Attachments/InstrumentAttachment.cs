@@ -65,24 +65,11 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 		base.Gesture_IdleProximity ();
 		CheckForSelection();
 	}
-	
-	
-	public override void Gesture_ExitIdleInterior ()
+
+	public override void Gesture_Exit ()
 	{
-		base.Gesture_ExitIdleInterior ();
 		CloseRadial(m_openRadialType, true);
-	}
-	
-	public override void Gesture_ExitIdleProximity ()
-	{
-		base.Gesture_ExitIdleProximity ();
-		CloseRadial(m_openRadialType, true);
-	}
-	
-	public override void Gesture_ExitIdleExterior ()
-	{
-		base.Gesture_ExitIdleExterior ();
-		CloseRadial(m_openRadialType, true);
+		base.Gesture_Exit ();
 	}
 	
 	public override void Gesture_Twist (float amount)

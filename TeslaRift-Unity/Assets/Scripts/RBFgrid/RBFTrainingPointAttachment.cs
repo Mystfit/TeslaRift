@@ -6,7 +6,7 @@ using MusicIO;
 
 namespace RBF{
 	
-	public class RBFTrainingPoint : MonoBehaviour {
+	public class RBFTrainingPointAttachment : BaseAttachment {
 	
 		protected float twistVal;		//Twist (w) input
 		public enum UIState{
@@ -42,15 +42,33 @@ namespace RBF{
 		public void SetTwist(float twist){
 			this.twistVal = twist;
 		}
-		
+
+
+		/*
+		 * Sets the target transform for this point to follow
+		 */
 		public void SetDragSource(Transform source){
 			m_pointState = UIState.DRAGGING;
 			m_dragSource = source;
 		}
-		
+
+
+		/* 
+		 * Removes the target drag source for this point
+		 */
 		public void RemoveDragSource(){
 			m_pointState = UIState.STATIONARY;
 			m_dragSource = null;
+		}
+
+
+		/*
+		 * Visually selects this training point
+		 */
+		public override void SetSelected (bool state)
+		{
+			base.SetSelected (state);
+			//Do something to the visuals or colour
 		}
 		
 
@@ -111,6 +129,5 @@ namespace RBF{
 		public void SetParameterValue(GenericMusicParam param, float val){
 			m_paramValues[param] = val;
 		}
-		
 	}
 }

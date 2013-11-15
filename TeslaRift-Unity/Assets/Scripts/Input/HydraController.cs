@@ -183,7 +183,7 @@ public class HydraController : MonoBehaviour {
 			m_rightHandController = SixenseInput.GetController( SixenseHands.RIGHT );
 			
 		
-		SetCommonTools(BaseTool.ToolHand.LEFT);
+		SetCommonTools(BaseTool.ToolHand.RIGHT);
 		SetIndividualToolsRight(BaseTool.ToolHand.RIGHT);
 	}
 	
