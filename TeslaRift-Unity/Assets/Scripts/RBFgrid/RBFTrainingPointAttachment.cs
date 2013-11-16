@@ -98,13 +98,21 @@ namespace RBF{
 		 * Moves this point inside of the parent container
 		 */
 		public void MoveRelativeToContainer(Transform worldPos){
-			if(m_parentContainer != null){
-				Vector3 pos = m_parentContainer.transform.InverseTransformPoint(worldPos.transform.position);
-				transform.localPosition = new Vector3(
-					Mathf.Clamp(pos.x, m_containerWidth*-0.5f, m_containerHeight*0.5f ), 
-					Mathf.Clamp(pos.y, m_containerWidth*-0.5f, m_containerHeight*0.5f ), 0.0f
-				);		
+
+			//Offset the position by the source's collider (if present)
+			Vector3 worldOffset = worldPos.position;
+			if(worldPos.collider != null){
+				if( worldPos.collider.GetType() == typeof(CapsuleCollider) ){
+					CapsuleCollider coll = worldPos.collider as CapsuleCollider;
+					worldOffset = coll.bounds.center;
+				}
 			}
+
+			Vector3 pos = m_parentContainer.transform.InverseTransformPoint(worldOffset);
+			transform.localPosition = new Vector3(
+				Mathf.Clamp(pos.x, m_containerWidth*-0.5f, m_containerHeight*0.5f ), 
+				Mathf.Clamp(pos.y, m_containerWidth*-0.5f, m_containerHeight*0.5f ), 0.0f
+			);		
 		}
 		
 		

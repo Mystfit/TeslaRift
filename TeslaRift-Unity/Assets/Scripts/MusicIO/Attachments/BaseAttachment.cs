@@ -94,7 +94,7 @@ public abstract class BaseAttachment : MonoBehaviour{
  */
 public class BaseAttachment<T> : BaseAttachment {
 	
-	protected T m_musicRef;
+	private T m_musicRef;
 	public virtual void Init(T managedReference){
 		m_musicRef = managedReference;
 	}

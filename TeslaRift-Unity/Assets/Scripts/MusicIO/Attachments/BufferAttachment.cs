@@ -35,7 +35,11 @@ public class BufferAttachment : BaseAttachment<ControlBuffer> {
 	public float m_clipRowSize = 1.0f;
 	public float m_clipColumnSize = 1.0f;
 	public float m_clipBufferEdges = 0.05f;
-	
+
+	/*
+	 * Prefabs
+	 */
+	public GameObject sliderPrefab;
 	
 	/*
 	 * Attached gameobjects
@@ -45,7 +49,7 @@ public class BufferAttachment : BaseAttachment<ControlBuffer> {
 	private BufferFrame m_frame;
 	Transform m_clipHolder;
 	Transform m_paramHolder;
-	
+
 	
 	/*
 	 * Music object intialization and reference
@@ -118,11 +122,12 @@ public class BufferAttachment : BaseAttachment<ControlBuffer> {
 			if(IsInstrumentInBuffer(attach.musicRef.owner, ParameterType.CLIP)){
 				RemoveInstrumentFromBuffer(attach.musicRef.owner, ParameterType.CLIP);
 			}
-			
+
 			m_attachedClips.Add(attach);
 			
 		} else if(attach.musicRef.GetType() == typeof(GenericMusicParam)){
-			m_attachedParams.Add(attach);
+			if(!m_attachedParams.Exists(a => attach))
+			   CreateSlider(attach.musicRef);
 		}
 		
 		Hashtable tweenParams = new Hashtable();
@@ -144,8 +149,22 @@ public class BufferAttachment : BaseAttachment<ControlBuffer> {
 			"time", 0.4f
 		));	
 	}
-	
-	
+
+
+	/*
+	 * Creates a new slider gui object representing a parameter value
+	 */
+	public void CreateSlider(BaseInstrumentParam param){
+		GameObject sliderObj = Instantiate(sliderPrefab) as GameObject;
+		sliderObj.transform.position = GetActiveAttachTransform().position;
+		sliderObj.transform.rotation = GetActiveAttachTransform().rotation;
+		sliderObj.transform.parent = GetActiveAttachTransform();
+		SliderAttachment slider = sliderObj.GetComponent<SliderAttachment>();
+		slider.Init( (param ));
+		m_attachedParams.Add(slider);
+	}
+
+
 	/*
 	 * Checks for an instrument already existing inside the buffer. 
 	 * Used to make sure only one clip per instrument is present in a buffer
@@ -229,9 +248,18 @@ public class BufferAttachment : BaseAttachment<ControlBuffer> {
 		List<BaseAttachment> attachList = tweenParams["targetList"] as List<BaseAttachment>;
 		attach.transform.position = GetActiveAttachTransform().position;
 		attach.transform.parent = GetActiveAttachTransform();
+
+		//Add parameter gui controls
+		if(attachList == m_attachedParams){
+
+		} else if(attachList == m_attachedClips){
+		
+		}
+
 		SortBufferItems ();
 	}
 	
+
 	
 	/*
 	 * Updates the clips/params loaded into this buffer
@@ -312,7 +340,8 @@ public class BufferAttachment : BaseAttachment<ControlBuffer> {
 	 */
 	public override void Gesture_First ()
 	{
-		InstrumentController.Instance.SelectBuffer(this);
+		if(mode == BaseTool.ToolMode.PRIMARY)
+			InstrumentController.Instance.SelectBuffer(this);
 	}
 	
 	public override void Gesture_PushIn ()

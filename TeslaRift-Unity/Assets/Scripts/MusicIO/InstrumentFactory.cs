@@ -21,6 +21,7 @@ public class InstrumentFactory : MonoBehaviour {
 	public string m_liveSessionFile;
 	
 	private InstrumentController m_instrumentControllerRef;
+	protected GameObject m_instrumentHolder;
 	
 	/*
 	 * Prefabs
@@ -32,7 +33,8 @@ public class InstrumentFactory : MonoBehaviour {
 
 	void Start () {
 		m_instrumentControllerRef = this.GetComponent<InstrumentController>();
-		
+		m_instrumentHolder = new GameObject("Instruments");
+
 		//Load prefabs
 		m_floatingClipPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/floatingClip.prefab", typeof(GameObject)) as GameObject;
 		m_textPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/GUI/paramLabel.prefab", typeof(GameObject)) as GameObject;
@@ -61,7 +63,6 @@ public class InstrumentFactory : MonoBehaviour {
 		//Get track, return, master information
 		XmlNodeList trackList = sessionXml.GetElementsByTagName("track"); //instrument array	
 		XmlNodeList returnList = sessionXml.GetElementsByTagName("trackReturn"); //instrument array	
-		
 
 		InstrumentController.Instance.SetSourceName(m_source);
 		
@@ -132,6 +133,7 @@ public class InstrumentFactory : MonoBehaviour {
 		//Create an instrument prefab
 		GameObject instrumentGame = Instantiate(instrumentPrefab, transform.position, Quaternion.identity ) as GameObject;
 		instrumentGame.name = GAMEINSTRUMENT_PREFIX + instrument.Name;
+		instrumentGame.transform.parent = m_instrumentHolder.transform;
 
 		//Add an instrument attachment to interface with the MusicIO controllers
 		InstrumentAttachment attach = instrumentGame.AddComponent<InstrumentAttachment>();

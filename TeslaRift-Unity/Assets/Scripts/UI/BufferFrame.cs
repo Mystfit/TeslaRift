@@ -383,4 +383,6 @@ public class BufferFrame : MonoBehaviour {
 	//Getters
 	public float width{ get { return m_frameWidth; }}
 	public float height{ get { return m_frameHeight; }}
+	public bool isRotated{ get { return bRotated; }}
+	public Transform background{ get { return m_backgroundQuad; }}
 }
