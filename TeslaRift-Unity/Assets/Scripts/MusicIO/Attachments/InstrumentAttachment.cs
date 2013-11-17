@@ -97,8 +97,8 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 		
 		//Create a floating instrument clip to put inside a buffer frame
 		if(m_selectedParam != null)
-			InstrumentController.Instance.AddToActiveBuffer( InstrumentFactory.CreateFloatingAttachment(m_selectedParam) );
-		
+			InstrumentController.Instance.AddToActivePanel( m_selectedParam.musicRef );
+
 		CloseRadial(m_openRadialType, false);
 		Gesture_Exit();
 	}

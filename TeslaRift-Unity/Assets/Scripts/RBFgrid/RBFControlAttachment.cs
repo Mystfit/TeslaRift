@@ -1,13 +1,24 @@
 ﻿using UnityEngine;
+using MusicIO;
 using System.Collections;
 using System.Collections.Generic;
 using RBF;
 
 public class RBFControlAttachment : BaseAttachment {
-	
+
+	//Owning group
+	MusicControllerAttachment m_owner;
+
+	//Training points
 	public GameObject m_trainingPointPrefab;
 	protected List<RBF.RBFTrainingPointAttachment> m_trainingPoints;
 	RBFTrainingPointAttachment m_selectedTraining;
+
+	//RBF
+	protected RBFCore m_rbf;
+	public float m_sigma = 2;
+
+	//UI
 	protected BufferFrame m_frame;
 	
 	//Dragging target and source
@@ -17,8 +28,19 @@ public class RBFControlAttachment : BaseAttachment {
 	void Start () {
 		m_frame = GetComponent<BufferFrame>();
 		m_trainingPoints = new List<RBFTrainingPointAttachment>();
+		m_rbf = new RBFCore(1,1);
+		m_rbf.setSigma(m_sigma);
 	}
-	
+
+
+	/*
+	 * Set owner
+	 */
+	public void Init(MusicControllerAttachment owner){
+		m_owner = owner;
+	}
+	public MusicControllerAttachment owner{ get { return m_owner; }}
+
 	
 	/*
 	 * Creates a new training point prefab on the panel
@@ -31,6 +53,35 @@ public class RBFControlAttachment : BaseAttachment {
 		m_trainingPoints.Add(training);
 	}	
 
+	/*public void SetTrainingPoints(List<BaseInstrumentParam> paramList){
+
+		m_rbf.reset(3, paramList.Count);
+
+
+
+		double[] paramVals = new double[paramList.Count];
+		for(int i = 0; i < paramList.Count; i++){
+			paramVals[i] = paramList[i].musicRef.val;
+		}
+
+		double[] positionVals = new double[3];
+		
+		for(int i = 0; i < m_trainingPoints.Count; i++){
+			RBFTrainingPointAttachment point = m_trainingPoints[i] as RBFTrainingPointAttachment;
+			positionVals[0] = point.xNormalized;
+			positionVals[1] = point.yNormalized;
+			positionVals[2] = point.twist;
+
+			point.paramValues
+
+			m_rbf.addTrainingPoint(positionVals, paramVals);
+		}
+	}*/
+
+
+	/*
+	 * Gesture overrides
+	 */
 	public override void Gesture_First ()
 	{
 		//PRIMARY = Add new RBF training points
@@ -61,6 +112,9 @@ public class RBFControlAttachment : BaseAttachment {
 	}
 
 
+	/*
+	 * Gets the closest training point in world space to a target transform
+	 */
 	public RBFTrainingPointAttachment GetClosestTraining( Transform point ){
 
 		RBFTrainingPointAttachment closestPoint = null;
@@ -85,5 +139,13 @@ public class RBFControlAttachment : BaseAttachment {
 		}
 
 		return closestPoint;
+	}
+
+
+	/*
+	 * Update the RBF weights
+	 */
+	public void UpdateWeights(){
+		m_rbf.calculateWeights();
 	}
 }

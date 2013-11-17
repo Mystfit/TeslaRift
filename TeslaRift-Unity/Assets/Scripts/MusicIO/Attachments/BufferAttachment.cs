@@ -40,6 +40,8 @@ public class BufferAttachment : BaseAttachment<ControlBuffer> {
 	 * Prefabs
 	 */
 	public GameObject sliderPrefab;
+
+	protected MusicControllerAttachment m_owner;
 	
 	/*
 	 * Attached gameobjects
@@ -72,7 +74,16 @@ public class BufferAttachment : BaseAttachment<ControlBuffer> {
 		m_paramHolder.transform.position = transform.position;
 		m_paramHolder.transform.parent = transform;
 	}
-	
+
+
+	/*
+	 * Set owner
+	 */
+	public void Init(MusicControllerAttachment owner){
+		m_owner = owner;
+	}
+	public MusicControllerAttachment owner{ get { return m_owner; }}
+
 	
 	/*
 	 * Selects this buffer
@@ -332,16 +343,6 @@ public class BufferAttachment : BaseAttachment<ControlBuffer> {
 			attach.musicRef.setOverrideVal(value);
 			attach.musicRef.setVal(value);
 		}
-	}
-	
-	
-	/*
-	 * Gesture overrides
-	 */
-	public override void Gesture_First ()
-	{
-		if(mode == BaseTool.ToolMode.PRIMARY)
-			InstrumentController.Instance.SelectBuffer(this);
 	}
 	
 	public override void Gesture_PushIn ()

@@ -17,7 +17,7 @@ public class InstrumentController : MonoBehaviour {
 	
 	//Buffer references
 	protected List<BufferAttachment> m_buffers;
-	protected BufferAttachment m_selectedBuffer;
+	protected ParamSliderPanelAttachment m_paramPanel;
 	
 	//Prefix source name in front of OSC messages
 	private string m_sourceName;
@@ -87,19 +87,20 @@ public class InstrumentController : MonoBehaviour {
 		m_buffers.Add(buffer);
 	}
 	
-	public void AddToActiveBuffer(FloatingAttachment attach){
-		if(m_selectedBuffer != null)
-			m_selectedBuffer.AddMusicObjectToBuffer(attach);
+	public void AddToActivePanel(BaseInstrumentParam param){
+		if(m_paramPanel != null){
+			m_paramPanel.CreateSlider( param );
+		}
 	}
 
 	/*
 	 * Selects a buffer
 	 */
-	public void SelectBuffer(BufferAttachment buffer){
-		if(m_selectedBuffer != null)
-			m_selectedBuffer.SetSelected(false);
-		m_selectedBuffer = buffer;
-		m_selectedBuffer.SetSelected(true);
+	public void SelectBuffer(ParamSliderPanelAttachment panel){
+		if(m_paramPanel != null)
+			m_paramPanel.SetSelected(false);
+		m_paramPanel = panel;
+		m_paramPanel.SetSelected(true);
 	}
 
 	//Instrument selection

@@ -29,8 +29,21 @@ public class BufferFrame : MonoBehaviour {
 	public float m_braceLength = 0.01f;
 	public float m_frameHeight = 1.0f;
 	public float m_frameWidth = 1.0f;
+	public float m_frameCollisionDepth = 0.5f;
 	public float m_outlineOffset = 0.5f;
 	public float m_outlineDepth = -0.5f;
+	public enum AnchorLocation {
+		LEFT = 0, 
+		TOP,
+		RIGHT, 
+		BOTTOM,
+		TOP_LEFT,
+		TOP_RIGHT,
+		BOTTOM_LEFT,
+		BOTTOM_RIGHT,
+		CENTER
+	}
+	public AnchorLocation m_anchorPoint;
 	
 	/*
 	 * Background and grid parameters
@@ -44,11 +57,11 @@ public class BufferFrame : MonoBehaviour {
 	/*
 	 * Debug toggles
 	 */
-	public bool m_toggleUpdate = false;
-	public bool m_toggleHorizontal = false;
-	public bool m_toggleVertical = false;
-	public bool m_toggleOutline = false;
-	public bool m_toggleBackground = false;
+	public bool toggleUpdate = false;
+	public bool toggleHorizontal = false;
+	public bool toggleVertical = false;
+	public bool toggleOutline = false;
+	public bool toggleBackground = false;
 	
 	/*
 	 * Active dimensions
@@ -84,29 +97,29 @@ public class BufferFrame : MonoBehaviour {
 	
 	void Update () {
 		//Toggles to test frame animations
-		if(m_toggleUpdate){
-			m_toggleUpdate = false;
+		if(toggleUpdate){
+			toggleUpdate = false;
 			AnimateSize(m_frameWidth, m_frameHeight);
 		}
 		
-		if(m_toggleVertical){
-			m_toggleVertical = false;
+		if(toggleVertical){
+			toggleVertical = false;
 			RotateToVertical();
 		}
 		
-		if(m_toggleHorizontal){
-			m_toggleHorizontal = false;
+		if(toggleHorizontal){
+			toggleHorizontal = false;
 			RotateToHorizontal();
 		}
 		
-		if(m_toggleOutline){
-			m_toggleOutline = false;
+		if(toggleOutline){
+			toggleOutline = false;
 			bIsOutlineVisible = !bIsOutlineVisible;
 			ShowOutline(bIsOutlineVisible);
 		}
 		
-		if(m_toggleBackground){
-			m_toggleBackground = false;
+		if(toggleBackground){
+			toggleBackground = false;
 			AnimateBackgroundColor(m_backgroundColor);
 		}
 	}
@@ -147,15 +160,15 @@ public class BufferFrame : MonoBehaviour {
 		int i = 0;
 		float colSpacing = targetWidth / (m_gridColumns.Count+1);
 		float rowSpacing = targetHeight / (m_gridRows.Count+1);
-		m_gridParent.transform.localPosition = new Vector3(-(m_currentWidth*0.5f), -(m_currentHeight*0.5f), 0.0f);
+		m_gridParent.transform.localPosition = GetAnchorOffset(m_currentWidth, m_currentHeight, m_anchorPoint);
 		
 		for(i = 0; i < m_gridRows.Count; i++){
-			m_gridRows[i].transform.localPosition = new Vector3( 0.0f, (i+1) * rowSpacing, 0.0f);
+			m_gridRows[i].transform.localPosition = new Vector3( -m_currentWidth*0.5f, ((i+1) * rowSpacing) - m_currentHeight*0.5f, 0.0f);
 			m_gridRows[i].transform.localScale = new Vector3(targetWidth, m_gridLineWidth, 0.0f);
 		}
 		
 		for(i = 0; i < m_gridColumns.Count; i++){
-			m_gridColumns[i].transform.localPosition = new Vector3( (i+1)*colSpacing, 0.0f, 0.0f);
+			m_gridColumns[i].transform.localPosition = new Vector3( ((i+1)*colSpacing) - m_currentWidth*0.5f, -m_currentHeight*0.5f, 0.0f);
 			m_gridColumns[i].transform.localScale = new Vector3(m_gridLineWidth, targetHeight , 0.0f);
 		}
 	}
@@ -179,7 +192,9 @@ public class BufferFrame : MonoBehaviour {
 	protected void UpdateBackground(float width, float height){
 		if(m_backgroundQuad != null){
 			m_backgroundQuad.localScale = new Vector3(width, height - (m_frameThickness*2));
-			m_backgroundQuad.localPosition = new Vector3(-(m_frameThickness*0.5f), -(m_frameThickness*0.5f), 0.0f);
+			//m_backgroundQuad.localPosition = new Vector3(-(m_frameThickness*0.5f), -(m_frameThickness*0.5f), 0.0f);
+			Vector3 borderOffset = new Vector3(-(m_frameThickness*0.5f), -(m_frameThickness*0.5f), 0.0f);
+			m_backgroundQuad.localPosition = GetAnchorOffset(width, height, m_anchorPoint) + borderOffset;
 		}
 	}
 	
@@ -198,8 +213,60 @@ public class BufferFrame : MonoBehaviour {
 		
 		if(m_hasGrid)
 			UpdateGridLines();
+
+		m_guiPanels.localPosition = GetAnchorOffset(m_currentWidth, m_currentHeight, m_anchorPoint);
+		m_selectGuiPanels.localPosition = GetAnchorOffset(m_currentWidth, m_currentHeight, m_anchorPoint);
 		
 		UpdateBackground(m_currentWidth, m_currentHeight);
+	}
+
+
+	/*
+	 * Gets the position of the top left corner of this object relative to the anchor point. Default is center
+	 */
+	public Vector3 GetAnchorOffset(float width, float height, AnchorLocation anchor){
+		Vector3 position = new Vector3();
+
+		switch(m_anchorPoint){
+		case AnchorLocation.LEFT:
+			position.x  = (bRotated) ? 0.0f : width*0.5f;
+			position.y = (bRotated) ? -height*0.5f : 0.0f;
+			break;
+		case AnchorLocation.TOP:
+			position.x  = (bRotated) ? -width*0.5f : 0.0f;
+			position.y = (bRotated) ? 0.0f : -height*0.5f;
+			break;
+		case AnchorLocation.RIGHT:
+			position.x  = (bRotated) ? 0.0f : -width*0.5f;
+			position.y = (bRotated) ? height*0.5f : 0.0f;
+			break;
+		case AnchorLocation.BOTTOM:
+			position.x  = (bRotated) ? width*0.5f : 0.0f;
+			position.y = (bRotated) ? 0.0f : height*0.5f;
+			break;
+		case AnchorLocation.TOP_LEFT:
+			position.x  = (bRotated) ? -width*0.5f : width*0.5f;
+			position.y = (bRotated) ? -height*0.5f : -height*0.5f;
+			break;
+		case AnchorLocation.TOP_RIGHT:
+			position.x  = (bRotated) ? -width*0.5f : -width*0.5f;
+			position.y = (bRotated) ? height*0.5f : -height*0.5f;
+			break;
+		case AnchorLocation.BOTTOM_LEFT:
+			position.x  = (bRotated) ? width*0.5f : width*0.5f;
+			position.y = (bRotated) ? -height*0.5f : height*0.5f;
+			break;
+		case AnchorLocation.BOTTOM_RIGHT:
+			position.x  = (bRotated) ? width*0.5f : -width*0.5f;
+			position.y = (bRotated) ? height*0.5f : height*0.5f;
+			break;
+		case AnchorLocation.CENTER:
+			position.x = 0.0f;
+			position.y = 0.0f;
+			break;
+		}
+
+		return position;
 	}
 	
 	
@@ -353,8 +420,8 @@ public class BufferFrame : MonoBehaviour {
 	 */
 	public void SetWidth(float width){
 		m_currentWidth = width;
-		m_interiorTrigger.UpdateCollider(width, m_currentHeight);
-		m_exteriorTrigger.UpdateCollider(width, m_currentHeight);
+		m_interiorTrigger.UpdateCollider(GetAnchorOffset(width, m_currentHeight, m_anchorPoint), width, m_currentHeight, m_frameCollisionDepth);
+		m_exteriorTrigger.UpdateCollider(GetAnchorOffset(width, m_currentHeight, m_anchorPoint), width, m_currentHeight, m_frameCollisionDepth);
 		UpdatePanel();
 		UpdatePanelOutline();
 	}
@@ -365,8 +432,8 @@ public class BufferFrame : MonoBehaviour {
 	 */
 	public void SetHeight(float height){
 		m_currentHeight = height;
-		m_interiorTrigger.UpdateCollider(m_currentWidth, height);
-		m_exteriorTrigger.UpdateCollider(m_currentWidth, height);
+		m_interiorTrigger.UpdateCollider(GetAnchorOffset(m_currentWidth, height, m_anchorPoint), m_currentWidth, height, m_frameCollisionDepth);
+		m_exteriorTrigger.UpdateCollider(GetAnchorOffset(m_currentWidth, height, m_anchorPoint), m_currentWidth, height, m_frameCollisionDepth);
 		UpdatePanel();
 		UpdatePanelOutline();
 	}
@@ -377,6 +444,15 @@ public class BufferFrame : MonoBehaviour {
 	public void SetOutlineOffset(float offset){
 		m_currentOutlineOffset = offset;
 		UpdatePanelOutline();
+	}
+
+
+	/*
+	 * Sets anchor point for frame
+	 */
+	public void SetAnchor(AnchorLocation anchor){
+		m_anchorPoint = anchor;
+		toggleUpdate = true;
 	}
 	
 	

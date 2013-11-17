@@ -84,6 +84,7 @@ public class PhysGrabberTool : BaseTool {
 				RBF.RBFTrainingPointAttachment m_selectedTrainingPoint = m_heldObject.GetComponent<RBF.RBFTrainingPointAttachment>();
 				if(m_selectedTrainingPoint != null){
 					m_selectedTrainingPoint.RemoveDragSource();
+					m_selectedTrainingPoint.rbfOwner.owner.UpdateRBF();
 				}
 			}
 			break;

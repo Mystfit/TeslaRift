@@ -75,7 +75,7 @@ namespace MusicIO
 			} else if(valueType == "toggle"){
 				m_params.Add(new ToggleParam(name, this));
 			} else{
-				GenericMusicParam param = new GenericMusicParam(name, this);
+				GenericMusicParam param = new GenericMusicParam(name, this, min, max);
 				param.setDeviceName(deviceName);
 				m_params.Add(param); 
 			}
@@ -161,7 +161,7 @@ namespace MusicIO
 						if(param.deviceName != "")
 							paramName = param.deviceName + "/" + param.name;
 						
-						addMessageToQueue(paramName, param.val);
+						addMessageToQueue(paramName, param.scaledVal);
 					}
 						
 					param.setClean();

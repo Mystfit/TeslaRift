@@ -15,12 +15,14 @@ namespace RBF{
 		}
 		protected UIState m_pointState;
 		public UIState uiState { get { return m_pointState; }}
-		
+
+		protected RBFControlAttachment m_rbfOwner;
 		protected Transform m_parentContainer;		//Controlling panel for this training point
 		protected float m_containerWidth;			//Controlling panel width
 		protected float m_containerHeight;			//Controlling panel height
 		protected Transform m_dragSource;
 		protected Dictionary<BaseInstrumentParam, float> m_paramValues;
+		public Dictionary<BaseInstrumentParam, float> paramValues{ get { return m_paramValues; }}
 		
 		/*
 		 * Init
@@ -34,7 +36,10 @@ namespace RBF{
 			if(uiState == UIState.DRAGGING)
 				MoveRelativeToContainer(m_dragSource);
 		}
-	
+
+		public void Init(RBFControlAttachment owner){
+			m_rbfOwner = owner;
+		}
 		
 		/*
 		 * Sets the input dimension values for this RBF training point
@@ -79,6 +84,7 @@ namespace RBF{
 		public float xNormalized {get { return Utils.Normalize(transform.localPosition.x, m_containerWidth*-0.5f, m_containerWidth*0.5f); }}
 		public float yNormalized {get { return Utils.Normalize(transform.localPosition.y, m_containerHeight*-0.5f, m_containerHeight*0.5f); }}
 		public float twist {get { return twistVal; }}
+		public RBFControlAttachment rbfOwner{ get { return m_rbfOwner; }}
 		
 		
 		/*
@@ -137,5 +143,10 @@ namespace RBF{
 		public void SetParameterValue(GenericMusicParam param, float val){
 			m_paramValues[param] = val;
 		}
+
+
+		/*
+		 * Gesture overrides
+		 */
 	}
 }

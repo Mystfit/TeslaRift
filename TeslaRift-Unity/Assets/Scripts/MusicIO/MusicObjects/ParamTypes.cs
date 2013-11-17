@@ -13,7 +13,7 @@ namespace MusicIO
 	public class ToggleParam : BaseInstrumentParam {
 		
 		public ToggleParam(string name, BaseInstrument paramOwner)
-				: base(name, paramOwner)
+				: base(name, paramOwner, 0.0f, 1.0f)
 		{
 			m_generators = new List<BaseGenerator>();
 		}
@@ -47,7 +47,7 @@ namespace MusicIO
 		
 		
 		public NoteParam(string name, BaseInstrument paramOwner)
-				: base(name, paramOwner)
+				: base(name, paramOwner, 0.0f, 127.0f)
 		{
 			m_chordNotes = new List<Note>();
 		}
@@ -105,7 +105,7 @@ namespace MusicIO
 		}
 				
 		public Note(string name, BaseInstrument paramOwner, bool isExpectingReturnMessage)
-				: base(name, paramOwner)
+				: base(name, paramOwner, 0.0f, 127.0f)
 		{
 		}
 	}
@@ -120,7 +120,8 @@ namespace MusicIO
 		public int scene;
 		public bool isPlaying;
 		
-		public InstrumentClip(string name, BaseInstrument paramOwner, int clipScene) : base(name, paramOwner)
+		public InstrumentClip(string name, BaseInstrument paramOwner, int clipScene) 
+			: base(name, paramOwner, 0.0f, 1.0f)
 		{
 			scene = clipScene;
 		}
@@ -135,7 +136,8 @@ namespace MusicIO
 	 * Generic parameter
 	 */
 	public class GenericMusicParam : BaseInstrumentParam {
-		public GenericMusicParam(string name, BaseInstrument paramOwner) : base(name, paramOwner)
+		public GenericMusicParam(string name, BaseInstrument paramOwner, float min, float max) 
+			: base(name, paramOwner, min, max)
 		{
 		}
 	}
