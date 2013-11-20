@@ -91,9 +91,13 @@ public class InstrumentFactory : MonoBehaviour {
 					string name = parameter.Attributes["name"].Value as String;
 					name = name.Replace("/", "-");
 					name = name.Replace(" ", "_");
+					string deviceName = device.Attributes["name"].Value as String;
+					deviceName = deviceName.Replace("/", "-");
+					deviceName = deviceName.Replace(" ", "_");
+
 					float min = Convert.ToSingle(parameter.Attributes["min"].Value);
 					float max = Convert.ToSingle(parameter.Attributes["max"].Value);
-					instrumentDef.AddParam(name, "float", min, max, device.Attributes["name"].Value);
+					instrumentDef.AddParam(name, "float", min, max, deviceName);
 				}
 	
 			}

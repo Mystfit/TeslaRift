@@ -41,42 +41,19 @@ public class RBFControlAttachment : BaseAttachment {
 	}
 	public MusicControllerAttachment owner{ get { return m_owner; }}
 
-	
+
 	/*
 	 * Creates a new training point prefab on the panel
 	 */
-	public void CreateTrainingPoint(Transform position){
+	public RBFTrainingPointAttachment CreateTrainingPoint(Transform position){
 		GameObject  trainingObj = Instantiate(m_trainingPointPrefab) as GameObject;
 		RBFTrainingPointAttachment training = trainingObj.GetComponent<RBFTrainingPointAttachment>();
-		training.SetParentContainer(transform, m_frame.width, m_frame.height);
+		training.SetParentContainer(this, m_frame.width, m_frame.height);
 		training.MoveRelativeToContainer(position);
 		m_trainingPoints.Add(training);
+
+		return training;
 	}	
-
-	/*public void SetTrainingPoints(List<BaseInstrumentParam> paramList){
-
-		m_rbf.reset(3, paramList.Count);
-
-
-
-		double[] paramVals = new double[paramList.Count];
-		for(int i = 0; i < paramList.Count; i++){
-			paramVals[i] = paramList[i].musicRef.val;
-		}
-
-		double[] positionVals = new double[3];
-		
-		for(int i = 0; i < m_trainingPoints.Count; i++){
-			RBFTrainingPointAttachment point = m_trainingPoints[i] as RBFTrainingPointAttachment;
-			positionVals[0] = point.xNormalized;
-			positionVals[1] = point.yNormalized;
-			positionVals[2] = point.twist;
-
-			point.paramValues
-
-			m_rbf.addTrainingPoint(positionVals, paramVals);
-		}
-	}*/
 
 
 	/*
@@ -84,28 +61,64 @@ public class RBFControlAttachment : BaseAttachment {
 	 */
 	public override void Gesture_First ()
 	{
-		//PRIMARY = Add new RBF training points
-		if( mode == BaseTool.ToolMode.PRIMARY ){
-			CreateTrainingPoint( HydraController.Instance.GetHand( m_hand ).transform );
+		switch(owner.controlState){
+		case MusicControllerAttachment.ControlState.EDIT:
+			//PRIMARY = Add new RBF training points
+			if( mode == BaseTool.ToolMode.PRIMARY ){
+				m_owner.UpdateTrainingPoint( CreateTrainingPoint( HydraController.Instance.GetHand( m_hand ).transform ) );
+			}
+			
+			//Secondary = Update values       
+			else if( mode == BaseTool.ToolMode.SECONDARY ){
+				owner.ToggleControlState();
+			}
+			break;
+		case MusicControllerAttachment.ControlState.PERFORM:
+			if( mode == BaseTool.ToolMode.SECONDARY ){
+				owner.ToggleControlState();
+			}
+			break;
 		}
-		/*
-		//Secondary = Move training points
-		} else if( mode == BaseTool.ToolMode.SECONDARY ){
-			RBFTrainingPointAttachment attach = GetClosestTraining( HydraController.Instance.GetHand( m_hand ).transform );
-			attach.SetDragSource( HydraController.Instance.GetHand( m_hand ).transform );
-			attach.SetSelected(true);
-			m_selectedTraining = attach;
-		}
-		*/
-
 		base.Gesture_First ();
+	}
+
+	public override void Gesture_IdleInterior (){
+		switch(owner.controlState){
+		case MusicControllerAttachment.ControlState.EDIT:
+			break;
+		case MusicControllerAttachment.ControlState.PERFORM:
+			if( mode == BaseTool.ToolMode.PRIMARY ){
+				
+				Vector3 pos = BaseTool.HandToObjectSpace( HydraController.Instance.GetHand( m_hand ).transform, transform);
+				
+				Vector3 clampedPos = new Vector3(
+					Mathf.Clamp(pos.x, m_frame.width*-0.5f, m_frame.height*0.5f ), 
+					Mathf.Clamp(pos.y, m_frame.width*-0.5f, m_frame.height*0.5f ), 0.0f
+					);	
+				
+				double[] positionVals = new double[3]{clampedPos.x, clampedPos.y, 0.0f};
+				double[] paramOutput = m_rbf.calculateOutput(positionVals);
+				
+				int outputIndex = 0;
+				List<BaseInstrumentParam> paramList = m_owner.paramControls.GetParametersFromSliders();
+				Dictionary<BaseInstrumentParam,float> sliderResults = new Dictionary<BaseInstrumentParam, float>();
+				foreach(BaseInstrumentParam param in paramList){
+					sliderResults[param] = (float)paramOutput[outputIndex++];
+				}
+				
+				m_owner.UpdateSlidersFromRBF(sliderResults);
+			}
+			break; 
+		}
+		
+		base.Gesture_IdleInterior ();
 	}
 
 
 	public override void Gesture_Exit ()
 	{
 		foreach(RBFTrainingPointAttachment attach in m_trainingPoints){
-			attach.RemoveDragSource();
+			attach.SetInactive();
 			attach.SetSelected(false);
 		}
 		base.Gesture_Exit ();
@@ -146,6 +159,54 @@ public class RBFControlAttachment : BaseAttachment {
 	 * Update the RBF weights
 	 */
 	public void UpdateWeights(){
+		//int numParams = owner.paramControls.GetParametersFromSliders().Count;
+		//if(numParams != m_rbf.numOutputs || m_trainingPoints.Count != m_rbf.trainingPoints.Count)
+		//ResetRBF(numParams);
 		m_rbf.calculateWeights();
+	}
+
+
+	/*
+	 * Resets the RBF if we change the number of parameters
+	 */
+	public void ResetRBF(int numParams){
+		m_rbf.reset(3, numParams);
+		m_rbf.setSigma(m_sigma);
+		foreach(RBFTrainingPointAttachment point in m_trainingPoints){
+
+			double[] positionVals = new double[3];
+			double[] paramVals = new double[ point.paramValues.Count ];
+
+			positionVals[0] = point.xNormalized;
+			positionVals[1] = point.yNormalized;
+			positionVals[2] = point.twist;
+
+			int index = 0;
+
+			foreach( KeyValuePair<BaseInstrumentParam,float> pair in point.paramValues)
+				paramVals[index++] = pair.Value;
+
+			m_rbf.addTrainingPoint(positionVals, paramVals);
+		}
+
+		UpdateWeights();
+	}
+
+
+	/*
+	 * Sets the active training point
+	 */
+	public void SetActiveTrainingPoint(RBFTrainingPointAttachment attach){
+		m_selectedTraining = attach;
+	}
+
+	public RBFTrainingPointAttachment SelectedTrainingPoint{ get { return m_selectedTraining; }}
+
+
+	/*
+	 * Sets the background colour of the frame
+	 */
+	public void SetBackground(Color color){
+		m_frame.AnimateBackgroundColor(color);
 	}
 }

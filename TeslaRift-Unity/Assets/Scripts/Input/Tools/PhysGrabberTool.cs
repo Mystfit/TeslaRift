@@ -83,7 +83,7 @@ public class PhysGrabberTool : BaseTool {
 			if(m_heldObject != null){
 				RBF.RBFTrainingPointAttachment m_selectedTrainingPoint = m_heldObject.GetComponent<RBF.RBFTrainingPointAttachment>();
 				if(m_selectedTrainingPoint != null){
-					m_selectedTrainingPoint.RemoveDragSource();
+					m_selectedTrainingPoint.SetInactive();
 					m_selectedTrainingPoint.rbfOwner.owner.UpdateRBF();
 				}
 			}
@@ -162,7 +162,7 @@ public class PhysGrabberTool : BaseTool {
 							m_heldObject = closestObject;
 							m_heldType = InteractableTypes.RBFPOINT;
 							RBFTrainingPointAttachment m_selectedTrainingPoint = m_heldObject.GetComponent<RBFTrainingPointAttachment>();
-							m_selectedTrainingPoint.SetDragSource(transform);
+							m_selectedTrainingPoint.SetActive(transform);
 							m_toolHandState = BaseTool.HandState.HOLDING;
 						}
 					}

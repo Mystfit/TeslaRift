@@ -10,6 +10,7 @@ public class ParamSliderPanelAttachment : BaseAttachment {
 
 	//Owner
 	protected MusicControllerAttachment m_owner;
+	public MusicControllerAttachment owner{ get { return m_owner; }}
 
 	//UI spacing
 	public float m_clipRowSize = 1.0f;
@@ -19,6 +20,9 @@ public class ParamSliderPanelAttachment : BaseAttachment {
 	//Sliders
 	protected List<SliderAttachment> m_sliders;
 	protected BufferFrame m_frame;
+	public delegate void SliderUpdateEvent();
+	public event SliderUpdateEvent SliderUpdate;
+
 
 	// Use this for initialization
 	void Start () {
@@ -89,7 +93,8 @@ public class ParamSliderPanelAttachment : BaseAttachment {
 		SliderAttachment sliderAttach = sliderObj.GetComponent<SliderAttachment>();
 		BufferFrame frame = sliderObj.GetComponent<BufferFrame>();
 		frame.SetAnchor(BufferFrame.AnchorLocation.TOP_LEFT);
-		sliderAttach.Init( (param ));
+		sliderAttach.Init( param );
+		sliderAttach.SetOwner(this);
 		m_sliders.Add(sliderAttach);
 			
 		SortBufferItems();
@@ -112,5 +117,18 @@ public class ParamSliderPanelAttachment : BaseAttachment {
 		}
 		
 		m_frame.AnimateSize(m_sliders.Count * m_clipColumnSize , m_clipRowSize );
+	}
+
+	/*
+	 * Sets the slider values from a list of values
+	 */
+	public void SetSliderValues(Dictionary<BaseInstrumentParam,float> paramList){
+		foreach(KeyValuePair<BaseInstrumentParam,float> pair in paramList){
+			m_sliders.Find(p => p.musicRef == pair.Key).SetSliderValue(pair.Value);
+		}
+	}
+
+	public void SlidersUpdated(){
+		SliderUpdate();
 	}
 }

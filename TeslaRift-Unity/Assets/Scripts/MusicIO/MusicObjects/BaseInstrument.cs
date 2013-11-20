@@ -161,7 +161,7 @@ namespace MusicIO
 						if(param.deviceName != "")
 							paramName = param.deviceName + "/" + param.name;
 						
-						addMessageToQueue(paramName, param.scaledVal);
+						addMessageToQueue(paramName, param.val);
 					}
 						
 					param.setClean();

@@ -44,7 +44,7 @@ namespace MusicIO
 		public void setDeviceName(string name){m_deviceName = name; }
 		public BaseInstrument owner{ get { return m_owner; } }
 		public float val { get { return m_fValue; }	}
-		public float scaledVal{ get { return Utils.Normalize(m_fValue, m_valMin, m_valMax); }}
+		public float scaledVal{ get { return Utils.Remap(m_fValue, 0.0f, 1.0f, m_valMin, m_valMax); }}
 		public virtual void setVal(float value){ 
 			m_isDirty = true;
 			m_fValue = value; 

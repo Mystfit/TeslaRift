@@ -135,8 +135,9 @@ namespace RBF{
 			//Only accepts the same number of input values as the RBF will take
 			if(inputDimValues.Length != m_numInputDimensions)
 				throw new ArgumentOutOfRangeException();
-			
+
 			double[] outputValues = new double[m_numOutputDimensions];
+
 			Matrix A = new Matrix( 1, m_trainingPoints.Count);
 			
 			for(int outputIndex = 0; outputIndex < m_numOutputDimensions; outputIndex++){
@@ -191,6 +192,11 @@ namespace RBF{
 			if(m_trainingPoints.Count > 0)
 				calculateWeights();
 		}
+
+		/*
+		 * Reference to training point list
+		 */
+		public List<RBFTraining> trainingPoints{ get { return m_trainingPoints; }}
 	}
 	
 	

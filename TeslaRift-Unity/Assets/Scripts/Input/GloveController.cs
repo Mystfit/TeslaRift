@@ -85,7 +85,7 @@ public class GloveController : MonoBehaviour {
 			switch(m_calibrationState){
 			
 			case CalibrationState.AWAITING_CALIBRATION:
-				if( Convert.ToBoolean( m_arduino.digitalRead(m_bendCalibratePin ) ) ){
+				if( Convert.ToBoolean( m_arduino.digitalRead(m_bendCalibratePin ) ) || Input.GetKeyDown(KeyCode.RightArrow) ){
 					m_calibrationState = CalibrationState.CALIBRATING;
 				}
 				break;

@@ -27,7 +27,7 @@ namespace RBF{
 		/*
 		 * Init
 		 */
-		void Start(){
+		void Awake(){
 			m_pointState = UIState.STATIONARY;
 			m_paramValues = new Dictionary<BaseInstrumentParam, float>();
 		}
@@ -37,9 +37,6 @@ namespace RBF{
 				MoveRelativeToContainer(m_dragSource);
 		}
 
-		public void Init(RBFControlAttachment owner){
-			m_rbfOwner = owner;
-		}
 		
 		/*
 		 * Sets the input dimension values for this RBF training point
@@ -52,18 +49,21 @@ namespace RBF{
 		/*
 		 * Sets the target transform for this point to follow
 		 */
-		public void SetDragSource(Transform source){
+		public void SetActive(Transform source){
 			m_pointState = UIState.DRAGGING;
 			m_dragSource = source;
+			m_rbfOwner.SetActiveTrainingPoint(this);
+			m_rbfOwner.owner.UpdateSlidersFromTrainingPoint(this);
 		}
 
 
 		/* 
 		 * Removes the target drag source for this point
 		 */
-		public void RemoveDragSource(){
+		public void SetInactive(){
 			m_pointState = UIState.STATIONARY;
 			m_dragSource = null;
+			//m_rbfOwner.SetActiveTrainingPoint(null);
 		}
 
 
@@ -81,8 +81,8 @@ namespace RBF{
 		 * Getters for normalized position of training point inside controlling panel
 		 */
 
-		public float xNormalized {get { return Utils.Normalize(transform.localPosition.x, m_containerWidth*-0.5f, m_containerWidth*0.5f); }}
-		public float yNormalized {get { return Utils.Normalize(transform.localPosition.y, m_containerHeight*-0.5f, m_containerHeight*0.5f); }}
+		public float xNormalized {get { return Utils.Scale(transform.localPosition.x, m_containerWidth*-0.5f, m_containerWidth*0.5f); }}
+		public float yNormalized {get { return Utils.Scale(transform.localPosition.y, m_containerHeight*-0.5f, m_containerHeight*0.5f); }}
 		public float twist {get { return twistVal; }}
 		public RBFControlAttachment rbfOwner{ get { return m_rbfOwner; }}
 		
@@ -90,11 +90,12 @@ namespace RBF{
 		/*
 		 * Sets the controlling container for this RBF point.
 		 */
-		public void SetParentContainer(Transform parent, float width, float height){
-			transform.position = parent.position;
-			transform.rotation = parent.rotation;
-			transform.parent = parent;
-			m_parentContainer = parent;
+		public void SetParentContainer(RBFControlAttachment parent, float width, float height){
+			transform.position = parent.transform.position;
+			transform.rotation = parent.transform.rotation;
+			transform.parent = parent.transform;
+			m_parentContainer = parent.transform;
+			m_rbfOwner = parent;
 			m_containerWidth = width;
 			m_containerHeight = height;
 		}
@@ -105,35 +106,22 @@ namespace RBF{
 		 */
 		public void MoveRelativeToContainer(Transform worldPos){
 
-			//Offset the position by the source's collider (if present)
-			Vector3 worldOffset = worldPos.position;
-			if(worldPos.collider != null){
-				if( worldPos.collider.GetType() == typeof(CapsuleCollider) ){
-					CapsuleCollider coll = worldPos.collider as CapsuleCollider;
-					worldOffset = coll.bounds.center;
-				}
-			}
-
-			Vector3 pos = m_parentContainer.transform.InverseTransformPoint(worldOffset);
+			Vector3 pos = BaseTool.HandToObjectSpace(worldPos, m_parentContainer.transform);
 			transform.localPosition = new Vector3(
 				Mathf.Clamp(pos.x, m_containerWidth*-0.5f, m_containerHeight*0.5f ), 
 				Mathf.Clamp(pos.y, m_containerWidth*-0.5f, m_containerHeight*0.5f ), 0.0f
 			);		
 		}
-		
-		
+
+
 		/*
-		 * Assigns a list of parameters to this training point
+		 * Adds and sets the parameter values for this training point
 		 */
-		public void AddParameters(List<BaseInstrumentParam> paramList, float[] existingValues){
-			
+		public void SetParameters(List<BaseInstrumentParam> paramList){
 			m_paramValues.Clear();
-			
-			if(existingValues.Length != paramList.Count)
-				throw new IndexOutOfRangeException();
-			
-			for(int i = 0; i < paramList.Count; i++)
-				m_paramValues[paramList[i]] = existingValues[i];				
+			foreach(BaseInstrumentParam param in paramList){
+				m_paramValues[param] = param.val;	
+			}
 		}
 		
 		
