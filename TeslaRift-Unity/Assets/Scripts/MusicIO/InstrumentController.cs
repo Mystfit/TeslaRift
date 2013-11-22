@@ -16,8 +16,8 @@ public class InstrumentController : MonoBehaviour {
 	protected GameObject m_lastSelectedGameInstrument = null;
 	
 	//Buffer references
-	protected List<BufferAttachment> m_buffers;
-	protected ParamSliderPanelAttachment m_paramPanel;
+	protected List<ClipBufferAttachment> m_buffers;
+	protected MusicControllerAttachment m_selectedMusicController;
 	
 	//Prefix source name in front of OSC messages
 	private string m_sourceName;
@@ -33,7 +33,7 @@ public class InstrumentController : MonoBehaviour {
 	void Awake () {
 		m_instruments = new List<BaseInstrument>();
 		m_instrumentGameObjs = new List<GameObject>();
-		m_buffers = new List<BufferAttachment>();
+		m_buffers = new List<ClipBufferAttachment>();
 		m_instance = this;
 	}
 	
@@ -83,24 +83,28 @@ public class InstrumentController : MonoBehaviour {
 	/*
 	 * Adds a new buffer
 	 */
-	public void AddBuffer(BufferAttachment buffer){
+	public void AddBuffer(ClipBufferAttachment buffer){
 		m_buffers.Add(buffer);
 	}
 	
 	public void AddToActivePanel(BaseInstrumentParam param){
-		if(m_paramPanel != null){
-			m_paramPanel.CreateSlider( param );
+		if(m_selectedMusicController != null){
+			if( param.GetType() == typeof(InstrumentClip)){
+				m_selectedMusicController.clipBuffer.AddMusicObjectToBuffer ( (InstrumentClip) param );
+			} else if( param.GetType() == typeof(InstrumentClip) ){
+				m_selectedMusicController.paramControls.CreateSlider( (GenericMusicParam) param );
+			}
+
+
+
 		}
 	}
 
 	/*
 	 * Selects a buffer
 	 */
-	public void SelectBuffer(ParamSliderPanelAttachment panel){
-		if(m_paramPanel != null)
-			m_paramPanel.SetSelected(false);
-		m_paramPanel = panel;
-		m_paramPanel.SetSelected(true);
+	public void SelectMusicController(MusicControllerAttachment musicControl){
+		m_selectedMusicController = musicControl;
 	}
 
 	//Instrument selection

@@ -26,7 +26,6 @@ public class ParamSliderPanelAttachment : BaseAttachment {
 
 	// Use this for initialization
 	void Start () {
-		InstrumentController.Instance.SelectBuffer(this);
 		m_sliders = new List<SliderAttachment>();
 		m_frame = GetComponent<BufferFrame>();
 	}

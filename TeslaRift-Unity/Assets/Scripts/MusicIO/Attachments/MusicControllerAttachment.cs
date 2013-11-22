@@ -14,7 +14,7 @@ public class MusicControllerAttachment : MonoBehaviour {
 	public ControlState controlState{ get { return m_controlState; }}
 	public bool toggleControlState;
 
-	public BufferAttachment m_clipBuffer;
+	public ClipBufferAttachment m_clipBuffer;
 	public ParamSliderPanelAttachment m_paramControls;
 	public RBFControlAttachment m_rbfPanel;
 
@@ -23,6 +23,8 @@ public class MusicControllerAttachment : MonoBehaviour {
 		m_clipBuffer.Init(this);
 		m_paramControls.Init(this);
 		m_rbfPanel.Init(this);
+
+		InstrumentController.Instance.SelectMusicController(this);
 
 		//Event listener delegate for updating training points with slider values upon change
 		m_paramControls.SliderUpdate += OnSlidersUpdated;
@@ -107,7 +109,7 @@ public class MusicControllerAttachment : MonoBehaviour {
 	/*
 	 * Getters
 	 */
-	public BufferAttachment clipBuffer { get { return m_clipBuffer; }}
+	public ClipBufferAttachment clipBuffer { get { return m_clipBuffer; }}
 	public ParamSliderPanelAttachment paramControls{ get { return m_paramControls; }}
 	public RBFControlAttachment rbfPanel{ get { return m_rbfPanel; }}
 

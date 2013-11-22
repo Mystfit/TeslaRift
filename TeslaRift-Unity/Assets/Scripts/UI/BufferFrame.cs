@@ -454,6 +454,57 @@ public class BufferFrame : MonoBehaviour {
 		m_anchorPoint = anchor;
 		toggleUpdate = true;
 	}
+
+
+
+
+	/*
+	 * Updates the clips/params loaded into this buffer
+	 */
+	public void SortBufferItems(){
+		/*
+		for(int i = 0; i < GetActiveAttachList().Count; i++){
+			Vector3 local = GetRowLocalCoordinates(i, GetActiveAttachList());
+			BaseAttachment attach = GetActiveAttachList()[i];
+			iTween.MoveTo(attach.gameObject, iTween.Hash(
+				"position", GetRowLocalCoordinates(i, GetActiveAttachList()),
+				"time", 0.2f,
+				"islocal", true
+				));
+		}
+		
+		m_frame.AnimateSize(m_frame.width, GetActiveAttachList().Count * (m_clipBufferEdges + m_clipRowSize) - (m_clipBufferEdges + m_clipRowSize) );
+		*/
+	}
+
+	/*
+	 * Gets the current world coordinates of a row by index
+	 *
+	public Vector3 GetRowWorldCoordinates(int index){
+		return  new Vector3(transform.position.x, transform.position.y + index*m_clipRowSize +m_clipBufferEdges, transform.position.z);
+	}
+	
+	/*
+	 * Gets the current world coordinates of a column by index
+	 *
+	public Vector3 GetColumnWorldCoordinates(int index){
+		return  new Vector3(transform.position.x + index*m_clipColumnSize + m_clipBufferEdges, transform.position.y, transform.position.z);
+	}
+	
+	/*
+	 * Gets the current coordinates of a row by index
+	 *
+	public Vector3 GetRowLocalCoordinates(int index, List<BaseAttachment> attachList){
+		return  new Vector3(0.0f, (((m_clipRowSize+m_clipBufferEdges)*attachList.Count)*0.5f) - ((attachList.Count - index)* (m_clipRowSize + m_clipBufferEdges)), 0.0f);
+	}
+	
+	/*
+	 * Gets the current coordinates of a column by index
+	 *
+	public Vector3 GetColumnLocalCoordinates(int index, List<BaseAttachment> attachList){
+		return  new Vector3((index*m_clipColumnSize +m_clipBufferEdges) - ((m_clipColumnSize+m_clipBufferEdges)*attachList.Count)*0.5f, 0.0f, 0.0f);
+	}
+	*/
 	
 	
 	//Getters
