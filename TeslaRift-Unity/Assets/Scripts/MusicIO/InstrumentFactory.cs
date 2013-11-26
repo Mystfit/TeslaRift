@@ -195,7 +195,6 @@ public class InstrumentFactory : MonoBehaviour {
 		panelLayer.transform.position = parentObj.transform.position;
 		panelLayer.transform.rotation = parentObj.transform.rotation;
 		panelLayer.transform.parent = parentObj.transform;
-		//panelLayer.transform.position += new Vector3(0.0f, 0.0f, );
 		panelLayer.SetActive(false);
 		
 		return panelLayer;
@@ -241,82 +240,82 @@ public class InstrumentFactory : MonoBehaviour {
 			c = new Vector3(-radius, radius ,0.0f);
 			d = new Vector3(radius, radius ,0.0f);
 		}
-		
-			vertices[0] = a;
-			vertices[1] = b;
-			vertices[2] = c + lowEdge;
-			vertices[3] = d + lowEdge;
-			vertices[4] = a + depth;
-			vertices[5] = b + depth;
-			vertices[6] = c + depth + lowEdge;
-			vertices[7] = d + depth + lowEdge;
 
-			normals[0] = -Vector3.forward;
-			normals[1] = -Vector3.forward;
-			normals[2] = -Vector3.forward;
-			normals[3] = -Vector3.forward;
-			normals[4] = -Vector3.forward;
-			normals[5] = -Vector3.forward;
-			normals[6] = -Vector3.forward;
-			normals[7] = -Vector3.forward;
+		//Hardcoded vertices
+		vertices[0] = a;
+		vertices[1] = b;
+		vertices[2] = c + lowEdge;
+		vertices[3] = d + lowEdge;
+		vertices[4] = a + depth;
+		vertices[5] = b + depth;
+		vertices[6] = c + depth + lowEdge;
+		vertices[7] = d + depth + lowEdge;
 
-			uvs[0] = new Vector2(0,0);
-			uvs[1] = new Vector2(0,1); 
-			uvs[2] = new Vector2(1,0);
-			uvs[3] = new Vector2(1,1);
-			uvs[4] = uvs[1];
-			uvs[5] = uvs[2];
-			uvs[6] = uvs[2];
-			uvs[7] = uvs[3];
-			
-			//Front
-			indices[0] = 0;
-			indices[1] = 2;
-			indices[2] = 1;
-			indices[3] = 2;
-			indices[4] = 3;
-			indices[5] = 1;
-			
-			//Back
-			indices[6] = 4;
-			indices[7] = 5;
-			indices[8] = 6;
-			indices[9] = 6;
-			indices[10] = 5;
-			indices[11] = 7;
-			
-			//Top
-			indices[12] = 1;
-			indices[13] = 5;
-			indices[14] = 0;
-			indices[15] = 5;
-			indices[16] = 4;
-			indices[17] = 0;
-			
-			//Right
-			indices[18] = 3;
-			indices[19] = 7;
-			indices[20] = 1;
-			indices[21] = 7;
-			indices[22] = 5;
-			indices[23] = 1;
-			
-			//Bottom
-			indices[24] = 2;
-			indices[25] = 6;
-			indices[26] = 3;
-			indices[27] = 6;
-			indices[28] = 7;
-			indices[29] = 3;
-			
-			//Left
-			indices[30] = 0;
-			indices[31] = 4;
-			indices[32] = 2;
-			indices[33] = 4;
-			indices[34] = 6;
-			indices[35] = 2;	
+		normals[0] = -Vector3.forward;
+		normals[1] = -Vector3.forward;
+		normals[2] = -Vector3.forward;
+		normals[3] = -Vector3.forward;
+		normals[4] = -Vector3.forward;
+		normals[5] = -Vector3.forward;
+		normals[6] = -Vector3.forward;
+		normals[7] = -Vector3.forward;
+
+		uvs[0] = new Vector2(0,0);
+		uvs[1] = new Vector2(0,1); 
+		uvs[2] = new Vector2(1,0);
+		uvs[3] = new Vector2(1,1);
+		uvs[4] = uvs[1];
+		uvs[5] = uvs[2];
+		uvs[6] = uvs[2];
+		uvs[7] = uvs[3];
 		
+		//Front
+		indices[0] = 0;
+		indices[1] = 2;
+		indices[2] = 1;
+		indices[3] = 2;
+		indices[4] = 3;
+		indices[5] = 1;
+		
+		//Back
+		indices[6] = 4;
+		indices[7] = 5;
+		indices[8] = 6;
+		indices[9] = 6;
+		indices[10] = 5;
+		indices[11] = 7;
+		
+		//Top
+		indices[12] = 1;
+		indices[13] = 5;
+		indices[14] = 0;
+		indices[15] = 5;
+		indices[16] = 4;
+		indices[17] = 0;
+		
+		//Right
+		indices[18] = 3;
+		indices[19] = 7;
+		indices[20] = 1;
+		indices[21] = 7;
+		indices[22] = 5;
+		indices[23] = 1;
+		
+		//Bottom
+		indices[24] = 2;
+		indices[25] = 6;
+		indices[26] = 3;
+		indices[27] = 6;
+		indices[28] = 7;
+		indices[29] = 3;
+		
+		//Left
+		indices[30] = 0;
+		indices[31] = 4;
+		indices[32] = 2;
+		indices[33] = 4;
+		indices[34] = 6;
+		indices[35] = 2;	
 		
 		layerMesh.vertices = vertices;
 		layerMesh.normals = normals;

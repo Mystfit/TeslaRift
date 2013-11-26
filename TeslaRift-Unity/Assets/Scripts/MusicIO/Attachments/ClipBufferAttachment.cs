@@ -1,55 +1,23 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using MusicIO;
 
 public class ClipBufferAttachment : BaseAttachment {
-	
-	/*
-	 * Flags specifying direction to expand frame in
-	 */
-	protected enum ExpandDirection{
-		UP = 0,
-		DOWN,
-		LEFT,
-		RIGHT
-	}
-	protected ExpandDirection m_expandDirection;
-	
-	
-	/*
-	 * Flags specifying display state of buffer
-	 */
-	public enum BufferDisplayMode{
-		SHOWING_CLIPS = 0,
-		TRANSITIONING_TO_PARAMS,
-		SHOWING_PARAMS,
-		TRANSITIONING_TO_CLIPS
-	}
-	public BufferDisplayMode m_displayMode;
-	
-	
-	/*
-	 * Clip visual parameters
-	 */
-	public float m_clipRowSize = 1.0f;
-	public float m_clipColumnSize = 1.0f;
-	public float m_clipBufferEdges = 0.05f;
-
-	/*
-	 * Prefabs
-	 */
-	public GameObject sliderPrefab;
 
 	protected MusicControllerAttachment m_owner;
 	
 	/*
 	 * Attached gameobjects
 	 */
-	List<InstrumentClip> m_attachedClips;
-	private BufferFrame m_frame;
+	List<ClipButtonAttachment> m_attachedClips;
+	private UIFrame m_frame;
 	Transform m_clipHolder;
-	Transform m_paramHolder;
+
+	//UI spacing
+	public float m_clipRowSize = 1.0f;
+	public float m_clipColumnSize = 1.0f;
+	public float m_clipBufferEdges = 0.05f;
 
 	
 	/*
@@ -59,8 +27,8 @@ public class ClipBufferAttachment : BaseAttachment {
 		//Add the buffer to the instrument controller
 		InstrumentController.Instance.AddBuffer(this);
 		
-		m_attachedClips = new List<InstrumentClip>();
-		m_frame = GetComponent<BufferFrame>();
+		m_attachedClips = new List<ClipButtonAttachment>();
+		m_frame = GetComponent<UIFrame>();
 		
 		m_clipHolder = new GameObject("clipHolder").transform;
 		m_clipHolder.transform.position = transform.position;
@@ -90,14 +58,84 @@ public class ClipBufferAttachment : BaseAttachment {
 	/*
 	 * Adds a music object to the buffer. Seperates clips and parameters automatically.
 	 */
-	public void AddMusicObjectToBuffer(InstrumentClip clip){							
+	public void AddClipToBuffer(InstrumentClip clip){							
+
+		/*
 		if(IsInstrumentInBuffer(clip.owner)){
 			RemoveInstrumentFromBuffer(clip.owner);
 		}
 
+		if(m_attachedClips == null)
+			m_attachedClips = new List<ClipButtonAttachment>();
 		m_attachedClips.Add(clip);
 
 		m_frame.SortBufferItems ();
+
+		*/
+
+		//Only have one slider per param
+		foreach(ClipButtonAttachment clipButton in m_attachedClips){
+			if(clipButton.musicRef == clip)
+				return;
+		}
+		
+		ClipButtonAttachment buttonObj = UI.UIFactory.CreateClipButton(clip, UIFrame.AnchorLocation.TOP_RIGHT, this);
+		buttonObj.transform.position = transform.position;
+		buttonObj.transform.rotation = transform.rotation;
+		buttonObj.transform.parent = transform;
+
+		m_attachedClips.Add(buttonObj);
+		
+		SortBufferItems();
+	}
+
+
+
+
+	/* Refactor task:
+	 * 
+	 * MOVE INTO DEDICATED UI ROOT
+	 *
+	 */
+
+	public void SortBufferItems(){
+		for(int i = 0; i < m_attachedClips.Count; i++){
+			Vector3 local = GetColumnLocalCoordinates(i);
+			local += new Vector3(0.0f, 0.0f -0.0001f);
+			ClipButtonAttachment attach = m_attachedClips[i];
+			iTween.MoveTo(attach.gameObject, iTween.Hash(
+				"position", local,
+				"time", 0.2f,
+				"islocal", true
+				));
+		}
+		
+		m_frame.AnimateSize(m_clipRowSize, m_attachedClips.Count * m_clipColumnSize  );
+	}
+
+
+	/*
+	 * Gets the current coordinates of a column by index
+	 */
+	public Vector3 GetColumnLocalCoordinates(int index){
+		float edge = (index == 0) ? 0.0f : 0.0f;
+		return  new Vector3((index*m_clipColumnSize + edge), 0.0f, 0.0f);
+	}
+
+	/*
+	 * Gets the current coordinates of a row by index
+	 */
+	public Vector3 GetRowLocalCoordinates(int index){
+		float edge = (index == 0) ? 0.0f : 0.0f;
+		return  new Vector3(0.0f, (index*m_clipColumnSize + edge), 0.0f);
+	}
+	
+	
+	/*
+	 * Gets the current world coordinates of a column by index
+	 */
+	public Vector3 GetColumnWorldCoordinates(int index){
+		return  new Vector3(transform.position.x + index*m_clipColumnSize + m_clipBufferEdges, transform.position.y, transform.position.z);
 	}
 
 
@@ -108,47 +146,41 @@ public class ClipBufferAttachment : BaseAttachment {
 	 * Used to make sure only one clip per instrument is present in a buffer
 	 */
 	public bool IsInstrumentInBuffer(BaseInstrument instrument){
-		foreach(InstrumentClip clip in m_attachedClips){
-			if(clip.owner == instrument){
-				return true;
+		if(m_attachedClips != null){
+			foreach(ClipButtonAttachment clip in m_attachedClips){
+				if(clip.musicRef.owner == instrument){
+					return true;
+				}
 			}
 		}
 		return false;
 	}
-	
-	
-	/*
-	 * Removes a gameobject from the buffer
-	 */
-	public void RemoveInstrumentFromBuffer(BaseInstrument instrument){
-		
-		List<InstrumentClip> removeList = null;
 
-		for(int i = 0; i < m_attachedClips.Count; i++){
-			InstrumentClip clip = m_attachedClips[i] as InstrumentClip;
-			
-			if(clip.owner == instrument){
-				if(removeList == null)
-					removeList = new List<InstrumentClip>();
+	public void ToggleActivateClip(ClipButtonAttachment clipButton){
+	
+	}
 
-				m_attachedClips.Remove(clip);
+	public void PlayAllQueuedClips(){
+		foreach(ClipButtonAttachment clipButton in m_attachedClips){
+			if(clipButton.clipState == ClipButtonAttachment.ClipState.IS_QUEUED)
+				clipButton.SetPlayState(ClipButtonAttachment.ClipState.IS_PLAYING);
+		}
+	}
+
+
+	public void PlayClip(ClipButtonAttachment clipButton, bool queued){
+		//Toggle off all existing clips
+		foreach(ClipButtonAttachment existingClip in m_attachedClips){
+			if(existingClip.musicRef.owner == clipButton.musicRef.owner && existingClip != clipButton){
+				if(existingClip.clipState == ClipButtonAttachment.ClipState.IS_PLAYING){
+					existingClip.SetPlayState(ClipButtonAttachment.ClipState.IS_DISABLED);
+				}
 			}
 		}
-	}
 
-
-	/*
-	 * Triggers all clips in buffer
-	 */
-	public void TriggerAllClips(){
-		foreach(InstrumentClip clip in m_attachedClips){
-			clip.Play();
-		}
-	}
-
-	
-	public override void Gesture_PushIn ()
-	{
-		TriggerAllClips();
+		if(queued)
+			clipButton.SetPlayState(ClipButtonAttachment.ClipState.IS_QUEUED);
+		else
+			clipButton.SetPlayState(ClipButtonAttachment.ClipState.IS_PLAYING);
 	}
 }

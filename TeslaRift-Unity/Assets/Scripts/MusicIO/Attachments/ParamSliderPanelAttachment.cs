@@ -5,9 +5,6 @@ using System.Collections.Generic;
 
 public class ParamSliderPanelAttachment : BaseAttachment {
 
-	//Prefabs
-	public GameObject sliderPrefab;
-
 	//Owner
 	protected MusicControllerAttachment m_owner;
 	public MusicControllerAttachment owner{ get { return m_owner; }}
@@ -19,7 +16,7 @@ public class ParamSliderPanelAttachment : BaseAttachment {
 
 	//Sliders
 	protected List<SliderAttachment> m_sliders;
-	protected BufferFrame m_frame;
+	protected UIFrame m_frame;
 	public delegate void SliderUpdateEvent();
 	public event SliderUpdateEvent SliderUpdate;
 
@@ -27,7 +24,7 @@ public class ParamSliderPanelAttachment : BaseAttachment {
 	// Use this for initialization
 	void Start () {
 		m_sliders = new List<SliderAttachment>();
-		m_frame = GetComponent<BufferFrame>();
+		m_frame = GetComponent<UIFrame>();
 	}
 	
 	// Update is called once per frame
@@ -85,15 +82,10 @@ public class ParamSliderPanelAttachment : BaseAttachment {
 				return;
 		}
 
-		GameObject sliderObj = Instantiate(sliderPrefab) as GameObject;
-		sliderObj.transform.position = transform.position;
-		sliderObj.transform.rotation = transform.rotation;
-		sliderObj.transform.parent = transform;
-		SliderAttachment sliderAttach = sliderObj.GetComponent<SliderAttachment>();
-		BufferFrame frame = sliderObj.GetComponent<BufferFrame>();
-		frame.SetAnchor(BufferFrame.AnchorLocation.TOP_LEFT);
-		sliderAttach.Init( param );
-		sliderAttach.SetOwner(this);
+		SliderAttachment sliderAttach = UI.UIFactory.CreateSlider(param, UIFrame.AnchorLocation.TOP_LEFT, this);
+		sliderAttach.transform.position = transform.position;
+		sliderAttach.transform.rotation = transform.rotation;
+		sliderAttach.transform.parent = transform;
 		m_sliders.Add(sliderAttach);
 			
 		SortBufferItems();

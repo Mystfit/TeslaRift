@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+using UnityEngine;
 using MusicIO;
 using System.Collections;
 
 public class BarSlider : MonoBehaviour {
 
 	protected GameObject m_fill;
-	protected BufferFrame m_frame;
+	protected UIFrame m_frame;
 	protected bool bIsActive;
 
 	[Range(0.0f, 1.0f)]
@@ -13,7 +13,7 @@ public class BarSlider : MonoBehaviour {
 
 	void Start () {
 		m_fill = transform.FindChild("sliderFill").gameObject;
-		m_frame = GetComponent<BufferFrame>();
+		m_frame = GetComponent<UIFrame>();
 	}
 	
 	void Update () {

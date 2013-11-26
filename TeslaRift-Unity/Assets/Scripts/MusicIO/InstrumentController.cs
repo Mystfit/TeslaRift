@@ -90,13 +90,10 @@ public class InstrumentController : MonoBehaviour {
 	public void AddToActivePanel(BaseInstrumentParam param){
 		if(m_selectedMusicController != null){
 			if( param.GetType() == typeof(InstrumentClip)){
-				m_selectedMusicController.clipBuffer.AddMusicObjectToBuffer ( (InstrumentClip) param );
-			} else if( param.GetType() == typeof(InstrumentClip) ){
+				m_selectedMusicController.clipBuffer.AddClipToBuffer ( (InstrumentClip) param );
+			} else if( param.GetType() == typeof(GenericMusicParam) ){
 				m_selectedMusicController.paramControls.CreateSlider( (GenericMusicParam) param );
 			}
-
-
-
 		}
 	}
 

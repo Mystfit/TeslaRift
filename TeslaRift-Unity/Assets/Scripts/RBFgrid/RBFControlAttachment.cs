@@ -10,7 +10,6 @@ public class RBFControlAttachment : BaseAttachment {
 	MusicControllerAttachment m_owner;
 
 	//Training points
-	public GameObject m_trainingPointPrefab;
 	protected List<RBF.RBFTrainingPointAttachment> m_trainingPoints;
 	RBFTrainingPointAttachment m_selectedTraining;
 
@@ -19,14 +18,14 @@ public class RBFControlAttachment : BaseAttachment {
 	public float m_sigma = 2;
 
 	//UI
-	protected BufferFrame m_frame;
+	protected UIFrame m_frame;
 	
 	//Dragging target and source
 	protected RBF.RBFTrainingPointAttachment m_dragTarget;
 	protected Transform m_dragSource;
 
 	void Start () {
-		m_frame = GetComponent<BufferFrame>();
+		m_frame = GetComponent<UIFrame>();
 		m_trainingPoints = new List<RBFTrainingPointAttachment>();
 		m_rbf = new RBFCore(1,1);
 		m_rbf.setSigma(m_sigma);
@@ -46,8 +45,7 @@ public class RBFControlAttachment : BaseAttachment {
 	 * Creates a new training point prefab on the panel
 	 */
 	public RBFTrainingPointAttachment CreateTrainingPoint(Transform position){
-		GameObject  trainingObj = Instantiate(m_trainingPointPrefab) as GameObject;
-		RBFTrainingPointAttachment training = trainingObj.GetComponent<RBFTrainingPointAttachment>();
+		RBFTrainingPointAttachment training = UI.UIFactory.CreateRBFTraining();
 		training.SetParentContainer(this, m_frame.width, m_frame.height);
 		training.MoveRelativeToContainer(position);
 		m_trainingPoints.Add(training);

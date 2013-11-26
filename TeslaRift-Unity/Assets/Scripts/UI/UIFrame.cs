@@ -1,8 +1,8 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class BufferFrame : MonoBehaviour {
+public class UIFrame : MonoBehaviour {
 	
 	/*
 	 * Frame objects

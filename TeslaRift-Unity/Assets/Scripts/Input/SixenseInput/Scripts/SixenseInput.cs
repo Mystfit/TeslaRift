@@ -47,8 +47,6 @@ public enum SixenseButtons
 /// </remarks>
 public class SixenseInput : MonoBehaviour
 {	
-	protected GloveController m_leftArduino;
-	
 	/// <summary>
 	/// Controller objects provide access to Sixense controllers data.
 	/// </summary>
@@ -252,15 +250,29 @@ public class SixenseInput : MonoBehaviour
 	/// <summary>
 	/// Initialize the sixense driver and allocate the controllers.
 	/// </summary>
-	void Start()
+	void Awake()
 	{
 		SixensePlugin.sixenseInit();
+
+
+		float nearRange = new int();
+		float nearVal = new int();
+		float farRange = new int();
+		float farVal = new int();
+		SixensePlugin.sixenseGetFilterParams(ref nearRange, ref nearVal, ref farRange, ref farVal);
+		Debug.Log (nearRange + " " + nearVal + " " + farRange + " " + farVal);
+
+
 		for ( int i = 0; i < MAX_CONTROLLERS; i++ )
 		{
 			m_Controllers[i] = new Controller();
 		}
-		
-		m_leftArduino = this.GetComponent<GloveController>();
+
+		RebindHands();
+	}
+
+	void Quit(){
+		SixensePlugin.sixenseExit();
 	}
 	
 	/// <summary>
@@ -332,12 +344,14 @@ public class SixenseInput : MonoBehaviour
 					}
 					else
 					{
+						//RebindHands();
 						for ( int i = 0; i < MAX_CONTROLLERS; i++ )
 						{
-							if ( ( m_Controllers[i] != null ) && Controllers[i].GetButtonDown( SixenseButtons.START ) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) )
-							{
-								//Hardcoded binding redirct
-								RebindHands();
+							
+							if ( ( m_Controllers[i] != null ) && Input.GetKeyDown(KeyCode.P) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) ){
+						//	if ( ( m_Controllers[i] != null ) && Controllers[i].GetButtonDown( SixenseButtons.START ) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) ){
+						//		//Hardcoded binding redirct
+						//		RebindHands();
 							}
 						}
 					}

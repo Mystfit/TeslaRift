@@ -1,18 +1,18 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using MusicIO;
 
 public class SliderAttachment : BaseAttachment<BaseInstrumentParam> {
 
 	protected BarSlider m_slider;
-	protected BufferFrame m_frame;
+	protected UIFrame m_frame;
 	protected ParamSliderPanelAttachment m_owner;
 	public ParamSliderPanelAttachment owner{ get { return m_owner; }}
 
 	// Use this for initialization
 	void Start () {
 		m_slider = GetComponent<BarSlider>();
-		m_frame = GetComponent<BufferFrame>();
+		m_frame = GetComponent<UIFrame>();
 	}
 	
 	// Update is called once per frame

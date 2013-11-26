@@ -192,24 +192,27 @@ public class HydraController : MonoBehaviour {
 	 * Sets tools for specifically th right controler (currently the only one being used. Will be changed)
 	 */
 	public void SetIndividualToolsRight(BaseTool.ToolHand hand){
-		if(m_rightHandController != null)
-		{	
+		//if(m_rightHandController != null)
+		//{	
 			//Hand calibration
 			//----------------
-			if(m_rightHandController.GetButton( SixenseButtons.START )){
+			if(Input.GetKeyDown(KeyCode.P)){
+			//if(m_rightHandController.GetButton( SixenseButtons.START ) || Input.GetKeyDown(KeyCode.P)){
+				//GetComponent<SixenseInput>().RebindHands();
 				m_leftHand.GetComponent<HydraHand>().SetEnabled(false);
 				m_rightHand.GetComponent<HydraHand>().SetEnabled(false);
 			}
 			
-			if ( m_rightHandController.GetButtonUp( SixenseButtons.START )){
+			if(Input.GetKeyUp(KeyCode.P)){
+			//if ( m_rightHandController.GetButtonUp( SixenseButtons.START ) || Input.GetKeyUp(KeyCode.P)){
 				m_leftHand.GetComponent<HydraHand>().ActivateHand(m_leftHandController);
 				m_rightHand.GetComponent<HydraHand>().ActivateHand(m_rightHandController);
 			} 
 			
-			else if(m_rightHandController.GetButton(SixenseButtons.START) && m_rightHandController.GetButtonUp(SixenseButtons.BUMPER)){
+			/*else if(m_rightHandController.GetButton(SixenseButtons.START) && m_rightHandController.GetButtonUp(SixenseButtons.BUMPER)){
 				gameObject.GetComponent<SixenseInput>().RebindHands();
-			} 
-		}
+			} */
+		//}
 	}
 	
 	
