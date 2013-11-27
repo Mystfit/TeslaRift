@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using MusicIO;
+using UI;
 using System.Collections;
 
-public class ClipButtonAttachment : BaseAttachment<InstrumentClip> {
+public class ClipButtonAttachment : UIAttachment<InstrumentClip> {
 
 	protected UIFrame m_frame;
+	public UIFrame frame { get { return m_frame; }}
+
 	public enum ClipState {
 		IS_DISABLED = 0,
 		IS_QUEUED,
@@ -30,9 +33,9 @@ public class ClipButtonAttachment : BaseAttachment<InstrumentClip> {
 
 
 	// Use this for initialization
-	void Start () {
-		m_clipState = ClipState.IS_DISABLED;
+	public override void Start () {
 		m_frame = GetComponent<UIFrame>();
+		SetPlayState(ClipState.IS_DISABLED);
 	}
 
 
@@ -61,17 +64,34 @@ public class ClipButtonAttachment : BaseAttachment<InstrumentClip> {
 
 		m_clipState = state;
 	}
-	
 
 
-	public override void Gesture_First ()
+
+	public override void Gesture_ExitIdleInterior ()
 	{
-		base.Gesture_First ();
+		base.Gesture_ExitIdleInterior ();
 		if(mode == BaseTool.ToolMode.PRIMARY){
 			owner.PlayClip(this, true);
-		} else if(mode == BaseTool.ToolMode.SECONDARY){
-			//Play track instantly
+		}
+	}
+
+	public override void Gesture_PushIn ()
+	{
+		base.Gesture_PushIn ();
+		if(mode == BaseTool.ToolMode.PRIMARY){
 			owner.PlayClip(this, false);
+		} else if(mode == BaseTool.ToolMode.SECONDARY){
+			owner.PlayAllQueuedClips();
+		}
+	}
+
+	public override void Gesture_PullOut ()
+	{
+		base.Gesture_PullOut ();
+		if(mode == BaseTool.ToolMode.PRIMARY){
+			//owner.PlayClip(this, true);
+		} else if(mode == BaseTool.ToolMode.SECONDARY){
+			//owner.PlayClip(this, false);
 		}
 	}
 }

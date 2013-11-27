@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using MusicIO;
+using UI;
 using System.Collections;
 using System.Collections.Generic;
 
-public class ParamSliderPanelAttachment : BaseAttachment {
+public class ParamSliderPanelAttachment : UIAttachment {
 
 	//Owner
 	protected MusicControllerAttachment m_owner;
@@ -22,14 +23,9 @@ public class ParamSliderPanelAttachment : BaseAttachment {
 
 
 	// Use this for initialization
-	void Start () {
+	public override void Start () {
 		m_sliders = new List<SliderAttachment>();
 		m_frame = GetComponent<UIFrame>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
 	}
 
 	/*

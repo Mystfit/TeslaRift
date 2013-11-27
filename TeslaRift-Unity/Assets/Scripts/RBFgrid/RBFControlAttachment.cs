@@ -3,8 +3,9 @@ using MusicIO;
 using System.Collections;
 using System.Collections.Generic;
 using RBF;
+using UI;
 
-public class RBFControlAttachment : BaseAttachment {
+public class RBFControlAttachment : UIAttachment {
 
 	//Owning group
 	MusicControllerAttachment m_owner;
@@ -24,7 +25,7 @@ public class RBFControlAttachment : BaseAttachment {
 	protected RBF.RBFTrainingPointAttachment m_dragTarget;
 	protected Transform m_dragSource;
 
-	void Start () {
+	public override void Start () {
 		m_frame = GetComponent<UIFrame>();
 		m_trainingPoints = new List<RBFTrainingPointAttachment>();
 		m_rbf = new RBFCore(1,1);

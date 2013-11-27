@@ -1,8 +1,9 @@
 using UnityEngine;
 using System.Collections;
 using MusicIO;
+using UI;
 
-public class SliderAttachment : BaseAttachment<BaseInstrumentParam> {
+public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 
 	protected BarSlider m_slider;
 	protected UIFrame m_frame;
@@ -10,16 +11,10 @@ public class SliderAttachment : BaseAttachment<BaseInstrumentParam> {
 	public ParamSliderPanelAttachment owner{ get { return m_owner; }}
 
 	// Use this for initialization
-	void Start () {
+	public override void Start () {
 		m_slider = GetComponent<BarSlider>();
 		m_frame = GetComponent<UIFrame>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
 
 	/*
 	 * Owning panel for this UI object

@@ -10,6 +10,17 @@ public enum ParameterType {
 
 
 public abstract class BaseAttachment : MonoBehaviour{
+
+	public virtual void Awake(){}
+	public virtual void Start(){}
+	public virtual void Update(){}
+
+	/*
+	 * Music reference state
+	 */
+	protected bool bHasMusicRef;
+	public bool HasMusicRef{ get { return bHasMusicRef; }}
+
 	/*
 	 * First gesture states
 	 */
@@ -97,6 +108,7 @@ public class BaseAttachment<T> : BaseAttachment {
 	private T m_musicRef;
 	public virtual void Init(T managedReference){
 		m_musicRef = managedReference;
+		bHasMusicRef = true;
 	}
 	public T musicRef{ get { return m_musicRef; }}
 }

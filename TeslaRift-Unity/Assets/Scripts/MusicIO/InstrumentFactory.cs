@@ -326,12 +326,10 @@ public class InstrumentFactory : MonoBehaviour {
 		return layerMesh;
 	}
 	
-	public static FloatingAttachment CreateFloatingAttachment(ParamAttachment attach){
-		BaseInstrumentParam param = attach.musicRef as BaseInstrumentParam;
-		
-		GameObject paramObj = GameObject.Instantiate(m_floatingClipPrefab, attach.transform.position, attach.transform.rotation) as GameObject;
-		FloatingAttachment floatAttach = paramObj.AddComponent<FloatingAttachment>();
-		floatAttach.Init(param);
-		return floatAttach;
+	public static GameObject CreateFloatingInstrument(BaseInstrument instrument){
+		GameObject insObj = GameObject.Instantiate(m_floatingClipPrefab) as GameObject;
+		insObj.renderer.material.SetColor("_Color", instrument.color);
+		return insObj;
 	}
+
 }

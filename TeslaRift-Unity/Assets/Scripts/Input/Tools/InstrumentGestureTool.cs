@@ -131,7 +131,7 @@ public class InstrumentGestureTool : BaseTool {
 			m_gestureTimer = m_betweenGestureDelay;
 			m_gestureState = GestureState.EXTERIOR;
 			m_lastGestureState = GestureState.PROXIMITY_TO_EXTERIOR;
-			TransitionOut();
+			//TransitionOut();
 			break;
 			
 		case GestureState.EXTERIOR:

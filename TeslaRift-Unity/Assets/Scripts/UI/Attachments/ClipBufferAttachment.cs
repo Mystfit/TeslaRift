@@ -1,9 +1,10 @@
 using UnityEngine;
+using UI;
 using System.Collections;
 using System.Collections.Generic;
 using MusicIO;
 
-public class ClipBufferAttachment : BaseAttachment {
+public class ClipBufferAttachment : UIAttachment {
 
 	protected MusicControllerAttachment m_owner;
 	
@@ -23,7 +24,7 @@ public class ClipBufferAttachment : BaseAttachment {
 	/*
 	 * Music object intialization and reference
 	 */
-	void Start () {
+	public override void Start () {
 		//Add the buffer to the instrument controller
 		InstrumentController.Instance.AddBuffer(this);
 		
@@ -79,10 +80,17 @@ public class ClipBufferAttachment : BaseAttachment {
 				return;
 		}
 		
-		ClipButtonAttachment buttonObj = UI.UIFactory.CreateClipButton(clip, UIFrame.AnchorLocation.TOP_RIGHT, this);
+		ClipButtonAttachment buttonObj = UI.UIFactory.CreateClipButton(clip, UIFrame.AnchorLocation.BOTTOM_RIGHT, this);
 		buttonObj.transform.position = transform.position;
 		buttonObj.transform.rotation = transform.rotation;
 		buttonObj.transform.parent = transform;
+
+		GameObject instrumentObj = InstrumentFactory.CreateFloatingInstrument(clip.owner);
+		instrumentObj.transform.localScale = new Vector3(0.08f, 0.08f, 0.08f);
+		instrumentObj.transform.position = buttonObj.transform.position;
+		instrumentObj.transform.rotation = buttonObj.transform.rotation;
+		instrumentObj.transform.parent = buttonObj.transform;
+		//buttonObj.frame.toggleVertical = true;
 
 		m_attachedClips.Add(buttonObj);
 		
@@ -101,7 +109,7 @@ public class ClipBufferAttachment : BaseAttachment {
 	public void SortBufferItems(){
 		for(int i = 0; i < m_attachedClips.Count; i++){
 			Vector3 local = GetColumnLocalCoordinates(i);
-			local += new Vector3(0.0f, 0.0f -0.0001f);
+			local += new Vector3(0.0f, 0.0f -0.001f);
 			ClipButtonAttachment attach = m_attachedClips[i];
 			iTween.MoveTo(attach.gameObject, iTween.Hash(
 				"position", local,
@@ -172,9 +180,12 @@ public class ClipBufferAttachment : BaseAttachment {
 		//Toggle off all existing clips
 		foreach(ClipButtonAttachment existingClip in m_attachedClips){
 			if(existingClip.musicRef.owner == clipButton.musicRef.owner && existingClip != clipButton){
-				if(existingClip.clipState == ClipButtonAttachment.ClipState.IS_PLAYING){
+				if(existingClip.clipState == ClipButtonAttachment.ClipState.IS_PLAYING ||
+				   existingClip.clipState == ClipButtonAttachment.ClipState.IS_QUEUED)
+				{
 					existingClip.SetPlayState(ClipButtonAttachment.ClipState.IS_DISABLED);
 				}
+
 			}
 		}
 

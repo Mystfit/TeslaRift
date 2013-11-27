@@ -3,10 +3,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using MusicIO;
+using UI;
 
 namespace RBF{
 	
-	public class RBFTrainingPointAttachment : BaseAttachment {
+	public class RBFTrainingPointAttachment : UIAttachment {
 	
 		protected float twistVal;		//Twist (w) input
 		public enum UIState{
@@ -27,12 +28,12 @@ namespace RBF{
 		/*
 		 * Init
 		 */
-		void Awake(){
+		public override void Awake(){
 			m_pointState = UIState.STATIONARY;
 			m_paramValues = new Dictionary<BaseInstrumentParam, float>();
 		}
 		
-		void Update(){
+		public override void Update(){
 			if(uiState == UIState.DRAGGING)
 				MoveRelativeToContainer(m_dragSource);
 		}
