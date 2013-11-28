@@ -97,14 +97,18 @@ public class HydraController : MonoBehaviour {
 	 * Returns the the closest object to the hand in a specific proximity list
 	 */
 	public GameObject HandTarget(BaseTool.ToolHand hand, ProximityType proximityTarget){
-		return GetClosestObjectInList( GetCollisionList(proximityTarget, BaseTool.ToolHandToSixenseHand(hand) ), GetHand(hand) );
+		return GetClosestObjectInList( GetCollisionList(proximityTarget, BaseTool.ToolHandToSixenseHand(hand) ), GetHand(hand));
 	}
-	
-	
-	/*
-	 * Finds the nearest GameObject to a list of GameObjects
-	 */
+
+	public GameObject HandTarget(BaseTool.ToolHand hand, ProximityType proximityTarget, BaseTool.ToolMode mode){
+		return GetClosestObjectInList( GetCollisionList(proximityTarget, BaseTool.ToolHandToSixenseHand(hand) ), GetHand(hand), BaseAttachment.ConvertToolModeToResponderMode(mode) );
+	}
+
 	public GameObject GetClosestObjectInList(List<GameObject> targetList, GameObject target){
+		return GetClosestObjectInList(targetList,target, BaseAttachment.ToolModeResponders.BOTH);
+	}
+
+	public GameObject GetClosestObjectInList(List<GameObject> targetList, GameObject target, BaseAttachment.ToolModeResponders mode){
 		float closestDistance = -1.0f;
 		GameObject closestObject = null;
 		
@@ -112,15 +116,21 @@ public class HydraController : MonoBehaviour {
 			foreach(GameObject obj in targetList){
 				float dist = Vector3.Distance(obj.transform.position, target.transform.position);
 				if(dist < closestDistance || closestDistance < 0){
-					closestDistance = dist;
-					closestObject = obj;
+					BaseAttachment attach = obj.GetComponent<BaseAttachment>();
+
+					if(attach != null){
+						if(attach.respondsToToolMode(mode)){
+							closestDistance = dist;
+							closestObject = obj;
+						}
+					}
 				}
 			}
 		}
 		
 		return closestObject;
 	}
-	
+
 	
 	
 	/*

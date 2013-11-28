@@ -78,20 +78,12 @@ public class ClipButtonAttachment : UIAttachment<InstrumentClip> {
 	public override void Gesture_PushIn ()
 	{
 		base.Gesture_PushIn ();
-		if(mode == BaseTool.ToolMode.PRIMARY){
-			owner.PlayClip(this, false);
-		} else if(mode == BaseTool.ToolMode.SECONDARY){
-			owner.PlayAllQueuedClips();
-		}
+		//owner.PlayClip(this, false);
 	}
 
 	public override void Gesture_PullOut ()
 	{
 		base.Gesture_PullOut ();
-		if(mode == BaseTool.ToolMode.PRIMARY){
-			//owner.PlayClip(this, true);
-		} else if(mode == BaseTool.ToolMode.SECONDARY){
-			//owner.PlayClip(this, false);
-		}
+		owner.PlayClip(this, false);
 	}
 }

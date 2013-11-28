@@ -31,10 +31,12 @@ public class OSCcontroller : MonoBehaviour {
 	public string targetIp = "127.0.0.1";
 	public string targetPort = "2345";
 	public string loopbackPort = "3000";
+	public string clientPort = "2348";
 	public string clientName = "Live";
 	public string loopbackName = "loopback";
 	public bool loopback = false;
 	public bool isServer = true;
+	public bool isClient = false;
 	
 	private Dictionary<string, ServerLog> servers;
 	private List<OSCListener> m_listeners;
@@ -55,6 +57,10 @@ public class OSCcontroller : MonoBehaviour {
 			OSCHandler.Instance.CreateClient(clientName, System.Net.IPAddress.Parse(targetIp), int.Parse(targetPort));
 		else
 			OSCHandler.Instance.CreateServer(clientName, int.Parse(targetPort));
+
+		if(isClient){
+			OSCHandler.Instance.CreateServer(clientName, int.Parse(clientPort));
+		}
 		
 		if(loopback){
 			OSCHandler.Instance.CreateClient(loopbackName, System.Net.IPAddress.Parse("127.0.0.1"), int.Parse(loopbackPort));

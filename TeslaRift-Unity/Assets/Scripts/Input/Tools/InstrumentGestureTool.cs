@@ -18,11 +18,13 @@ public class InstrumentGestureTool : BaseTool {
 	public enum GestureState{
 		INTERIOR = 0,
 		INTERIOR_TO_PROXIMITY,
+		INTERIOR_TO_EXTERIOR,
 		PROXIMITY,
 		PROXIMITY_TO_INTERIOR,
 		PROXIMITY_TO_EXTERIOR,
 		EXTERIOR,
-		EXTERIOR_TO_PROXIMITY
+		EXTERIOR_TO_PROXIMITY,
+		EXTERIOR_TO_INTERIOR
 	}
 	
 	/*
@@ -70,8 +72,8 @@ public class InstrumentGestureTool : BaseTool {
 		case HandState.HOLDING:
 			//Closest proximity triggers
 			//--------------------------
-			GameObject activeInterior = HydraController.Instance.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR);
-			GameObject activeProximity = HydraController.Instance.HandTarget(m_hand, ProximityType.INSTRUMENT_PROXIMITY);
+			GameObject activeInterior = HydraController.Instance.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR, m_mode);
+			GameObject activeProximity = HydraController.Instance.HandTarget(m_hand, ProximityType.INSTRUMENT_PROXIMITY, m_mode);
 			
 			//Set proximity state based on last state and current position
 			//--------------------------
@@ -80,6 +82,8 @@ public class InstrumentGestureTool : BaseTool {
 					//Inside interior
 					if(m_gestureState == GestureState.PROXIMITY)
 						m_gestureState = GestureState.PROXIMITY_TO_INTERIOR;
+					else if(m_gestureState == GestureState.EXTERIOR)
+						m_gestureState = GestureState.EXTERIOR_TO_INTERIOR;
 				} else {
 					//Inside proximity
 					if(m_gestureState == GestureState.INTERIOR)
@@ -91,6 +95,8 @@ public class InstrumentGestureTool : BaseTool {
 				//Outside exterior
 				if(m_gestureState == GestureState.PROXIMITY)
 					m_gestureState = GestureState.PROXIMITY_TO_EXTERIOR;
+				else if(m_gestureState == GestureState.INTERIOR)
+					m_gestureState = GestureState.INTERIOR_TO_EXTERIOR;
 			}
 			
 			ProcessGestures();
@@ -116,22 +122,30 @@ public class InstrumentGestureTool : BaseTool {
 			m_gestureState = GestureState.PROXIMITY;
 			m_lastGestureState = GestureState.INTERIOR_TO_PROXIMITY;
 			break;
-			
+
+		case GestureState.INTERIOR_TO_EXTERIOR:
+			m_gestureTimer = m_betweenGestureDelay;
+			//m_gestureState = GestureState.EXTERIOR;
+			m_lastGestureState = GestureState.INTERIOR;
+			TransitionOut();
+			break;
+
 		case GestureState.PROXIMITY:
 			m_attachment.Gesture_IdleProximity();
 			break;
 			
 		case GestureState.PROXIMITY_TO_INTERIOR:
 			m_gestureTimer = m_betweenGestureDelay;
-			m_gestureState = GestureState.INTERIOR;
+			//m_gestureState = GestureState.INTERIOR;
 			m_lastGestureState = GestureState.PROXIMITY_TO_INTERIOR;
+			TransitionOut();
 			break;
 			
 		case GestureState.PROXIMITY_TO_EXTERIOR:
 			m_gestureTimer = m_betweenGestureDelay;
-			m_gestureState = GestureState.EXTERIOR;
+			//m_gestureState = GestureState.EXTERIOR;
 			m_lastGestureState = GestureState.PROXIMITY_TO_EXTERIOR;
-			//TransitionOut();
+			TransitionOut();
 			break;
 			
 		case GestureState.EXTERIOR:
@@ -142,7 +156,13 @@ public class InstrumentGestureTool : BaseTool {
 			m_gestureTimer = m_betweenGestureDelay;
 			m_gestureState = GestureState.PROXIMITY;
 			m_lastGestureState = GestureState.EXTERIOR_TO_PROXIMITY;
+			break;
 
+		case GestureState.EXTERIOR_TO_INTERIOR:
+			m_gestureTimer = m_betweenGestureDelay;
+			//m_gestureState = GestureState.INTERIOR;
+			m_lastGestureState = GestureState.EXTERIOR;
+			TransitionOut();
 			break;
 		}
 			
@@ -158,7 +178,7 @@ public class InstrumentGestureTool : BaseTool {
 	 * Check if we're inside an object
 	 */
 	protected void CheckForObjectCollision(){
-		m_heldObject = HydraController.Instance.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR);
+		m_heldObject = HydraController.Instance.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR, m_mode);
 		
 		if(m_heldObject != null){
 			BaseAttachment attach = m_heldObject.GetComponent<BaseAttachment>();
@@ -196,6 +216,9 @@ public class InstrumentGestureTool : BaseTool {
 			case GestureState.EXTERIOR:				
 				m_attachment.Gesture_ExitIdleExterior();
 				break;
+			case GestureState.INTERIOR_TO_EXTERIOR:
+				m_attachment.Gesture_PullOut();
+				break;
 			case GestureState.EXTERIOR_TO_PROXIMITY:
 				break;
 			case GestureState.INTERIOR_TO_PROXIMITY:
@@ -204,6 +227,9 @@ public class InstrumentGestureTool : BaseTool {
 				m_attachment.Gesture_PullOut();
 				break;
 			case GestureState.PROXIMITY_TO_INTERIOR:
+				m_attachment.Gesture_PushIn();
+				break;
+			case GestureState.EXTERIOR_TO_INTERIOR:
 				m_attachment.Gesture_PushIn();
 				break;
 			}

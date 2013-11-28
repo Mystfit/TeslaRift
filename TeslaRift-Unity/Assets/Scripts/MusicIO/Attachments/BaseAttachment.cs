@@ -27,11 +27,30 @@ public abstract class BaseAttachment : MonoBehaviour{
 	public bool respondsToToolMode(BaseTool.ToolMode mode){ 
 		if(m_respondsToToolMode == ToolModeResponders.BOTH)
 			return true;
-		if(m_respondsToToolMode == ToolModeResponders.PRIMARY && mode == BaseTool.ToolMode.PRIMARY)
+		else if(m_respondsToToolMode == ToolModeResponders.PRIMARY && mode == BaseTool.ToolMode.PRIMARY)
 			return true;
-		if(m_respondsToToolMode == ToolModeResponders.SECONDARY && mode == BaseTool.ToolMode.SECONDARY)
+		else if(m_respondsToToolMode == ToolModeResponders.SECONDARY && mode == BaseTool.ToolMode.SECONDARY)
 			return true;
 		return false;
+	}
+
+	public bool respondsToToolMode(ToolModeResponders mode){
+		if(mode == ToolModeResponders.BOTH)
+			return true;
+		else if(mode == ToolModeResponders.PRIMARY)
+			return respondsToToolMode(BaseTool.ToolMode.PRIMARY);
+		else if(mode == ToolModeResponders.SECONDARY)
+			return respondsToToolMode(BaseTool.ToolMode.SECONDARY); 
+		return false;
+	}
+
+	public static ToolModeResponders ConvertToolModeToResponderMode(BaseTool.ToolMode mode){
+		if(mode == BaseTool.ToolMode.PRIMARY)
+			return BaseAttachment.ToolModeResponders.PRIMARY;
+		else if(mode == BaseTool.ToolMode.SECONDARY)
+			return BaseAttachment.ToolModeResponders.SECONDARY;
+
+		return BaseAttachment.ToolModeResponders.BOTH;
 	}
 
 	/*

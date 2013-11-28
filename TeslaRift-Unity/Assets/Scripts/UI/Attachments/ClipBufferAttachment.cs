@@ -185,7 +185,6 @@ public class ClipBufferAttachment : UIAttachment {
 				{
 					existingClip.SetPlayState(ClipButtonAttachment.ClipState.IS_DISABLED);
 				}
-
 			}
 		}
 
@@ -193,5 +192,22 @@ public class ClipBufferAttachment : UIAttachment {
 			clipButton.SetPlayState(ClipButtonAttachment.ClipState.IS_QUEUED);
 		else
 			clipButton.SetPlayState(ClipButtonAttachment.ClipState.IS_PLAYING);
+	}
+
+
+	/*
+	 * Gesture Overrides
+	 */
+	public override void Gesture_PushIn ()
+	{
+		base.Gesture_PushIn ();
+	}
+
+	public override void Gesture_PullOut ()
+	{
+		base.Gesture_PullOut ();
+		//Stop playing clips somehow?
+		PlayAllQueuedClips();
+
 	}
 }
