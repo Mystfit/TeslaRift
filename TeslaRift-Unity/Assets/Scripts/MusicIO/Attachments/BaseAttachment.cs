@@ -16,6 +16,25 @@ public abstract class BaseAttachment : MonoBehaviour{
 	public virtual void Update(){}
 
 	/*
+	 * Tool types the attachment can respond to
+	 */
+	public enum ToolModeResponders{
+		BOTH = 0,
+		PRIMARY,
+		SECONDARY
+	}
+	public ToolModeResponders m_respondsToToolMode;
+	public bool respondsToToolMode(BaseTool.ToolMode mode){ 
+		if(m_respondsToToolMode == ToolModeResponders.BOTH)
+			return true;
+		if(m_respondsToToolMode == ToolModeResponders.PRIMARY && mode == BaseTool.ToolMode.PRIMARY)
+			return true;
+		if(m_respondsToToolMode == ToolModeResponders.SECONDARY && mode == BaseTool.ToolMode.SECONDARY)
+			return true;
+		return false;
+	}
+
+	/*
 	 * Music reference state
 	 */
 	protected bool bHasMusicRef;
@@ -26,8 +45,7 @@ public abstract class BaseAttachment : MonoBehaviour{
 	 */
 	protected bool bIsFirstGesture = true;
 	public bool IsFirstGesture{ get { return bIsFirstGesture; }}
-	
-	
+
 	/*
 	 * Active tool hand
 	 */

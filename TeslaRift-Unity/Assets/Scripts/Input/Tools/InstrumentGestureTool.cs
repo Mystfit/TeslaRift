@@ -161,13 +161,16 @@ public class InstrumentGestureTool : BaseTool {
 		m_heldObject = HydraController.Instance.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR);
 		
 		if(m_heldObject != null){
-			m_attachment = m_heldObject.GetComponent<BaseAttachment>();
+			BaseAttachment attach = m_heldObject.GetComponent<BaseAttachment>();
 			
-			if(m_attachment != null){
-				//m_gestureState = GestureState.INTERIOR;
-				m_toolHandState = BaseTool.HandState.HOLDING;
-				m_attachment.SetToolMode( m_mode);
-				m_attachment.SetActiveHand( m_hand);
+			if(attach != null){
+				if( attach.respondsToToolMode( m_mode ) ){
+					//m_gestureState = GestureState.INTERIOR;
+					m_attachment = attach;
+					m_toolHandState = BaseTool.HandState.HOLDING;
+					m_attachment.SetToolMode( m_mode);
+					m_attachment.SetActiveHand( m_hand);
+				}
 			}
 		}
 	}
