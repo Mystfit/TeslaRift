@@ -4,7 +4,7 @@ using MusicIO;
 using System.Collections;
 using System.Collections.Generic;
 
-public class MusicControllerAttachment : MonoBehaviour {
+public class MusicControllerAttachment : BaseAttachment {
 
 	public enum ControlState{
 		EDIT = 0,
@@ -19,7 +19,7 @@ public class MusicControllerAttachment : MonoBehaviour {
 	public RBFControlAttachment m_rbfPanel;
 
 	// Use this for initialization
-	void Start () {
+	public override void Start () {
 		m_clipBuffer.Init(this);
 		m_paramControls.Init(this);
 		m_rbfPanel.Init(this);
@@ -32,11 +32,21 @@ public class MusicControllerAttachment : MonoBehaviour {
 		SwitchControlState(ControlState.PERFORM);
 	}
 
-	void Update(){
+	public override void Update(){
 		if(toggleControlState){
 			toggleControlState = false;
 			ToggleControlState();
 		}
+	}
+
+
+	/*
+	 * Gesture override
+	 */
+	public override void Gesture_First ()
+	{
+		base.Gesture_First ();
+		ToggleControlState();
 	}
 
 

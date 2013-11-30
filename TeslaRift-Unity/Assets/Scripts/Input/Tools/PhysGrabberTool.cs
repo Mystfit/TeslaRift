@@ -130,35 +130,29 @@ public class PhysGrabberTool : BaseTool {
 			//Attach
 			switch(m_toolHandState){
 			case HandState.SEARCHING:
-				if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR)){
-					if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR) != m_heldObject){
+				GameObject handTarget = m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR,  mode);
+				if(handTarget != null){
+					if(handTarget != m_heldObject){
 						
-						GameObject closestObject = m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR);
+						GameObject closestObject = handTarget;
 						
-						if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR).CompareTag(InteractableTypes.INSTRUMENT)){
+						if(handTarget.CompareTag(InteractableTypes.INSTRUMENT)){
 							m_heldObject = closestObject;
 							m_heldType = InteractableTypes.INSTRUMENT;
 							m_joint = gameObject.AddComponent<FixedJoint>();
 							m_joint.connectedBody = m_heldObject.GetComponent<Rigidbody>();
 							m_instrumentControlRef.SetLastSelectedGameInstrument(m_heldObject);
 							m_toolHandState = BaseTool.HandState.HOLDING;
+						} else if(handTarget.CompareTag(InteractableTypes.MUSICGROUP)){
+							m_heldObject = closestObject;
+							m_heldType = InteractableTypes.MUSICGROUP;
+							m_joint = gameObject.AddComponent<FixedJoint>();
+							m_joint.connectedBody = m_heldObject.GetComponent<Rigidbody>();
+							//m_instrumentControlRef.SetLastSelectedGameInstrument(m_heldObject);
+							m_toolHandState = BaseTool.HandState.HOLDING;
 						}
-						
-						else if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR).CompareTag(InteractableTypes.GENERATOR)){
-							if(m_toolControlRef.SelectedGenerator == null){		//Only one attached generator at a time
-								m_heldObject = closestObject;
-								m_heldType = InteractableTypes.GENERATOR;
-								m_selectedGenerator = m_heldObject.GetComponent<BaseGenerator>();
-								m_toolControlRef.SetSelectedGenerator(m_selectedGenerator);
-								m_toolHandState = BaseTool.HandState.HOLDING;
-								
-								//Create a line between the hand and the generator
-								GeneratorLine line = gameObject.AddComponent<GeneratorLine>();
-								line.CreateConnection(m_selectedGenerator.transform, transform);
-							}
-						}
-						
-						else if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR).CompareTag(InteractableTypes.RBFPOINT)){
+
+						else if(handTarget.CompareTag(InteractableTypes.RBFPOINT)){
 							m_heldObject = closestObject;
 							m_heldType = InteractableTypes.RBFPOINT;
 							RBFTrainingPointAttachment m_selectedTrainingPoint = m_heldObject.GetComponent<RBFTrainingPointAttachment>();

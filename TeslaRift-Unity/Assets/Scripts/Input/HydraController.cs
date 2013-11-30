@@ -93,22 +93,17 @@ public class HydraController : MonoBehaviour {
 	}
 	
 	
+
 	/*
 	 * Returns the the closest object to the hand in a specific proximity list
 	 */
-	public GameObject HandTarget(BaseTool.ToolHand hand, ProximityType proximityTarget){
-		return GetClosestObjectInList( GetCollisionList(proximityTarget, BaseTool.ToolHandToSixenseHand(hand) ), GetHand(hand));
-	}
 
 	public GameObject HandTarget(BaseTool.ToolHand hand, ProximityType proximityTarget, BaseTool.ToolMode mode){
-		return GetClosestObjectInList( GetCollisionList(proximityTarget, BaseTool.ToolHandToSixenseHand(hand) ), GetHand(hand), BaseAttachment.ConvertToolModeToResponderMode(mode) );
+		return GetClosestObjectInList( GetCollisionList(proximityTarget, BaseTool.ToolHandToSixenseHand(hand) ), GetHand(hand), mode );
 	}
 
-	public GameObject GetClosestObjectInList(List<GameObject> targetList, GameObject target){
-		return GetClosestObjectInList(targetList,target, BaseAttachment.ToolModeResponders.BOTH);
-	}
 
-	public GameObject GetClosestObjectInList(List<GameObject> targetList, GameObject target, BaseAttachment.ToolModeResponders mode){
+	public GameObject GetClosestObjectInList(List<GameObject> targetList, GameObject target, BaseTool.ToolMode mode){
 		float closestDistance = -1.0f;
 		GameObject closestObject = null;
 		
