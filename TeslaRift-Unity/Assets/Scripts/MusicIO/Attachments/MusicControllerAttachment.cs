@@ -18,7 +18,11 @@ public class MusicControllerAttachment : BaseAttachment {
 	public ParamSliderPanelAttachment m_paramControls;
 	public RBFControlAttachment m_rbfPanel;
 
-	// Use this for initialization
+	public bool facePerformer;
+	public Transform faceTarget;
+	public float faceDampening = 20;
+
+
 	public override void Awake () {
 		m_clipBuffer.Init(this);
 		m_paramControls.Init(this);
@@ -38,7 +42,17 @@ public class MusicControllerAttachment : BaseAttachment {
 			toggleControlState = false;
 			ToggleControlState();
 		}
+
+		//Rotate to face player eyes
+		if(facePerformer){
+			if (faceTarget != null) {
+				// Look at and dampen the rotation
+				Quaternion rotation = Quaternion.LookRotation(transform.position - faceTarget.position);
+				transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * faceDampening);
+			}
+		}
 	}
+
 
 
 	/*
