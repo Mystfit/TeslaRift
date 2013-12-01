@@ -34,6 +34,12 @@ public static class Utils
     	return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
 	}
 
+	public static string ReplaceWhitespaceSlashes(string input){
+		string output = input.Replace("/", "-");
+		output = input.Replace(" ", "_");
+		return output;
+	}
+
 	
 	//Generates points on the surface of a sphere
 	public static Vector3[] PointsOnSphere(int n, float scale){

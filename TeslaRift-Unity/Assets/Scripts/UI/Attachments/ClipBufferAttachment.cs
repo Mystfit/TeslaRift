@@ -24,7 +24,7 @@ public class ClipBufferAttachment : UIAttachment {
 	/*
 	 * Music object intialization and reference
 	 */
-	public override void Start () {
+	public override void Awake () {
 		//Add the buffer to the instrument controller
 		InstrumentController.Instance.AddBuffer(this);
 		
@@ -55,24 +55,25 @@ public class ClipBufferAttachment : UIAttachment {
 		m_frame.ShowOutline(state);
 	}
 
+	/*
+	 * Returns all clip objects
+	 */
+	public List<InstrumentClip> GetClips(){
+		List<InstrumentClip> clipList = new List<InstrumentClip>();
+		foreach(ClipButtonAttachment clipBtn in m_attachedClips){
+			clipList.Add(clipBtn.musicRef);
+		}
+		return clipList;
+	}
+
 
 	/*
 	 * Adds a music object to the buffer. Seperates clips and parameters automatically.
 	 */
 	public void AddClipToBuffer(InstrumentClip clip){							
 
-		/*
-		if(IsInstrumentInBuffer(clip.owner)){
-			RemoveInstrumentFromBuffer(clip.owner);
-		}
-
 		if(m_attachedClips == null)
 			m_attachedClips = new List<ClipButtonAttachment>();
-		m_attachedClips.Add(clip);
-
-		m_frame.SortBufferItems ();
-
-		*/
 
 		//Only have one slider per param
 		foreach(ClipButtonAttachment clipButton in m_attachedClips){

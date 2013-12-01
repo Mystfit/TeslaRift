@@ -58,7 +58,8 @@ namespace MusicIO
 		}
 		
 		public InstrumentClip GetClipByIndex(int index){ 
-			return m_clips[index] as InstrumentClip;
+
+			return m_clips[index-1] as InstrumentClip;
 		}
 
 

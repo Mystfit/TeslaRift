@@ -43,14 +43,27 @@ public class RBFControlAttachment : UIAttachment {
 
 
 	/*
-	 * Creates a new training point prefab on the panel
+	 * Creates a training point at a position or transform location
 	 */
-	public RBFTrainingPointAttachment CreateTrainingPoint(Transform position){
+	public RBFTrainingPointAttachment CreateTrainingPoint(float x, float y, float twist){
 		RBFTrainingPointAttachment training = UI.UIFactory.CreateRBFTraining();
 		training.SetParentContainer(this, m_frame.width, m_frame.height);
-		training.MoveRelativeToContainer(position);
+		training.MoveRelativeToLocal(x, y);
 		m_trainingPoints.Add(training);
+		
+		return training;
+	}
 
+
+	/*
+	 * Creates a new training point (transform overload)
+	 */
+	public RBFTrainingPointAttachment CreateTrainingPoint(Transform t){
+		RBFTrainingPointAttachment training = UI.UIFactory.CreateRBFTraining();
+		training.SetParentContainer(this, m_frame.width, m_frame.height);
+		training.MoveRelativeToContainer(t);
+		m_trainingPoints.Add(training);
+		
 		return training;
 	}	
 
@@ -96,7 +109,8 @@ public class RBFControlAttachment : UIAttachment {
 				List<BaseInstrumentParam> paramList = m_owner.paramControls.GetParametersFromSliders();
 				Dictionary<BaseInstrumentParam,float> sliderResults = new Dictionary<BaseInstrumentParam, float>();
 				foreach(BaseInstrumentParam param in paramList){
-					sliderResults[param] = (float)paramOutput[outputIndex++];
+					if(outputIndex < paramList.Count)
+						sliderResults[param] = (float)paramOutput[outputIndex++];
 				}
 				
 				m_owner.UpdateSlidersFromRBF(sliderResults);
@@ -194,6 +208,7 @@ public class RBFControlAttachment : UIAttachment {
 	}
 
 	public RBFTrainingPointAttachment SelectedTrainingPoint{ get { return m_selectedTraining; }}
+	public List<RBF.RBFTrainingPointAttachment> points{ get { return  m_trainingPoints; }}
 
 
 	/*

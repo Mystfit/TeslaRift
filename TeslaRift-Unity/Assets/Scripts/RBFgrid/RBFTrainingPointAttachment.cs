@@ -116,6 +116,11 @@ namespace RBF{
 		}
 
 
+		public void MoveRelativeToLocal(float x, float y){
+			transform.localPosition = new Vector3(x, y, 0.0f);
+		}
+
+
 		/*
 		 * Adds and sets the parameter values for this training point
 		 */

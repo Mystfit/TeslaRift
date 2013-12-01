@@ -18,12 +18,19 @@ public class ParamSliderPanelAttachment : UIAttachment {
 	//Sliders
 	protected List<SliderAttachment> m_sliders;
 	protected UIFrame m_frame;
+
+	//Delegates
 	public delegate void SliderUpdateEvent();
 	public event SliderUpdateEvent SliderUpdate;
+	public delegate void SliderAddEvent();
+	public event SliderAddEvent SliderAdd;
+
+	//States
+	protected bool bQueuedSort;
 
 
 	// Use this for initialization
-	public override void Start () {
+	public override void Awake () {
 		m_sliders = new List<SliderAttachment>();
 		m_frame = GetComponent<UIFrame>();
 	}
@@ -72,6 +79,9 @@ public class ParamSliderPanelAttachment : UIAttachment {
 	 */
 	public void CreateSlider(BaseInstrumentParam param){
 
+		//if(m_sliders == null)
+			//m_sliders = new List<SliderAttachment>();
+
 		//Only have one slider per param
 		foreach(SliderAttachment slider in m_sliders){
 			if(slider.musicRef == param)
@@ -82,16 +92,27 @@ public class ParamSliderPanelAttachment : UIAttachment {
 		sliderAttach.transform.position = transform.position;
 		sliderAttach.transform.rotation = transform.rotation;
 		sliderAttach.transform.parent = transform;
-		m_sliders.Add(sliderAttach);
-			
-		SortBufferItems();
+		m_sliders.Add(sliderAttach);		
+
+		QueueSort();
+		SlidersAdded();
+	}
+
+	public bool HasParameter(BaseInstrumentParam param){
+		if(m_sliders != null){
+			foreach(SliderAttachment slider in m_sliders){
+				if(slider.musicRef == param)
+					return true;
+			}
+		}
+		return false;
 	}
 
 
 	/*
 	 * Updates the clips/params loaded into this buffer
 	 */
-	protected void SortBufferItems(){
+	public bool SortBufferItems(){
 		for(int i = 0; i < m_sliders.Count; i++){
 			Vector3 local = GetColumnLocalCoordinates(i);
 			local += new Vector3(0.0f, 0.0f -0.0001f);
@@ -104,6 +125,7 @@ public class ParamSliderPanelAttachment : UIAttachment {
 		}
 		
 		m_frame.AnimateSize(m_sliders.Count * m_clipColumnSize , m_clipRowSize );
+		return false;
 	}
 
 	/*
@@ -111,11 +133,28 @@ public class ParamSliderPanelAttachment : UIAttachment {
 	 */
 	public void SetSliderValues(Dictionary<BaseInstrumentParam,float> paramList){
 		foreach(KeyValuePair<BaseInstrumentParam,float> pair in paramList){
-			m_sliders.Find(p => p.musicRef == pair.Key).SetSliderValue(pair.Value);
+			SliderAttachment slider = m_sliders.Find(p => p.musicRef == pair.Key);
+			if(slider != null)
+				slider.SetSliderValue(pair.Value);
 		}
 	}
 
 	public void SlidersUpdated(){
 		SliderUpdate();
+	}
+
+	public void SlidersAdded(){
+		SliderAdd();
+	}
+
+	public void QueueSort(){
+		bQueuedSort = true;
+	}
+
+	public override void Update(){
+		if(bQueuedSort){
+			if(m_frame != null)
+				bQueuedSort = SortBufferItems();
+		}
 	}
 }

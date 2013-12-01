@@ -19,7 +19,7 @@ public class MusicControllerAttachment : BaseAttachment {
 	public RBFControlAttachment m_rbfPanel;
 
 	// Use this for initialization
-	public override void Start () {
+	public override void Awake () {
 		m_clipBuffer.Init(this);
 		m_paramControls.Init(this);
 		m_rbfPanel.Init(this);
@@ -28,6 +28,7 @@ public class MusicControllerAttachment : BaseAttachment {
 
 		//Event listener delegate for updating training points with slider values upon change
 		m_paramControls.SliderUpdate += OnSlidersUpdated;
+		m_paramControls.SliderAdd += OnSliderAdded;
 
 		SwitchControlState(ControlState.PERFORM);
 	}
@@ -78,6 +79,13 @@ public class MusicControllerAttachment : BaseAttachment {
 		UpdateTrainingPoint(m_rbfPanel.SelectedTrainingPoint);
 	}
 
+	/*
+	 * Listener delegate to update RBF values when sliders change
+	 */
+	protected void OnSliderAdded(){
+		UpdateAllTrainingPoints();
+	}
+	
 
 	/*
 	 * Update RBF using training point locations and slider values
@@ -90,14 +98,28 @@ public class MusicControllerAttachment : BaseAttachment {
 	/*
 	 * Updates the stored parameter values for an RBF point
 	 */
-	public void UpdateTrainingPoint(BaseAttachment attach){
-		if(attach != null){
-			RBFTrainingPointAttachment pointAttach = attach as RBFTrainingPointAttachment;
+	public void UpdateTrainingPoint(RBFTrainingPointAttachment pointAttach){
+		if(pointAttach != null){
 			List<BaseInstrumentParam> paramList = m_paramControls.GetParametersFromSliders();
 			pointAttach.SetParameters( paramList );
 			m_rbfPanel.ResetRBF( paramList.Count );
 		}
 	} 
+
+	/*
+	 * Updates every training point
+	 */
+	public void UpdateAllTrainingPoints(){
+		int paramCount = 0;
+		foreach(RBFTrainingPointAttachment rbfPoint in m_rbfPanel.points){
+			if(rbfPoint != null){
+				List<BaseInstrumentParam> paramList = m_paramControls.GetParametersFromSliders();
+				rbfPoint.SetParameters( paramList );
+				paramCount = paramList.Count;
+			}
+		}
+		m_rbfPanel.ResetRBF( paramCount );
+	}
 
 
 	/*
