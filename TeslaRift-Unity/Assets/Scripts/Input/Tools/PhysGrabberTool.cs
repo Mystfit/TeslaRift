@@ -1,15 +1,18 @@
 ﻿using UnityEngine;
+using RBF;
 using System.Collections;
 
 public class PhysGrabberTool : BaseTool {
 	
 	public GameObject m_heldObject = null;
+	public string m_heldType;
 	public BaseGenerator m_selectedGenerator = null;
+	public RBF.RBFTrainingPointAttachment m_selectedTrainingPoint = null;
 	
 	private Vector3 m_lastHeldPosition;
 	private Vector3 m_deltaVelocity;
 	
-	public enum PhysDirection{ BLOW = 0, SUCK};
+	public enum PhysDirection{ BLOW = 0, SUCK};	
 	
 	private FixedJoint m_joint = null;
 	
@@ -31,6 +34,10 @@ public class PhysGrabberTool : BaseTool {
 		base.Update();
 	}
 	
+	
+	/*
+	 * Tool enter state
+	 */
 	public override void TransitionIn ()
 	{
 		Debug.Log(this.m_toolControlRef);
@@ -43,6 +50,10 @@ public class PhysGrabberTool : BaseTool {
 		}
 	}
 	
+	
+	/*
+	 * Tool exit state
+	 */
 	public override void TransitionOut(){
 		if(m_joint != null)
 			Destroy(m_joint);
@@ -51,21 +62,41 @@ public class PhysGrabberTool : BaseTool {
 		for(int i = 0 ; i < jointList.Length; i++){
 			DestroyImmediate( jointList[i] );
 		}
-			
-		if(m_heldObject != null){
-			m_heldObject.rigidbody.velocity = m_deltaVelocity * 50;	
-			m_heldObject = null;
-			m_toolHandState = BaseTool.HandState.RELEASING;
-		}
 		
-		if(m_selectedGenerator != null){
-			GeneratorLine[] lines = gameObject.GetComponents<GeneratorLine>();
-			foreach(GeneratorLine line in lines)
-				line.Remove();
-			//m_toolControlRef.SetSelectedGenerator(null);
+		//Handle releasing of held objects
+		switch(m_heldType){
+		case InteractableTypes.INSTRUMENT:
+			if(m_heldObject != null){
+				m_heldObject.rigidbody.velocity = m_deltaVelocity * 50;	
+				m_heldObject = null;
+			}
+			break;
+		case InteractableTypes.GENERATOR:
+			if(m_selectedGenerator != null){
+				GeneratorLine[] lines = gameObject.GetComponents<GeneratorLine>();
+				foreach(GeneratorLine line in lines)
+					line.Remove();
+				//m_toolControlRef.SetSelectedGenerator(null);
+			}
+			break;
+		case InteractableTypes.RBFPOINT:
+			if(m_heldObject != null){
+				RBF.RBFTrainingPointAttachment m_selectedTrainingPoint = m_heldObject.GetComponent<RBF.RBFTrainingPointAttachment>();
+				if(m_selectedTrainingPoint != null){
+					m_selectedTrainingPoint.SetInactive();
+					m_selectedTrainingPoint.rbfOwner.owner.UpdateRBF();
+				}
+			}
+			break;
 		}
+	
+		m_toolHandState = BaseTool.HandState.RELEASING;
 	}
 	
+	
+	/*
+	 * Moves all instruments towards or away from the tool
+	 */
 	public void ApplyForceToInstruments(PhysDirection physAction, float strength){
 		
 		GameObject[] instruments = GameObject.FindGameObjectsWithTag("Instrument");
@@ -89,6 +120,10 @@ public class PhysGrabberTool : BaseTool {
 		}
 	}
 	
+	
+	/*
+	 * Checks for collision with appropriate obejcts
+	 */
 	public void CheckForSelection(){
 		if(m_hydraRef != null){
 
@@ -98,17 +133,21 @@ public class PhysGrabberTool : BaseTool {
 				if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR)){
 					if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR) != m_heldObject){
 						
-						if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR).CompareTag("Instrument")){
-							m_heldObject = m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR);
+						GameObject closestObject = m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR);
+						
+						if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR).CompareTag(InteractableTypes.INSTRUMENT)){
+							m_heldObject = closestObject;
+							m_heldType = InteractableTypes.INSTRUMENT;
 							m_joint = gameObject.AddComponent<FixedJoint>();
 							m_joint.connectedBody = m_heldObject.GetComponent<Rigidbody>();
 							m_instrumentControlRef.SetLastSelectedGameInstrument(m_heldObject);
 							m_toolHandState = BaseTool.HandState.HOLDING;
 						}
 						
-						else if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR).CompareTag("Generator")){
+						else if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR).CompareTag(InteractableTypes.GENERATOR)){
 							if(m_toolControlRef.SelectedGenerator == null){		//Only one attached generator at a time
-								m_heldObject = m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR);
+								m_heldObject = closestObject;
+								m_heldType = InteractableTypes.GENERATOR;
 								m_selectedGenerator = m_heldObject.GetComponent<BaseGenerator>();
 								m_toolControlRef.SetSelectedGenerator(m_selectedGenerator);
 								m_toolHandState = BaseTool.HandState.HOLDING;
@@ -116,8 +155,15 @@ public class PhysGrabberTool : BaseTool {
 								//Create a line between the hand and the generator
 								GeneratorLine line = gameObject.AddComponent<GeneratorLine>();
 								line.CreateConnection(m_selectedGenerator.transform, transform);
-								Debug.Log("Selecting generator " + m_selectedGenerator);
 							}
+						}
+						
+						else if(m_hydraRef.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR).CompareTag(InteractableTypes.RBFPOINT)){
+							m_heldObject = closestObject;
+							m_heldType = InteractableTypes.RBFPOINT;
+							RBFTrainingPointAttachment m_selectedTrainingPoint = m_heldObject.GetComponent<RBFTrainingPointAttachment>();
+							m_selectedTrainingPoint.SetActive(transform);
+							m_toolHandState = BaseTool.HandState.HOLDING;
 						}
 					}
 				}

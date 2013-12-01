@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <song tempo = '110.0'>
 	<track channel='1' name='TeslaArp' volume='-4.8 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='True' color='16712965'>
-		<clip index='1' name='chord1' color='12411136' mute='False' looping='True' playing='True' triggered='False' />
+		<clip index='1' name='chord1' color='12411136' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='4' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='5' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='6' name='LightCycle1' color='5480241' mute='False' looping='True' playing='False' triggered='False' />
@@ -23,7 +23,7 @@
 	</track>
 	<track channel='2' name='M-Traveller' volume='-3.4 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='16753961'>
 		<clip index='1' name='IntroSwell' color='16753524' mute='False' looping='False' playing='False' triggered='False' />
-		<clip index='2' name='IntroSwell' color='16753524' mute='False' looping='True' playing='True' triggered='False' />
+		<clip index='2' name='IntroSwell' color='16753524' mute='False' looping='True' playing='False' triggered='False' />
 		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
@@ -41,7 +41,7 @@
 	</track>
 	<track channel='3' name='BrassSwell' volume='1.3 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='16773172'>
 		<clip index='1' name='2 8-Brass Swell Around' color='12411136' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='2' name='2 8-Brass Swell Around' color='12411136' mute='False' looping='True' playing='True' triggered='False' />
+		<clip index='2' name='2 8-Brass Swell Around' color='12411136' mute='False' looping='True' playing='False' triggered='False' />
 		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
@@ -58,7 +58,7 @@
 		</device>
 	</track>
 	<track channel='4' name='Percussion' volume='-5.5 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='5480241'>
-		<clip index='1' name='TimeTables1' color='16149507' mute='False' looping='True' playing='True' triggered='False' />
+		<clip index='1' name='TimeTables1' color='16149507' mute='False' looping='True' playing='False' triggered='False' />
 		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='1.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />

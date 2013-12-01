@@ -33,7 +33,7 @@ namespace Uniduino
 		/// <summary>
 		/// Automatically connect to the arduino if properly configured.
 		/// </summary>
-		void Awake () {		
+		public virtual void Awake () {		
 					
 			Log("Arduino awake");
 			if (instance == null) instance = this; // track the first instance that was created as a convenience, but dont preclude multiple uniduino's coexisting

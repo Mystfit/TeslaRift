@@ -1,12 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using DotNumerics.LinearAlgebra;
 
 public class GlobalConfig : MonoBehaviour {
 	
 	public bool IsClient = false;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
+		
 		if(IsClient){
 			GameObject.Find("__HydraController").SetActive(false);
 			GameObject.Find("__InstrumentSpawner").SetActive(false);

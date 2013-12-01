@@ -42,7 +42,8 @@ public class HydraController : MonoBehaviour {
 	public GameObject instrumentController;
 	private InstrumentController m_instrumentControlRef;
 	
-	private ArduinoController m_gloveController;
+	private GloveController m_leftGlove;
+	private GloveController m_rightGlove;
 	
 	// Initialization
 	//------------------
@@ -56,8 +57,10 @@ public class HydraController : MonoBehaviour {
 		//Controllers
 		m_toolControlRef = ToolController.Instance;
 		m_instrumentControlRef = InstrumentController.Instance;
-		m_gloveController = this.GetComponent<ArduinoController>();
 		m_instance = this;
+		
+		m_leftGlove = m_leftHand.GetComponent<GloveController>();
+		m_rightGlove = m_rightHand.GetComponent<GloveController>();
 	}
 	
 	
@@ -77,8 +80,16 @@ public class HydraController : MonoBehaviour {
 	public GameObject GetHand(BaseTool.ToolHand hand){
 		if(hand == BaseTool.ToolHand.LEFT)
 			return m_leftHand;
-		else
-			return m_rightHand;
+		return m_rightHand;
+	}
+	
+	/*
+	 * Returns left/right glove controllers
+	 */
+	public GloveController GetGloveController(BaseTool.ToolHand hand){
+		if(hand == BaseTool.ToolHand.LEFT)
+			return m_leftGlove;
+		return m_rightGlove;
 	}
 	
 	
@@ -86,14 +97,18 @@ public class HydraController : MonoBehaviour {
 	 * Returns the the closest object to the hand in a specific proximity list
 	 */
 	public GameObject HandTarget(BaseTool.ToolHand hand, ProximityType proximityTarget){
-		return GetClosestObjectInList( GetCollisionList(proximityTarget, BaseTool.ToolHandToSixenseHand(hand) ), GetHand(hand) );
+		return GetClosestObjectInList( GetCollisionList(proximityTarget, BaseTool.ToolHandToSixenseHand(hand) ), GetHand(hand));
 	}
-	
-	
-	/*
-	 * Finds the nearest GameObject to a list of GameObjects
-	 */
+
+	public GameObject HandTarget(BaseTool.ToolHand hand, ProximityType proximityTarget, BaseTool.ToolMode mode){
+		return GetClosestObjectInList( GetCollisionList(proximityTarget, BaseTool.ToolHandToSixenseHand(hand) ), GetHand(hand), BaseAttachment.ConvertToolModeToResponderMode(mode) );
+	}
+
 	public GameObject GetClosestObjectInList(List<GameObject> targetList, GameObject target){
+		return GetClosestObjectInList(targetList,target, BaseAttachment.ToolModeResponders.BOTH);
+	}
+
+	public GameObject GetClosestObjectInList(List<GameObject> targetList, GameObject target, BaseAttachment.ToolModeResponders mode){
 		float closestDistance = -1.0f;
 		GameObject closestObject = null;
 		
@@ -101,15 +116,21 @@ public class HydraController : MonoBehaviour {
 			foreach(GameObject obj in targetList){
 				float dist = Vector3.Distance(obj.transform.position, target.transform.position);
 				if(dist < closestDistance || closestDistance < 0){
-					closestDistance = dist;
-					closestObject = obj;
+					BaseAttachment attach = obj.GetComponent<BaseAttachment>();
+
+					if(attach != null){
+						if(attach.respondsToToolMode(mode)){
+							closestDistance = dist;
+							closestObject = obj;
+						}
+					}
 				}
 			}
 		}
 		
 		return closestObject;
 	}
-	
+
 	
 	
 	/*
@@ -118,10 +139,8 @@ public class HydraController : MonoBehaviour {
 	public void AddCollision(GameObject proximityTarget, SixenseHands hand, ProximityType proximityType){		
 		List<GameObject> targetList = GetCollisionList(proximityType, hand);
 		
-		if(!targetList.Contains(proximityTarget)){
+		if(!targetList.Contains(proximityTarget))
 			targetList.Add(proximityTarget);
-			//Debug.Log ("Proximity trigger: " + proximityTarget.name + " Proximity type:"  + proximityType);
-		}
 	}
 	
 	
@@ -174,134 +193,96 @@ public class HydraController : MonoBehaviour {
 			m_rightHandController = SixenseInput.GetController( SixenseHands.RIGHT );
 			
 		
-		//SetCommonTools(m_leftHandController, BaseTool.ToolHand.LEFT);
-		SetCommonTools(m_rightHandController, BaseTool.ToolHand.RIGHT);
-		SetIndividualToolsLeft(m_leftHandController, BaseTool.ToolHand.LEFT);
-		SetIndividualToolsRight(m_rightHandController, BaseTool.ToolHand.RIGHT);
+		SetCommonTools(BaseTool.ToolHand.RIGHT);
+		SetIndividualToolsRight(BaseTool.ToolHand.RIGHT);
 	}
 	
-	//Arduino controlled glove
-	public void SetIndividualToolsLeft(SixenseInput.Controller handControl, BaseTool.ToolHand hand){
-		if(m_leftHandController != null)
-		{
-			//Arduino grabber
-			//---------------
-			/*if( m_gloveController.GetButtonDown(ArduinoController.GloveButton.ONE)) {
-				m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand);
-			}*/
-			
-			//Arduino idle
-			//------------
-			/*if(m_gloveController.GetButtonUp(ArduinoController.GloveButton.TWO) ||
-				m_gloveController.GetButtonUp(ArduinoController.GloveButton.ONE))
-			{
-				GameObject handObj = null;
-				
-				if(hand == BaseTool.ToolHand.LEFT)
-					handObj = m_leftHand;
-				else if(hand == BaseTool.ToolHand.RIGHT)
-					handObj = m_rightHand;
-				
-				if(handObj != null){
-					BaseTool tool = handObj.GetComponent(typeof(BaseTool)) as BaseTool;
-					m_toolControlRef.PopTool(hand);
-				}
-			}*/
-		}
-	}
 	
-	public void SetIndividualToolsRight(SixenseInput.Controller handControl, BaseTool.ToolHand hand){
-		if(m_rightHandController != null)
-		{	
+	/*
+	 * Sets tools for specifically th right controler (currently the only one being used. Will be changed)
+	 */
+	public void SetIndividualToolsRight(BaseTool.ToolHand hand){
+		//if(m_rightHandController != null)
+		//{	
 			//Hand calibration
 			//----------------
-			if(m_rightHandController.GetButton( SixenseButtons.START )){
+			if(Input.GetKeyDown(KeyCode.P)){
+			//if(m_rightHandController.GetButton( SixenseButtons.START ) || Input.GetKeyDown(KeyCode.P)){
+				//GetComponent<SixenseInput>().RebindHands();
 				m_leftHand.GetComponent<HydraHand>().SetEnabled(false);
 				m_rightHand.GetComponent<HydraHand>().SetEnabled(false);
 			}
 			
-			if ( m_rightHandController.GetButtonUp( SixenseButtons.START )){
+			if(Input.GetKeyUp(KeyCode.P)){
+			//if ( m_rightHandController.GetButtonUp( SixenseButtons.START ) || Input.GetKeyUp(KeyCode.P)){
 				m_leftHand.GetComponent<HydraHand>().ActivateHand(m_leftHandController);
 				m_rightHand.GetComponent<HydraHand>().ActivateHand(m_rightHandController);
 			} 
 			
-			else if(m_rightHandController.GetButton(SixenseButtons.START) && m_rightHandController.GetButtonUp(SixenseButtons.BUMPER)){
+			/*else if(m_rightHandController.GetButton(SixenseButtons.START) && m_rightHandController.GetButtonUp(SixenseButtons.BUMPER)){
 				gameObject.GetComponent<SixenseInput>().RebindHands();
-			} 
-			
-			else if(m_rightHandController.GetButton(SixenseButtons.START) && m_rightHandController.GetButtonUp(SixenseButtons.FOUR)){
-				//GameObject.Find("OVRPlayerController").GetComponent<OVRMainMenu>().CalibrateMag();
-			}
-			
-			
-			//Param deselector
-			//------------
-			if(Input.GetKeyDown(KeyCode.S)){  //handControl.GetButtonDown(SixenseButtons.THREE)
-				if(m_toolControlRef.currentTool(hand) == null)
-					m_toolControlRef.PushTool(typeof(ResetTool), hand);
-				else
-					Debug.Log("Existing tool still active");
-				
-			}
-			
-			//Physics pull
-			//------------
-			if( Input.GetKeyDown(KeyCode.Space) && Input.GetKey(KeyCode.LeftShift)){ //m_rightHandController.GetButton(SixenseButtons.TWO) && m_rightHandController.Trigger > 0.1f
-				m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand, BaseTool.ToolMode.SECONDARY);
-			}
+			} */
+		//}
+	}
+	
+	
+	/*
+	 * Common tools for each hand
+	 */
+	public void SetCommonTools(BaseTool.ToolHand hand){
+		
+		GloveController m_glove = GetGloveController(hand);
+					
+		//Physics selector
+		//------------
+		if(m_glove.GetGestureDown("CLOSED_HAND") || Input.GetKeyDown(KeyCode.Space)){
+			m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand, BaseTool.ToolMode.PRIMARY);
+		}
+		
+		//Physics pull
+		//------------
+		else if(m_glove.GetGestureDown("PINKY") || Input.GetKeyDown(KeyCode.LeftShift)){
+			m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand, BaseTool.ToolMode.SECONDARY);
+		}
+		
+		//Gesture Selector Primary
+		//--------------------
+		else if(m_glove.GetGestureDown("INDEX_POINT") || Input.GetKeyDown(KeyCode.W)){
+			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.PRIMARY);
+		}
+		
+					//Gesture selector secondary
+		//--------------------
+		else if(m_glove.GetGestureDown("INDEX_MIDDLE") || Input.GetKeyDown(KeyCode.E)){
+			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.SECONDARY);	//Secondary mode does a full reset
+		}
+	
+		//Normal reset
+		//--------------------
+		/*else if(m_leftGlove.GetGestureDown("INDEX_POINT") || Input.GetKeyDown(KeyCode.W)){
+			m_toolControlRef.PushTool(typeof(ResetTool), hand);
+		}
+		
+		
+		//Full instrument reset
+		//---------------------
+		else if(Input.GetKeyDown(KeyCode.D)){  
+			m_toolControlRef.PushTool(typeof(ResetTool), hand, BaseTool.ToolMode.SECONDARY);
+		}*/
+		
+		//Return to idle
+		//--------------
+		
+		bool openHand = m_glove.GetGestureDown("IDLE_HAND");
+		
+		if(Input.GetKeyUp (KeyCode.Space) ||
+			Input.GetKeyUp(KeyCode.W) ||
+			Input.GetKeyUp(KeyCode.S) ||
+			Input.GetKeyUp(KeyCode.E) ||
+			openHand )
+		{
+			m_toolControlRef.PopTool(hand);
 		}
 	}
 	
-	//Common tools between each hand
-	//-------------------------------
-	public void SetCommonTools(SixenseInput.Controller handControl, BaseTool.ToolHand hand){
-		if(handControl != null){
-			
-			if( Input.GetKey (KeyCode.LeftControl) )
-				hand = BaseTool.ToolHand.LEFT;
-						
-			//Physics selector
-			//------------
-			if( Input.GetKeyDown(KeyCode.Space) ){ //handControl.GetButtonDown(SixenseButtons.TWO)
-				m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand);
-			}
-			
-			//Gesture selector secondary
-			//--------------------
-			else if(Input.GetKeyDown(KeyCode.W) && Input.GetKey(KeyCode.LeftShift) ){  //handControl.GetButtonDown(SixenseButtons.BUMPER) && handControl.GetButton(SixenseButtons.FOUR)
-				m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.SECONDARY);	//Secondary mode does a full reset
-			}
-			
-			
-			//Gesture Selector Primary
-			//--------------------
-			else if( Input.GetKeyDown(KeyCode.W) ){ //handControl.GetButtonDown(SixenseButtons.BUMPER)
-				m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand);
-			} 
-			
-			
-			//Full instrument reset
-			//---------------------
-			else if(Input.GetKeyDown(KeyCode.S) && Input.GetKey(KeyCode.LeftShift)){  //handControl.GetButtonDown(SixenseButtons.BUMPER) && handControl.GetButton(SixenseButtons.THREE)
-				m_toolControlRef.PushTool(typeof(ResetTool), hand, BaseTool.ToolMode.SECONDARY);
-			}
-
-			
-			//Return to idle
-			//--------------
-			/*if(handControl.GetButtonUp(SixenseButtons.TWO) ||
-				handControl.GetButtonUp(SixenseButtons.BUMPER) ||
-				handControl.GetButtonUp(SixenseButtons.ONE) || 
-				handControl.GetButtonUp(SixenseButtons.THREE) || 
-				handControl.GetButtonUp(SixenseButtons.FOUR)) 
-			{*/
-			if(Input.GetKeyUp (KeyCode.Space) ||
-				Input.GetKeyUp(KeyCode.W) ||
-				Input.GetKeyUp(KeyCode.S) ||
-				Input.GetKeyUp(KeyCode.D) )
-			{
-				m_toolControlRef.PopTool(hand);
-			}
-		}
-	}
 }

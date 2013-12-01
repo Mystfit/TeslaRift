@@ -8,6 +8,11 @@ public class BaseTool : MonoBehaviour {
 	protected HydraController m_hydraRef = null;
 	protected InstrumentController m_instrumentControlRef = null;
 	protected ToolController m_toolControlRef = null;
+	
+	//For inspector previewing of active states
+	public HandState activeGestureState;
+	public ToolMode toolMode;
+
 
 	
 	//Variables
@@ -32,25 +37,26 @@ public class BaseTool : MonoBehaviour {
 	public BaseTool(){
 	}
 	
+	public virtual void Awake(){
+		m_hydraRef = HydraController.Instance;
+		m_instrumentControlRef = InstrumentController.Instance;
+		m_toolControlRef = ToolController.Instance;
+		m_toolHandState = BaseTool.HandState.SEARCHING;
+		m_targets = new List<object>();	
+		
+	}
+	
+	public virtual void Update () {
+		activeGestureState = m_toolHandState;	//Inspector level previewing of state
+		toolMode = m_mode;
+	}
+	
 	public static SixenseHands ToolHandToSixenseHand(BaseTool.ToolHand hand){
 		if(hand == ToolHand.LEFT)
 			return SixenseHands.LEFT;
 		if(hand == ToolHand.RIGHT)
 			return SixenseHands.RIGHT;
 		return SixenseHands.UNKNOWN;
-	}
-	
-	public virtual void Awake(){
-		m_hydraRef = HydraController.Instance;
-		m_instrumentControlRef = InstrumentController.Instance;
-		m_toolControlRef = ToolController.Instance;
-		m_targets = new List<object>();	
-		
-	}
-	
-
-	
-	public virtual void Update () {
 	}
 	
 	//Initializer
@@ -84,6 +90,28 @@ public class BaseTool : MonoBehaviour {
 	public void setTargets(List<object> targets){
 		m_targets = targets;
 	}
-	
 
+	public static Vector3 HandToObjectSpace(Transform worldPosition, Transform objectSpace){
+		//Offset the position by the source's collider (if present)
+		Vector3 worldOffset = worldPosition.position;
+		if(worldPosition.collider != null){
+			if( worldPosition.collider.GetType() == typeof(CapsuleCollider) ){
+				CapsuleCollider coll = worldPosition.collider as CapsuleCollider;
+				worldOffset = coll.bounds.center;
+			}
+		}
+		
+		return objectSpace.InverseTransformPoint(worldOffset);
+	}
+}
+
+
+/*
+ * String enum class defining interactable tag types
+ */
+public static class InteractableTypes
+{
+    public const string  GENERATOR = "Generator"; 
+    public const string INSTRUMENT = "Instrument"; 
+    public const string RBFPOINT = "RBFPoint";
 }

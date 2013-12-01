@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class Clock : OSCListener {
@@ -41,8 +41,8 @@ public class Clock : OSCListener {
 		float time = (Time.time - m_startTime) % m_beatLength;
 		float cycleTime = (Time.time - m_startTime) % (m_beatLength * m_beatsPerBar);
 		
-		m_beatTime = Utils.Normalize(time, 0.0f, m_beatLength);
-		m_cycleTime =  Utils.Normalize(cycleTime, 0.0f, m_beatLength * m_beatsPerBar);
+		m_beatTime = Utils.Scale(time, 0.0f, m_beatLength);
+		m_cycleTime =  Utils.Scale(cycleTime, 0.0f, m_beatLength * m_beatsPerBar);
 		
 		//Beat marked dirty
 		if(m_lastBeatTime > m_beatTime)

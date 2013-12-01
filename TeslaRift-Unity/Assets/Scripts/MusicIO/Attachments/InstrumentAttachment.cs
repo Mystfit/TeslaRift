@@ -65,24 +65,11 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 		base.Gesture_IdleProximity ();
 		CheckForSelection();
 	}
-	
-	
-	public override void Gesture_ExitIdleInterior ()
+
+	public override void Gesture_Exit ()
 	{
-		base.Gesture_ExitIdleInterior ();
 		CloseRadial(m_openRadialType, true);
-	}
-	
-	public override void Gesture_ExitIdleProximity ()
-	{
-		base.Gesture_ExitIdleProximity ();
-		CloseRadial(m_openRadialType, true);
-	}
-	
-	public override void Gesture_ExitIdleExterior ()
-	{
-		base.Gesture_ExitIdleExterior ();
-		CloseRadial(m_openRadialType, true);
+		base.Gesture_Exit ();
 	}
 	
 	public override void Gesture_Twist (float amount)
@@ -110,8 +97,8 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 		
 		//Create a floating instrument clip to put inside a buffer frame
 		if(m_selectedParam != null)
-			InstrumentController.Instance.AddToActiveBuffer( InstrumentFactory.CreateFloatingAttachment(m_selectedParam) );
-		
+			InstrumentController.Instance.AddToActivePanel( m_selectedParam.musicRef );
+
 		CloseRadial(m_openRadialType, false);
 		Gesture_Exit();
 	}
@@ -136,18 +123,22 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 	 */
 	public void OpenRadial(ParameterType type, Quaternion rotation){
 		if(type == ParameterType.CLIP){
-			m_clipRadial.transform.rotation = rotation;
-			m_clipRadial.SetActive(true);
-			iTween.Stop(m_clipRadial);
-			iTween.RotateTo(m_clipRadial, iTween.Hash("rotation", rotation, "time", 0.4f, "easetype", "easeOutCubic"));
-			iTween.ScaleTo(m_clipRadial, iTween.Hash("scale", new Vector3(1.0f, 1.0f, 1.0f), "time", 0.4f, "easetype", "easeOutCubic"));
+			if(m_clipRadial != null){
+				m_clipRadial.transform.rotation = rotation;
+				m_clipRadial.SetActive(true);
+				iTween.Stop(m_clipRadial);
+				iTween.RotateTo(m_clipRadial, iTween.Hash("rotation", rotation, "time", 0.4f, "easetype", "easeOutCubic"));
+				iTween.ScaleTo(m_clipRadial, iTween.Hash("scale", new Vector3(1.0f, 1.0f, 1.0f), "time", 0.4f, "easetype", "easeOutCubic"));
+			}
 		} 
 		else if(type == ParameterType.PARAM){
+			if(m_paramRadial != null){
 			m_paramRadial.transform.rotation = rotation;
 			m_paramRadial.SetActive(true);
 			iTween.Stop(m_paramRadial);
 			iTween.RotateTo(m_paramRadial, iTween.Hash("rotation", rotation, "time", 0.4f, "easetype", "easeOutCubic"));
 			iTween.ScaleTo(m_paramRadial, iTween.Hash("scale", new Vector3(1.0f, 1.0f, 1.0f), "time", 0.4f, "easetype", "easeOutCubic"));
+			}
 		}
 	}
 	
@@ -159,9 +150,11 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 		float delay = (immediate) ? 0.0f : 2.0f;
 			
 		if(type == ParameterType.CLIP){
-			iTween.ScaleTo(m_clipRadial, iTween.Hash("scale", new Vector3(0.0f, 0.0f, 0.0f), "time", 0.4f, "easetype", "easeInCubic",  "delay", delay));
+			if(m_clipRadial != null)
+				iTween.ScaleTo(m_clipRadial, iTween.Hash("scale", new Vector3(0.0f, 0.0f, 0.0f), "time", 0.4f, "easetype", "easeInCubic",  "delay", delay));
 		} else if(type == ParameterType.PARAM){
-			iTween.ScaleTo(m_paramRadial, iTween.Hash("scale", new Vector3(.0f, .0f, 0.0f), "time", 0.4f, "easetype", "easeInCubic", "delay", delay));
+			if(m_paramRadial != null)
+				iTween.ScaleTo(m_paramRadial, iTween.Hash("scale", new Vector3(.0f, .0f, 0.0f), "time", 0.4f, "easetype", "easeInCubic", "delay", delay));
 		}
 	}
 	

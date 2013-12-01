@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityOSC;
@@ -60,22 +60,21 @@ namespace MusicIO
 		public InstrumentClip GetClipByIndex(int index){ 
 			return m_clips[index] as InstrumentClip;
 		}
-		
-		
+
+
+		// Parameter functions
+		//-----------------
 		public void AddParam(string name, string valueType, float min, float max){
 			AddParam(name, valueType, min, max, "");
 		}
-		
-		
-		// Parameter functions
-		//-----------------
+
 		public void AddParam(string name, string valueType, float min, float max, string deviceName){
 			if(valueType == "chord"){
 				m_params.Add(new NoteParam(name, this)); 
 			} else if(valueType == "toggle"){
 				m_params.Add(new ToggleParam(name, this));
 			} else{
-				GenericMusicParam param = new GenericMusicParam(name, this);
+				GenericMusicParam param = new GenericMusicParam(name, this, min, max);
 				param.setDeviceName(deviceName);
 				m_params.Add(param); 
 			}

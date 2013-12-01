@@ -5,20 +5,25 @@ public class HandProximityTrigger : MonoBehaviour {
 	
 	public GameObject proximityRoot;
 	public ProximityType proximityTarget;
-	
+
 	public void Init(ProximityType type){
 		proximityTarget = type;
 	}
 	
 	// Use this for initialization
 	void Awake () {
-	
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
 	}
+
+	public void UpdateCollider(Vector3 position, float width, float height, float depth){
+		transform.localScale = new Vector3(width*2, height*2, depth*2);
+		transform.localPosition = position;
+	}
+
 	
 	void OnTriggerEnter(Collider collider){
 		if(collider.gameObject.layer == LayerMask.NameToLayer("SoundCollideable")){

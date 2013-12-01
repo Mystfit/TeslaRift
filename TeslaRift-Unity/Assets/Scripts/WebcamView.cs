@@ -8,8 +8,8 @@ public class WebcamView : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		foreach(WebCamDevice device in WebCamTexture.devices)
-			Debug.Log(device.name);
+		//foreach(WebCamDevice device in WebCamTexture.devices)
+			//Debug.Log(device.name);
 	
 		m_camTexture = new WebCamTexture(WebCamTexture.devices[deviceIndex].name, 640, 480, 30);
 		renderer.material.SetTexture("_MainTex", m_camTexture);

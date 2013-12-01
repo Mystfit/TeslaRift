@@ -10,13 +10,61 @@ public enum ParameterType {
 
 
 public abstract class BaseAttachment : MonoBehaviour{
+
+	public virtual void Awake(){}
+	public virtual void Start(){}
+	public virtual void Update(){}
+
+	/*
+	 * Tool types the attachment can respond to
+	 */
+	public enum ToolModeResponders{
+		BOTH = 0,
+		PRIMARY,
+		SECONDARY
+	}
+	public ToolModeResponders m_respondsToToolMode;
+	public bool respondsToToolMode(BaseTool.ToolMode mode){ 
+		if(m_respondsToToolMode == ToolModeResponders.BOTH)
+			return true;
+		else if(m_respondsToToolMode == ToolModeResponders.PRIMARY && mode == BaseTool.ToolMode.PRIMARY)
+			return true;
+		else if(m_respondsToToolMode == ToolModeResponders.SECONDARY && mode == BaseTool.ToolMode.SECONDARY)
+			return true;
+		return false;
+	}
+
+	public bool respondsToToolMode(ToolModeResponders mode){
+		if(mode == ToolModeResponders.BOTH)
+			return true;
+		else if(mode == ToolModeResponders.PRIMARY)
+			return respondsToToolMode(BaseTool.ToolMode.PRIMARY);
+		else if(mode == ToolModeResponders.SECONDARY)
+			return respondsToToolMode(BaseTool.ToolMode.SECONDARY); 
+		return false;
+	}
+
+	public static ToolModeResponders ConvertToolModeToResponderMode(BaseTool.ToolMode mode){
+		if(mode == BaseTool.ToolMode.PRIMARY)
+			return BaseAttachment.ToolModeResponders.PRIMARY;
+		else if(mode == BaseTool.ToolMode.SECONDARY)
+			return BaseAttachment.ToolModeResponders.SECONDARY;
+
+		return BaseAttachment.ToolModeResponders.BOTH;
+	}
+
+	/*
+	 * Music reference state
+	 */
+	protected bool bHasMusicRef;
+	public bool HasMusicRef{ get { return bHasMusicRef; }}
+
 	/*
 	 * First gesture states
 	 */
 	protected bool bIsFirstGesture = true;
 	public bool IsFirstGesture{ get { return bIsFirstGesture; }}
-	
-	
+
 	/*
 	 * Active tool hand
 	 */
@@ -94,9 +142,10 @@ public abstract class BaseAttachment : MonoBehaviour{
  */
 public class BaseAttachment<T> : BaseAttachment {
 	
-	protected T m_musicRef;
+	private T m_musicRef;
 	public virtual void Init(T managedReference){
 		m_musicRef = managedReference;
+		bHasMusicRef = true;
 	}
 	public T musicRef{ get { return m_musicRef; }}
 }
