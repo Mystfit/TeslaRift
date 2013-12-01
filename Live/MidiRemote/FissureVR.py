@@ -13,6 +13,8 @@ class FissureVR(ControlSurface):
         self.log_message("-----------------------------------------------")
         self.cInstance = c_instance
 
+        self.ignoreList = ["Grabber", "RH-", "RG-", "RA-", "Device On"]
+
         # Add listeners
         if self.cInstance.song().tracks_has_listener(self.tracks_updated) != 1:
             self.cInstance.song().add_tracks_listener(self.tracks_updated)
@@ -36,7 +38,6 @@ class FissureVR(ControlSurface):
             for clipSlot in track.clip_slots:
                 clipSlot.add_has_clip_listener(self.tracks_updated)
 
-
     def rem_tracks_listener(self):
         if self.song().tracks_has_listener(self.tracks_updated) == 1:
             self.song().remove_tracks_listener(self.tracks_updated)
@@ -44,7 +45,7 @@ class FissureVR(ControlSurface):
     def rem_clipslot_listeners(self):
         for track in self.cInstance.song().tracks:
             for clipSlot in track.clip_slots:
-                if( clipSlot.has_clip_has_listener(self.tracks_updated) ):
+                if(clipSlot.has_clip_has_listener(self.tracks_updated)):
                     clipSlot.remove_has_clip_listener(self.tracks_updated)
 
     def tracks_updated(self):
@@ -62,10 +63,37 @@ class FissureVR(ControlSurface):
         for myTrack in self.cInstance.song().tracks:
             trackChannel += 1
 
+            myTrackMixer = myTrack.mixer_device
+
             try:
                 myTrackMixer = myTrack.mixer_device
+
+                # Ignore specific devices, OSC senders and stuff
+                ignoreTrack = False
+                for i in range(len(self.ignoreList)):
+                    self.log_message(("Checking ignore term " + str(self.ignoreList[i]) + " in " + str(myTrack.name)))
+                    if str(self.ignoreList[i]) in str(myTrack.name):
+                        ignoreTrack = True
+                        self.log_message("MATCHED TRACK")
+                if(ignoreTrack):
+                    continue
+
+                # if(myTrack.name.find("H-") > 0):
+                #     self.log_message("Ignore this track! " + myTrack.name)
+                #     continue
+                # elif(myTrack.name.find("G-") > 0):
+                #     self.log_message("Ignore this track! " + myTrack.name)
+                #     continue
+                # elif(myTrack.name.find("A-") > 0):
+                #     self.log_message("Ignore this track! " + myTrack.name)
+                #     continue
+
+                armed = False
+                if(myTrack.can_be_armed):
+                    armed = myTrack.arm
+
                 xmlString += "\t<track channel='" + str(trackChannel) + "' name='" + str(myTrack.name) + "' volume='" + str(myTrackMixer.volume) + "' pan='" + str(
-                    myTrackMixer.panning) + "' output_meter_level='" + str(myTrack.output_meter_level) + "' mute='" + str(myTrack.mute) + "' solo='" + str(myTrack.solo) + "' arm='" + str(myTrack.arm) + "' color='" + str(myTrack.color) + "'>\n"
+                    myTrackMixer.panning) + "' output_meter_level='" + str(myTrack.output_meter_level) + "' mute='" + str(myTrack.mute) + "' solo='" + str(myTrack.solo) + "' arm='" + str(armed) + "' color='" + str(myTrack.color) + "'>\n"
 
                 clipIndex = 0
 
@@ -94,6 +122,15 @@ class FissureVR(ControlSurface):
                 # get the devices and the associated parameters
                 for myDevice in myTrack.devices:
                     try:
+                        # Ignore specific devices, OSC senders and stuff
+                        ignoreDevice = False
+                        for i in range(len(self.ignoreList)):
+                            self.log_message("Checking device name")
+                            if(myDevice.name.find(self.ignoreList[i]) > 0):
+                                ignoreDevice = True
+                                self.log_message("MATCHED DEVICE")
+                        if(ignoreDevice):
+                            continue
                         xmlString += "\t\t<device name='" + \
                             str(myDevice.name) + "'>\n"
                     except:
@@ -101,6 +138,14 @@ class FissureVR(ControlSurface):
 
                     for myParameter in myDevice.parameters:
                         try:
+                            ignoreDeviceParam = False
+                            for i in range(len(self.ignoreList)):
+                                self.log_message(("Checking ignore term " + str(self.ignoreList[i]) + " in " + str(myParameter.name)))
+                                if str(self.ignoreList[i]) in str(myParameter.name):
+                                    ignoreDeviceParam = True
+                                    self.log_message("MATCHED DEVICE PARAMETER")
+                            if(ignoreDeviceParam):
+                                continue
                             xmlString += "\t\t\t<parameter name='" + str(myParameter.name) + "' value='" + str(
                                 myParameter.value) + "' min='" + str(myParameter.min) + "' max='" + str(myParameter.max) + "'/>\n"
                         except:
@@ -124,6 +169,16 @@ class FissureVR(ControlSurface):
                 # get the devices and the associated parameters
                 for myReturnDevice in myReturnTrack.devices:
                     try:
+                        # Ignore specific devices, OSC senders and stuff
+                        ignoreDevice = False
+                        for i in range(len(self.ignoreList)):
+                            self.log_message("Checking return device name")
+                            if(myReturnDevice.name.find(self.ignoreList[i]) > 0):
+                                ignoreDevice = True
+                                self.log_message("MATCHED RETURN DEVICE")
+                        if(ignoreDevice):
+                            continue
+
                         xmlString += "\t\t<device name='" + \
                             str(myReturnDevice.name) + "'>\n"
                     except:
@@ -143,33 +198,35 @@ class FissureVR(ControlSurface):
                 self.log_message("!! error parsing return !!")
 
         # represent the Master Track
-        try:
-            myMasterTrack = self.cInstance.song().master_track
-            myMasterTrackMixer = myMasterTrack.mixer_device
-            xmlString += "\t<trackMaster name='" + str(myMasterTrack.name) + "' volume='" + str(myMasterTrackMixer.volume) + "' pan='" + str(
-                myMasterTrackMixer.panning) + "' output_meter_level='" + str(myMasterTrack.output_meter_level) + "' color='" + str(myMasterTrack.color) + "'>\n"
+        # try:
+        #     myMasterTrack = self.cInstance.song().master_track
+        #     myMasterTrackMixer = myMasterTrack.mixer_device
+        #     xmlString += "\t<trackMaster name='" + str(myMasterTrack.name) + "' volume='" + str(myMasterTrackMixer.volume) + "' pan='" + str(
+        # myMasterTrackMixer.panning) + "' output_meter_level='" +
+        # str(myMasterTrack.output_meter_level) + "' color='" +
+        # str(myMasterTrack.color) + "'>\n"
 
-            # iterate through the device chain of a track
-            # get the devices and the associated parameters
-            for myMasterDevice in myMasterTrack.devices:
-                try:
-                    xmlString += "\t\t<device name='" + \
-                        str(myMasterDevice.name) + "'>\n"
-                except:
-                    self.log_message("!! error parsing return Device !!")
+        # iterate through the device chain of a track
+        # get the devices and the associated parameters
+        #     for myMasterDevice in myMasterTrack.devices:
+        #         try:
+        #             xmlString += "\t\t<device name='" + \
+        #                 str(myMasterDevice.name) + "'>\n"
+        #         except:
+        #             self.log_message("!! error parsing return Device !!")
 
-                for myMasterParameter in myMasterDevice.parameters:
-                    try:
-                        xmlString += "\t\t\t<parameter name='" + str(myMasterParameter.name) + "' value='" + str(
-                            myMasterParameter.value) + "' min='" + str(myMasterParameter.min) + "' max='" + str(myMasterParameter.max) + "'/>\n"
-                    except:
-                        self.log_message("!! error parsing return Parameter!!")
+        #         for myMasterParameter in myMasterDevice.parameters:
+        #             try:
+        #                 xmlString += "\t\t\t<parameter name='" + str(myMasterParameter.name) + "' value='" + str(
+        #                     myMasterParameter.value) + "' min='" + str(myMasterParameter.min) + "' max='" + str(myMasterParameter.max) + "'/>\n"
+        #             except:
+        #                 self.log_message("!! error parsing return Parameter!!")
 
-                xmlString += "\t\t</device>\n"
-            xmlString += "\t</trackMaster>\n"
+        #         xmlString += "\t\t</device>\n"
+        #     xmlString += "\t</trackMaster>\n"
 
-        except:
-            self.log_message("!! error master return !!")
+        # except:
+        #     self.log_message("!! error master return !!")
 
         xmlString += "</song>\n"
 
@@ -177,4 +234,4 @@ class FissureVR(ControlSurface):
             "/Users/mystfit/Code/TeslaRift/Live/MidiRemote/sessionDump.xml", "w")
         f.write(xmlString)
 
-        #self.log_message(xmlString)
+        # self.log_message(xmlString)

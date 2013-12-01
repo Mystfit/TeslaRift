@@ -1,50 +1,24 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <song tempo = '110.0'>
-	<track channel='1' name='TeslaArp' volume='-3.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='16712965'>
-		<clip index='1' name='chord1' color='12411136' mute='False' looping='True' playing='False' triggered='False' />
+	<track channel='1' name='TeslaArp' volume='-4.8 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='True' color='16712965'>
+		<clip index='1' name='chord1' color='12411136' mute='False' looping='True' playing='True' triggered='False' />
 		<clip index='4' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='5' name='MystChords' color='8754719' mute='False' looping='True' playing='True' triggered='False' />
+		<clip index='5' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='6' name='LightCycle1' color='5480241' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='9' name='Minor1' color='31421' mute='False' looping='True' playing='False' triggered='False' />
 		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
-		<device name='Ubiquitous'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
-			<parameter name='Style' value='6.0' min='0.0' max='17.0'/>
-			<parameter name='Offset' value='0.0' min='-8.0' max='8.0'/>
-			<parameter name='Repeats' value='0.0' min='0.0' max='16.0'/>
-			<parameter name='Sync On' value='1.0' min='0.0' max='1.0'/>
-			<parameter name='Synced Rate' value='6.0' min='0.0' max='13.0'/>
-			<parameter name='Groove' value='0.0' min='0.0' max='3.0'/>
-			<parameter name='Free Rate' value='0.595238089561' min='0.0' max='1.0'/>
-			<parameter name='Gate' value='102.079368591' min='1.0' max='200.0'/>
-			<parameter name='Retrigger Mode' value='2.0' min='0.0' max='2.0'/>
-			<parameter name='Ret. Interval' value='5.0' min='0.0' max='14.0'/>
-			<parameter name='Hold On' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Tranpose Mode' value='0.0' min='0.0' max='2.0'/>
-			<parameter name='Tranpose Key' value='3.0' min='0.0' max='11.0'/>
-			<parameter name='Transp. Steps' value='2.0' min='0.0' max='8.0'/>
-			<parameter name='Transp. Dist.' value='12.0' min='-24.0' max='24.0'/>
-			<parameter name='Velocity On' value='1.0' min='0.0' max='1.0'/>
-			<parameter name='Vel. Retrigger' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Velocity Decay' value='0.484126985073' min='0.0' max='1.0'/>
-			<parameter name='Velocity Target' value='103.817459106' min='0.0' max='127.0'/>
-		</device>
-		<device name='Annihilator 1'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
-			<parameter name='Hi Cut Filter' value='127.0' min='0.0' max='127.0'/>
-			<parameter name='Filter Reson' value='66.0' min='0.0' max='127.0'/>
-			<parameter name='Distortion Dry/Wet' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Arp/Gate On/Off' value='0.0' min='0.0' max='127.0'/>
+		<device name='TeslaArpRack'>
+			<parameter name='Gate' value='37.0' min='0.0' max='127.0'/>
+			<parameter name='Rate' value='61.0' min='0.0' max='127.0'/>
+			<parameter name='Steps' value='87.0' min='0.0' max='127.0'/>
+			<parameter name='Hi Cut Filter' value='47.0' min='0.0' max='127.0'/>
+			<parameter name='Filter Reson' value='42.0' min='0.0' max='127.0'/>
+			<parameter name='Distortion Dry/Wet' value='72.0' min='0.0' max='127.0'/>
 			<parameter name='Attack' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Release' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Reverb Dry/Wet' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Delay Dry/Wet' value='26.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 8' value='0.0' min='0.0' max='127.0'/>
 			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
-		</device>
-		<device name='TrackGrabber'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
 		</device>
 	</track>
 	<track channel='2' name='M-Traveller' volume='-3.4 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='16753961'>
@@ -54,7 +28,6 @@
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
 		<device name='The Traveler'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
 			<parameter name='Hi Cut Filter' value='127.0' min='0.0' max='127.0'/>
 			<parameter name='Filter Reson' value='47.0' min='0.0' max='127.0'/>
 			<parameter name='Filter Rate' value='0.0' min='0.0' max='127.0'/>
@@ -65,9 +38,6 @@
 			<parameter name='Delay Dry/Wet' value='0.0' min='0.0' max='127.0'/>
 			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
 		</device>
-		<device name='TrackGrabber'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
-		</device>
 	</track>
 	<track channel='3' name='BrassSwell' volume='1.3 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='16773172'>
 		<clip index='1' name='2 8-Brass Swell Around' color='12411136' mute='False' looping='True' playing='False' triggered='False' />
@@ -76,7 +46,6 @@
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
 		<device name='Brass Swell Around'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
 			<parameter name='Hi Cut Filter' value='111.0' min='0.0' max='127.0'/>
 			<parameter name='Filter Reson' value='42.0' min='0.0' max='127.0'/>
 			<parameter name='Filter Rate' value='0.0' min='0.0' max='127.0'/>
@@ -87,17 +56,13 @@
 			<parameter name='Delay Dry/Wet' value='0.0' min='0.0' max='127.0'/>
 			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
 		</device>
-		<device name='TrackGrabber'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
-		</device>
 	</track>
 	<track channel='4' name='Percussion' volume='-5.5 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='5480241'>
 		<clip index='1' name='TimeTables1' color='16149507' mute='False' looping='True' playing='True' triggered='False' />
-		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
-		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
+		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
+		<sends name='B-Turnado2' value='1.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
 		<device name='Electrix Audio Clip Effect Rack'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
 			<parameter name='Hi Cut Filter' value='127.0' min='0.0' max='127.0'/>
 			<parameter name='Filter Reson' value='25.0' min='0.0' max='127.0'/>
 			<parameter name='DistortionDry/Wet' value='0.0' min='0.0' max='127.0'/>
@@ -108,19 +73,15 @@
 			<parameter name='Delay Dry/Wet' value='0.0' min='0.0' max='127.0'/>
 			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
 		</device>
-		<device name='TrackGrabber'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
-		</device>
 	</track>
 	<track channel='5' name='AudioLoop1' volume='0.2 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='2490280'>
-		<clip index='1' name='TapHat' color='16753961' mute='False' looping='True' playing='True' triggered='False' />
+		<clip index='1' name='TapHat' color='16753961' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='2' name='DigitalArmy1' color='49071' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='3' name='RadioProcessing' color='12581632' mute='False' looping='True' playing='False' triggered='False' />
 		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
 		<device name='Electrix Audio Clip Effect Rack'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
 			<parameter name='Hi Cut Filter' value='127.0' min='0.0' max='127.0'/>
 			<parameter name='Filter Reson' value='25.0' min='0.0' max='127.0'/>
 			<parameter name='DistortionDry/Wet' value='0.0' min='0.0' max='127.0'/>
@@ -131,34 +92,24 @@
 			<parameter name='Delay Dry/Wet' value='0.0' min='0.0' max='127.0'/>
 			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
 		</device>
-		<device name='TrackGrabber'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
-		</device>
 	</track>
 	<track channel='6' name='AudioImpulse1' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='2490280'>
 		<clip index='1' name='Woosh' color='15549221' mute='False' looping='False' playing='False' triggered='False' />
-		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
-		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
+		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
+		<sends name='B-Turnado2' value='1.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
-		<device name='TrackGrabber'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
-		</device>
 	</track>
 	<track channel='7' name='Kaoss1' volume='-1.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='1769263'>
-		<clip index='1' name='BassCroak1' color='12411136' mute='False' looping='True' playing='True' triggered='False' />
+		<clip index='1' name='BassCroak1' color='12411136' mute='False' looping='True' playing='False' triggered='False' />
 		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
-		<device name='TrackGrabber'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
-		</device>
 	</track>
 	<track channel='8' name='SnowPad' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='9160191'>
 		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
 		<device name='A Snow Pad'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
 			<parameter name='Filter Freq' value='64.0' min='0.0' max='127.0'/>
 			<parameter name='Arp High' value='46.0' min='0.0' max='127.0'/>
 			<parameter name='Arp Low' value='114.0' min='0.0' max='127.0'/>
@@ -170,51 +121,118 @@
 			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
 		</device>
 	</track>
-	<track channel='9' name='R_LowBAss' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='True' color='9611263'>
+	<track channel='10' name='RM-LowBass' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='9611263'>
 		<clip index='4' name='bass1' color='14183652' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='5' name='bass2' color='14183652' mute='False' looping='True' playing='False' triggered='False' />
-		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
+		<sends name='A-Turnado1' value='0.639999866486' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
 		<device name='Pitch'>
-			<parameter name='Device On' value='0.0' min='0.0' max='1.0'/>
 			<parameter name='Pitch' value='0.0' min='-128.0' max='128.0'/>
 			<parameter name='Lowest' value='60.0' min='0.0' max='127.0'/>
 			<parameter name='Range' value='127.0' min='0.0' max='127.0'/>
 		</device>
+		<device name='nK Receiver'>
+			<parameter name='Send A (*LowBass-fxA*)' value='127.0' min='0.0' max='127.0'/>
+			<parameter name='Send B (*LowBass-fxB*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Send C (*LowBass-fxC*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 4' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 5' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 6' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 7' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 8' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
+		</device>
 	</track>
-	<track channel='10' name='R_Sisters' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='5538020'>
+	<track channel='14' name='RM-Sisters' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='5538020'>
 		<clip index='4' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='5' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
-		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
+		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
 		<device name='Pitch'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
 			<parameter name='Pitch' value='0.0' min='-128.0' max='128.0'/>
 			<parameter name='Lowest' value='0.0' min='0.0' max='127.0'/>
 			<parameter name='Range' value='59.0' min='0.0' max='127.0'/>
 		</device>
+		<device name='nK Receiver'>
+			<parameter name='Send A (*Sisters-fxA*)' value='127.0' min='0.0' max='127.0'/>
+			<parameter name='Send B (*Sisters-fxB*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Send C (*Sisters-fxC*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 4' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 5' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 6' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 7' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 8' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
+		</device>
 	</track>
-	<track channel='11' name='R-7sisters' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='9160191'>
+	<track channel='18' name='M-7sisters' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='9160191'>
 		<clip index='4' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='5' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='6' name='6 LightCycleArp' color='5480241' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='9' name='4 R-7sisters' color='3101346' mute='False' looping='True' playing='False' triggered='False' />
-		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
+		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
 		<device name='Pitch'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
 			<parameter name='Pitch' value='0.0' min='-128.0' max='128.0'/>
 			<parameter name='Lowest' value='60.0' min='0.0' max='127.0'/>
 			<parameter name='Range' value='127.0' min='0.0' max='127.0'/>
 		</device>
+		<device name='nK Receiver'>
+			<parameter name='Send A (*7Sisters-fxA*)' value='127.0' min='0.0' max='127.0'/>
+			<parameter name='Send B (*7Sisters-fxB*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Send C (*7Sisters-fxC*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 4' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 5' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 6' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 7' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 8' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
+		</device>
 	</track>
-	<track channel='12' name='ReasonOut' volume='-0.5 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='197631'>
-		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
+	<track channel='22' name='RM-Orch' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='10204100'>
+		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
+		<device name='Pitch'>
+			<parameter name='Pitch' value='0.0' min='-128.0' max='128.0'/>
+			<parameter name='Lowest' value='60.0' min='0.0' max='127.0'/>
+			<parameter name='Range' value='127.0' min='0.0' max='127.0'/>
+		</device>
+		<device name='nK Receiver'>
+			<parameter name='Send A (*Orch-fxA*)' value='127.0' min='0.0' max='127.0'/>
+			<parameter name='Send B (*Orch-fxB*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Send C (*Orch-fxC*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 4' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 5' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 6' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 7' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 8' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
+		</device>
+	</track>
+	<track channel='26' name='RM-Percuss1' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='13011836'>
+		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
+		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
+		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
+		<device name='Pitch'>
+			<parameter name='Pitch' value='0.0' min='-128.0' max='128.0'/>
+			<parameter name='Lowest' value='60.0' min='0.0' max='127.0'/>
+			<parameter name='Range' value='127.0' min='0.0' max='127.0'/>
+		</device>
+		<device name='nK Receiver'>
+			<parameter name='Send A (*Perc-fxA*)' value='127.0' min='0.0' max='127.0'/>
+			<parameter name='Send B (*Perc-fxB*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Send C (*Perc-fxC*)' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 4' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 5' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 6' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 7' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Macro 8' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
+		</device>
 	</track>
 	<trackReturn name='A-Turnado1' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' color='15810688'>
 		<device name='Turnado'>
@@ -226,7 +244,7 @@
 			<parameter name='Control 4' value='0.0' min='0.0' max='1.0'/>
 			<parameter name='Control 5' value='0.0' min='0.0' max='1.0'/>
 			<parameter name='Control 6' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 7' value='0.0' min='0.0' max='1.0'/>
+			<parameter name='Control 7' value='0.13499994576' min='0.0' max='1.0'/>
 			<parameter name='Control 8' value='0.0' min='0.0' max='1.0'/>
 		</device>
 	</trackReturn>
@@ -248,47 +266,14 @@
 		<device name='Turnado'>
 			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
 			<parameter name='Dictator' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 1' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 2' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 3' value='0.0' min='0.0' max='1.0'/>
+			<parameter name='Control 1' value='0.285252988338' min='0.0' max='1.0'/>
+			<parameter name='Control 2' value='0.6590949893' min='0.0' max='1.0'/>
+			<parameter name='Control 3' value='0.651542007923' min='0.0' max='1.0'/>
 			<parameter name='Control 4' value='0.0' min='0.0' max='1.0'/>
 			<parameter name='Control 5' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 6' value='0.0' min='0.0' max='1.0'/>
+			<parameter name='Control 6' value='0.646781027317' min='0.0' max='1.0'/>
 			<parameter name='Control 7' value='0.0' min='0.0' max='1.0'/>
 			<parameter name='Control 8' value='0.0' min='0.0' max='1.0'/>
 		</device>
 	</trackReturn>
-	<trackMaster name='Master' volume='2.0 dB' pan='C' output_meter_level='0.0' color='0'>
-		<device name='GrabberReceiver'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
-		</device>
-		<device name='Generic Compressor'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
-			<parameter name='Threshold' value='0.336661458015' min='0.0' max='1.0'/>
-			<parameter name='Ratio' value='0.5' min='0.0' max='1.0'/>
-			<parameter name='Expansion Ratio' value='1.14999997616' min='1.0' max='2.0'/>
-			<parameter name='Attack' value='0.600000023842' min='0.0' max='1.0'/>
-			<parameter name='Release' value='0.271304905415' min='0.0' max='1.0'/>
-			<parameter name='Auto Release On/Off' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Output Gain' value='0.0' min='-36.0' max='36.0'/>
-			<parameter name='Makeup' value='1.0' min='0.0' max='1.0'/>
-			<parameter name='Dry/Wet' value='1.0' min='0.0' max='1.0'/>
-			<parameter name='Model' value='0.0' min='0.0' max='2.0'/>
-			<parameter name='Env Mode' value='1.0' min='0.0' max='1.0'/>
-			<parameter name='Knee' value='0.703125' min='0.0' max='18.0'/>
-			<parameter name='LookAhead' value='1.0' min='0.0' max='2.0'/>
-			<parameter name='Side Listen' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Ext. In On' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Ext. In Gain' value='0.40000000596' min='0.0' max='1.0'/>
-			<parameter name='Ext. In Mix' value='1.0' min='0.0' max='1.0'/>
-			<parameter name='EQ Mode' value='4.0' min='0.0' max='5.0'/>
-			<parameter name='EQ On' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='EQ Freq' value='0.528338193893' min='0.0' max='1.0'/>
-			<parameter name='EQ Gain' value='0.0' min='-15.0' max='15.0'/>
-			<parameter name='EQ Q' value='0.408567070961' min='0.0' max='1.0'/>
-		</device>
-		<device name='Master'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
-		</device>
-	</trackMaster>
 </song>
