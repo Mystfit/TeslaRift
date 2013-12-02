@@ -25,7 +25,7 @@ public class RBFControlAttachment : UIAttachment {
 	protected RBF.RBFTrainingPointAttachment m_dragTarget;
 	protected Transform m_dragSource;
 
-	public override void Start () {
+	public override void Awake () {
 		m_frame = GetComponent<UIFrame>();
 		m_trainingPoints = new List<RBFTrainingPointAttachment>();
 		m_rbf = new RBFCore(1,1);
@@ -43,14 +43,27 @@ public class RBFControlAttachment : UIAttachment {
 
 
 	/*
-	 * Creates a new training point prefab on the panel
+	 * Creates a training point at a position or transform location
 	 */
-	public RBFTrainingPointAttachment CreateTrainingPoint(Transform position){
+	public RBFTrainingPointAttachment CreateTrainingPoint(float x, float y, float twist){
 		RBFTrainingPointAttachment training = UI.UIFactory.CreateRBFTraining();
 		training.SetParentContainer(this, m_frame.width, m_frame.height);
-		training.MoveRelativeToContainer(position);
+		training.MoveRelativeToLocal(x, y);
 		m_trainingPoints.Add(training);
+		
+		return training;
+	}
 
+
+	/*
+	 * Creates a new training point (transform overload)
+	 */
+	public RBFTrainingPointAttachment CreateTrainingPoint(Transform t){
+		RBFTrainingPointAttachment training = UI.UIFactory.CreateRBFTraining();
+		training.SetParentContainer(this, m_frame.width, m_frame.height);
+		training.MoveRelativeToContainer(t);
+		m_trainingPoints.Add(training);
+		
 		return training;
 	}	
 
@@ -66,16 +79,8 @@ public class RBFControlAttachment : UIAttachment {
 			if( mode == BaseTool.ToolMode.PRIMARY ){
 				m_owner.UpdateTrainingPoint( CreateTrainingPoint( HydraController.Instance.GetHand( m_hand ).transform ) );
 			}
-			
-			//Secondary = Update values       
-			else if( mode == BaseTool.ToolMode.SECONDARY ){
-				owner.ToggleControlState();
-			}
 			break;
 		case MusicControllerAttachment.ControlState.PERFORM:
-			if( mode == BaseTool.ToolMode.SECONDARY ){
-				owner.ToggleControlState();
-			}
 			break;
 		}
 		base.Gesture_First ();
@@ -86,14 +91,16 @@ public class RBFControlAttachment : UIAttachment {
 		case MusicControllerAttachment.ControlState.EDIT:
 			break;
 		case MusicControllerAttachment.ControlState.PERFORM:
-			if( mode == BaseTool.ToolMode.PRIMARY ){
-				
+			if( mode == BaseTool.ToolMode.SECONDARY ){
+				m_frame.GetAnchorOffset(m_frame.width, m_frame.height, m_frame.m_anchorPoint);
 				Vector3 pos = BaseTool.HandToObjectSpace( HydraController.Instance.GetHand( m_hand ).transform, transform);
 				
+//				Vector3 clampedPos = new Vector3(
+//					Mathf.Clamp(pos.x, m_frame.width*-0.5f, m_frame.height*0.5f ), 
+//					Mathf.Clamp(pos.y, m_frame.width*-0.5f, m_frame.height*0.5f ), 0.0f
+//					);	
 				Vector3 clampedPos = new Vector3(
-					Mathf.Clamp(pos.x, m_frame.width*-0.5f, m_frame.height*0.5f ), 
-					Mathf.Clamp(pos.y, m_frame.width*-0.5f, m_frame.height*0.5f ), 0.0f
-					);	
+					pos.x, pos.y, 0.0f);	
 				
 				double[] positionVals = new double[3]{clampedPos.x, clampedPos.y, 0.0f};
 				double[] paramOutput = m_rbf.calculateOutput(positionVals);
@@ -102,7 +109,8 @@ public class RBFControlAttachment : UIAttachment {
 				List<BaseInstrumentParam> paramList = m_owner.paramControls.GetParametersFromSliders();
 				Dictionary<BaseInstrumentParam,float> sliderResults = new Dictionary<BaseInstrumentParam, float>();
 				foreach(BaseInstrumentParam param in paramList){
-					sliderResults[param] = (float)paramOutput[outputIndex++];
+					if(outputIndex < paramList.Count)
+						sliderResults[param] = (float)paramOutput[outputIndex++];
 				}
 				
 				m_owner.UpdateSlidersFromRBF(sliderResults);
@@ -200,6 +208,7 @@ public class RBFControlAttachment : UIAttachment {
 	}
 
 	public RBFTrainingPointAttachment SelectedTrainingPoint{ get { return m_selectedTraining; }}
+	public List<RBF.RBFTrainingPointAttachment> points{ get { return  m_trainingPoints; }}
 
 
 	/*

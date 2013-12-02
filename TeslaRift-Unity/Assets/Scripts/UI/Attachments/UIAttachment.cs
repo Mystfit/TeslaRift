@@ -16,25 +16,15 @@ namespace UI
 	}
 
 	public class UIAttachment : BaseAttachment{
-		protected GameObject m_collisionTriggers;
+		public GameObject m_collisionTrigger;
 
 		public bool willCollide = true;
 
-		public override void Awake(){
-			for(int i =0; i < transform.childCount; i++){
-				if(transform.GetChild(i).name == "BoxAreaTrigger"){
-					m_collisionTriggers = transform.GetChild(i).gameObject;
-				}
-			}
-
-			base.Awake();
-		}
-
 		public override void Update(){
-			if(willCollide && !m_collisionTriggers.activeSelf)
-				m_collisionTriggers.SetActive(true);
-			else if(!willCollide && m_collisionTriggers.activeSelf)
-				m_collisionTriggers.SetActive(false);
+			if(willCollide && !m_collisionTrigger.activeSelf)
+				m_collisionTrigger.SetActive(true);
+			else if(!willCollide && m_collisionTrigger.activeSelf)
+				m_collisionTrigger.SetActive(false);
 		}
 	}
 }

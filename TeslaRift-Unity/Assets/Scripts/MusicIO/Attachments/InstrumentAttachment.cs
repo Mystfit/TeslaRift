@@ -21,9 +21,15 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 	protected ParameterType m_openRadialType;
 	protected bool bOpenRadial = false;
 	public bool IsRadialOpen{ get { return bOpenRadial; }}
+
+	public override void Awake ()
+	{
+		base.Awake ();
+		m_respondsToToolMode = new BaseTool.ToolMode[]{BaseTool.ToolMode.PRIMARY, BaseTool.ToolMode.SECONDARY};
+	}
 	
 	
-	void Update () {
+	public override void Update () {
 		//Debug tests for clip changing
 		if(triggerClip == true){
 			triggerClip = false;

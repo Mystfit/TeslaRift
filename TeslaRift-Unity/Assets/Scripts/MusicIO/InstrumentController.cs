@@ -18,11 +18,14 @@ public class InstrumentController : MonoBehaviour {
 	//Buffer references
 	protected List<ClipBufferAttachment> m_buffers;
 	protected MusicControllerAttachment m_selectedMusicController;
+
+	//Controller references
+	protected List<MusicControllerAttachment> m_musicGroups;
 	
 	//Prefix source name in front of OSC messages
 	private string m_sourceName;
 	public void SetSourceName(string sourceName){ m_sourceName = sourceName; }
-	
+
 	//Inspector toggles
 	public bool m_blastAllParameters;
 
@@ -34,6 +37,7 @@ public class InstrumentController : MonoBehaviour {
 		m_instruments = new List<BaseInstrument>();
 		m_instrumentGameObjs = new List<GameObject>();
 		m_buffers = new List<ClipBufferAttachment>();
+		m_musicGroups = new List<MusicControllerAttachment>();
 		m_instance = this;
 	}
 	
@@ -138,9 +142,7 @@ public class InstrumentController : MonoBehaviour {
 			if(instrument.Name == targetInstrument)
 				return instrument;
 		}
-		
-		
-			
+
 		return null;
 	}
 	
@@ -157,4 +159,14 @@ public class InstrumentController : MonoBehaviour {
 	 * Gets last selected isntrument
 	 */
 	public GameObject LastSelectedGameInstrument{ get { return m_lastSelectedGameInstrument; }}
+
+
+	/*
+	 * Music controller interaction
+	 */
+	public void AddMusicGroup(MusicControllerAttachment mGroup){
+		m_musicGroups.Add(mGroup);
+	}
+
+	public List<MusicControllerAttachment> MusicGroups{ get { return m_musicGroups; }}
 }

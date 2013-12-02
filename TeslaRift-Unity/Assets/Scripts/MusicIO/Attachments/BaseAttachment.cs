@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEditor;
 using System.Collections;
 using MusicIO;
 
@@ -16,41 +17,18 @@ public abstract class BaseAttachment : MonoBehaviour{
 	public virtual void Update(){}
 
 	/*
-	 * Tool types the attachment can respond to
+	 * Filter for attachment to only respond to defined tool modes
 	 */
-	public enum ToolModeResponders{
-		BOTH = 0,
-		PRIMARY,
-		SECONDARY
-	}
-	public ToolModeResponders m_respondsToToolMode;
-	public bool respondsToToolMode(BaseTool.ToolMode mode){ 
-		if(m_respondsToToolMode == ToolModeResponders.BOTH)
-			return true;
-		else if(m_respondsToToolMode == ToolModeResponders.PRIMARY && mode == BaseTool.ToolMode.PRIMARY)
-			return true;
-		else if(m_respondsToToolMode == ToolModeResponders.SECONDARY && mode == BaseTool.ToolMode.SECONDARY)
-			return true;
+	public BaseTool.ToolMode[] m_respondsToToolMode;
+	public bool respondsToToolMode(BaseTool.ToolMode mode){
+		if(m_respondsToToolMode.Length > 0){
+			foreach(BaseTool.ToolMode responder in m_respondsToToolMode){
+				if(responder == mode)
+					return true;
+			}
+		}
+
 		return false;
-	}
-
-	public bool respondsToToolMode(ToolModeResponders mode){
-		if(mode == ToolModeResponders.BOTH)
-			return true;
-		else if(mode == ToolModeResponders.PRIMARY)
-			return respondsToToolMode(BaseTool.ToolMode.PRIMARY);
-		else if(mode == ToolModeResponders.SECONDARY)
-			return respondsToToolMode(BaseTool.ToolMode.SECONDARY); 
-		return false;
-	}
-
-	public static ToolModeResponders ConvertToolModeToResponderMode(BaseTool.ToolMode mode){
-		if(mode == BaseTool.ToolMode.PRIMARY)
-			return BaseAttachment.ToolModeResponders.PRIMARY;
-		else if(mode == BaseTool.ToolMode.SECONDARY)
-			return BaseAttachment.ToolModeResponders.SECONDARY;
-
-		return BaseAttachment.ToolModeResponders.BOTH;
 	}
 
 	/*
@@ -64,6 +42,7 @@ public abstract class BaseAttachment : MonoBehaviour{
 	 */
 	protected bool bIsFirstGesture = true;
 	public bool IsFirstGesture{ get { return bIsFirstGesture; }}
+	public void ResetFirstGesture(){ bIsFirstGesture = false; }
 
 	/*
 	 * Active tool hand
@@ -132,8 +111,8 @@ public abstract class BaseAttachment : MonoBehaviour{
 	
 	public virtual void Gesture_Exit(){
 		bIsFirstGesture = true;
-		SetToolMode(BaseTool.ToolMode.PRIMARY);	//Reset tool modes in case we forget to intialize
-	}
+		//SetToolMode(BaseTool.ToolMode.PRIMARY);	//Reset tool modes in case we forget to intialize
+	}	
 }
 
 
@@ -149,3 +128,5 @@ public class BaseAttachment<T> : BaseAttachment {
 	}
 	public T musicRef{ get { return m_musicRef; }}
 }
+
+

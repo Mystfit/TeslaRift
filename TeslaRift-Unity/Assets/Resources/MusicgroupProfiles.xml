@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<MusicGroupList>
+  <MusicGroupList>
+    <MusicGroup>
+      <clip name="IntroSwell" index="2" owner="M-Traveller" />
+      <rbfPoint x="0.2950353" y="0.7563743" twist="0">
+        <rbfValue paramName="Send_C_(*LowBass-fxC*)" owner="A-LowBass">0</rbfValue>
+        <rbfValue paramName="Send_A_(*LowBass-fxA*)" owner="A-LowBass">0.1</rbfValue>
+        <rbfValue paramName="Send-C-Turnado3" owner="A-LowBass">0.2</rbfValue>
+        <rbfValue paramName="Send-A-Turnado1" owner="H-SistersRoute">0.6131001</rbfValue>
+        <rbfValue paramName="Send-B-Turnado2" owner="H-SistersRoute">0.5214539</rbfValue>
+        <rbfValue paramName="Send-C-Turnado3" owner="H-SistersRoute">0</rbfValue>
+      </rbfPoint>
+      <rbfPoint x="0.6952821" y="0.6102298" twist="0">
+        <rbfValue paramName="Send_C_(*LowBass-fxC*)" owner="A-LowBass">0.5</rbfValue>
+        <rbfValue paramName="Send_A_(*LowBass-fxA*)" owner="A-LowBass">0.2</rbfValue>
+        <rbfValue paramName="Send-C-Turnado3" owner="A-LowBass">0.7</rbfValue>
+        <rbfValue paramName="Send-A-Turnado1" owner="H-SistersRoute">0.6131001</rbfValue>
+        <rbfValue paramName="Send-B-Turnado2" owner="H-SistersRoute">0</rbfValue>
+        <rbfValue paramName="Send-C-Turnado3" owner="H-SistersRoute">0</rbfValue>
+      </rbfPoint>
+      <rbfPoint x="0.7421532" y="0.26032" twist="0">
+       <rbfValue paramName="Send_C_(*LowBass-fxC*)" owner="A-LowBass">0</rbfValue>
+        <rbfValue paramName="Send_A_(*LowBass-fxA*)" owner="A-LowBass">0.8122575</rbfValue>
+        <rbfValue paramName="Send-C-Turnado3" owner="A-LowBass">0</rbfValue>
+        <rbfValue paramName="Send-A-Turnado1" owner="H-SistersRoute">0</rbfValue>
+        <rbfValue paramName="Send-B-Turnado2" owner="H-SistersRoute">0.5214539</rbfValue>
+        <rbfValue paramName="Send-C-Turnado3" owner="H-SistersRoute">0</rbfValue>
+      </rbfPoint>
+      <rbfPoint x="0.2315637" y="0.2779288" twist="0">
+        <rbfValue paramName="Send_C_(*LowBass-fxC*)" owner="A-LowBass">0</rbfValue>
+        <rbfValue paramName="Send_A_(*LowBass-fxA*)" owner="A-LowBass">0.8122575</rbfValue>
+        <rbfValue paramName="Send-C-Turnado3" owner="A-LowBass">0</rbfValue>
+        <rbfValue paramName="Send-A-Turnado1" owner="H-SistersRoute">0</rbfValue>
+        <rbfValue paramName="Send-B-Turnado2" owner="H-SistersRoute">0.5214539</rbfValue>
+        <rbfValue paramName="Send-C-Turnado3" owner="H-SistersRoute">0</rbfValue>
+      </rbfPoint>
+    </MusicGroup>
+  </MusicGroupList>
+</MusicGroupList>

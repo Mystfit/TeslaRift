@@ -56,6 +56,8 @@ public class InstrumentGestureTool : BaseTool {
 	public override void TransitionIn ()
 	{
 		m_toolHandState = BaseTool.HandState.SEARCHING;
+		m_gestureState = GestureState.EXTERIOR;
+		m_lastGestureState = GestureState.EXTERIOR;
 		m_gestureTimer = m_betweenGestureDelay;
 	}
 	
@@ -125,9 +127,9 @@ public class InstrumentGestureTool : BaseTool {
 
 		case GestureState.INTERIOR_TO_EXTERIOR:
 			m_gestureTimer = m_betweenGestureDelay;
-			//m_gestureState = GestureState.EXTERIOR;
+			m_gestureState = GestureState.EXTERIOR;
 			m_lastGestureState = GestureState.INTERIOR;
-			TransitionOut();
+			LeavingProximity();
 			break;
 
 		case GestureState.PROXIMITY:
@@ -136,16 +138,15 @@ public class InstrumentGestureTool : BaseTool {
 			
 		case GestureState.PROXIMITY_TO_INTERIOR:
 			m_gestureTimer = m_betweenGestureDelay;
-			//m_gestureState = GestureState.INTERIOR;
+			m_gestureState = GestureState.INTERIOR;
 			m_lastGestureState = GestureState.PROXIMITY_TO_INTERIOR;
-			TransitionOut();
 			break;
 			
 		case GestureState.PROXIMITY_TO_EXTERIOR:
 			m_gestureTimer = m_betweenGestureDelay;
-			//m_gestureState = GestureState.EXTERIOR;
+			m_gestureState = GestureState.EXTERIOR;
 			m_lastGestureState = GestureState.PROXIMITY_TO_EXTERIOR;
-			TransitionOut();
+			LeavingProximity();
 			break;
 			
 		case GestureState.EXTERIOR:
@@ -160,9 +161,8 @@ public class InstrumentGestureTool : BaseTool {
 
 		case GestureState.EXTERIOR_TO_INTERIOR:
 			m_gestureTimer = m_betweenGestureDelay;
-			//m_gestureState = GestureState.INTERIOR;
+			m_gestureState = GestureState.INTERIOR;
 			m_lastGestureState = GestureState.EXTERIOR;
-			TransitionOut();
 			break;
 		}
 			
@@ -171,6 +171,8 @@ public class InstrumentGestureTool : BaseTool {
 			m_gestureTimer = 0;
 			m_lastGestureState = m_gestureState;
 		}	
+
+		Debug.Log(m_lastGestureState);
 	}
 	
 	
@@ -194,19 +196,18 @@ public class InstrumentGestureTool : BaseTool {
 			}
 		}
 	}
-	
-	
-	/*
-	 * Tool exit state
-	 */
-	public override void TransitionOut ()
-	{		
+
+
+	public override void LeavingProximity ()
+	{
+		base.LeavingProximity ();
+
 		//Trigger gesture actions upon tool exit
 		//--------------------------
 		if(m_attachment != null){
 			switch(m_lastGestureState){
 				
-			//Idle gestures
+				//Idle gestures
 			case GestureState.INTERIOR:
 				m_attachment.Gesture_ExitIdleInterior();
 				break;
@@ -233,11 +234,19 @@ public class InstrumentGestureTool : BaseTool {
 				m_attachment.Gesture_PushIn();
 				break;
 			}
-			m_attachment.Gesture_Exit();
 		}
-
 		m_toolHandState = BaseTool.HandState.SEARCHING;
+	}
+
+	
+	/*
+	 * Tool exit state
+	 */
+	public override void TransitionOut ()
+	{		
+		if(m_attachment != null)
+			m_attachment.Gesture_Exit();
 		m_heldObject = null;
-		//m_attachment = null;
+		m_attachment = null;
 	}
 }

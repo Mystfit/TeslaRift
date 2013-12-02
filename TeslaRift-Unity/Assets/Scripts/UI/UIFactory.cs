@@ -13,6 +13,7 @@ namespace UI
 		public GameObject framePrefab;
 		public GameObject rbfTrainingPrefab;
 		public GameObject clipButtonPrefab;
+		public GameObject musicGroupPrefab;
 		
 		void Start(){
 			m_instance = this;
@@ -72,6 +73,12 @@ namespace UI
 				attach.SetOwner(owner);
 
 			return attach;
+		}
+
+		
+		public static MusicControllerAttachment CreateMusicGroup(){
+			GameObject musicObj = Instantiate(Instance.musicGroupPrefab) as GameObject;
+			return musicObj.GetComponent<MusicControllerAttachment>();
 		}
 	}
 }

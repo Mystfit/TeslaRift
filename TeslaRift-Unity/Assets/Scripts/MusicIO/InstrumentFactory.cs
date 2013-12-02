@@ -11,7 +11,6 @@ public class InstrumentFactory : MonoBehaviour {
 	public string m_client;		//Target OSC for instruments
 	public string m_source;		//Source we are sending messages from (first adress prefix in outgoing OSC)
 	
-	public static string GAMEINSTRUMENT_PREFIX = "GInstr_";
 	public GameObject instrumentPrefab = null;
 	public TextAsset instrumentDefinitionFile;
 	public GameObject paramPanelPrefab;
@@ -136,7 +135,7 @@ public class InstrumentFactory : MonoBehaviour {
 	private GameObject CreateLayeredInstrument(BaseInstrument instrument, Color instrumentColor){
 		//Create an instrument prefab
 		GameObject instrumentGame = Instantiate(instrumentPrefab, transform.position, Quaternion.identity ) as GameObject;
-		instrumentGame.name = GAMEINSTRUMENT_PREFIX + instrument.Name;
+		instrumentGame.name = instrument.Name;
 		instrumentGame.transform.parent = m_instrumentHolder.transform;
 
 		//Add an instrument attachment to interface with the MusicIO controllers

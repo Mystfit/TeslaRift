@@ -26,7 +26,7 @@ public class BaseTool : MonoBehaviour {
 	//Tool modes
 	public enum ToolMode{PRIMARY = 0, SECONDARY, TERTIARY};
 	protected ToolMode m_mode = ToolMode.PRIMARY;
-	public ToolMode Mode{ get { return m_mode; }}
+	public ToolMode mode{ get { return m_mode; }}
 
 	//Hand states
 	public enum HandState{ IDLE = 0, SEARCHING, HOLDING, RELEASING};
@@ -77,6 +77,9 @@ public class BaseTool : MonoBehaviour {
 	
 	public virtual void TransitionOut(){
 	}
+
+	public virtual void LeavingProximity(){
+	}
 	
 	//Accessors
 	public List<object> targets { get { return m_targets; }}
@@ -114,4 +117,5 @@ public static class InteractableTypes
     public const string  GENERATOR = "Generator"; 
     public const string INSTRUMENT = "Instrument"; 
     public const string RBFPOINT = "RBFPoint";
+	public const string MUSICGROUP = "MusicGroup";
 }
