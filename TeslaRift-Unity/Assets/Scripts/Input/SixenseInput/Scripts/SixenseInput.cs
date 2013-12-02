@@ -367,8 +367,8 @@ public class SixenseInput : MonoBehaviour
 	/// Manually rebinds the hands. HACKY
 	/// </summary>
 	public void RebindHands(){
-		Controllers[0].HandBind = SixenseHands.LEFT;
-		Controllers[1].HandBind = SixenseHands.RIGHT;
+		Controllers[0].HandBind = SixenseHands.RIGHT;
+		Controllers[1].HandBind = SixenseHands.LEFT;
 		
 		SixensePlugin.sixenseAutoEnableHemisphereTracking( 0 );
 		SixensePlugin.sixenseAutoEnableHemisphereTracking( 1 );

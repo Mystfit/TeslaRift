@@ -39,12 +39,26 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 		SetValueFromHand( HydraController.Instance.GetHand( m_hand ).transform );
 	}
 
+	public override void Gesture_PullOut ()
+	{
+		base.Gesture_PullOut ();
+		if(mode == BaseTool.ToolMode.SECONDARY){
+			RemoveSlider();
+		}
+	}
 
 	public override void Gesture_Exit ()
 	{
 		if(m_owner != null)
 			m_owner.SlidersUpdated();
 		base.Gesture_Exit ();
+	}
+
+	/*
+	 * Removes this slider
+	 */
+	public void RemoveSlider(){
+		owner.RemoveSlider(this);
 	}
 
 

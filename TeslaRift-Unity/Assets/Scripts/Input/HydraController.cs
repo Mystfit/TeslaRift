@@ -30,6 +30,9 @@ public class HydraController : MonoBehaviour {
 	private SixenseInput.Controller m_rightHandController;
 	public GameObject m_leftHand;
 	public GameObject m_rightHand;
+	public Transform m_leftHandTip;
+	public Transform m_rightHandTip;
+	public GameObject m_performer;
 	
 	//Collision lists
 	//---------------
@@ -82,6 +85,32 @@ public class HydraController : MonoBehaviour {
 			return m_leftHand;
 		return m_rightHand;
 	}
+
+	/*
+	 * Gets the left/right hand gameObject
+	 */
+	public Transform GetHandTip(BaseTool.ToolHand hand){
+		if(hand == BaseTool.ToolHand.LEFT)
+			return m_leftHandTip;
+		return m_rightHandTip;
+	}
+
+
+	/*
+	 * Gets the OVR performer
+	 */
+	public GameObject GetPerformer{ get { return m_performer; }}
+
+	/*
+	 * Checks distance between hand, performer, and a target object
+	 */
+	public bool IsHandCloserThanObject(Transform t, BaseTool.ToolHand hand){
+		if( Vector3.Distance(t.position, m_performer.transform.position) > 
+		   	Vector3.Distance(GetHandTip(hand).position, m_performer.transform.position) )
+			return true;
+		return false;
+	}
+
 	
 	/*
 	 * Returns left/right glove controllers
@@ -188,8 +217,8 @@ public class HydraController : MonoBehaviour {
 			m_rightHandController = SixenseInput.GetController( SixenseHands.RIGHT );
 			
 		
-		SetCommonTools(BaseTool.ToolHand.RIGHT);
-		SetIndividualToolsRight(BaseTool.ToolHand.RIGHT);
+		SetCommonTools(BaseTool.ToolHand.LEFT);
+		SetIndividualToolsRight(BaseTool.ToolHand.LEFT);
 	}
 	
 	

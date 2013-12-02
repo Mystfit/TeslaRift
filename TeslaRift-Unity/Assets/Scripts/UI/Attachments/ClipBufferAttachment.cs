@@ -176,6 +176,10 @@ public class ClipBufferAttachment : UIAttachment {
 		}
 	}
 
+	public void StopAllQueuedClips(){
+		//Stop playing clips here
+	}
+
 
 	public void PlayClip(ClipButtonAttachment clipButton, bool queued){
 		//Toggle off all existing clips
@@ -202,13 +206,12 @@ public class ClipBufferAttachment : UIAttachment {
 	public override void Gesture_PushIn ()
 	{
 		base.Gesture_PushIn ();
+		StopAllQueuedClips();
 	}
 
 	public override void Gesture_PullOut ()
 	{
 		base.Gesture_PullOut ();
-		//Stop playing clips somehow?
 		PlayAllQueuedClips();
-
 	}
 }

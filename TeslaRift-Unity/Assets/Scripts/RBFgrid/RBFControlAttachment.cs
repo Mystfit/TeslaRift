@@ -75,10 +75,7 @@ public class RBFControlAttachment : UIAttachment {
 	{
 		switch(owner.controlState){
 		case MusicControllerAttachment.ControlState.EDIT:
-			//PRIMARY = Add new RBF training points
-			if( mode == BaseTool.ToolMode.PRIMARY ){
-				m_owner.UpdateTrainingPoint( CreateTrainingPoint( HydraController.Instance.GetHand( m_hand ).transform ) );
-			}
+			m_owner.UpdateTrainingPoint( CreateTrainingPoint( HydraController.Instance.GetHand( m_hand ).transform ) );
 			break;
 		case MusicControllerAttachment.ControlState.PERFORM:
 			break;
@@ -91,30 +88,29 @@ public class RBFControlAttachment : UIAttachment {
 		case MusicControllerAttachment.ControlState.EDIT:
 			break;
 		case MusicControllerAttachment.ControlState.PERFORM:
-			if( mode == BaseTool.ToolMode.SECONDARY ){
-				m_frame.GetAnchorOffset(m_frame.width, m_frame.height, m_frame.m_anchorPoint);
-				Vector3 pos = BaseTool.HandToObjectSpace( HydraController.Instance.GetHand( m_hand ).transform, transform);
-				
+			m_frame.GetAnchorOffset(m_frame.width, m_frame.height, m_frame.m_anchorPoint);
+			Vector3 pos = BaseTool.HandToObjectSpace( HydraController.Instance.GetHand( m_hand ).transform, transform);
+			
 //				Vector3 clampedPos = new Vector3(
 //					Mathf.Clamp(pos.x, m_frame.width*-0.5f, m_frame.height*0.5f ), 
 //					Mathf.Clamp(pos.y, m_frame.width*-0.5f, m_frame.height*0.5f ), 0.0f
 //					);	
-				Vector3 clampedPos = new Vector3(
-					pos.x, pos.y, 0.0f);	
-				
-				double[] positionVals = new double[3]{clampedPos.x, clampedPos.y, 0.0f};
-				double[] paramOutput = m_rbf.calculateOutput(positionVals);
-				
-				int outputIndex = 0;
-				List<BaseInstrumentParam> paramList = m_owner.paramControls.GetParametersFromSliders();
-				Dictionary<BaseInstrumentParam,float> sliderResults = new Dictionary<BaseInstrumentParam, float>();
-				foreach(BaseInstrumentParam param in paramList){
-					if(outputIndex < paramList.Count)
-						sliderResults[param] = (float)paramOutput[outputIndex++];
-				}
-				
-				m_owner.UpdateSlidersFromRBF(sliderResults);
+			Vector3 clampedPos = new Vector3(
+				pos.x, pos.y, 0.0f);	
+			
+			double[] positionVals = new double[3]{clampedPos.x, clampedPos.y, 0.0f};
+			double[] paramOutput = m_rbf.calculateOutput(positionVals);
+			
+			int outputIndex = 0;
+			List<BaseInstrumentParam> paramList = m_owner.paramControls.GetParametersFromSliders();
+			Dictionary<BaseInstrumentParam,float> sliderResults = new Dictionary<BaseInstrumentParam, float>();
+			foreach(BaseInstrumentParam param in paramList){
+				if(outputIndex < paramList.Count)
+					sliderResults[param] = (float)paramOutput[outputIndex++];
 			}
+			
+			m_owner.UpdateSlidersFromRBF(sliderResults);
+
 			break; 
 		}
 		

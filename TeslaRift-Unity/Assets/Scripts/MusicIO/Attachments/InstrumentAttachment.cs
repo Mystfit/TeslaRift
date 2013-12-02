@@ -82,31 +82,29 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 	{
 		base.Gesture_Twist (amount);
 	}
-	
-	/*
-	 * ExitGestures
-	 */
-	public override void Gesture_PushIn()
-	{
-		base.Gesture_PushIn();
-		InstrumentController.Instance.ResetInstrumentParameters( musicRef );
-		if(m_selectedParam != null)
-			m_selectedParam.ToggleSelected();	//Activate parameter
-		
-		CloseRadial(m_openRadialType, false);
+
+	public override void Gesture_PushIn (){
+		base.Gesture_PushIn ();
+		SelectAndClose();
 		Gesture_Exit();
 	}
-	
+
 	public override void Gesture_PullOut ()
 	{
 		base.Gesture_PullOut ();
-		
-		//Create a floating instrument clip to put inside a buffer frame
+		SelectAndClose();
+		Gesture_Exit();
+	}
+
+
+	/*
+	 * Adds parameter to active music controller
+	 */
+	protected void SelectAndClose(){
 		if(m_selectedParam != null)
 			InstrumentController.Instance.AddToActivePanel( m_selectedParam.musicRef );
-
+		
 		CloseRadial(m_openRadialType, false);
-		Gesture_Exit();
 	}
 	
 	

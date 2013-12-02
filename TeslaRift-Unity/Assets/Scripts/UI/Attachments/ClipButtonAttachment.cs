@@ -78,12 +78,11 @@ public class ClipButtonAttachment : UIAttachment<InstrumentClip> {
 	public override void Gesture_PushIn ()
 	{
 		base.Gesture_PushIn ();
-		//owner.PlayClip(this, false);
+		owner.PlayClip(this, false);
 	}
 
 	public override void Gesture_PullOut ()
 	{
 		base.Gesture_PullOut ();
-		owner.PlayClip(this, false);
 	}
 }

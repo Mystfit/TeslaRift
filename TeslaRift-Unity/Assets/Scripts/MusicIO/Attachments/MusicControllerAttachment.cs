@@ -29,6 +29,7 @@ public class MusicControllerAttachment : BaseAttachment {
 		//Event listener delegate for updating training points with slider values upon change
 		m_paramControls.SliderUpdate += OnSlidersUpdated;
 		m_paramControls.SliderAdd += OnSliderAdded;
+		m_paramControls.SliderRemove += OnSliderRemoved;
 
 		SwitchControlState(ControlState.PERFORM);
 	}
@@ -83,6 +84,10 @@ public class MusicControllerAttachment : BaseAttachment {
 	 * Listener delegate to update RBF values when sliders change
 	 */
 	protected void OnSliderAdded(){
+		UpdateAllTrainingPoints();
+	}
+
+	protected void OnSliderRemoved(){
 		UpdateAllTrainingPoints();
 	}
 	

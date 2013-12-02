@@ -24,6 +24,8 @@ public class ParamSliderPanelAttachment : UIAttachment {
 	public event SliderUpdateEvent SliderUpdate;
 	public delegate void SliderAddEvent();
 	public event SliderAddEvent SliderAdd;
+	public delegate void SliderRemoveEvent();
+	public event SliderRemoveEvent SliderRemove;
 
 	//States
 	protected bool bQueuedSort;
@@ -95,7 +97,18 @@ public class ParamSliderPanelAttachment : UIAttachment {
 		m_sliders.Add(sliderAttach);		
 
 		QueueSort();
-		SlidersAdded();
+		SliderAdd();
+	}
+
+
+	/*
+	 * Removes a slider
+	 */
+	public void RemoveSlider(SliderAttachment slider){
+		m_sliders.Remove(slider);
+		Destroy(slider.gameObject);
+		QueueSort();
+		SliderRemove();
 	}
 
 	public bool HasParameter(BaseInstrumentParam param){
@@ -141,10 +154,6 @@ public class ParamSliderPanelAttachment : UIAttachment {
 
 	public void SlidersUpdated(){
 		SliderUpdate();
-	}
-
-	public void SlidersAdded(){
-		SliderAdd();
 	}
 
 	public void QueueSort(){

@@ -91,7 +91,8 @@ public class MusicgroupFactory : MonoBehaviour {
 				attach.paramControls.QueueSort();
 			}
 
-			attach.rbfPanel.ResetRBF(attach.paramControls.GetParametersFromSliders().Count);
+			if(attach.paramControls.GetParametersFromSliders().Count > 0)
+				attach.rbfPanel.ResetRBF(attach.paramControls.GetParametersFromSliders().Count);
 		}
 	}
 
