@@ -8,6 +8,7 @@ public class SixenseObjectController : MonoBehaviour {
 	
 	protected bool				m_enabled = false;
 	protected Quaternion		m_initialRotation;
+	protected Quaternion		m_initialControllerRotation;
 	protected Vector3			m_initialPosition;
 	protected Vector3			m_baseControllerPosition;
 	
@@ -84,7 +85,9 @@ public class SixenseObjectController : MonoBehaviour {
 													controller.Position.z * Sensitivity.z );
 			
 		// this is the new start position
+		m_initialControllerRotation = controller.Rotation;
 		m_initialPosition = this.gameObject.transform.localPosition;
+		m_initialRotation = transform.rotation;
 	}
 	
 	
@@ -104,6 +107,7 @@ public class SixenseObjectController : MonoBehaviour {
 	
 	protected void UpdateRotation( SixenseInput.Controller controller )
 	{
-		this.gameObject.transform.localRotation = controller.Rotation * m_initialRotation;
+		Quaternion offsetRotation = Quaternion.Inverse(m_initialControllerRotation) * controller.Rotation;
+		this.gameObject.transform.localRotation = m_initialRotation * offsetRotation;
 	}
 }

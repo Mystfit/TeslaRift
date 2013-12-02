@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -206,7 +206,7 @@ public class InstrumentGestureTool : BaseTool {
 		//--------------------------
 		if(m_attachment != null){
 			switch(m_lastGestureState){
-				
+
 				//Idle gestures
 			case GestureState.INTERIOR:
 				m_attachment.Gesture_ExitIdleInterior();

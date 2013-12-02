@@ -18,6 +18,12 @@ public class MusicControllerAttachment : BaseAttachment {
 	public ParamSliderPanelAttachment m_paramControls;
 	public RBFControlAttachment m_rbfPanel;
 
+	public bool facePerformer;
+	public Transform faceTarget;
+	public float faceDampening = 20;
+
+	protected bool bIsGuiVisisble = true;
+
 	// Use this for initialization
 	public override void Awake () {
 		m_clipBuffer.Init(this);
@@ -39,16 +45,48 @@ public class MusicControllerAttachment : BaseAttachment {
 			toggleControlState = false;
 			ToggleControlState();
 		}
+
+		//Rotate to face player eyes
+		if(facePerformer){
+			if (faceTarget != null) {
+				// Look at and dampen the rotation
+				Quaternion rotation = Quaternion.LookRotation(transform.position - faceTarget.position);
+				transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * faceDampening);
+			}
+		}
+	}
+
+	public override void SetSelected (bool state)
+	{
+		base.SetSelected (state);
+		m_rbfPanel.SetSelected(state);
 	}
 
 
 	/*
 	 * Gesture override
 	 */
-	public override void Gesture_First ()
+	public override void Gesture_ExitIdleInterior ()
 	{
-		base.Gesture_First ();
-		ToggleControlState();
+		base.Gesture_ExitIdleInterior ();
+		if(mode == BaseTool.ToolMode.PRIMARY)
+			InstrumentController.Instance.SelectMusicController(this);
+		if(mode == BaseTool.ToolMode.SECONDARY)
+			ToggleGui();
+	}
+
+	public override void Gesture_PullOut ()
+	{
+		base.Gesture_PullOut ();
+		if(mode == BaseTool.ToolMode.PRIMARY)
+			ToggleControlState();
+	}
+
+	public void ToggleGui(){
+		bIsGuiVisisble = !bIsGuiVisisble;
+		m_rbfPanel.gameObject.SetActive(bIsGuiVisisble);
+		m_paramControls.gameObject.SetActive(bIsGuiVisisble);
+		m_clipBuffer.gameObject.SetActive(bIsGuiVisisble);
 	}
 
 

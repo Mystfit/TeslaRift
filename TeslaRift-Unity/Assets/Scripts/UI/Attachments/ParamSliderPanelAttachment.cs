@@ -91,9 +91,9 @@ public class ParamSliderPanelAttachment : UIAttachment {
 		}
 
 		SliderAttachment sliderAttach = UI.UIFactory.CreateSlider(param, UIFrame.AnchorLocation.TOP_LEFT, this);
-		sliderAttach.transform.position = transform.position;
-		sliderAttach.transform.rotation = transform.rotation;
 		sliderAttach.transform.parent = transform;
+		//sliderAttach.transform.localPosition = transform.localPosition;
+		//sliderAttach.transform.localRotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, 90.0f));
 		m_sliders.Add(sliderAttach);		
 
 		QueueSort();
@@ -126,17 +126,29 @@ public class ParamSliderPanelAttachment : UIAttachment {
 	 * Updates the clips/params loaded into this buffer
 	 */
 	public bool SortBufferItems(){
-		for(int i = 0; i < m_sliders.Count; i++){
-			Vector3 local = GetColumnLocalCoordinates(i);
+		int sliderCount = 0;
+		foreach(SliderAttachment slider in m_sliders){
+			//if(slider.frame.isAnimating)
+				//return true;
+			
+			Vector3 local = GetColumnLocalCoordinates(sliderCount++);
 			local += new Vector3(0.0f, 0.0f -0.0001f);
-			SliderAttachment slider = m_sliders[i];
-			iTween.MoveTo(slider.gameObject, iTween.Hash(
+			iTween.Stop(slider.gameObject);
+			slider.transform.localPosition = local;
+			slider.transform.localRotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, 90.0f));
+			/*iTween.MoveTo(slider.gameObject, iTween.Hash(
 				"position", local,
 				"time", 0.2f,
 				"islocal", true
-				));
+			));
+
+			iTween.RotateTo(slider.gameObject, iTween.Hash(
+				"rotation", Quaternion.identity,
+				"time", 0.2f,
+				"islocal", true
+			));*/
 		}
-		
+
 		m_frame.AnimateSize(m_sliders.Count * m_clipColumnSize , m_clipRowSize );
 		return false;
 	}

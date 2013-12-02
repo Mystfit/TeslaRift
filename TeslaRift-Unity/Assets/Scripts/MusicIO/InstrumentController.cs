@@ -90,7 +90,11 @@ public class InstrumentController : MonoBehaviour {
 	public void AddBuffer(ClipBufferAttachment buffer){
 		m_buffers.Add(buffer);
 	}
-	
+
+
+	/*
+	 * Adds an object to the controller
+	 */
 	public void AddToActivePanel(BaseInstrumentParam param){
 		if(m_selectedMusicController != null){
 			if( param.GetType() == typeof(InstrumentClip)){
@@ -101,11 +105,15 @@ public class InstrumentController : MonoBehaviour {
 		}
 	}
 
+
 	/*
 	 * Selects a buffer
 	 */
 	public void SelectMusicController(MusicControllerAttachment musicControl){
+		if(m_selectedMusicController != null)
+			m_selectedMusicController.SetSelected(false);
 		m_selectedMusicController = musicControl;
+		m_selectedMusicController.SetSelected(true);
 	}
 
 	//Instrument selection

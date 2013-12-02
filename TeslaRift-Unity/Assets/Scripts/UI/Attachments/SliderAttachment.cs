@@ -7,6 +7,7 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 
 	protected BarSlider m_slider;
 	protected UIFrame m_frame;
+	public UIFrame frame{ get { return m_frame; }}
 	protected ParamSliderPanelAttachment m_owner;
 	public ParamSliderPanelAttachment owner{ get { return m_owner; }}
 
@@ -31,13 +32,10 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 	public override void Gesture_IdleInterior ()
 	{
 		base.Gesture_IdleInterior ();
-		SetValueFromHand( HydraController.Instance.GetHand( m_hand ).transform );
+		if(mode == BaseTool.ToolMode.PRIMARY)
+			SetValueFromHand( HydraController.Instance.GetHandTip( m_hand ) );
 	}
 
-	public override void Gesture_IdleProximity(){
-		base.Gesture_IdleProximity();
-		SetValueFromHand( HydraController.Instance.GetHand( m_hand ).transform );
-	}
 
 	public override void Gesture_PullOut ()
 	{
@@ -69,12 +67,6 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 		
 		//Offset the position by the source's collider (if present)
 		Vector3 worldOffset = worldPos.position;
-		if(worldPos.collider != null){
-			if( worldPos.collider.GetType() == typeof(CapsuleCollider) ){
-				CapsuleCollider coll = worldPos.collider as CapsuleCollider;
-				worldOffset = coll.bounds.center;
-			}
-		}
 		
 		Vector3 pos = transform.InverseTransformPoint(worldOffset);
 		Vector2 sliderPosVal = new Vector2(

@@ -32,6 +32,12 @@ public class RBFControlAttachment : UIAttachment {
 		m_rbf.setSigma(m_sigma);
 	}
 
+	public override void SetSelected (bool state)
+	{
+		base.SetSelected (state);
+		m_frame.ShowOutline(state);
+	}
+
 
 	/*
 	 * Set owner

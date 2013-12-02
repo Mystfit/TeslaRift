@@ -75,9 +75,19 @@ namespace UI
 			return attach;
 		}
 
-		
+
 		public static MusicControllerAttachment CreateMusicGroup(){
-			GameObject musicObj = Instantiate(Instance.musicGroupPrefab) as GameObject;
+			Transform t = null;
+			return CreateMusicGroup(t);
+		}
+
+		public static MusicControllerAttachment CreateMusicGroup(Transform t){
+			GameObject musicObj = null;
+			if(t != null)
+				musicObj = Instantiate(Instance.musicGroupPrefab, t.position, t.rotation) as GameObject;
+			else
+				musicObj = Instantiate(Instance.musicGroupPrefab) as GameObject;
+
 			return musicObj.GetComponent<MusicControllerAttachment>();
 		}
 	}

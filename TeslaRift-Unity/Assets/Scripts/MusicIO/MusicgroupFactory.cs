@@ -10,15 +10,16 @@ using UI;
 public class MusicgroupFactory : MonoBehaviour {
 	
 	public string m_musicProfilePath;
-	public bool m_toggleMusicGroupWrite;
+	public bool m_toggleWriteMusicgroup;
+	public Transform UIFacingTarget;
 	
 	void Start () {
 		LoadMusicgroupXML();
 	}
 
 	void Update(){
-		if(m_toggleMusicGroupWrite){
-			m_toggleMusicGroupWrite = false;
+		if(m_toggleWriteMusicgroup){
+			m_toggleWriteMusicgroup = false;
 			WriteMusicGroupsToFile(InstrumentController.Instance.MusicGroups);
 		}
 	}
@@ -50,6 +51,10 @@ public class MusicgroupFactory : MonoBehaviour {
 			//Color color = Utils.intToColor( int.Parse(mGroup.Attributes["color"].Value) );		
 
 			MusicControllerAttachment attach = UIFactory.CreateMusicGroup();
+			attach.transform.position = transform.position;
+			attach.transform.parent = transform;
+			attach.faceTarget = UIFacingTarget;
+			attach.facePerformer = true;
 			InstrumentController.Instance.AddMusicGroup(attach);
 			//attach.gameObject.name = mGroup.Attributes["name"].Value as String;
 
