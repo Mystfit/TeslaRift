@@ -72,6 +72,8 @@ public class ClipButtonAttachment : UIAttachment<InstrumentClip> {
 		base.Gesture_ExitIdleInterior ();
 		if(mode == BaseTool.ToolMode.PRIMARY){
 			owner.PlayClip(this, true);
+		} else if( mode == BaseTool.ToolMode.TERTIARY){
+			owner.RemoveClipButton(this);
 		}
 	}
 

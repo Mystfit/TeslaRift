@@ -106,6 +106,7 @@ public class ParamSliderPanelAttachment : UIAttachment {
 	 */
 	public void RemoveSlider(SliderAttachment slider){
 		m_sliders.Remove(slider);
+		HydraController.Instance.RemoveFromAllCollisionLists(slider.gameObject);
 		Destroy(slider.gameObject);
 		QueueSort();
 		SliderRemove();

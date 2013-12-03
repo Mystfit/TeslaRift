@@ -30,6 +30,9 @@ public class HydraController : MonoBehaviour {
 	private SixenseInput.Controller m_rightHandController;
 	public GameObject m_leftHand;
 	public GameObject m_rightHand;
+	protected HydraHand m_leftHandHydra;
+	protected HydraHand m_rightHandHydra;
+
 	public Transform m_leftHandTip;
 	public Transform m_rightHandTip;
 	public GameObject m_performer;
@@ -56,6 +59,8 @@ public class HydraController : MonoBehaviour {
 		m_rightInstrumentProximity = new List<GameObject>();
 		m_leftInstrumentInterior = new List<GameObject>();
 		m_rightInstrumentInterior = new List<GameObject>();
+		m_leftHandHydra = m_leftHand.GetComponent<HydraHand>();
+		m_rightHandHydra = m_rightHand.GetComponent<HydraHand>();
 		
 		//Controllers
 		m_toolControlRef = ToolController.Instance;
@@ -105,8 +110,9 @@ public class HydraController : MonoBehaviour {
 	 * Checks distance between hand, performer, and a target object
 	 */
 	public bool IsHandCloserThanObject(Transform t, BaseTool.ToolHand hand){
-		if( Vector3.Distance(t.position, m_performer.transform.position) > 
-		   	Vector3.Distance(GetHandTip(hand).position, m_performer.transform.position) )
+		float a = Vector3.Distance(t.position, m_performer.transform.position);
+		float b = Vector3.Distance(GetHandTip(hand).position, m_performer.transform.position);
+		if( a > b )
 			return true;
 		return false;
 	}
@@ -119,6 +125,15 @@ public class HydraController : MonoBehaviour {
 		if(hand == BaseTool.ToolHand.LEFT)
 			return m_leftGlove;
 		return m_rightGlove;
+	}
+
+	/*
+	 * Returns left/right hydrahands controllers
+	 */
+	public HydraHand GetHydraHand(BaseTool.ToolHand hand){
+		if(hand == BaseTool.ToolHand.LEFT)
+			return m_leftHandHydra;
+		return m_rightHandHydra;
 	}
 	
 	
@@ -138,21 +153,31 @@ public class HydraController : MonoBehaviour {
 		
 		if(targetList != null && target != null){
 			foreach(GameObject obj in targetList){
-				float dist = Vector3.Distance(obj.transform.position, target.transform.position);
-				if(dist < closestDistance || closestDistance < 0){
-					BaseAttachment attach = obj.GetComponent<BaseAttachment>();
+				if(obj != null){
+					float dist = Vector3.Distance(obj.transform.position, target.transform.position);
+					if(dist < closestDistance || closestDistance < 0){
+						BaseAttachment attach = obj.GetComponent<BaseAttachment>();
 
-					if(attach != null){
-						if(attach.respondsToToolMode(mode)){
-							closestDistance = dist;
-							closestObject = obj;
+						if(attach != null){
+							if(attach.respondsToToolMode(mode)){
+								closestDistance = dist;
+								closestObject = obj;
+							}
 						}
 					}
+
 				}
 			}
 		}
 		
 		return closestObject;
+	}
+
+	public void RemoveFromAllCollisionLists(GameObject target){
+		GetCollisionList(ProximityType.INSTRUMENT_INTERIOR, SixenseHands.LEFT).Remove(target);
+		GetCollisionList(ProximityType.INSTRUMENT_INTERIOR, SixenseHands.RIGHT).Remove(target);
+		GetCollisionList(ProximityType.INSTRUMENT_PROXIMITY, SixenseHands.LEFT).Remove(target);
+		GetCollisionList(ProximityType.INSTRUMENT_PROXIMITY, SixenseHands.RIGHT).Remove(target);
 	}
 
 	
@@ -233,14 +258,14 @@ public class HydraController : MonoBehaviour {
 			if(Input.GetKeyDown(KeyCode.P)){
 			//if(m_rightHandController.GetButton( SixenseButtons.START ) || Input.GetKeyDown(KeyCode.P)){
 				//GetComponent<SixenseInput>().RebindHands();
-				m_leftHand.GetComponent<HydraHand>().SetEnabled(false);
-				m_rightHand.GetComponent<HydraHand>().SetEnabled(false);
+				m_leftHandHydra.SetEnabled(false);
+				m_rightHandHydra.SetEnabled(false);
 			}
 			
 			if(Input.GetKeyUp(KeyCode.P)){
 			//if ( m_rightHandController.GetButtonUp( SixenseButtons.START ) || Input.GetKeyUp(KeyCode.P)){
-				m_leftHand.GetComponent<HydraHand>().ActivateHand(m_leftHandController);
-				m_rightHand.GetComponent<HydraHand>().ActivateHand(m_rightHandController);
+				m_leftHandHydra.ActivateHand(m_leftHandController);
+				m_rightHandHydra.ActivateHand(m_rightHandController);
 			} 
 			
 			/*else if(m_rightHandController.GetButton(SixenseButtons.START) && m_rightHandController.GetButtonUp(SixenseButtons.BUMPER)){
@@ -256,29 +281,40 @@ public class HydraController : MonoBehaviour {
 	public void SetCommonTools(BaseTool.ToolHand hand){
 		
 		GloveController m_glove = GetGloveController(hand);
+		HydraHand hydraHand = GetHydraHand(hand);
 					
 		//Physics selector
 		//------------
 		if(m_glove.GetGestureDown("CLOSED_HAND") || Input.GetKeyDown(KeyCode.Space)){
 			m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand, BaseTool.ToolMode.PRIMARY);
-		}
+			hydraHand.animator.SetBool( "Fist", true );
+			hydraHand.animator.SetFloat("FistAmount", 1.0f);
+		} 
 		
 		//Physics pull
 		//------------
 		else if(m_glove.GetGestureDown("PINKY") || Input.GetKeyDown(KeyCode.LeftShift)){
 			m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand, BaseTool.ToolMode.SECONDARY);
+			hydraHand.animator.SetBool( "GripBall", true );
 		}
 		
 		//Gesture Selector Primary
 		//--------------------
 		else if(m_glove.GetGestureDown("INDEX_POINT") || Input.GetKeyDown(KeyCode.W)){
 			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.PRIMARY);
+			hydraHand.animator.SetBool( "Point", true );
 		}
 		
 					//Gesture selector secondary
 		//--------------------
 		else if(m_glove.GetGestureDown("INDEX_MIDDLE") || Input.GetKeyDown(KeyCode.E)){
 			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.SECONDARY);	//Secondary mode does a full reset
+			hydraHand.animator.SetBool( "HoldBook", true );
+		}
+
+		else if(m_glove.GetGestureDown("ROCK_ON") || Input.GetKeyDown(KeyCode.S)){
+			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.TERTIARY);	//Secondary mode does a full reset
+			hydraHand.animator.SetBool( "GripBall", true );
 		}
 	
 		//Normal reset
@@ -301,11 +337,17 @@ public class HydraController : MonoBehaviour {
 		
 		if(Input.GetKeyUp (KeyCode.Space) ||
 			Input.GetKeyUp(KeyCode.W) ||
-			Input.GetKeyUp(KeyCode.S) ||
+		    Input.GetKeyUp(KeyCode.LeftShift) ||
 			Input.GetKeyUp(KeyCode.E) ||
+		    Input.GetKeyUp(KeyCode.S) ||
 			openHand )
 		{
 			m_toolControlRef.PopTool(hand);
+			hydraHand.animator.SetBool( "Fist", false );
+			hydraHand.animator.SetFloat("FistAmount", 0.0f);
+			hydraHand.animator.SetBool( "Point", false );
+			hydraHand.animator.SetBool( "HoldBook", false );
+			hydraHand.animator.SetBool("Idle", true);
 		}
 	}
 	

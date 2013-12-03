@@ -36,6 +36,7 @@ public class MusicControllerAttachment : BaseAttachment {
 		m_paramControls.SliderUpdate += OnSlidersUpdated;
 		m_paramControls.SliderAdd += OnSliderAdded;
 		m_paramControls.SliderRemove += OnSliderRemoved;
+		m_clipBuffer.ClipRemove += OnClipRemoved;
 
 		SwitchControlState(ControlState.PERFORM);
 	}
@@ -127,6 +128,9 @@ public class MusicControllerAttachment : BaseAttachment {
 
 	protected void OnSliderRemoved(){
 		UpdateAllTrainingPoints();
+	}
+
+	protected void OnClipRemoved(){
 	}
 	
 

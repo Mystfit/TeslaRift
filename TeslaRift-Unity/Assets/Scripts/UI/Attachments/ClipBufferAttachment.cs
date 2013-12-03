@@ -15,6 +15,12 @@ public class ClipBufferAttachment : UIAttachment {
 	private UIFrame m_frame;
 	Transform m_clipHolder;
 
+	/*
+	 * Delegates
+	 */
+	public delegate void ClipRemoveEvent();
+	public event ClipRemoveEvent ClipRemove;
+
 	//UI spacing
 	public float m_clipRowSize = 1.0f;
 	public float m_clipColumnSize = 1.0f;
@@ -96,6 +102,17 @@ public class ClipBufferAttachment : UIAttachment {
 		m_attachedClips.Add(buttonObj);
 		
 		SortBufferItems();
+	}
+
+	/*
+	 * Removes a slider
+	 */
+	public void RemoveClipButton(ClipButtonAttachment clip){
+		m_attachedClips.Remove(clip);
+		HydraController.Instance.RemoveFromAllCollisionLists(clip.gameObject);
+		Destroy(clip.gameObject);
+		SortBufferItems();
+		ClipRemove();
 	}
 
 
@@ -206,12 +223,12 @@ public class ClipBufferAttachment : UIAttachment {
 	public override void Gesture_PushIn ()
 	{
 		base.Gesture_PushIn ();
-		StopAllQueuedClips();
+		PlayAllQueuedClips();
 	}
 
 	public override void Gesture_PullOut ()
 	{
 		base.Gesture_PullOut ();
-		PlayAllQueuedClips();
+		StopAllQueuedClips();
 	}
 }

@@ -116,6 +116,7 @@ public class InstrumentGestureTool : BaseTool {
 			m_attachment.Gesture_IdleInterior();
 			if(m_attachment.IsFirstGesture){
 				m_attachment.Gesture_First();
+				m_lastGestureState = GestureState.INTERIOR;
 			}
 			break;
 			
@@ -219,21 +220,24 @@ public class InstrumentGestureTool : BaseTool {
 				break;
 			case GestureState.INTERIOR_TO_EXTERIOR:
 				//Check if we're pulling towards or away from the performer
-				if( HydraController.Instance.IsHandCloserThanObject(m_heldObject.transform, m_hand) )
-					m_attachment.Gesture_PullOut();
-				else
-					m_attachment.Gesture_PushIn();
-
+				if(m_heldObject != null){
+					if( HydraController.Instance.IsHandCloserThanObject(m_heldObject.transform, m_hand) )
+						m_attachment.Gesture_PullOut();
+					else
+						m_attachment.Gesture_PushIn();
+				}
 				break;
 			case GestureState.EXTERIOR_TO_PROXIMITY:
 				break;
 			case GestureState.INTERIOR_TO_PROXIMITY:
 				break;
 			case GestureState.PROXIMITY_TO_EXTERIOR:
-				if( HydraController.Instance.IsHandCloserThanObject(m_heldObject.transform, m_hand) )
-					m_attachment.Gesture_PullOut();
-				else
-					m_attachment.Gesture_PushIn();
+				if(m_heldObject != null){
+					if( HydraController.Instance.IsHandCloserThanObject(m_heldObject.transform, m_hand) )
+						m_attachment.Gesture_PullOut();
+					else
+						m_attachment.Gesture_PushIn();
+				}
 				break;
 			case GestureState.PROXIMITY_TO_INTERIOR:
 				//m_attachment.Gesture_PushIn();
@@ -252,8 +256,10 @@ public class InstrumentGestureTool : BaseTool {
 	 */
 	public override void TransitionOut ()
 	{		
-		if(m_attachment != null)
+		if(m_attachment != null){
+			LeavingProximity();
 			m_attachment.Gesture_Exit();
+		}
 		m_heldObject = null;
 		m_attachment = null;
 	}

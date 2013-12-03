@@ -237,6 +237,8 @@ public class SixenseInput : MonoBehaviour
 		
 	private static Controller[] m_Controllers = new Controller[MAX_CONTROLLERS];
 	private ControllerManagerState m_ControllerManagerState = ControllerManagerState.NONE;
+
+	public bool toggleRebind;
 	
 	/// <summary>
 	/// Do the controllers require calibrating?
@@ -280,6 +282,12 @@ public class SixenseInput : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
+
+		if(toggleRebind){
+			toggleRebind = false;
+			RebindHands();
+		}
+
 		// update controller data
 		uint numControllersBound = 0;
 		uint numControllersEnabled = 0;

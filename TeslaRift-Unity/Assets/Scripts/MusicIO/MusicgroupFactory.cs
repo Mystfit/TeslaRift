@@ -12,8 +12,11 @@ public class MusicgroupFactory : MonoBehaviour {
 	public string m_musicProfilePath;
 	public bool m_toggleWriteMusicgroup;
 	public Transform UIFacingTarget;
+
+	protected MusicgroupSpawnerAttachment m_musicSpawner;
 	
 	void Start () {
+		m_musicSpawner = GetComponent<MusicgroupSpawnerAttachment>();
 		LoadMusicgroupXML();
 	}
 
@@ -50,13 +53,14 @@ public class MusicgroupFactory : MonoBehaviour {
 		foreach(XmlNode mGroup in xmlList){	
 			//Color color = Utils.intToColor( int.Parse(mGroup.Attributes["color"].Value) );		
 
-			MusicControllerAttachment attach = UIFactory.CreateMusicGroup();
-			attach.transform.position = transform.position;
-			attach.transform.parent = transform;
-			attach.faceTarget = UIFacingTarget;
-			attach.facePerformer = true;
-			InstrumentController.Instance.AddMusicGroup(attach);
-			//attach.gameObject.name = mGroup.Attributes["name"].Value as String;
+			MusicControllerAttachment attach = m_musicSpawner.SpawnMusicgroup();
+			attach.rigidbody.isKinematic = true;
+			attach.transform.position = new Vector3( 
+			    Convert.ToSingle(mGroup.Attributes["x"].Value),
+				Convert.ToSingle(mGroup.Attributes["y"].Value),
+				Convert.ToSingle(mGroup.Attributes["z"].Value)
+			);
+			attach.rigidbody.isKinematic = false;
 
 			//Get devices present in mGroup
 			XmlNodeList clipList = mGroup.SelectNodes("clip"); //clip array	
@@ -130,6 +134,9 @@ public class MusicgroupFactory : MonoBehaviour {
 
 			foreach(MusicControllerAttachment mGroup in musicGroupList){
 				XmlElement mGroupElem = xmlDoc.CreateElement("MusicGroup");
+				mGroupElem.SetAttribute("x", mGroup.transform.position.x.ToString());
+				mGroupElem.SetAttribute("y", mGroup.transform.position.y.ToString());
+				mGroupElem.SetAttribute("z", mGroup.transform.position.z.ToString());
 
 				//Add clips
 				foreach(InstrumentClip clip in mGroup.clipBuffer.GetClips()){

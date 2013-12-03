@@ -37,11 +37,11 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 	}
 
 
-	public override void Gesture_PullOut ()
+	public override void Gesture_ExitIdleInterior ()
 	{
-		base.Gesture_PullOut ();
-		if(mode == BaseTool.ToolMode.SECONDARY){
-			RemoveSlider();
+		base.Gesture_ExitIdleInterior ();
+		if(mode == BaseTool.ToolMode.TERTIARY){
+			owner.RemoveSlider(this);
 		}
 	}
 
@@ -50,13 +50,6 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 		if(m_owner != null)
 			m_owner.SlidersUpdated();
 		base.Gesture_Exit ();
-	}
-
-	/*
-	 * Removes this slider
-	 */
-	public void RemoveSlider(){
-		owner.RemoveSlider(this);
 	}
 
 
