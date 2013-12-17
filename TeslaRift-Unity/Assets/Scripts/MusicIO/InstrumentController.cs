@@ -39,6 +39,8 @@ public class InstrumentController : MonoBehaviour {
 		m_buffers = new List<ClipBufferAttachment>();
 		m_musicGroups = new List<MusicControllerAttachment>();
 		m_instance = this;
+
+		SetSourceName(GlobalConfig.Instance.ProjectSourceName);
 	}
 	
 	

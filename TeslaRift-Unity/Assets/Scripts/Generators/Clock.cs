@@ -25,7 +25,7 @@ public class Clock : OSCListener {
 	protected float m_firstBeat = 0.0f;
 
 	// Use this for initialization
-	protected override void Start () {
+	public override void Start () {
 		Init(m_beatsPerBar, m_bpm);
 		base.Start();
 	}
@@ -36,7 +36,7 @@ public class Clock : OSCListener {
 	}
 	
 	// Update is called once per frame
-	protected override void Update () {
+	public override void Update () {
 		base.Update();
 		float time = (Time.time - m_startTime) % m_beatLength;
 		float cycleTime = (Time.time - m_startTime) % (m_beatLength * m_beatsPerBar);

@@ -11,13 +11,13 @@ public class TrailSpawnerListener : OSCListener {
 	protected SphereSurfaceSpawner m_spawner;
 
 	// Use this for initialization
-	protected override void  Start () {
+	public override void  Start () {
 		base.Start();
 		m_spawner = this.GetComponent<SphereSurfaceSpawner>();
 	}
 	
 	// Update is called once per frame
-	protected override void Update () {
+	public override void Update () {
 		base.Update();
 		
 		if(m_isDirty){

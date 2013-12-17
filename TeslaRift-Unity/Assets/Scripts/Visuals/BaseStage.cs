@@ -40,7 +40,7 @@ public class BaseStage : OSCListener {
 	private TransitionState m_transitionState = TransitionState.IN_STATE;
 		
 	
-	protected override void Start ()
+	public override void Start ()
 	{
 		m_distance = new float[m_numTargets];
 		m_oscillate = new float[m_numTargets];
@@ -50,7 +50,7 @@ public class BaseStage : OSCListener {
 	}
 	
 	// Update is called once per frame
-	protected override void Update () {
+	public override void Update () {
 		base.Update();
 		
 		//Get OSC state

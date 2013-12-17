@@ -294,7 +294,7 @@ public class HydraController : MonoBehaviour {
 		//Physics pull
 		//------------
 		else if(m_glove.GetGestureDown("PINKY") || Input.GetKeyDown(KeyCode.LeftShift)){
-			m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand, BaseTool.ToolMode.SECONDARY);
+			//m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand, BaseTool.ToolMode.SECONDARY);
 			hydraHand.animator.SetBool( "GripBall", true );
 		}
 		

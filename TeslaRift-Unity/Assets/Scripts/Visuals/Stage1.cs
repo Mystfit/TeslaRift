@@ -24,7 +24,7 @@ public class Stage1 : BaseStage {
 	public float m_spawnDistance = 7.0f;
 
 	// Use this for initialization
-	protected override void Start () {
+	public override void Start () {
 		//Create metaball positions
 		m_blobPositions = new BlobPosition[3];
 		for(int i = 0; i < 3; i++)

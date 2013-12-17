@@ -22,7 +22,7 @@ public class MusicgroupSpawnerAttachment : BaseAttachment {
 	public override void Gesture_PushIn ()
 	{
 		base.Gesture_PushIn ();
-		m_factory.WriteMusicGroupsToFile();
+		m_factory.WriteMusicGroupsToFile(InstrumentController.Instance.MusicGroups);
 	}	
 
 	public MusicControllerAttachment SpawnMusicgroup(){

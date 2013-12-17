@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using RBF;
 using MusicIO;
 using System.Collections;
@@ -101,6 +101,9 @@ public class MusicControllerAttachment : BaseAttachment {
 			SwitchControlState(ControlState.EDIT);
 	}
 
+	/* 
+	 * Swaps between performance and edit mode for controlling RBF
+	 */
 	public void SwitchControlState(ControlState state){
 		if(state == ControlState.EDIT){
 			m_controlState = ControlState.EDIT;

@@ -4,11 +4,11 @@ using System.Collections;
 public class Stage2 : BaseStage {
 
 	// Use this for initialization
-	protected override void Start () {
+	public override void Start () {
 		base.Start();
 	}
 	
-	protected override void Update(){
+	public override void Update(){
 		base.Update();
 	}
 	

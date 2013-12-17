@@ -9,7 +9,7 @@ using System.IO;
 public class InstrumentFactory : MonoBehaviour {
 	
 	public string m_client;		//Target OSC for instruments
-	public string m_source;		//Source we are sending messages from (first adress prefix in outgoing OSC)
+	protected string m_source;		//Source we are sending messages from (first adress prefix in outgoing OSC)
 	
 	public GameObject instrumentPrefab = null;
 	public TextAsset instrumentDefinitionFile;
@@ -20,7 +20,7 @@ public class InstrumentFactory : MonoBehaviour {
 	public string m_liveSessionFile;
 	
 	private InstrumentController m_instrumentControllerRef;
-	protected GameObject m_instrumentHolder;
+	public GameObject m_instrumentHolder;
 	
 	/*
 	 * Prefabs
@@ -32,7 +32,7 @@ public class InstrumentFactory : MonoBehaviour {
 
 	void Start () {
 		m_instrumentControllerRef = this.GetComponent<InstrumentController>();
-		m_instrumentHolder = new GameObject("Instruments");
+		m_source = GlobalConfig.Instance.ProjectSourceName;
 
 		//Load prefabs
 		m_floatingClipPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/floatingClip.prefab", typeof(GameObject)) as GameObject;
@@ -138,10 +138,9 @@ public class InstrumentFactory : MonoBehaviour {
 		instrumentGame.name = instrument.Name;
 		instrumentGame.transform.parent = m_instrumentHolder.transform;
 
-		//Add an instrument attachment to interface with the MusicIO controllers
-		InstrumentAttachment attach = instrumentGame.AddComponent<InstrumentAttachment>();
-		attach.Init(instrument);
-		
+		InstrumentAttachment attach = instrumentGame.AddComponent<InstrumentAttachment>();	//Instrument attachment needs to be manually added
+		attach.Init(instrument);															//Init with instrument object to set musicref
+		instrumentGame.GetComponent<InstrumentListener>().SetPrefixedOSCAddresses(instrument.Name);		//Set instrument prefixes for OSC listener
 		instrumentGame.renderer.material.SetColor("_Color", instrumentColor);
 		
 		//Create parameter radial menu
@@ -182,7 +181,7 @@ public class InstrumentFactory : MonoBehaviour {
 			panel.GetComponentInChildren<TextMesh>().text = parameterList[i].name;
 				
 			panel.transform.parent = panelLayer.transform;	
-			panel.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 360/(float)parameterList.Count*(float)i);
+			panel.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 180/(float)parameterList.Count*(float)i);
 			panel.transform.localPosition = new Vector3(0.0f, 0.0f, m_panelOrbitDistance);
 			
 			//Label position

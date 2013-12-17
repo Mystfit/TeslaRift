@@ -16,7 +16,7 @@ public class SphereStateController : OSCListener {
 	private BaseStage[] m_stages;
 
 	// Use this for initialization
-	protected override void Start () {
+	public override void Start () {
 		base.Start();
 		
 		/*m_stages = new BaseStage[4]; 
@@ -28,7 +28,7 @@ public class SphereStateController : OSCListener {
 	}
 	
 	// Update is called once per frame
-	protected override void Update () {
+	public override void Update () {
 		base.Update();
 		
 		//Get OSC state

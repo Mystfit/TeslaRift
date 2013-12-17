@@ -33,6 +33,7 @@ public class OSCcontroller : MonoBehaviour {
 	public string loopbackPort = "3000";
 	public string clientPort = "2348";
 	public string clientName = "Live";
+	public string serverName = "LiveSender";
 	public string loopbackName = "loopback";
 	public bool loopback = false;
 	public bool isServer = true;
@@ -59,7 +60,7 @@ public class OSCcontroller : MonoBehaviour {
 			OSCHandler.Instance.CreateServer(clientName, int.Parse(targetPort));
 
 		if(isClient){
-			OSCHandler.Instance.CreateServer(clientName, int.Parse(clientPort));
+			OSCHandler.Instance.CreateServer(serverName, int.Parse(clientPort));
 		}
 		
 		if(loopback){

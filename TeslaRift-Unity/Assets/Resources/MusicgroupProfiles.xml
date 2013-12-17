@@ -1,6 +1,13 @@
 <?xml version="1.0"?>
 <MusicGroupList>
   <MusicGroupList>
-    <MusicGroup x="-0.005579323" y="0.3898018" z="-8.302929" />
+    <MusicGroup x="-0.3900318" y="0.3372819" z="-8.508331">
+      <clip name="BassCroak1" index="1" owner="Kaoss1" />
+      <clip name="2 8-Brass Swell Around" index="1" owner="BrassSwell" />
+      <clip name="chord1" index="1" owner="TeslaArp" />
+      <clip name="MystChords" index="4" owner="TeslaArp" />
+      <clip name="TapHat" index="1" owner="AudioLoop1" />
+      <clip name="IntroSwell" index="1" owner="M-Traveller" />
+    </MusicGroup>
   </MusicGroupList>
 </MusicGroupList>

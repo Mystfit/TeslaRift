@@ -10,11 +10,11 @@ public class PanelToggle : MonoBehaviour {
 			if(state){
 				m_isToggled = true;
 				renderer.material.SetColor("_Color", Color.blue);
-				transform.GetComponentInChildren<TextMesh>().color = Color.white;
+				transform.GetComponentInChildren<TextMesh>().color = Color.grey;
 			}else{
 				m_isToggled = false;
 				renderer.material.SetColor("_Color", Color.white);
-				transform.GetComponentInChildren<TextMesh>().color = Color.black;
+				transform.GetComponentInChildren<TextMesh>().color = Color.white;
 			}
 		}
 	}
@@ -28,7 +28,7 @@ public class PanelToggle : MonoBehaviour {
 				renderer.material.SetColor("_Color", Color.blue);
 			else
 				renderer.material.SetColor("_Color", Color.white);
-			transform.GetComponentInChildren<TextMesh>().color = Color.black;
+			transform.GetComponentInChildren<TextMesh>().color = Color.grey;
 		}
 	}
 }

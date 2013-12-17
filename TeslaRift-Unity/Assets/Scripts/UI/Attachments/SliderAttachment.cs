@@ -17,6 +17,12 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 		m_frame = GetComponent<UIFrame>();
 	}
 
+	public override void Init (BaseInstrumentParam managedReference)
+	{
+		base.Init (managedReference);
+		GetComponent<BarSlider>().SetLabel(managedReference.name);
+	}
+
 	/*
 	 * Owning panel for this UI object
 	 */

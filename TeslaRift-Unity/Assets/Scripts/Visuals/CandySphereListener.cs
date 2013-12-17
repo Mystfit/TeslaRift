@@ -10,12 +10,12 @@ public class CandySphereListener : OSCListener {
 	public float poleScale = 10.0f;
 
 	// Use this for initialization
-	protected override void Start () {
+	public override void Start () {
 		base.Start();
 	}
 	
 	// Update is called once per frame
-	protected override void Update () {
+	public override void Update () {
 		base.Update();
 		
 		if(m_isDirty){

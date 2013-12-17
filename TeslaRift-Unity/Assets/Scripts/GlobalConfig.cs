@@ -6,9 +6,14 @@ using DotNumerics.LinearAlgebra;
 public class GlobalConfig : MonoBehaviour {
 	
 	public bool IsClient = false;
+	public string ProjectSourceName;
+
+	public static GlobalConfig m_instance;
 
 	// Use this for initialization
 	void Awake () {
+
+		m_instance = this;
 		
 		if(IsClient){
 			GameObject.Find("__HydraController").SetActive(false);
@@ -27,6 +32,8 @@ public class GlobalConfig : MonoBehaviour {
 		
 		GameObject.Find("OVRPlayerController").GetComponent<OVRPlayerController>().SetAllowMouseRotation(false);
 	}
+
+	public static GlobalConfig Instance{ get { return m_instance; }}
 	
 	// Update is called once per frame
 	void Update () {

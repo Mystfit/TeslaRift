@@ -289,12 +289,16 @@ public class UIFrame : MonoBehaviour {
 	 */
 	public void RotateToVertical(){
 		bRotated = true;
+
+		transform.rotation = Quaternion.Euler( new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 90.0f) );
 		
-		iTween.RotateTo(gameObject, iTween.Hash(
+		/*
+		 * iTween.RotateTo(gameObject, iTween.Hash(
 			"rotation", new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 90.0f),
 			"time", m_easeTime,
 			"easetype", "easeInOutSine"
 		));
+		*/
 		AnimateSize(m_frameWidth, m_frameHeight);
 	}
 	
@@ -304,12 +308,17 @@ public class UIFrame : MonoBehaviour {
 	 */
 	public void RotateToHorizontal(){
 		bRotated = false;
-		
+
+		transform.rotation = Quaternion.Euler( new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 0.0f) );
+
+		/*
+		 * 
 		iTween.RotateTo(gameObject, iTween.Hash(
 			"rotation", new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 0.0f),
 			"time", m_easeTime,
 			"easetype", "easeInOutSine"
-		));
+		)); 
+		*/
 		AnimateSize(m_frameWidth, m_frameHeight);
 	}
 	
@@ -321,7 +330,12 @@ public class UIFrame : MonoBehaviour {
 		bIsAnimating = true;
 		float targetHeight = (bRotated) ? width : height;
 		float targetWidth = (bRotated) ? height : width;
-				
+
+		SetWidth(targetWidth);
+		SetHeight(targetHeight);
+		AnimationComplete();
+
+		/*
 		iTween.ValueTo(gameObject, iTween.Hash(
 			"from", m_lastWidth, 
 			"to", targetWidth, 
@@ -340,6 +354,7 @@ public class UIFrame : MonoBehaviour {
 			"oncomplete", "AnimationComplete",
 			"easetype", "easeInOutSine"
 		));
+		*/
 	}
 	
 	public void AnimateBackgroundColor(Color color){
