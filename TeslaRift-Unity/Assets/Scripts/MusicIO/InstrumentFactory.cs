@@ -20,7 +20,7 @@ public class InstrumentFactory : MonoBehaviour {
 	public string m_liveSessionFile;
 	
 	private InstrumentController m_instrumentControllerRef;
-	public GameObject m_instrumentHolder;
+	public VRCarousel m_instrumentHolder;
 	
 	/*
 	 * Prefabs
@@ -74,6 +74,9 @@ public class InstrumentFactory : MonoBehaviour {
 	 * Creates instruments from xml lists
 	 */
 	private void CreateInstrumentFromXmlList(XmlNodeList xmlList){
+
+		int insCount = 0;
+		float angleInc = 360 / xmlList.Count;
 		//Tracks are converted to instruments
 		foreach(XmlNode track in xmlList){	
 			//Get track definition
@@ -123,8 +126,11 @@ public class InstrumentFactory : MonoBehaviour {
 			}
 			
 			m_instrumentControllerRef.AddInstrument(instrumentDef);
-			InstrumentController.Instance.AddInstrumentGame( CreateLayeredInstrument(instrumentDef, color) );
+			m_instrumentHolder.AddInstrument( CreateLayeredInstrument(instrumentDef, color) );
 		}
+
+		//Sort instruments
+		m_instrumentHolder.PlaceObjects();
 	}
 
 	

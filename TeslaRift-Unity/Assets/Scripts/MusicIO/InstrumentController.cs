@@ -12,7 +12,6 @@ public class InstrumentController : MonoBehaviour {
 	//Instrument references
 	protected List<BaseInstrument> m_instruments;
 	protected BaseInstrument m_selectedInstrument;
-	protected List<GameObject> m_instrumentGameObjs;
 	protected GameObject m_lastSelectedGameInstrument = null;
 	
 	//Buffer references
@@ -35,7 +34,6 @@ public class InstrumentController : MonoBehaviour {
 	//-------------------------------------
 	void Awake () {
 		m_instruments = new List<BaseInstrument>();
-		m_instrumentGameObjs = new List<GameObject>();
 		m_buffers = new List<ClipBufferAttachment>();
 		m_musicGroups = new List<MusicControllerAttachment>();
 		m_instance = this;
@@ -128,19 +126,6 @@ public class InstrumentController : MonoBehaviour {
 	 */
 	public void AddInstrument(BaseInstrument instrument){
 		m_instruments.Add(instrument);
-	}
-	
-	public void AddInstrumentGame(GameObject instrumentGame){
-		m_instrumentGameObjs.Add(instrumentGame);
-	}
-	
-	public GameObject GetInstrumentGameByMusicReference(BaseInstrument instrumentRef){
-		foreach(GameObject instrumentGame in m_instrumentGameObjs){
-			if (instrumentGame.GetComponent<InstrumentAttachment>().musicRef == instrumentRef){
-				return instrumentGame;
-			}
-		}
-		return null;
 	}
 	
 	

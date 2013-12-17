@@ -25,12 +25,13 @@ public class OSCListener : MonoBehaviour {
 	}
 	
 	public virtual void SendUpdate(UnityOSC.OSCPacket message){
-		
-		for(int i = 0; i < m_address.Length; i++){
-			if(m_address[i] == message.Address){
-				m_paramValues[i] = (float)message.Data[0];
-				Debug.Log("Matched " + message.Address + ", " + m_paramValues[i] );
-				m_isDirty= true;
+		if(m_paramValues != null){
+			for(int i = 0; i < m_address.Length; i++){
+				if(m_address[i] == message.Address){
+					m_paramValues[i] = (float)message.Data[0];
+					Debug.Log("Matched " + message.Address + ", " + m_paramValues[i] );
+					m_isDirty= true;
+				}
 			}
 		}
 	}
