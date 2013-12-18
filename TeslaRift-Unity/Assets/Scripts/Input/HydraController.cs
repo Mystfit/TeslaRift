@@ -32,6 +32,10 @@ public class HydraController : MonoBehaviour {
 	public GameObject m_rightHand;
 	protected HydraHand m_leftHandHydra;
 	protected HydraHand m_rightHandHydra;
+	protected Vector3 m_leftHandVelocity;
+	protected Vector3 m_rightHandVelocity;
+	private Vector3 m_lastLeftHandPos;
+	private Vector3 m_lastRightHandPos;
 
 	public Transform m_leftHandTip;
 	public Transform m_rightHandTip;
@@ -100,6 +104,12 @@ public class HydraController : MonoBehaviour {
 		return m_rightHandTip;
 	}
 
+	public Vector3 GetHandVelocity(BaseTool.ToolHand hand){
+		if(hand == BaseTool.ToolHand.LEFT)
+			return m_leftHandVelocity;
+		return m_rightHandVelocity;
+	}
+
 
 	/*
 	 * Gets the OVR performer
@@ -134,6 +144,23 @@ public class HydraController : MonoBehaviour {
 		if(hand == BaseTool.ToolHand.LEFT)
 			return m_leftHandHydra;
 		return m_rightHandHydra;
+	}
+
+	public Vector3 GetHandColliderPosition(BaseTool.ToolHand hand){
+		GameObject handObj;
+		if(hand == BaseTool.ToolHand.LEFT)
+			handObj = m_leftHand;
+		else 
+			handObj = m_rightHand;
+
+		if(handObj.collider != null){
+			if( handObj.collider.GetType() == typeof(BoxCollider) ){
+				BoxCollider coll = handObj.collider as BoxCollider;
+				return coll.bounds.center;
+			}
+		}
+
+		return Vector3.zero;
 	}
 	
 	
@@ -240,7 +267,12 @@ public class HydraController : MonoBehaviour {
 				
 		if(m_rightHandController == null)
 			m_rightHandController = SixenseInput.GetController( SixenseHands.RIGHT );
-			
+
+		//Hand velocities
+		m_leftHandVelocity = m_leftHand.transform.position - m_lastLeftHandPos;
+		m_rightHandVelocity = m_rightHand.transform.position - m_lastRightHandPos;
+		m_lastLeftHandPos = m_leftHand.transform.position;
+		m_lastRightHandPos = m_rightHand.transform.position;
 		
 		SetCommonTools(BaseTool.ToolHand.LEFT);
 		SetIndividualToolsRight(BaseTool.ToolHand.LEFT);
@@ -294,7 +326,11 @@ public class HydraController : MonoBehaviour {
 		//Physics pull
 		//------------
 		else if(m_glove.GetGestureDown("PINKY") || Input.GetKeyDown(KeyCode.LeftShift)){
-			//m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand, BaseTool.ToolMode.SECONDARY);
+			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.TERTIARY);
+		}
+
+		else if(m_glove.GetGestureDown("THREE_SWIPE") || Input.GetKeyDown(KeyCode.LeftShift)){
+			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.TERTIARY);
 			hydraHand.animator.SetBool( "GripBall", true );
 		}
 		

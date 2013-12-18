@@ -95,7 +95,8 @@ public class RBFControlAttachment : UIAttachment {
 			break;
 		case MusicControllerAttachment.ControlState.PERFORM:
 			m_frame.GetAnchorOffset(m_frame.width, m_frame.height, m_frame.m_anchorPoint);
-			Vector3 pos = BaseTool.HandToObjectSpace( HydraController.Instance.GetHand( m_hand ).transform, transform);
+
+			Vector3 pos = BaseTool.HandToObjectSpace( HydraController.Instance.GetHandColliderPosition( m_hand ), transform);
 			
 //				Vector3 clampedPos = new Vector3(
 //					Mathf.Clamp(pos.x, m_frame.width*-0.5f, m_frame.height*0.5f ), 

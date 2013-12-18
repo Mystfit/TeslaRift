@@ -94,17 +94,8 @@ public class BaseTool : MonoBehaviour {
 		m_targets = targets;
 	}
 
-	public static Vector3 HandToObjectSpace(Transform worldPosition, Transform objectSpace){
-		//Offset the position by the source's collider (if present)
-		Vector3 worldOffset = worldPosition.position;
-		if(worldPosition.collider != null){
-			if( worldPosition.collider.GetType() == typeof(CapsuleCollider) ){
-				CapsuleCollider coll = worldPosition.collider as CapsuleCollider;
-				worldOffset = coll.bounds.center;
-			}
-		}
-		
-		return objectSpace.InverseTransformPoint(worldOffset);
+	public static Vector3 HandToObjectSpace(Vector3 worldPosition, Transform objectSpace){
+		return objectSpace.InverseTransformPoint(worldPosition);
 	}
 }
 

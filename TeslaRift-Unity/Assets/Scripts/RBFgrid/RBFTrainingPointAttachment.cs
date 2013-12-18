@@ -107,7 +107,8 @@ namespace RBF{
 		 */
 		public void MoveRelativeToContainer(Transform worldPos){
 
-			Vector3 pos = BaseTool.HandToObjectSpace(worldPos, m_parentContainer.transform);
+
+			Vector3 pos = BaseTool.HandToObjectSpace(worldPos.position, m_parentContainer.transform);
 			transform.localPosition = new Vector3(pos.x, pos.y, 0.0f);	
 //			transform.localPosition = new Vector3(
 //				Mathf.Clamp(pos.x, m_containerWidth*-0.5f, m_containerHeight*0.5f ), 
