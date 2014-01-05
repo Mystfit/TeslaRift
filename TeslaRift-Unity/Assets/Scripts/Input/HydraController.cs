@@ -54,6 +54,8 @@ public class HydraController : MonoBehaviour {
 	
 	private GloveController m_leftGlove;
 	private GloveController m_rightGlove;
+
+	public GloveController m_rhythmGlove;
 	
 	// Initialization
 	//------------------
@@ -276,6 +278,7 @@ public class HydraController : MonoBehaviour {
 		
 		SetCommonTools(BaseTool.ToolHand.LEFT);
 		SetIndividualToolsRight(BaseTool.ToolHand.LEFT);
+		SetRhythmTools(m_rhythmGlove);
 	}
 	
 	
@@ -305,6 +308,18 @@ public class HydraController : MonoBehaviour {
 			} */
 		//}
 	}
+
+
+	/*
+	 * Rhythm tools for inputting rhythmic notes
+	 */
+	public void SetRhythmTools(GloveController glove){
+		if(!glove.IsGestureClean()){
+			//Trigger a note in the active instrument
+			InstrumentController.Instance.TriggerNote();
+		}
+	}
+	
 	
 	
 	/*

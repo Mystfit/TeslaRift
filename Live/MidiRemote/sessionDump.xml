@@ -1,24 +1,55 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<song tempo = '110.0'>
-	<track channel='1' name='TeslaArp' volume='-4.8 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='True' color='16712965'>
+<song tempo = '104.0'>
+	<track channel='1' name='TeslaArp' volume='-11.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='True' color='16712965'>
 		<clip index='1' name='chord1' color='12411136' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='4' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='5' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='6' name='LightCycle1' color='5480241' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='9' name='Minor1' color='31421' mute='False' looping='True' playing='False' triggered='False' />
+		<clip index='11' name='15 TeslaArp' color='8092539' mute='False' looping='True' playing='False' triggered='False' />
+		<clip index='12' name='16 TeslaArp' color='16712965' mute='False' looping='True' playing='False' triggered='False' />
 		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
+		<device name='Scale'>
+			<parameter name='Base' value='3.0' min='0.0' max='11.0'/>
+			<parameter name='Transpose' value='0.0' min='-36.0' max='36.0'/>
+			<parameter name='Fold' value='0.0' min='0.0' max='1.0'/>
+			<parameter name='Lowest' value='0.0' min='0.0' max='127.0'/>
+			<parameter name='Range' value='128.0' min='0.0' max='128.0'/>
+			<parameter name='Map 0' value='0.0' min='-1.0' max='12.0'/>
+			<parameter name='Map 1' value='0.0' min='-1.0' max='12.0'/>
+			<parameter name='Map 2' value='2.0' min='-1.0' max='12.0'/>
+			<parameter name='Map 3' value='2.0' min='-1.0' max='12.0'/>
+			<parameter name='Map 4' value='3.0' min='-1.0' max='12.0'/>
+			<parameter name='Map 5' value='4.0' min='-1.0' max='12.0'/>
+			<parameter name='Map 6' value='5.0' min='-1.0' max='12.0'/>
+			<parameter name='Map 7' value='7.0' min='-1.0' max='12.0'/>
+			<parameter name='Map 8' value='7.0' min='-1.0' max='12.0'/>
+			<parameter name='Map 9' value='8.0' min='-1.0' max='12.0'/>
+			<parameter name='Map 10' value='8.0' min='-1.0' max='12.0'/>
+			<parameter name='Map 11' value='10.0' min='-1.0' max='12.0'/>
+		</device>
 		<device name='TeslaArpRack'>
-			<parameter name='Gate' value='37.0' min='0.0' max='127.0'/>
-			<parameter name='Rate' value='61.0' min='0.0' max='127.0'/>
-			<parameter name='Steps' value='87.0' min='0.0' max='127.0'/>
-			<parameter name='Hi Cut Filter' value='47.0' min='0.0' max='127.0'/>
-			<parameter name='Filter Reson' value='42.0' min='0.0' max='127.0'/>
-			<parameter name='Distortion Dry/Wet' value='72.0' min='0.0' max='127.0'/>
+			<parameter name='Gate' value='64.0' min='0.0' max='127.0'/>
+			<parameter name='Rate' value='49.0' min='0.0' max='127.0'/>
+			<parameter name='Steps' value='38.0' min='0.0' max='127.0'/>
+			<parameter name='Hi Cut Filter' value='40.0' min='0.0' max='127.0'/>
+			<parameter name='Filter Reson' value='29.0' min='0.0' max='127.0'/>
+			<parameter name='Distortion Dry/Wet' value='44.0' min='0.0' max='127.0'/>
 			<parameter name='Attack' value='0.0' min='0.0' max='127.0'/>
 			<parameter name='Macro 8' value='0.0' min='0.0' max='127.0'/>
 			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
+		</device>
+		<device name='Looper'>
+			<parameter name='State' value='0.0' min='0.0' max='3.0'/>
+			<parameter name='Feedback' value='1.0' min='0.0' max='1.0'/>
+			<parameter name='Reverse' value='0.0' min='0.0' max='1.0'/>
+			<parameter name='Monitor' value='0.0' min='0.0' max='3.0'/>
+			<parameter name='Speed' value='0.0' min='-36.0' max='36.0'/>
+			<parameter name='Quantization' value='0.0' min='0.0' max='14.0'/>
+			<parameter name='Song Control' value='1.0' min='0.0' max='2.0'/>
+			<parameter name='Tempo Control' value='1.0' min='0.0' max='2.0'/>
 		</device>
 	</track>
 	<track channel='2' name='M-Traveller' volume='-3.4 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='16753961'>
@@ -82,7 +113,7 @@
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
 		<device name='Electrix Audio Clip Effect Rack'>
-			<parameter name='Hi Cut Filter' value='127.0' min='0.0' max='127.0'/>
+			<parameter name='Hi Cut Filter' value='78.0' min='0.0' max='127.0'/>
 			<parameter name='Filter Reson' value='25.0' min='0.0' max='127.0'/>
 			<parameter name='DistortionDry/Wet' value='0.0' min='0.0' max='127.0'/>
 			<parameter name='Beat Gate' value='0.0' min='0.0' max='127.0'/>
@@ -99,8 +130,9 @@
 		<sends name='B-Turnado2' value='1.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
 	</track>
-	<track channel='7' name='Kaoss1' volume='-1.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='1769263'>
+	<track channel='7' name='Kaoss1' volume='-4.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='1769263'>
 		<clip index='1' name='BassCroak1' color='12411136' mute='False' looping='True' playing='False' triggered='False' />
+		<clip index='2' name='Looper0009 TeslaArp' color='13958625' mute='False' looping='True' playing='False' triggered='False' />
 		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
@@ -239,12 +271,12 @@
 			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
 			<parameter name='Dictator' value='0.0' min='0.0' max='1.0'/>
 			<parameter name='Control 1' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 2' value='0.0' min='0.0' max='1.0'/>
+			<parameter name='Control 2' value='0.0299999974668' min='0.0' max='1.0'/>
 			<parameter name='Control 3' value='0.0' min='0.0' max='1.0'/>
 			<parameter name='Control 4' value='0.0' min='0.0' max='1.0'/>
 			<parameter name='Control 5' value='0.0' min='0.0' max='1.0'/>
 			<parameter name='Control 6' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 7' value='0.13499994576' min='0.0' max='1.0'/>
+			<parameter name='Control 7' value='0.0' min='0.0' max='1.0'/>
 			<parameter name='Control 8' value='0.0' min='0.0' max='1.0'/>
 		</device>
 	</trackReturn>

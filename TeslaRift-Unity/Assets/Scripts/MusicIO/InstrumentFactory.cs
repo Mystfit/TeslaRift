@@ -80,8 +80,10 @@ public class InstrumentFactory : MonoBehaviour {
 		//Tracks are converted to instruments
 		foreach(XmlNode track in xmlList){	
 			//Get track definition
-			Color color = Utils.intToColor( int.Parse(track.Attributes["color"].Value) );			
-			BaseInstrument instrumentDef = new BaseInstrument( m_client, m_source, track.Attributes["name"].Value, color );
+			Color color = Utils.intToColor( int.Parse(track.Attributes["color"].Value) );		
+			bool armed = bool.Parse( track.Attributes["arm"] );
+			
+			BaseInstrument instrumentDef = new BaseInstrument( m_client, m_source, track.Attributes["name"].Value, color, armed);
 			
 			//Get devices present in track
 			XmlNodeList deviceList = track.SelectNodes("device"); //device array	

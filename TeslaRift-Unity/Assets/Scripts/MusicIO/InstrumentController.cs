@@ -164,4 +164,15 @@ public class InstrumentController : MonoBehaviour {
 	}
 
 	public List<MusicControllerAttachment> MusicGroups{ get { return m_musicGroups; }}
+
+
+	/*
+	 * Instrument playing
+	 */
+	 public void TriggerNote(){
+	 	if(m_selectedInstrument != null){
+	 		m_selectedInstrument.TriggerNote();
+	 	}
+	 }
+
 }

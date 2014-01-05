@@ -23,15 +23,17 @@ namespace MusicIO
 		string m_client = "";
 		string m_name = "";
 		string m_owner = "";
+		bool m_playable = false;
 		Color m_color;
 		
 		protected InstrumentClip m_loadedClip;		// Last played clip
 		
-		public BaseInstrument(string instrumentClient, string instrumentOwner, string instrumentName, Color color){
+		public BaseInstrument(string instrumentClient, string instrumentOwner, string instrumentName, Color color, bool playable){
 			m_name = instrumentName;
 			m_owner = instrumentOwner;
 			m_client = instrumentClient;
 			m_color = color;
+			m_playable = playable;
 			
 			m_clips = new List<BaseInstrumentParam>();
 			m_params = new List<BaseInstrumentParam>();
@@ -42,6 +44,7 @@ namespace MusicIO
 		public string Owner{ get {return m_owner; } } 
 		public string Client{ get {return m_client; } }
 		public Color color{ get { return m_color; }}
+		public bool playable{ get { return m_playable; }}
 		
 		
 		//Reset instrument to default
@@ -180,6 +183,15 @@ namespace MusicIO
 			m_messageQueue.Clear();
 			completed.Clear();
 		}
+
+
+		/*
+		 * Playing functions
+		 */
+		 public void TriggerNote(){
+		 	if(m_playable)
+		 		Debug.log(m_name + " playing a note")
+		 }
 	}
 
 }

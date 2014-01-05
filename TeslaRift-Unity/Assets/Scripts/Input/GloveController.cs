@@ -28,6 +28,7 @@ public class GloveController : MonoBehaviour {
 	private int m_currentGestureTimer = 0;
 	public string m_activeGesture;
 	private string m_activeGestureDown;
+	private bool m_isDirty = true;
 
 	private int m_calibratingGestureIndex;
 	private bool bIsCalibrateButtonDown = false;
@@ -139,8 +140,10 @@ public class GloveController : MonoBehaviour {
 					
 					if(m_activeGesture != m_lastGestureDown)
 						m_activeGestureDown = m_activeGesture;
+						SetDirty();
 					else 
 						m_activeGestureDown = "";
+						SetClean();
 					
 					m_lastGestureDown = m_currentGesture;
 				}
@@ -166,6 +169,13 @@ public class GloveController : MonoBehaviour {
 			return true;
 		return false;
 	}
+
+	/*
+	 * GestureState notifiers
+	 */
+	private void SetDirty(){ m_isDirty = true; }
+	private void SetClean(){ m_isDirty = false; }
+	public bool IsGestureClean(){ return m_isDirty; }
 
 	/*
 	 * Gets an array with the chosen gesture index set to 1.0. Used for finger RBF gesture matching
