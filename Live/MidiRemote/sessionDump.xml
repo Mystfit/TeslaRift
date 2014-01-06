@@ -10,7 +10,7 @@
 		<clip index='12' name='16 TeslaArp' color='16712965' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='14' name='20 TeslaArp' color='10927616' mute='False' looping='True' playing='False' triggered='False' />
 		<clip index='15' name='21 TeslaArp' color='8046132' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='16' name='22 TeslaArp' color='4047616' mute='False' looping='True' playing='True' triggered='False' />
+		<clip index='16' name='22 TeslaArp' color='4047616' mute='False' looping='True' playing='False' triggered='False' />
 		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
 		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
 		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
@@ -34,12 +34,12 @@
 			<parameter name='Map 11' value='10.0' min='-1.0' max='12.0'/>
 		</device>
 		<device name='TeslaArpRack'>
-			<parameter name='Gate' value='37.0' min='0.0' max='127.0'/>
+			<parameter name='Gate' value='61.4251213074' min='0.0' max='127.0'/>
 			<parameter name='Rate' value='52.0' min='0.0' max='127.0'/>
 			<parameter name='Steps' value='38.0' min='0.0' max='127.0'/>
-			<parameter name='Hi Cut Filter' value='40.0' min='0.0' max='127.0'/>
-			<parameter name='Filter Reson' value='29.0' min='0.0' max='127.0'/>
-			<parameter name='Distortion Dry/Wet' value='44.0' min='0.0' max='127.0'/>
+			<parameter name='Hi Cut Filter' value='38.6579208374' min='0.0' max='127.0'/>
+			<parameter name='Filter Reson' value='38.6579208374' min='0.0' max='127.0'/>
+			<parameter name='Distortion Dry/Wet' value='92.4063720703' min='0.0' max='127.0'/>
 			<parameter name='Attack' value='0.0' min='0.0' max='127.0'/>
 			<parameter name='Macro 8' value='0.0' min='0.0' max='127.0'/>
 			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>

@@ -13,7 +13,7 @@ class FissureVR(ControlSurface):
         self.log_message("-----------------------------------------------")
         self.cInstance = c_instance
 
-        self.ignoreList = ["Grabber", "RH-", "RG-", "RA-", "Device On"]
+        self.ignoreList = ["Grabber", "RH-", "RG-", "RA-", "Device On", "Scale"]
 
         # Add listeners
         if self.cInstance.song().tracks_has_listener(self.tracks_updated) != 1:
