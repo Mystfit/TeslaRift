@@ -1,13 +1,33 @@
 <?xml version="1.0"?>
 <MusicGroupList>
   <MusicGroupList>
-    <MusicGroup x="-0.3900318" y="0.3372819" z="-8.508331">
-      <clip name="BassCroak1" index="1" owner="Kaoss1" />
-      <clip name="2 8-Brass Swell Around" index="1" owner="BrassSwell" />
+    <MusicGroup x="0.9643408" y="0.3680707" z="-8.497753">
       <clip name="chord1" index="1" owner="TeslaArp" />
-      <clip name="MystChords" index="4" owner="TeslaArp" />
-      <clip name="TapHat" index="1" owner="AudioLoop1" />
-      <clip name="IntroSwell" index="1" owner="M-Traveller" />
+      <clip name="Minor1" index="9" owner="TeslaArp" />
+      <rbfPoint x="0.0401057" y="0.3245539" twist="0">
+        <rbfValue paramName="Filter_Reson" owner="TeslaArp">0</rbfValue>
+        <rbfValue paramName="Distortion_Dry-Wet" owner="TeslaArp">0.1331271</rbfValue>
+        <rbfValue paramName="Hi_Cut_Filter" owner="TeslaArp">0</rbfValue>
+        <rbfValue paramName="Gate" owner="TeslaArp">0.7842155</rbfValue>
+      </rbfPoint>
+      <rbfPoint x="0.4383059" y="-0.04399973" twist="0">
+        <rbfValue paramName="Filter_Reson" owner="TeslaArp">0</rbfValue>
+        <rbfValue paramName="Distortion_Dry-Wet" owner="TeslaArp">0.1331271</rbfValue>
+        <rbfValue paramName="Hi_Cut_Filter" owner="TeslaArp">0.08652975</rbfValue>
+        <rbfValue paramName="Gate" owner="TeslaArp">0</rbfValue>
+      </rbfPoint>
+      <rbfPoint x="0.3250453" y="0.8125199" twist="0">
+        <rbfValue paramName="Filter_Reson" owner="TeslaArp">0</rbfValue>
+        <rbfValue paramName="Distortion_Dry-Wet" owner="TeslaArp">0.1109699</rbfValue>
+        <rbfValue paramName="Hi_Cut_Filter" owner="TeslaArp">0.4219943</rbfValue>
+        <rbfValue paramName="Gate" owner="TeslaArp">0.4457891</rbfValue>
+      </rbfPoint>
+      <rbfPoint x="0.6665575" y="0.3251008" twist="0">
+        <rbfValue paramName="Filter_Reson" owner="TeslaArp">0.03221362</rbfValue>
+        <rbfValue paramName="Distortion_Dry-Wet" owner="TeslaArp">0.346784</rbfValue>
+        <rbfValue paramName="Hi_Cut_Filter" owner="TeslaArp">0.2047795</rbfValue>
+        <rbfValue paramName="Gate" owner="TeslaArp">0.4232101</rbfValue>
+      </rbfPoint>
     </MusicGroup>
   </MusicGroupList>
 </MusicGroupList>

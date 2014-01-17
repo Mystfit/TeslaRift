@@ -49,7 +49,7 @@ public class PhysGrabberTool : BaseTool {
 			Debug.Log("Resetting generator selection" + m_selectedGenerator);
 		}
 	}
-	
+
 	
 	/*
 	 * Tool exit state
@@ -143,6 +143,9 @@ public class PhysGrabberTool : BaseTool {
 							m_joint.connectedBody = m_heldObject.GetComponent<Rigidbody>();
 							m_instrumentControlRef.SetLastSelectedGameInstrument(m_heldObject);
 							m_toolHandState = BaseTool.HandState.HOLDING;
+
+							//pop the instrument off the carousel
+							InstrumentController.Instance.Carousel.HoldInstrument(m_heldObject);
 						} else if(handTarget.CompareTag(InteractableTypes.MUSICGROUP)){
 							m_heldObject = closestObject;
 							m_heldType = InteractableTypes.MUSICGROUP;

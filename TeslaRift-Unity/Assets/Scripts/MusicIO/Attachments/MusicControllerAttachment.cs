@@ -73,14 +73,13 @@ public class MusicControllerAttachment : BaseAttachment {
 		if(mode == BaseTool.ToolMode.PRIMARY)
 			InstrumentController.Instance.SelectMusicController(this);
 		if(mode == BaseTool.ToolMode.SECONDARY)
-			ToggleGui();
+			ToggleControlState();
 	}
 
 	public override void Gesture_PullOut ()
 	{
 		base.Gesture_PullOut ();
-		if(mode == BaseTool.ToolMode.PRIMARY)
-			ToggleControlState();
+			//if(mode == BaseTool.ToolMode.PRIMARY)
 	}
 
 	public void ToggleGui(){

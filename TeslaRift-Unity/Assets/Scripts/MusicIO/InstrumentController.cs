@@ -25,9 +25,12 @@ public class InstrumentController : MonoBehaviour {
 	private string m_sourceName;
 	public void SetSourceName(string sourceName){ m_sourceName = sourceName; }
 
+	//Carousel ref
+	public VRCarousel m_carousel;
+	public VRCarousel Carousel { get { return m_carousel; }}
+
 	//Inspector toggles
 	public bool m_blastAllParameters;
-
 	
 	
 	// Unity

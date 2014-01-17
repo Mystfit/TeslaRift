@@ -190,7 +190,7 @@ namespace MusicIO
 		 */
 		 public void TriggerNote(){
 		 	if(m_playable)
-		 		Debug.log(m_name + " playing a note")
+				Debug.Log(m_name + " playing a note");
 		 }
 	}
 

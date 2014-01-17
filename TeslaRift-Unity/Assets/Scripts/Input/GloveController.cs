@@ -138,12 +138,13 @@ public class GloveController : MonoBehaviour {
 				if(m_currentGestureTimer > m_gestureSwitchDelay){
 					m_activeGesture = m_currentGesture;
 					
-					if(m_activeGesture != m_lastGestureDown)
+					if(m_activeGesture != m_lastGestureDown){
 						m_activeGestureDown = m_activeGesture;
 						SetDirty();
-					else 
+					} else {
 						m_activeGestureDown = "";
 						SetClean();
+					}
 					
 					m_lastGestureDown = m_currentGesture;
 				}

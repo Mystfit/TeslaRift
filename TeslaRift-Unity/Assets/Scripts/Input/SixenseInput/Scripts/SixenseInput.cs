@@ -262,6 +262,7 @@ public class SixenseInput : MonoBehaviour
 		float farRange = new int();
 		float farVal = new int();
 		SixensePlugin.sixenseGetFilterParams(ref nearRange, ref nearVal, ref farRange, ref farVal);
+		//SixensePlugin.sixenseSetFilterParams(500.0f, 0.85f, 3200.0f, 0.95f);
 		Debug.Log (nearRange + " " + nearVal + " " + farRange + " " + farVal);
 
 
@@ -270,7 +271,8 @@ public class SixenseInput : MonoBehaviour
 			m_Controllers[i] = new Controller();
 		}
 
-		RebindHands();
+		Controllers[0].HandBind = SixenseHands.RIGHT;
+		Controllers[1].HandBind = SixenseHands.LEFT;
 	}
 
 	void Quit(){
@@ -375,11 +377,13 @@ public class SixenseInput : MonoBehaviour
 	/// Manually rebinds the hands. HACKY
 	/// </summary>
 	public void RebindHands(){
-		Controllers[0].HandBind = SixenseHands.RIGHT;
-		Controllers[1].HandBind = SixenseHands.LEFT;
-		
+
 		SixensePlugin.sixenseAutoEnableHemisphereTracking( 0 );
 		SixensePlugin.sixenseAutoEnableHemisphereTracking( 1 );
+		//SixensePlugin.sixenseSetHemisphereTrackingMode(0,1);
+		//SixensePlugin.sixenseSetHemisphereTrackingMode(1,1);
+
+		SixensePlugin.sixenseSetHighPriorityBindingEnabled(1);
 
 		m_ControllerManagerState = ControllerManagerState.NONE;
 		

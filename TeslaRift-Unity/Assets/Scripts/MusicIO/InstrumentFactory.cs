@@ -75,33 +75,40 @@ public class InstrumentFactory : MonoBehaviour {
 	 */
 	private void CreateInstrumentFromXmlList(XmlNodeList xmlList){
 
-		int insCount = 0;
 		float angleInc = 360 / xmlList.Count;
 		//Tracks are converted to instruments
 		foreach(XmlNode track in xmlList){	
 			//Get track definition
 			Color color = Utils.intToColor( int.Parse(track.Attributes["color"].Value) );		
-			bool armed = bool.Parse( track.Attributes["arm"] );
+
+			bool armed = false;
+			XmlNode armedNode = track.Attributes["arm"];
+			if(armedNode != null)
+			   armed = bool.Parse( track.Attributes["arm"].Value );
 			
 			BaseInstrument instrumentDef = new BaseInstrument( m_client, m_source, track.Attributes["name"].Value, color, armed);
 			
 			//Get devices present in track
 			XmlNodeList deviceList = track.SelectNodes("device"); //device array	
 			foreach(XmlNode device in deviceList){
-				//Get params in device
-				XmlNodeList paramList = device.SelectNodes("parameter"); //parameter array	
-				
-				foreach(XmlNode parameter in paramList){
-					string name = parameter.Attributes["name"].Value as String;
-					name = name.Replace("/", "-");
-					name = name.Replace(" ", "_");
-					string deviceName = device.Attributes["name"].Value as String;
-					deviceName = deviceName.Replace("/", "-");
-					deviceName = deviceName.Replace(" ", "_");
 
-					float min = Convert.ToSingle(parameter.Attributes["min"].Value);
-					float max = Convert.ToSingle(parameter.Attributes["max"].Value);
-					instrumentDef.AddParam(name, "float", min, max, deviceName);
+				if((String)device.Attributes["name"].Value != "Looper" &&
+				   (String)device.Attributes["name"].Value != "Scale"){
+					//Get params in device
+					XmlNodeList paramList = device.SelectNodes("parameter"); //parameter array	
+					
+					foreach(XmlNode parameter in paramList){
+						string name = parameter.Attributes["name"].Value as String;
+						name = name.Replace("/", "-");
+						name = name.Replace(" ", "_");
+						string deviceName = device.Attributes["name"].Value as String;
+						deviceName = deviceName.Replace("/", "-");
+						deviceName = deviceName.Replace(" ", "_");
+
+						float min = Convert.ToSingle(parameter.Attributes["min"].Value);
+						float max = Convert.ToSingle(parameter.Attributes["max"].Value);
+						instrumentDef.AddParam(name, "float", min, max, deviceName);
+					}
 				}
 	
 			}
