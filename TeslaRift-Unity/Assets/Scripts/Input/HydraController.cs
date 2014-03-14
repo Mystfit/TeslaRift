@@ -277,8 +277,9 @@ public class HydraController : MonoBehaviour {
 		m_lastRightHandPos = m_rightHand.transform.position;
 		
 		SetCommonTools(BaseTool.ToolHand.LEFT);
+		SetCommonTools(BaseTool.ToolHand.RIGHT);
 		SetIndividualToolsRight(BaseTool.ToolHand.LEFT);
-		SetRhythmTools(m_rhythmGlove);
+		//SetRhythmTools(m_rhythmGlove);
 	}
 	
 	
