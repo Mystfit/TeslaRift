@@ -30,6 +30,11 @@ public class GloveController : MonoBehaviour {
 	private string m_activeGestureDown;
 	private bool m_isDirty = true;
 
+	//Gesture change speeds
+	private double[] m_lastGestureOutput;
+	private double[] m_gestureVelocity;
+	public double activeGestureVelocity;
+
 	private int m_calibratingGestureIndex;
 	private bool bIsCalibrateButtonDown = false;
 	private bool bIsCalibrateButtonLast = false;
@@ -38,7 +43,6 @@ public class GloveController : MonoBehaviour {
 	public bool m_toggleCalibration = false;
 	public bool m_toggleNextGestureCalibration = false;
 	public double m_sigma = 0.5;
-	public double m_gestureThreshold = 0.5;
 	public int m_gestureSwitchDelay = 0;
 		
     void Start( )
@@ -51,6 +55,8 @@ public class GloveController : MonoBehaviour {
 		m_rbf = new RBFCore(m_bendPins.Length, m_gestures.Length);
 		m_rbf.setSigma(m_sigma);
 		m_bendValues = new double[m_bendPins.Length];
+		m_gestureVelocity = new double[m_gestures.Length];
+		m_lastGestureOutput = new double[m_gestures.Length];
     }
 	
 	
@@ -116,6 +122,14 @@ public class GloveController : MonoBehaviour {
 			case CalibrationState.CALIBRATED:	
 				
 				double[] gestureOutput = m_rbf.calculateOutput(m_bendValues);
+
+				//Calculate gesture change velocities
+				for(int i = 0; i < m_gestures.Length; i++){
+					m_gestureVelocity[i] = gestureOutput[i] - m_lastGestureOutput[i];
+					if(m_gestureVelocity[i] < 0) m_gestureVelocity[i] *= -1.0;
+				}
+
+				m_lastGestureOutput = gestureOutput;
 				
 				double largestVal = 0.0;
 				int activeIndex = 0;
@@ -140,6 +154,7 @@ public class GloveController : MonoBehaviour {
 					
 					if(m_activeGesture != m_lastGestureDown){
 						m_activeGestureDown = m_activeGesture;
+						activeGestureVelocity = m_gestureVelocity[activeIndex];
 						SetDirty();
 					} else {
 						m_activeGestureDown = "";
@@ -183,7 +198,7 @@ public class GloveController : MonoBehaviour {
 	 */
 	protected double[] GetRBFCalibrationArray(int gestureIndex){
 		double[] calibrationArr = new double[m_gestures.Length];
-		calibrationArr[gestureIndex] = 1.0;
+		calibrationArr[gestureIndex] = 100.0;
 		return calibrationArr;
 	}
 }

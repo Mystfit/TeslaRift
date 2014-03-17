@@ -1,6 +1,6 @@
 //Maya ASCII 2014 scene
 //Name: headsupPanel.ma
-//Last modified: Fri, Mar 14, 2014 07:20:34 PM
+//Last modified: Fri, Mar 14, 2014 08:21:38 PM
 //Codeset: 1252
 requires maya "2014";
 requires -nodeType "mentalrayFramebuffer" -nodeType "mentalrayOutputPass" -nodeType "mentalrayRenderPass"
@@ -90,8 +90,8 @@ fileInfo "osv" "Microsoft Windows 7 Ultimate Edition, 64-bit Windows 7 Service P
 fileInfo "license" "student";
 createNode transform -s -n "persp";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" -0.53335457073708814 0.77769474775210101 -2.1743686162789326 ;
-	setAttr ".r" -type "double3" -16.538352729565695 196.19999999993232 0 ;
+	setAttr ".t" -type "double3" 0.11863721141602401 2.3264768166502972 0.054314729563754494 ;
+	setAttr ".r" -type "double3" -93.93835272956251 178.59999999992885 0 ;
 createNode camera -s -n "perspShape" -p "persp";
 	setAttr -k off ".v" no;
 	setAttr ".fl" 34.999999999999993;
@@ -457,6 +457,17 @@ createNode polyFlipUV -n "polyFlipUV1";
 	setAttr ".ics" -type "componentList" 1 "f[0:99]";
 	setAttr ".ix" -type "matrix" 1 0 0 0 0 2.2204460492503131e-016 1 0 0 -1 2.2204460492503131e-016 0
 		 0 0 0 1;
+createNode polySmoothFace -n "polySmoothFace1";
+	setAttr ".ics" -type "componentList" 1 "f[*]";
+	setAttr ".suv" yes;
+	setAttr ".kb" no;
+	setAttr ".ksb" no;
+	setAttr ".kmb" 0;
+	setAttr ".kt" no;
+	setAttr ".ps" 0.10000000149011612;
+	setAttr ".ro" 1;
+	setAttr ".ma" yes;
+	setAttr ".m08" yes;
 select -ne :time1;
 	setAttr ".o" 1;
 	setAttr ".unw" 1;
@@ -492,8 +503,7 @@ connectAttr "groupId2.id" "panelShape.iog.og[5].gid";
 connectAttr "tweakSet1.mwc" "panelShape.iog.og[5].gco";
 connectAttr "bend2GroupId.id" "panelShape.iog.og[6].gid";
 connectAttr "bend2Set.mwc" "panelShape.iog.og[6].gco";
-connectAttr "polyNormal1.out" "panelShape.i";
-connectAttr "tweak1.vl[0].vt[0]" "panelShape.twl";
+connectAttr "polySmoothFace1.out" "panelShape.i";
 connectAttr "polyPlane1.out" "panelShape1Orig.i";
 connectAttr "bend1.msg" "bend1Handle.sml";
 connectAttr "bend1.cur" "bend1HandleShape.cur";
@@ -542,6 +552,7 @@ connectAttr "bend2GroupId.id" "bend2GroupParts.gi";
 connectAttr "bend2.og[0]" "polyNormal1.ip";
 connectAttr "panelShape1Orig.w" "polyFlipUV1.ip";
 connectAttr "panelShape.wm" "polyFlipUV1.mp";
+connectAttr "polyNormal1.out" "polySmoothFace1.ip";
 connectAttr "panelShape.iog" ":initialShadingGroup.dsm" -na;
 connectAttr "defaultRenderLayer.msg" ":defaultRenderingList1.r" -na;
 // End of headsupPanel.ma
