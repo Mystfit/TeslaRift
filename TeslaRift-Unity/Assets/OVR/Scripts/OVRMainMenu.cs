@@ -7,9 +7,20 @@ Authors     :   Peter Giokaris
 
 Copyright   :   Copyright 2013 Oculus VR, Inc. All Rights reserved.
 
-Use of this software is subject to the terms of the Oculus LLC license
-agreement provided at the time of installation or download, or which
+Licensed under the Oculus VR SDK License Version 2.0 (the "License"); 
+you may not use the Oculus VR SDK except in compliance with the License, 
+which is provided at the time of installation or download, or which 
 otherwise accompanies this software in either electronic or hard copy form.
+
+You may obtain a copy of the License at
+
+http://www.oculusvr.com/licenses/LICENSE-2.0 
+
+Unless required by applicable law or agreed to in writing, the Oculus VR SDK 
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 ************************************************************************************/
 using UnityEngine;
@@ -210,7 +221,12 @@ public class OVRMainMenu : MonoBehaviour
 				// We don't need a depth buffer on this texture
 				GUIRenderTexture = new RenderTexture(w, h, 0);	
 				GuiHelper.SetPixelResolution(w, h);
-				GuiHelper.SetDisplayResolution(OVRDevice.HResolution, OVRDevice.VResolution);
+				// NOTE: All GUI elements are being written with pixel values based
+				// from DK1 (1280x800). These should change to normalized locations so 
+				// that we can scale more cleanly with varying resolutions
+				//GuiHelper.SetDisplayResolution(OVRDevice.HResolution, 
+				//								 OVRDevice.VResolution);
+				GuiHelper.SetDisplayResolution(1280.0f, 800.0f);
 			}
 		}
 		
