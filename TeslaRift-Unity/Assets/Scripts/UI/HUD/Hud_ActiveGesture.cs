@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Gui_ActiveGesture : MonoBehaviour {
+public class Hud_ActiveGesture : MonoBehaviour {
 
 	public GloveController m_targetGlove;
 	protected TextMesh m_text;

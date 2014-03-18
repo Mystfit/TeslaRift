@@ -40,6 +40,7 @@ public class HydraController : MonoBehaviour {
 	public Transform m_leftHandTip;
 	public Transform m_rightHandTip;
 	public GameObject m_performer;
+	public GloveCalibrator m_gloveCalibrator;
 	
 	//Collision lists
 	//---------------
@@ -281,6 +282,17 @@ public class HydraController : MonoBehaviour {
 		SetIndividualToolsRight(BaseTool.ToolHand.LEFT);
 		//SetRhythmTools(m_rhythmGlove);
 	}
+
+	public void FreezeHands(){
+		m_leftHandHydra.SetEnabled(false);
+		m_rightHandHydra.SetEnabled(false);
+	}
+
+	public void UnfreezeHands(){
+		m_leftHandHydra.ActivateHand(m_leftHandController);
+		m_rightHandHydra.ActivateHand(m_rightHandController);
+	}
+
 	
 	
 	/*
@@ -291,17 +303,18 @@ public class HydraController : MonoBehaviour {
 		//{	
 			//Hand calibration
 			//----------------
-			if(Input.GetKeyDown(KeyCode.P)){
+			if(Input.GetKeyDown(KeyCode.Space)){
 			//if(m_rightHandController.GetButton( SixenseButtons.START ) || Input.GetKeyDown(KeyCode.P)){
 				//GetComponent<SixenseInput>().RebindHands();
-				m_leftHandHydra.SetEnabled(false);
-				m_rightHandHydra.SetEnabled(false);
+				FreezeHands();
 			}
 			
-			if(Input.GetKeyUp(KeyCode.P)){
+			if(Input.GetKeyUp(KeyCode.Space)){
 			//if ( m_rightHandController.GetButtonUp( SixenseButtons.START ) || Input.GetKeyUp(KeyCode.P)){
-				m_leftHandHydra.ActivateHand(m_leftHandController);
-				m_rightHandHydra.ActivateHand(m_rightHandController);
+				
+				if(!m_gloveCalibrator.isCalibrated){
+					m_gloveCalibrator.StartCalibration();
+				}
 			} 
 			
 			/*else if(m_rightHandController.GetButton(SixenseButtons.START) && m_rightHandController.GetButtonUp(SixenseButtons.BUMPER)){
@@ -341,7 +354,7 @@ public class HydraController : MonoBehaviour {
 		
 		//Physics pull
 		//------------
-		else if(m_glove.GetGestureDown("PINKY") || Input.GetKeyDown(KeyCode.LeftShift)){
+		if(m_glove.GetGestureDown("PINKY") || Input.GetKeyDown(KeyCode.LeftShift)){
 			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.TERTIARY);
 		}
 

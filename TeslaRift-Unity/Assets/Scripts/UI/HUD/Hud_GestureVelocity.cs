@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Gui_GestureVelocity : MonoBehaviour {
+public class Hud_GestureVelocity : MonoBehaviour {
 
 	public GloveController m_targetGlove;
 	protected TextMesh m_text;

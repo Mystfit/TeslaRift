@@ -13,13 +13,14 @@ public class GloveController : MonoBehaviour {
 	private Arduino m_arduino;
 
 	//Calibration state
-	private enum CalibrationState{
+	public enum CalibrationState{
 		AWAITING_CALIBRATION = 0,
 		CALIBRATING,
 		CALIBRATED
 	}
-	private CalibrationState m_calibrationState = CalibrationState.AWAITING_CALIBRATION;
-	
+	protected CalibrationState m_calibrationState = CalibrationState.AWAITING_CALIBRATION;
+	public CalibrationState GetCalibrationState(){ return m_calibrationState; }
+
 	//RBF
 	private RBFCore m_rbf;
 	private string m_currentGesture;
@@ -45,7 +46,7 @@ public class GloveController : MonoBehaviour {
 	public double m_sigma = 0.5;
 	public int m_gestureSwitchDelay = 0;
 		
-    void Start( )
+    void Awake( )
     {	
 		m_arduino = GetComponent<Arduino>();
 		if(m_arduino == null)
@@ -70,8 +71,15 @@ public class GloveController : MonoBehaviour {
 			m_arduino.reportAnalog(m_bendPins[i], 1);
 		}
     }
-	
-	
+
+	public void ToggleCalibration(){
+		m_toggleCalibration = true;
+	}
+
+	public void CalibrateNext(){
+		m_toggleNextGestureCalibration = true;
+	}
+
 	void Update () 
 	{       
 		if(m_arduino.Connected){
@@ -85,6 +93,9 @@ public class GloveController : MonoBehaviour {
 				m_calibrationState = CalibrationState.CALIBRATING;
 				m_calibratingGestureIndex = 0;
 				Debug.Log("Glove calibration start:");
+
+				//Set first gesture that needs to be calibrated
+				m_activeGesture = m_gestures[m_calibratingGestureIndex];
 				Debug.Log("Calibrate " + m_gestures[m_calibratingGestureIndex]);
 			}
 				
@@ -107,7 +118,7 @@ public class GloveController : MonoBehaviour {
 					m_calibratingGestureIndex++;
 	
 					if(m_calibratingGestureIndex < m_gestures.Length){
-						
+						m_activeGesture = m_gestures[m_calibratingGestureIndex];
 						Debug.Log("Calibrate " + m_gestures[m_calibratingGestureIndex]);
 						//Need some sort of gui text display for the current finger gesture to calibrate.
 						//Best way would be to show the gesture on the model for the performer to imitate before calibrating
@@ -120,7 +131,6 @@ public class GloveController : MonoBehaviour {
 				break;			
 			
 			case CalibrationState.CALIBRATED:	
-				
 				double[] gestureOutput = m_rbf.calculateOutput(m_bendValues);
 
 				//Calculate gesture change velocities
@@ -185,6 +195,13 @@ public class GloveController : MonoBehaviour {
 			return true;
 		return false;
 	}
+	public double[] GetRawGestures(){
+		return m_lastGestureOutput;
+	}
+	
+	public string GetGestureName(int index){
+		return m_gestures[index];
+	}
 
 	/*
 	 * GestureState notifiers
@@ -198,7 +215,7 @@ public class GloveController : MonoBehaviour {
 	 */
 	protected double[] GetRBFCalibrationArray(int gestureIndex){
 		double[] calibrationArr = new double[m_gestures.Length];
-		calibrationArr[gestureIndex] = 100.0;
+		calibrationArr[gestureIndex] = 1.0;
 		return calibrationArr;
 	}
 }

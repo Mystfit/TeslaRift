@@ -8,6 +8,7 @@ public class BarSlider : MonoBehaviour {
 	protected UIFrame m_frame;
 	protected bool bIsActive;
 	public TextMesh m_label;
+	public string m_sliderLabel = "";
 
 	[Range(0.0f, 1.0f)]
 	public float m_sliderVal;
@@ -15,6 +16,7 @@ public class BarSlider : MonoBehaviour {
 	void Start () {
 		m_fill = transform.FindChild("sliderFill").gameObject;
 		m_frame = GetComponent<UIFrame>();
+		m_label.text = m_sliderLabel;
 	}
 
 	public void SetLabel(string label){

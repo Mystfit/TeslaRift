@@ -1,6 +1,20 @@
 <?xml version="1.0"?>
 <MusicGroupList>
   <MusicGroupList>
-    <MusicGroup x="-0.8171186" y="0.2734171" z="-8.237969" />
+    <MusicGroup x="0.6118715" y="0.522762" z="-8.548388">
+      <rbfPoint x="0.2773808" y="0.4376292" twist="0">
+        <rbfValue paramName="Control_2" owner="C-Turnado3">0</rbfValue>
+        <rbfValue paramName="Device_On" owner="C-Turnado3">0</rbfValue>
+      </rbfPoint>
+      <rbfPoint x="0.6538234" y="0.2286757" twist="0">
+        <rbfValue paramName="Control_2" owner="C-Turnado3">0.4859288</rbfValue>
+        <rbfValue paramName="Device_On" owner="C-Turnado3">0.9056602</rbfValue>
+      </rbfPoint>
+      <rbfPoint x="0.2149568" y="0.1741425" twist="0">
+        <rbfValue paramName="Control_2" owner="C-Turnado3">0.4859288</rbfValue>
+        <rbfValue paramName="Device_On" owner="C-Turnado3">0</rbfValue>
+      </rbfPoint>
+    </MusicGroup>
+    <MusicGroup x="-0.9813625" y="-0.2585192" z="-8.429742" />
   </MusicGroupList>
 </MusicGroupList>

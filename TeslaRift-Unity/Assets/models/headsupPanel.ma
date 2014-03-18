@@ -1,6 +1,6 @@
 //Maya ASCII 2014 scene
 //Name: headsupPanel.ma
-//Last modified: Fri, Mar 14, 2014 08:21:38 PM
+//Last modified: Tue, Mar 18, 2014 03:20:38 PM
 //Codeset: 1252
 requires maya "2014";
 requires -nodeType "mentalrayFramebuffer" -nodeType "mentalrayOutputPass" -nodeType "mentalrayRenderPass"
@@ -90,12 +90,12 @@ fileInfo "osv" "Microsoft Windows 7 Ultimate Edition, 64-bit Windows 7 Service P
 fileInfo "license" "student";
 createNode transform -s -n "persp";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" 0.11863721141602401 2.3264768166502972 0.054314729563754494 ;
-	setAttr ".r" -type "double3" -93.93835272956251 178.59999999992885 0 ;
+	setAttr ".t" -type "double3" -0.69145856410843032 0.080669718527788092 -1.6535904771618657 ;
+	setAttr ".r" -type "double3" -2.7383527287364546 201.79999999983482 0 ;
 createNode camera -s -n "perspShape" -p "persp";
 	setAttr -k off ".v" no;
 	setAttr ".fl" 34.999999999999993;
-	setAttr ".coi" 2.2922576401785077;
+	setAttr ".coi" 1.9586617497756684;
 	setAttr ".imn" -type "string" "persp";
 	setAttr ".den" -type "string" "persp_depth";
 	setAttr ".man" -type "string" "persp_mask";
@@ -172,16 +172,16 @@ createNode transform -n "bend1Handle";
 	setAttr ".smd" 7;
 createNode deformBend -n "bend1HandleShape" -p "bend1Handle";
 	setAttr -k off ".v";
-	setAttr ".dd" -type "doubleArray" 3 -1 1 0.87266462599716477 ;
+	setAttr ".dd" -type "doubleArray" 3 -1.8 1.8 0.87266462599716477 ;
 	setAttr ".hw" 0.55;
 createNode transform -n "bend2Handle";
-	setAttr ".t" -type "double3" 0 -2.7755575615628914e-017 -0.10233381390571594 ;
+	setAttr ".t" -type "double3" 3.0093811125903725e-034 -2.7755575615628914e-017 0 ;
 	setAttr ".r" -type "double3" 90 89.999999999999972 0 ;
 	setAttr ".s" -type "double3" 0.5 0.5 0.5 ;
 	setAttr ".smd" 7;
 createNode deformBend -n "bend2HandleShape" -p "bend2Handle";
 	setAttr -k off ".v";
-	setAttr ".dd" -type "doubleArray" 3 -1 1 0.87266462599716477 ;
+	setAttr ".dd" -type "doubleArray" 3 -1.8 1.8 0.87266462599716477 ;
 	setAttr ".hw" 0.48280225396156318;
 createNode lightLinker -s -n "lightLinker1";
 	setAttr -s 2 ".lnk";
@@ -337,8 +337,8 @@ createNode mentalrayOptions -s -n "miDefaultOptions";
 	setAttr ".stringOptions[44].type" -type "string" "string";
 createNode mentalrayFramebuffer -s -n "miDefaultFramebuffer";
 createNode polyPlane -n "polyPlane1";
-	setAttr ".w" 1.24713e-009;
-	setAttr ".h" 1.24713e-009;
+	setAttr ".w" 1.2;
+	setAttr ".h" 1.2;
 	setAttr ".cuv" 2;
 createNode nonLinear -n "bend1";
 	addAttr -is true -ci true -k true -sn "cur" -ln "curvature" -smn -3.14159 -smx 
@@ -348,8 +348,8 @@ createNode nonLinear -n "bend1";
 	addAttr -is true -ci true -k true -sn "hb" -ln "highBound" -dv 1 -min 0 -smn 0 -smx 
 		10 -at "double";
 	setAttr -k on ".cur" 50;
-	setAttr -k on ".lb";
-	setAttr -k on ".hb";
+	setAttr -k on ".lb" -1.8;
+	setAttr -k on ".hb" 1.8;
 createNode tweak -n "tweak1";
 createNode objectSet -n "bend1Set";
 	setAttr ".ihi" 0;
@@ -375,8 +375,8 @@ createNode nonLinear -n "bend2";
 	addAttr -is true -ci true -k true -sn "hb" -ln "highBound" -dv 1 -min 0 -smn 0 -smx 
 		10 -at "double";
 	setAttr -k on ".cur" 50;
-	setAttr -k on ".lb";
-	setAttr -k on ".hb";
+	setAttr -k on ".lb" -1.8;
+	setAttr -k on ".hb" 1.8;
 createNode objectSet -n "bend2Set";
 	setAttr ".ihi" 0;
 	setAttr ".vo" yes;
@@ -495,8 +495,6 @@ select -ne :hardwareRenderingGlobals;
 select -ne :defaultHardwareRenderGlobals;
 	setAttr ".fn" -type "string" "im";
 	setAttr ".res" -type "string" "ntsc_4d 646 485 1.333";
-select -ne :ikSystem;
-	setAttr -s 4 ".sol";
 connectAttr "bend1GroupId.id" "panelShape.iog.og[4].gid";
 connectAttr "bend1Set.mwc" "panelShape.iog.og[4].gco";
 connectAttr "groupId2.id" "panelShape.iog.og[5].gid";

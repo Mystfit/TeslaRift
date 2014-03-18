@@ -11,13 +11,14 @@ public class MusicgroupFactory : MonoBehaviour {
 	
 	public string m_musicProfilePath;
 	public bool m_toggleWriteMusicgroup;
+	public bool m_toggleLoadMusicgroups;
 	public Transform UIFacingTarget;
 
 	protected MusicgroupSpawnerAttachment m_musicSpawner;
 	
 	void Start () {
 		m_musicSpawner = GetComponent<MusicgroupSpawnerAttachment>();
-		LoadMusicgroupXML();
+		//LoadMusicgroupXML();
 	}
 
 	void Update(){
@@ -25,12 +26,18 @@ public class MusicgroupFactory : MonoBehaviour {
 			m_toggleWriteMusicgroup = false;
 			WriteMusicGroupsToFile(InstrumentController.Instance.MusicGroups);
 		}
+
+		if(m_toggleLoadMusicgroups){
+			LoadMusicgroupXML();
+			m_toggleLoadMusicgroups = false;
+		}
 	}
 	
 	/*
 	 * Creates instruments from Live's dumped session xml
 	 */
 	private void LoadMusicgroupXML(){
+
 
 		string filepath = Application.dataPath + "/Resources/" + m_musicProfilePath;
 		XmlDocument xmlDoc = new XmlDocument();
@@ -43,12 +50,22 @@ public class MusicgroupFactory : MonoBehaviour {
 		CreateGroupFromXmlList(mGroupList);
 		//WriteMusicGroupsToFile();
 	}
+
+	public void RemoveAllGroups(){
+		foreach(Transform obj in transform){
+			if(obj.name != "AreaTrigger")
+				GameObject.Destroy(obj.gameObject);
+		}
+	}
 	
 	
 	/*
 	 * Creates instruments from xml lists
 	 */
 	private void CreateGroupFromXmlList(XmlNodeList xmlList){
+
+		//Remove existing music groups
+		RemoveAllGroups();
 
 		foreach(XmlNode mGroup in xmlList){	
 			//Color color = Utils.intToColor( int.Parse(mGroup.Attributes["color"].Value) );		
