@@ -7,37 +7,41 @@ using MusicIO;
 using System.IO;
 
 public class InstrumentFactory : MonoBehaviour {
+
+	public static InstrumentFactory Instance{ get { return m_instance; }}
+	private static InstrumentFactory m_instance;
 	
 	public string m_client;		//Target OSC for instruments
 	protected string m_source;		//Source we are sending messages from (first adress prefix in outgoing OSC)
 	
 	public GameObject instrumentPrefab = null;
-	public TextAsset instrumentDefinitionFile;
 	public GameObject paramPanelPrefab;
 	public float m_radialInnerRadius = 0.05f;	
 	public float m_radialOuterRadius = 0.5f;
 	public float m_panelOrbitDistance = 0.2f;
-	public string m_liveSessionFile;
-	
+	public TextAsset m_liveSessionFile;
+
 	private InstrumentController m_instrumentControllerRef;
 	public VRCarousel m_instrumentHolder;
-	
+
 	/*
 	 * Prefabs
 	 */
-	protected static GameObject m_floatingClipPrefab;
-	protected static GameObject m_textPrefab;
-	protected static GameObject m_trianglePanelPrefab;
+	public GameObject m_floatingClipPrefab;
+	public GameObject m_textPrefab;
+	public GameObject m_trianglePanelPrefab;
 	protected static Material m_panelMaterial;
 
 	void Start () {
+		m_instance = this;
+
 		m_instrumentControllerRef = this.GetComponent<InstrumentController>();
 		m_source = GlobalConfig.Instance.ProjectSourceName;
 
 		//Load prefabs
-		m_floatingClipPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/floatingClip.prefab", typeof(GameObject)) as GameObject;
-		m_textPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/GUI/paramLabel.prefab", typeof(GameObject)) as GameObject;
-		m_trianglePanelPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/GUI/trianglePanel.prefab", typeof(GameObject)) as GameObject;
+		//m_floatingClipPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/floatingClip.prefab", typeof(GameObject)) as GameObject;
+		//m_textPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/GUI/paramLabel.prefab", typeof(GameObject)) as GameObject;
+		//m_trianglePanelPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/GUI/trianglePanel.prefab", typeof(GameObject)) as GameObject;
 		
 		//LoadInstrumentDefinitions();
 		LoadLiveSessionXml();
@@ -50,20 +54,25 @@ public class InstrumentFactory : MonoBehaviour {
 	private void LoadLiveSessionXml(){
 		
 		//Load xml
-		XmlReaderSettings settings = new XmlReaderSettings();
-		settings.IgnoreWhitespace = true;
-		
-		StreamReader sr = new StreamReader( Application.dataPath + "../../../Live/MidiRemote/" + m_liveSessionFile );
-		XmlReader xmlRead = XmlReader.Create(sr, settings);
+		//XmlReaderSettings settings = new XmlReaderSettings();
+		//settings.IgnoreWhitespace = true;
+
+		//Debug.Log(Application.dataPath);
+		//StreamReader sr = new StreamReader( Application.dataPath + "/" + m_liveSessionFile );
+		//XmlReader xmlRead = XmlReader.Create(sr, settings);
 		
 		XmlDocument sessionXml = new XmlDocument ();
-		sessionXml.Load( xmlRead );
+
+		sessionXml.LoadXml(m_liveSessionFile.text);
+		//sessionXml.Load( xmlRead );
 		
 		//Get track, return, master information
 		XmlNodeList trackList = sessionXml.GetElementsByTagName("track"); //instrument array	
 		XmlNodeList returnList = sessionXml.GetElementsByTagName("trackReturn"); //instrument array	
 
 		InstrumentController.Instance.SetSourceName(m_source);
+
+		Debug.Log(m_liveSessionFile.text);
 		
 		CreateInstrumentFromXmlList( trackList);
 		CreateInstrumentFromXmlList( returnList);
@@ -339,7 +348,7 @@ public class InstrumentFactory : MonoBehaviour {
 		return layerMesh;
 	}
 	
-	public static GameObject CreateFloatingInstrument(BaseInstrument instrument){
+	public GameObject CreateFloatingInstrument(BaseInstrument instrument){
 		GameObject insObj = GameObject.Instantiate(m_floatingClipPrefab) as GameObject;
 		insObj.renderer.material.SetColor("_Color", instrument.color);
 		return insObj;

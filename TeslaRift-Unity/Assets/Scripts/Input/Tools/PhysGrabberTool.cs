@@ -40,9 +40,8 @@ public class PhysGrabberTool : BaseTool {
 	 */
 	public override void TransitionIn ()
 	{
-		Debug.Log(this.m_toolControlRef);
-		if( m_toolControlRef.SelectedGenerator != null ){
-			m_toolControlRef.SetSelectedGenerator(null);
+		if( ToolController.Instance.SelectedGenerator != null ){
+			ToolController.Instance.SetSelectedGenerator(null);
 			GeneratorLine[] lines = gameObject.GetComponents<GeneratorLine>();
 			foreach(GeneratorLine line in lines)
 				line.Remove();

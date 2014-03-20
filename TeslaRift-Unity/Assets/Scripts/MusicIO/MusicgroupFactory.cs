@@ -8,6 +8,10 @@ using System.IO;
 using UI;
 
 public class MusicgroupFactory : MonoBehaviour {
+
+	//Singleton references
+	private static MusicgroupFactory m_instance;
+	public static MusicgroupFactory Instance{ get { return m_instance; }}
 	
 	public string m_musicProfilePath;
 	public bool m_toggleWriteMusicgroup;
@@ -17,6 +21,7 @@ public class MusicgroupFactory : MonoBehaviour {
 	protected MusicgroupSpawnerAttachment m_musicSpawner;
 	
 	void Start () {
+		m_instance = this;
 		m_musicSpawner = GetComponent<MusicgroupSpawnerAttachment>();
 		//LoadMusicgroupXML();
 	}
@@ -37,9 +42,8 @@ public class MusicgroupFactory : MonoBehaviour {
 	 * Creates instruments from Live's dumped session xml
 	 */
 	private void LoadMusicgroupXML(){
-
-
-		string filepath = Application.dataPath + "/Resources/" + m_musicProfilePath;
+		string filepath = Application.dataPath + "/" + m_musicProfilePath;
+		Debug.Log(filepath);
 		XmlDocument xmlDoc = new XmlDocument();
 		
 		if(File.Exists (filepath))

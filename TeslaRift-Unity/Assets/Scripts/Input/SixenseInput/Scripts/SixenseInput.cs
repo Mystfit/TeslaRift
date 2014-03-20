@@ -261,9 +261,8 @@ public class SixenseInput : MonoBehaviour
 		float nearVal = new int();
 		float farRange = new int();
 		float farVal = new int();
-		SixensePlugin.sixenseGetFilterParams(ref nearRange, ref nearVal, ref farRange, ref farVal);
-		//SixensePlugin.sixenseSetFilterParams(500.0f, 0.85f, 3200.0f, 0.95f);
-		Debug.Log (nearRange + " " + nearVal + " " + farRange + " " + farVal);
+		//SixensePlugin.sixenseGetFilterParams(ref nearRange, ref nearVal, ref farRange, ref farVal);
+		//Debug.Log (nearRange + " " + nearVal + " " + farRange + " " + farVal);
 
 
 		for ( int i = 0; i < MAX_CONTROLLERS; i++ )

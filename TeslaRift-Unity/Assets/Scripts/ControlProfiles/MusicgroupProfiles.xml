@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<MusicGroupList>
+  <MusicGroupList>
+    <MusicGroup x="-0.393808" y="0.4966341" z="-8.333378">
+      <rbfPoint x="0.03510895" y="0.1892637" twist="0">
+        <rbfValue paramName="Hi_Cut_Filter" owner="TeslaArp">0</rbfValue>
+        <rbfValue paramName="Attack" owner="TeslaArp">0</rbfValue>
+        <rbfValue paramName="Chain_Selector" owner="TeslaArp">0</rbfValue>
+      </rbfPoint>
+      <rbfPoint x="0.503379" y="0.3664953" twist="0">
+        <rbfValue paramName="Hi_Cut_Filter" owner="TeslaArp">0</rbfValue>
+        <rbfValue paramName="Attack" owner="TeslaArp">0</rbfValue>
+        <rbfValue paramName="Chain_Selector" owner="TeslaArp">0</rbfValue>
+      </rbfPoint>
+      <rbfPoint x="0.4145411" y="0.3158868" twist="0">
+        <rbfValue paramName="Hi_Cut_Filter" owner="TeslaArp">0</rbfValue>
+        <rbfValue paramName="Attack" owner="TeslaArp">0</rbfValue>
+        <rbfValue paramName="Chain_Selector" owner="TeslaArp">0</rbfValue>
+      </rbfPoint>
+      <rbfPoint x="0.1725136" y="0.2958496" twist="0">
+        <rbfValue paramName="Hi_Cut_Filter" owner="TeslaArp">0</rbfValue>
+        <rbfValue paramName="Attack" owner="TeslaArp">1</rbfValue>
+        <rbfValue paramName="Chain_Selector" owner="TeslaArp">0.01143071</rbfValue>
+      </rbfPoint>
+      <rbfPoint x="0.2932581" y="0.2947149" twist="0">
+        <rbfValue paramName="Hi_Cut_Filter" owner="TeslaArp">0</rbfValue>
+        <rbfValue paramName="Attack" owner="TeslaArp">1</rbfValue>
+        <rbfValue paramName="Chain_Selector" owner="TeslaArp">0.8459848</rbfValue>
+      </rbfPoint>
+      <rbfPoint x="0.3439747" y="0.7162067" twist="0">
+        <rbfValue paramName="Hi_Cut_Filter" owner="TeslaArp">0</rbfValue>
+        <rbfValue paramName="Attack" owner="TeslaArp">0</rbfValue>
+        <rbfValue paramName="Chain_Selector" owner="TeslaArp">0</rbfValue>
+      </rbfPoint>
+      <rbfPoint x="0.4917051" y="0.4021649" twist="0">
+        <rbfValue paramName="Hi_Cut_Filter" owner="TeslaArp">0</rbfValue>
+        <rbfValue paramName="Attack" owner="TeslaArp">0</rbfValue>
+        <rbfValue paramName="Chain_Selector" owner="TeslaArp">0</rbfValue>
+      </rbfPoint>
+      <rbfPoint x="-0.04791841" y="0.2718901" twist="0">
+        <rbfValue paramName="Hi_Cut_Filter" owner="TeslaArp">0.9336761</rbfValue>
+        <rbfValue paramName="Attack" owner="TeslaArp">0</rbfValue>
+        <rbfValue paramName="Chain_Selector" owner="TeslaArp">0</rbfValue>
+      </rbfPoint>
+      <rbfPoint x="0.2268642" y="0.4048247" twist="0">
+        <rbfValue paramName="Hi_Cut_Filter" owner="TeslaArp">0.9336761</rbfValue>
+        <rbfValue paramName="Attack" owner="TeslaArp">0</rbfValue>
+        <rbfValue paramName="Chain_Selector" owner="TeslaArp">0.7455744</rbfValue>
+      </rbfPoint>
+    </MusicGroup>
+  </MusicGroupList>
+</MusicGroupList>

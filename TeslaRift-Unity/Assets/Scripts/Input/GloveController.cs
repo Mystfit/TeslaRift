@@ -140,7 +140,7 @@ public class GloveController : MonoBehaviour {
 				}
 
 				m_lastGestureOutput = gestureOutput;
-				
+
 				double largestVal = 0.0;
 				int activeIndex = 0;
 				

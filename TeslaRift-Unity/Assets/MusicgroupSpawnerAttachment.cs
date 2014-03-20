@@ -4,7 +4,7 @@ using UI;
 
 public class MusicgroupSpawnerAttachment : BaseAttachment {
 
-	public GameObject UIFacingTarget;
+	public Transform UIFacingTarget;
 	public VRCarousel m_instrumentCarousel;
 	protected MusicgroupFactory m_factory;
 
@@ -79,7 +79,7 @@ public class MusicgroupSpawnerAttachment : BaseAttachment {
 		attach.transform.position = transform.position;
 		attach.transform.parent = transform;
 		attach.facePerformer = true;
-		attach.faceTarget = UIFacingTarget.transform;
+		attach.faceTarget = UIFacingTarget;
 		attach.rigidbody.AddForce(new Vector3(0.0f, 50.0f, 0.0f));
 		InstrumentController.Instance.AddMusicGroup(attach);
 		return attach;

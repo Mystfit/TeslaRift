@@ -346,10 +346,8 @@ public class HydraController : MonoBehaviour {
 					
 		//Physics selector
 		//------------
-		if(m_glove.GetGestureDown("CLOSED_HAND") || Input.GetKeyDown(KeyCode.Space)){
+		if(m_glove.GetGestureDown("CLOSED_HAND") || Input.GetKeyDown(KeyCode.LeftControl)){
 			m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand, BaseTool.ToolMode.PRIMARY);
-			hydraHand.animator.SetBool( "Fist", true );
-			hydraHand.animator.SetFloat("FistAmount", 1.0f);
 		} 
 		
 		//Physics pull
@@ -360,26 +358,22 @@ public class HydraController : MonoBehaviour {
 
 		else if(m_glove.GetGestureDown("THREE_SWIPE") || Input.GetKeyDown(KeyCode.LeftShift)){
 			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.TERTIARY);
-			hydraHand.animator.SetBool( "GripBall", true );
 		}
 		
 		//Gesture Selector Primary
 		//--------------------
 		else if(m_glove.GetGestureDown("INDEX_POINT") || Input.GetKeyDown(KeyCode.W)){
 			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.PRIMARY);
-			hydraHand.animator.SetBool( "Point", true );
 		}
 		
 					//Gesture selector secondary
 		//--------------------
 		else if(m_glove.GetGestureDown("INDEX_MIDDLE") || Input.GetKeyDown(KeyCode.E)){
 			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.SECONDARY);	//Secondary mode does a full reset
-			hydraHand.animator.SetBool( "HoldBook", true );
 		}
 
 		else if(m_glove.GetGestureDown("ROCK_ON") || Input.GetKeyDown(KeyCode.S)){
 			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.TERTIARY);	//Secondary mode does a full reset
-			hydraHand.animator.SetBool( "GripBall", true );
 		}
 	
 		//Normal reset
@@ -408,11 +402,6 @@ public class HydraController : MonoBehaviour {
 			openHand )
 		{
 			m_toolControlRef.PopTool(hand);
-			hydraHand.animator.SetBool( "Fist", false );
-			hydraHand.animator.SetFloat("FistAmount", 0.0f);
-			hydraHand.animator.SetBool( "Point", false );
-			hydraHand.animator.SetBool( "HoldBook", false );
-			hydraHand.animator.SetBool("Idle", true);
 		}
 	}
 	
