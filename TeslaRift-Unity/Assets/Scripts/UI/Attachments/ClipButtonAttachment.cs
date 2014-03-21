@@ -19,7 +19,7 @@ public class ClipButtonAttachment : UIAttachment<InstrumentClip> {
 	/*
 	 * Owner of this button
 	 */
-	protected ClipBufferAttachment m_owner;
+	public ClipBufferAttachment m_owner;
 	public ClipBufferAttachment owner{ get { return m_owner; }}
 	public void SetOwner(ClipBufferAttachment owner){ m_owner = owner; }
 
