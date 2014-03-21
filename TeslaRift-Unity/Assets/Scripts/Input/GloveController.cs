@@ -1,5 +1,6 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using Uniduino;
 using RBF;
 using System;
@@ -20,6 +21,10 @@ public class GloveController : MonoBehaviour {
 	}
 	protected CalibrationState m_calibrationState = CalibrationState.AWAITING_CALIBRATION;
 	public CalibrationState GetCalibrationState(){ return m_calibrationState; }
+	private List<double[]> m_currentCalibrationSamples;
+	public int m_calibrationSamples = 60;
+	protected bool bIsCollectingSamples;
+	protected double[] m_calibrationAvg;
 
 	//RBF
 	private RBFCore m_rbf;
@@ -37,7 +42,6 @@ public class GloveController : MonoBehaviour {
 	public double activeGestureVelocity;
 
 	private int m_calibratingGestureIndex;
-	private bool bIsCalibrateButtonDown = false;
 	private bool bIsCalibrateButtonLast = false;
 	
 	public string[] m_gestures;
@@ -58,6 +62,7 @@ public class GloveController : MonoBehaviour {
 		m_bendValues = new double[m_bendPins.Length];
 		m_gestureVelocity = new double[m_gestures.Length];
 		m_lastGestureOutput = new double[m_gestures.Length];
+		m_currentCalibrationSamples = new List<double[]>();
     }
 	
 	
@@ -75,7 +80,7 @@ public class GloveController : MonoBehaviour {
 	public void ToggleCalibration(){
 		m_toggleCalibration = true;
 	}
-
+	
 	public void CalibrateNext(){
 		m_toggleNextGestureCalibration = true;
 	}
@@ -83,13 +88,12 @@ public class GloveController : MonoBehaviour {
 	void Update () 
 	{       
 		if(m_arduino.Connected){
-			bIsCalibrateButtonDown = Convert.ToBoolean( m_arduino.digitalRead(m_bendCalibratePin) );
-			
 			for(int i = 0; i < m_bendValues.Length; i++)
 				m_bendValues[i] = (double)m_arduino.analogRead(m_bendPins[i]);
 			
 			if(m_toggleCalibration){
 				m_toggleCalibration = false;
+				m_toggleNextGestureCalibration = true;
 				m_calibrationState = CalibrationState.CALIBRATING;
 				m_calibratingGestureIndex = 0;
 				Debug.Log("Glove calibration start:");
@@ -109,25 +113,49 @@ public class GloveController : MonoBehaviour {
 				break;
 			
 			case CalibrationState.CALIBRATING:
-				if(m_toggleNextGestureCalibration || Input.GetKeyDown(KeyCode.RightArrow))					//Keyboard calibration trigger
-				//if(bIsCalibrateButtonDown = false && bIsCalibrateButtonLast != bIsCalibrateButtonDown)	//Arduino calibration trigger
-				{					
-					m_toggleNextGestureCalibration = false;
-					
-					m_rbf.addTrainingPoint(m_bendValues, GetRBFCalibrationArray( m_calibratingGestureIndex));
-					m_calibratingGestureIndex++;
-	
-					if(m_calibratingGestureIndex < m_gestures.Length){
-						m_activeGesture = m_gestures[m_calibratingGestureIndex];
-						Debug.Log("Calibrate " + m_gestures[m_calibratingGestureIndex]);
-						//Need some sort of gui text display for the current finger gesture to calibrate.
-						//Best way would be to show the gesture on the model for the performer to imitate before calibrating
-					} else {
-						m_calibrationState = CalibrationState.CALIBRATED;
-						m_rbf.calculateWeights();
-						Debug.Log("Calibration complete!");
+
+				if(m_toggleNextGestureCalibration){
+					//Start recording samples to calculate the averages per bend sensor.
+					if(m_currentCalibrationSamples.Count == 0){
+						bIsCollectingSamples = true;
 					}
-				}
+
+					if(bIsCollectingSamples){
+						if(m_currentCalibrationSamples.Count < m_calibrationSamples){
+							m_currentCalibrationSamples.Add(m_bendValues.Clone() as Double[]);
+						} else {
+							double[] m_calibrationTotal = new double[m_bendValues.Length];
+							m_calibrationAvg = new double[m_bendValues.Length];
+							foreach(double[] vals in m_currentCalibrationSamples){
+								for(int i = 0; i < vals.Length; i++){
+									m_calibrationTotal[i] += vals[i];
+								}
+							}
+							for(int i =0; i < m_calibrationTotal.Length; i++){
+								m_calibrationAvg[i] = m_calibrationTotal[i] / m_calibrationSamples;
+							}
+							bIsCollectingSamples = false;
+						}	
+					} else {
+						//Samples recorded, save into RBF engine.
+						m_toggleNextGestureCalibration = false;
+						
+						m_rbf.addTrainingPoint(m_calibrationAvg, GetRBFCalibrationArray( m_calibratingGestureIndex));
+						m_currentCalibrationSamples.Clear();
+						m_calibratingGestureIndex++;
+						
+						if(m_calibratingGestureIndex < m_gestures.Length){
+							m_activeGesture = m_gestures[m_calibratingGestureIndex];
+							Debug.Log("Calibrate " + m_gestures[m_calibratingGestureIndex]);
+							//Need some sort of gui text display for the current finger gesture to calibrate.
+							//Best way would be to show the gesture on the model for the performer to imitate before calibrating
+						} else {
+							m_calibrationState = CalibrationState.CALIBRATED;
+							m_rbf.calculateWeights();
+							Debug.Log("Calibration complete!");
+						}
+					}
+				} 
 				break;			
 			
 			case CalibrationState.CALIBRATED:	
@@ -178,8 +206,6 @@ public class GloveController : MonoBehaviour {
 				
 				break;
 			}
-			
-			bIsCalibrateButtonLast = bIsCalibrateButtonDown;
 		}
 	}
 	

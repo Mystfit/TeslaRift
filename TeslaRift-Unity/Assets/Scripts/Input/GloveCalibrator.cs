@@ -52,9 +52,9 @@ public class GloveCalibrator : MonoBehaviour {
 						} else {
 							m_leftGlove.CalibrateNext();
 							m_rightGlove.CalibrateNext();
+							m_currentCalibrateTime = m_calibrateDuration;
+							Debug.Log(m_currentCalibrateTime);
 						}
-
-						m_currentCalibrateTime = m_calibrateDuration;
 					}
 				}
 			}
