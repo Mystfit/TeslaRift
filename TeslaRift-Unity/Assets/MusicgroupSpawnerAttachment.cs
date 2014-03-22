@@ -9,7 +9,6 @@ public class MusicgroupSpawnerAttachment : BaseAttachment {
 	protected MusicgroupFactory m_factory;
 
 	//Kinetic scrolling
-	protected float m_lastHandXpos;		//Last position of hand on x-axis
 	protected float m_angVelocity;		//Current angular velocity of carousel
 	public float m_dampening = 0.95f;
 	public float m_rotationMultiplier = 1.2f;
@@ -29,7 +28,6 @@ public class MusicgroupSpawnerAttachment : BaseAttachment {
 		} else {
 			m_angVelocity = 0.0f;
 		}
-
 	}
 
 	/*

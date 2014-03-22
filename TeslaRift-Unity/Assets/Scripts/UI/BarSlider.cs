@@ -20,6 +20,7 @@ public class BarSlider : MonoBehaviour {
 	}
 
 	public void SetLabel(string label){
+		m_sliderLabel = label;
 		m_label.text = label;
 	}
 	

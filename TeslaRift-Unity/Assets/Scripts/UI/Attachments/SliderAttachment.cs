@@ -12,7 +12,7 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 	public ParamSliderPanelAttachment owner{ get { return m_owner; }}
 
 	// Use this for initialization
-	public override void Start () {
+	public override void Awake () {
 		m_slider = GetComponent<BarSlider>();
 		m_frame = GetComponent<UIFrame>();
 	}
@@ -20,7 +20,8 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 	public override void Init (BaseInstrumentParam managedReference)
 	{
 		base.Init (managedReference);
-		GetComponent<BarSlider>().SetLabel(managedReference.name);
+		BarSlider sliderFrame = GetComponent<BarSlider>();
+		sliderFrame.SetLabel(managedReference.name);
 	}
 
 	/*
@@ -46,9 +47,6 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 	public override void Gesture_ExitIdleInterior ()
 	{
 		base.Gesture_ExitIdleInterior ();
-		if(mode == BaseTool.ToolMode.TERTIARY){
-			owner.RemoveSlider(this);
-		}
 	}
 
 	public override void Gesture_Exit ()

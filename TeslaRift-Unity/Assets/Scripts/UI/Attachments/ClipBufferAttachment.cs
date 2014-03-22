@@ -92,7 +92,7 @@ public class ClipBufferAttachment : UIAttachment {
 		buttonObj.transform.rotation = transform.rotation;
 		buttonObj.transform.parent = transform;
 
-		GameObject instrumentObj = InstrumentFactory.Instance.CreateFloatingInstrument(clip.owner);
+		GameObject instrumentObj = UI.UIFactory.CreateFloatingInstrumentIcon(clip.owner);
 		instrumentObj.transform.localScale = new Vector3(0.08f, 0.08f, 0.08f);
 		instrumentObj.transform.position = buttonObj.transform.position;
 		instrumentObj.transform.rotation = buttonObj.transform.rotation;

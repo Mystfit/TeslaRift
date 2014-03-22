@@ -125,6 +125,10 @@ public class BaseAttachment<T> : BaseAttachment {
 	public virtual void Init(T managedReference){
 		m_musicRef = managedReference;
 		bHasMusicRef = true;
+
+		//Set default tool filter if not set
+		if(m_respondsToToolMode == null)
+			m_respondsToToolMode = new BaseTool.ToolMode[]{BaseTool.ToolMode.PRIMARY, BaseTool.ToolMode.SECONDARY};
 	}
 	public T musicRef{ get { return m_musicRef; }}
 }

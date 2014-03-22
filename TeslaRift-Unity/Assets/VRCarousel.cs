@@ -31,7 +31,7 @@ public class VRCarousel : MonoBehaviour {
 	 * Pops an instrument off the carousel to be held by another object (control or hand)
 	 */
 	public void HoldInstrument(GameObject instrument){
-		DropInstrument();
+		//DropInstrument();
 
 		if(m_instruments.Remove(instrument)){
 			m_floatingInstrument = instrument;

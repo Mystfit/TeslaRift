@@ -1,13 +1,20 @@
 fileFormatVersion: 2
-guid: 752e464f5cbd3a740ba12d0e2933847b
+guid: cb24cd9df71500946a9a978be1c5880e
 ModelImporter:
-  serializedVersion: 15
+  serializedVersion: 16
   fileIDToRecycleName:
     100000: //RootNode
+    100002: pasted__pSolid2
+    100004: dodecahedron
     400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: pSolid2
+    400002: pasted__pSolid2
+    400004: dodecahedron
+    2300000: pasted__pSolid2
+    2300002: dodecahedron
+    3300000: pasted__pSolid2
+    3300002: dodecahedron
+    4300000: pasted__pSolid2
+    4300002: dodecahedron
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -16,11 +23,13 @@ ModelImporter:
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
+    optimizeGameObjects: 0
     animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5
     animationScaleError: .5
     animationWrapMode: 0
+    extraExposedTransformPaths: []
     clipAnimations: []
     isReadable: 1
   meshes:
@@ -48,7 +57,6 @@ ModelImporter:
   humanDescription:
     human: []
     skeleton: []
-    handles: []
     armTwist: .5
     foreArmTwist: .5
     upperLegTwist: .5
@@ -58,6 +66,6 @@ ModelImporter:
     feetSpacing: 0
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  additionalBone: 1
   animationType: 2
+  additionalBone: 0
   userData: 
