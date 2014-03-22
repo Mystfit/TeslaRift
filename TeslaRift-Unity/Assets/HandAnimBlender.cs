@@ -1,8 +1,12 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public class HandAnimBlender : MonoBehaviour {
+
+	protected List<double[]> m_rollingAverage;
+	public int m_smoothingSamples = 5;
 
 	[Range(0.0f, 1.0f)]
 	public float weightA;
@@ -30,6 +34,7 @@ public class HandAnimBlender : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		m_rollingAverage = new List<double[]>();
 		m_glove = GetComponent<GloveController>();
 
 		foreach(string gesture in m_glove.gestureTypes){
@@ -70,7 +75,25 @@ public class HandAnimBlender : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		SetWeights(m_glove.GetRawGestures());
+
+		m_rollingAverage.Add(m_glove.GetRawGestures());
+		if(m_rollingAverage.Count > m_smoothingSamples){
+			m_rollingAverage.RemoveAt(0);
+		}
+		double[] totalVals = new double[m_glove.GetRawGestures().Length];
+		double[] avgValues = new double[m_glove.GetRawGestures().Length];
+
+		foreach(double[] vals in m_rollingAverage){
+			for(int i = 0; i < vals.Length; i++){
+				totalVals[i] += vals[i];
+			}
+		}
+
+		for(int i=0; i < totalVals.Length; i++){
+			avgValues[i] = totalVals[i] / m_rollingAverage.Count;
+		}
+
+		SetWeights(avgValues);
 
 		weightA = animation["IDLE_HAND"].weight;
 		weightB = animation["CLOSED_HAND"].weight;

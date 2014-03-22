@@ -6,6 +6,7 @@ public class GloveCalibrator : MonoBehaviour {
 	public bool isCalibrated = false;
 	public float m_calibrateReadyCountdown = 3.0f;
 	public float m_calibrateDuration = 2.0f;
+	public int m_calibrationSamples;
 	protected float m_currentCalibrateTime = 0.0f;
 
 	public Hud_Glove_Calibration m_gloveCalibrateHud;

@@ -22,7 +22,7 @@ public class GloveController : MonoBehaviour {
 	protected CalibrationState m_calibrationState = CalibrationState.AWAITING_CALIBRATION;
 	public CalibrationState GetCalibrationState(){ return m_calibrationState; }
 	private List<double[]> m_currentCalibrationSamples;
-	public int m_calibrationSamples = 60;
+	protected int m_calibrationSamples = 60;
 	protected bool bIsCollectingSamples;
 	protected double[] m_calibrationAvg;
 
