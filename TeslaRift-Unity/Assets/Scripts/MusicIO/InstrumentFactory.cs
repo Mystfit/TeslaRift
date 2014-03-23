@@ -24,26 +24,12 @@ public class InstrumentFactory : MonoBehaviour {
 	private InstrumentController m_instrumentControllerRef;
 	public VRCarousel m_instrumentHolder;
 
-	/*
-	 * Prefabs
-	 */
-	public GameObject m_floatingInstrumentIconPrefab;
-	public GameObject m_textPrefab;
-	public GameObject m_trianglePanelPrefab;
-	protected static Material m_panelMaterial;
-
 	void Start () {
 		m_instance = this;
 
 		m_instrumentControllerRef = this.GetComponent<InstrumentController>();
 		m_source = GlobalConfig.Instance.ProjectSourceName;
 
-		//Load prefabs
-		//m_floatingClipPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/floatingClip.prefab", typeof(GameObject)) as GameObject;
-		//m_textPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/GUI/paramLabel.prefab", typeof(GameObject)) as GameObject;
-		//m_trianglePanelPrefab = Resources.LoadAssetAtPath("Assets/Prefabs/GUI/trianglePanel.prefab", typeof(GameObject)) as GameObject;
-		
-		//LoadInstrumentDefinitions();
 		LoadLiveSessionXml();
 	}
 	
@@ -52,28 +38,16 @@ public class InstrumentFactory : MonoBehaviour {
 	 * Creates instruments from Live's dumped session xml
 	 */
 	private void LoadLiveSessionXml(){
-		
-		//Load xml
-		//XmlReaderSettings settings = new XmlReaderSettings();
-		//settings.IgnoreWhitespace = true;
 
-		//Debug.Log(Application.dataPath);
-		//StreamReader sr = new StreamReader( Application.dataPath + "/" + m_liveSessionFile );
-		//XmlReader xmlRead = XmlReader.Create(sr, settings);
-		
 		XmlDocument sessionXml = new XmlDocument ();
-
 		sessionXml.LoadXml(m_liveSessionFile.text);
-		//sessionXml.Load( xmlRead );
-		
+
 		//Get track, return, master information
 		XmlNodeList trackList = sessionXml.GetElementsByTagName("track"); //instrument array	
 		XmlNodeList returnList = sessionXml.GetElementsByTagName("trackReturn"); //instrument array	
 
 		InstrumentController.Instance.SetSourceName(m_source);
 
-		Debug.Log(m_liveSessionFile.text);
-		
 		CreateInstrumentFromXmlList( trackList);
 		CreateInstrumentFromXmlList( returnList);
 	}
