@@ -5,6 +5,7 @@ using UI;
 
 public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 
+	public bool m_useHorizontalInput = true;
 	protected BarSlider m_slider;
 	protected UIFrame m_frame;
 	public UIFrame frame{ get { return m_frame; }}
@@ -40,7 +41,7 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 	{
 		base.Gesture_IdleInterior ();
 		if(mode == BaseTool.ToolMode.PRIMARY)
-			SetValueFromHand( HydraController.Instance.GetHandTip( m_hand ) );
+			SetValueFromHand( HydraController.Instance.GetHandColliderPosition( m_hand ) );
 	}
 
 
@@ -60,20 +61,17 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 	/*
 	 * Sets the value of the slider(0,1) based on location inside the slider frame
 	 */
-	public void SetValueFromHand(Transform worldPos){
+	public void SetValueFromHand(Vector3 worldPos){
 		
-		//Offset the position by the source's collider (if present)
-		Vector3 worldOffset = worldPos.position;
-		
-		Vector3 pos = transform.InverseTransformPoint(worldOffset);
+		Vector3 pos = transform.InverseTransformPoint(worldPos);
 		Vector2 sliderPosVal = new Vector2(
-			Mathf.Clamp(pos.x, m_frame.width*-0.5f, m_frame.height*0.5f ), 
-			Mathf.Clamp(pos.y,  m_frame.width*-0.5f, m_frame.height*0.5f )
+			Mathf.Clamp(pos.x - frame.GetAnchorOffset(m_frame.width, m_frame.height, frame.m_anchorPoint).x, m_frame.width*-0.5f, m_frame.height*0.5f ), 
+			Mathf.Clamp(pos.y - frame.GetAnchorOffset(m_frame.width, m_frame.height, frame.m_anchorPoint).y,  m_frame.width*-0.5f, m_frame.height*0.5f )
 		);
 
 		float sliderVal = 0.0f;
 
-		if(m_frame.isRotated)
+		if(!m_useHorizontalInput)
 			sliderVal = Utils.Scale(sliderPosVal.x, m_frame.width*-0.5f, m_frame.height*0.5f);
 		else
 			sliderVal = Utils.Scale(sliderPosVal.y, m_frame.width*-0.5f, m_frame.height*0.5f);

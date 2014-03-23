@@ -194,6 +194,7 @@ public class GloveController : MonoBehaviour {
 						m_activeGestureDown = m_activeGesture;
 						activeGestureVelocity = m_gestureVelocity[activeIndex];
 						SetDirty();
+						SetCollider(activeIndex);
 					} else {
 						m_activeGestureDown = "";
 						SetClean();
@@ -206,6 +207,45 @@ public class GloveController : MonoBehaviour {
 				
 				break;
 			}
+		}
+	}
+
+
+	/*
+	 * Collider center/size for different gestures
+	 */
+	public void SetCollider(int gestureIndex){
+		BoxCollider col = collider as BoxCollider;
+		string ges = m_gestures[gestureIndex];
+		switch(ges){
+		case "IDLE_HAND":
+			col.center  = new Vector3(0.0f, 0.01f, 0.06f);
+			col.size = new Vector3(0.11f, -0.03f, 0.11f);
+			break;
+		case "CLOSED_HAND":
+			col.center = new Vector3(0.0f, -0.02f, 0.0f);
+			col.size = new Vector3(0.11f, 0.05f, 0.08f);
+			break;
+		case "INDEX_POINT":
+			col.center = new Vector3(0.03f, -0.01f, 0.03f);
+			col.size = new Vector3(0.025f, 0.07f, 0.15f);
+			break;
+		case "INDEX_MIDDLE":
+			col.center = new Vector3(0.02f, 0.0f, 0.07f);
+			col.size = new Vector3(0.05f, 0.05f, 0.15f);
+			break;
+		case "THREE_SWIPE":
+			col.center = new Vector3(0.01f, 0.0f, 0.07f);
+			col.size = new Vector3(0.075f, 0.05f, 0.15f);
+			break;
+		case "PINKY":
+			col.center = new Vector3(-0.035f, 0.0f, 0.07f);
+			col.size = new Vector3(0.025f, 0.05f, 0.15f);
+			break;
+		case "ROCK_ON":
+			col.center = new Vector3(0.0f, 0.01f, 0.06f);
+			col.size = new Vector3(0.11f, -0.03f, 0.11f);
+			break;
 		}
 	}
 	
