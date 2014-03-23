@@ -9,13 +9,11 @@ Direct3D:
 Begin MonoManager ReloadAssembly
 Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\UnityEngine.dll (this message is harmless)
 Loading C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\UnityEngine.dll into Unity Child Domain
-Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
-Loading C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
 Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\Assembly-CSharp.dll (this message is harmless)
 Loading C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
 Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\DotNumerics.dll (this message is harmless)
 Loading C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\DotNumerics.dll into Unity Child Domain
-- Completed reload, in  0.050 seconds
+- Completed reload, in  0.045 seconds
 desktop: 2560x1440 59Hz; virtual: 2560x1440 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
@@ -27,506 +25,140 @@ The referenced script on this Behaviour is missing!
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Mono/MonoBehaviour.cpp Line: 1699)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/sharedassets0.assets' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 8759508 > 8759504]
+[Position out of bounds! 8756964 > 8756960]
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/sharedassets0.assets' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 8759556 > 8759552]
+[Position out of bounds! 8757012 > 8757008]
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/sharedassets0.assets' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 8759589 > 8759588]
+[Position out of bounds! 8757045 > 8757044]
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/sharedassets0.assets' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 8759732 > 8759728]
+[Position out of bounds! 8757188 > 8757184]
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/sharedassets0.assets' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 8759764 > 8759760]
+[Position out of bounds! 8757220 > 8757216]
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/sharedassets0.assets' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 8759812 > 8759808]
+[Position out of bounds! 8757244 > 8757240]
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/sharedassets0.assets' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 8761077 > 8761076]
+[Position out of bounds! 8758509 > 8758508]
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/sharedassets0.assets' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 8761324 > 8761320]
+[Position out of bounds! 8758756 > 8758752]
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/sharedassets0.assets' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 8761532 > 8761528]
+[Position out of bounds! 8758964 > 8758960]
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/sharedassets0.assets' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 8761680 > 8761676]
+[Position out of bounds! 8759112 > 8759108]
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 120320 > 120316]
+[Position out of bounds! 116936 > 116932]
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 120432 > 120428]
+[Position out of bounds! 117048 > 117044]
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 120592 > 120588]
+[Position out of bounds! 117208 > 117204]
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
+
+The referenced script on this Behaviour is missing!
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Mono/MonoBehaviour.cpp Line: 1699)
+
+The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
+[Position out of bounds! 117520 > 117516]
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 120928 > 120924]
+[Position out of bounds! 117824 > 117820]
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 121232 > 121228]
+[Position out of bounds! 117904 > 117900]
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 121312 > 121308]
+[Position out of bounds! 118104 > 118100]
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 121512 > 121508]
+[Position out of bounds! 118208 > 118204]
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
+
+The referenced script on this Behaviour is missing!
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Mono/MonoBehaviour.cpp Line: 1699)
+
+The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
+[Position out of bounds! 119760 > 119756]
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
+
+The referenced script on this Behaviour is missing!
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Mono/MonoBehaviour.cpp Line: 1699)
+
+The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
+[Position out of bounds! 119928 > 119924]
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 121616 > 121612]
+[Position out of bounds! 120048 > 120044]
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
+
+The referenced script on this Behaviour is missing!
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Mono/MonoBehaviour.cpp Line: 1699)
+
+The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
+[Position out of bounds! 123460 > 123456]
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 123240 > 123236]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 123432 > 123428]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 123552 > 123548]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 127012 > 127008]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 127084 > 127080]
+[Position out of bounds! 123532 > 123528]
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 269)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 127084 > 127080]
+[Position out of bounds! 123532 > 123528]
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
 
 Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\System.Configuration.dll (this message is harmless)
-<?xml version='1.0' encoding='UTF-8'?>
-<song tempo = '88.0'>
-	<track channel='1' name='TeslaArp' volume='-11.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='16712965'>
-		<clip index='1' name='chord1' color='12411136' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='4' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='5' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='6' name='LightCycle1' color='5480241' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='9' name='Minor1' color='31421' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='11' name='15 TeslaArp' color='8092539' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='12' name='16 TeslaArp' color='16712965' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='14' name='20 TeslaArp' color='10927616' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='15' name='21 TeslaArp' color='8046132' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='16' name='22 TeslaArp' color='4047616' mute='False' looping='True' playing='False' triggered='False' />
-		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
-		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
-		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
-		<device name='Scale'>
-			<parameter name='Base' value='3.0' min='0.0' max='11.0'/>
-			<parameter name='Transpose' value='0.0' min='-36.0' max='36.0'/>
-			<parameter name='Fold' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Lowest' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Range' value='128.0' min='0.0' max='128.0'/>
-			<parameter name='Map 0' value='0.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 1' value='0.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 2' value='2.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 3' value='2.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 4' value='3.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 5' value='4.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 6' value='5.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 7' value='7.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 8' value='7.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 9' value='8.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 10' value='8.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 11' value='10.0' min='-1.0' max='12.0'/>
-		</device>
-		<device name='TeslaArpRack'>
-			<parameter name='Gate' value='61.4251213074' min='0.0' max='127.0'/>
-			<parameter name='Rate' value='52.0' min='0.0' max='127.0'/>
-			<parameter name='Steps' value='38.0' min='0.0' max='127.0'/>
-			<parameter name='Hi Cut Filter' value='38.6579208374' min='0.0' max='127.0'/>
-			<parameter name='Filter Reson' value='38.6579208374' min='0.0' max='127.0'/>
-			<parameter name='Distortion Dry/Wet' value='92.4063720703' min='0.0' max='127.0'/>
-			<parameter name='Attack' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 8' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
-		</device>
-		<device name='Looper'>
-			<parameter name='State' value='0.0' min='0.0' max='3.0'/>
-			<parameter name='Feedback' value='1.0' min='0.0' max='1.0'/>
-			<parameter name='Reverse' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Monitor' value='0.0' min='0.0' max='3.0'/>
-			<parameter name='Speed' value='0.0' min='-36.0' max='36.0'/>
-			<parameter name='Quantization' value='0.0' min='0.0' max='14.0'/>
-			<parameter name='Song Control' value='1.0' min='0.0' max='2.0'/>
-			<parameter name='Tempo Control' value='1.0' min='0.0' max='2.0'/>
-		</device>
-	</track>
-	<track channel='2' name='M-Traveller' volume='-3.4 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='16753961'>
-		<clip index='1' name='IntroSwell' color='16753524' mute='False' looping='False' playing='False' triggered='False' />
-		<clip index='2' name='IntroSwell' color='16753524' mute='False' looping='True' playing='False' triggered='False' />
-		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
-		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
-		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
-		<device name='Scale'>
-			<parameter name='Base' value='3.0' min='0.0' max='11.0'/>
-			<parameter name='Transpose' value='0.0' min='-36.0' max='36.0'/>
-			<parameter name='Fold' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Lowest' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Range' value='128.0' min='0.0' max='128.0'/>
-			<parameter name='Map 0' value='0.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 1' value='0.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 2' value='2.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 3' value='2.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 4' value='3.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 5' value='4.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 6' value='5.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 7' value='7.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 8' value='7.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 9' value='8.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 10' value='8.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 11' value='10.0' min='-1.0' max='12.0'/>
-		</device>
-		<device name='The Traveler'>
-			<parameter name='Hi Cut Filter' value='127.0' min='0.0' max='127.0'/>
-			<parameter name='Filter Reson' value='47.0' min='0.0' max='127.0'/>
-			<parameter name='Filter Rate' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Distortion Dry/Wet' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Attack' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Release' value='101.0' min='0.0' max='127.0'/>
-			<parameter name='Reverb Dry/Wet' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Delay Dry/Wet' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
-		</device>
-	</track>
-	<track channel='3' name='BrassSwell' volume='1.3 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='16773172'>
-		<clip index='1' name='2 8-Brass Swell Around' color='12411136' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='2' name='2 8-Brass Swell Around' color='12411136' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='14' name='6 BrassSwell' color='10927616' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='15' name='7 BrassSwell' color='8046132' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='16' name='8 BrassSwell' color='4047616' mute='False' looping='True' playing='False' triggered='False' />
-		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
-		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
-		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
-		<device name='Scale'>
-			<parameter name='Base' value='3.0' min='0.0' max='11.0'/>
-			<parameter name='Transpose' value='0.0' min='-36.0' max='36.0'/>
-			<parameter name='Fold' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Lowest' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Range' value='128.0' min='0.0' max='128.0'/>
-			<parameter name='Map 0' value='0.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 1' value='0.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 2' value='2.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 3' value='2.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 4' value='3.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 5' value='4.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 6' value='5.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 7' value='7.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 8' value='7.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 9' value='8.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 10' value='8.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 11' value='10.0' min='-1.0' max='12.0'/>
-		</device>
-		<device name='Brass Swell Around'>
-			<parameter name='Hi Cut Filter' value='111.0' min='0.0' max='127.0'/>
-			<parameter name='Filter Reson' value='42.0' min='0.0' max='127.0'/>
-			<parameter name='Filter Rate' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Distortion Dry/Wet' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Attack' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Release' value='101.0' min='0.0' max='127.0'/>
-			<parameter name='Reverb Dry/Wet' value='2.0' min='0.0' max='127.0'/>
-			<parameter name='Delay Dry/Wet' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
-		</device>
-	</track>
-	<track channel='4' name='Percussion' volume='-5.5 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='True' color='5480241'>
-		<clip index='1' name='TimeTables1' color='16149507' mute='False' looping='True' playing='False' triggered='False' />
-		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
-		<sends name='B-Turnado2' value='1.0' min='0.0' max='1.0' />
-		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
-		<device name='Electrix Audio Clip Effect Rack'>
-			<parameter name='Hi Cut Filter' value='127.0' min='0.0' max='127.0'/>
-			<parameter name='Filter Reson' value='25.0' min='0.0' max='127.0'/>
-			<parameter name='DistortionDry/Wet' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Beat Gate' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Filter Rate' value='78.0' min='0.0' max='127.0'/>
-			<parameter name='Filter Amount' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Reverb Dry/Wet' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Delay Dry/Wet' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
-		</device>
-	</track>
-	<track channel='5' name='AudioLoop1' volume='0.2 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='2490280'>
-		<clip index='1' name='TapHat' color='16753961' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='2' name='DigitalArmy1' color='49071' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='3' name='RadioProcessing' color='12581632' mute='False' looping='True' playing='False' triggered='False' />
-		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
-		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
-		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
-		<device name='Electrix Audio Clip Effect Rack'>
-			<parameter name='Hi Cut Filter' value='78.0' min='0.0' max='127.0'/>
-			<parameter name='Filter Reson' value='25.0' min='0.0' max='127.0'/>
-			<parameter name='DistortionDry/Wet' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Beat Gate' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Filter Rate' value='78.0' min='0.0' max='127.0'/>
-			<parameter name='Filter Amount' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Reverb Dry/Wet' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Delay Dry/Wet' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
-		</device>
-	</track>
-	<track channel='6' name='AudioImpulse1' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='2490280'>
-		<clip index='1' name='Woosh' color='15549221' mute='False' looping='False' playing='False' triggered='False' />
-		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
-		<sends name='B-Turnado2' value='1.0' min='0.0' max='1.0' />
-		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
-	</track>
-	<track channel='7' name='Kaoss1' volume='-4.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='1769263'>
-		<clip index='1' name='BassCroak1' color='12411136' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='2' name='Looper0009 TeslaArp' color='13958625' mute='False' looping='True' playing='False' triggered='False' />
-		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
-		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
-		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
-	</track>
-	<track channel='8' name='SnowPad' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='9160191'>
-		<sends name='A-Turnado1' value='1.0' min='0.0' max='1.0' />
-		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
-		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
-		<device name='Scale'>
-			<parameter name='Base' value='3.0' min='0.0' max='11.0'/>
-			<parameter name='Transpose' value='0.0' min='-36.0' max='36.0'/>
-			<parameter name='Fold' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Lowest' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Range' value='128.0' min='0.0' max='128.0'/>
-			<parameter name='Map 0' value='0.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 1' value='0.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 2' value='2.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 3' value='2.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 4' value='3.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 5' value='4.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 6' value='5.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 7' value='7.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 8' value='7.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 9' value='8.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 10' value='8.0' min='-1.0' max='12.0'/>
-			<parameter name='Map 11' value='10.0' min='-1.0' max='12.0'/>
-		</device>
-		<device name='A Snow Pad'>
-			<parameter name='Filter Freq' value='64.0' min='0.0' max='127.0'/>
-			<parameter name='Arp High' value='46.0' min='0.0' max='127.0'/>
-			<parameter name='Arp Low' value='114.0' min='0.0' max='127.0'/>
-			<parameter name='Space Amount' value='87.0' min='0.0' max='127.0'/>
-			<parameter name='Attack' value='95.0' min='0.0' max='127.0'/>
-			<parameter name='Release' value='72.0' min='0.0' max='127.0'/>
-			<parameter name='Noise' value='90.0' min='0.0' max='127.0'/>
-			<parameter name='Volume' value='107.950004578' min='0.0' max='127.0'/>
-			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
-		</device>
-	</track>
-	<track channel='10' name='RM-LowBass' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='9611263'>
-		<clip index='4' name='bass1' color='14183652' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='5' name='bass2' color='14183652' mute='False' looping='True' playing='False' triggered='False' />
-		<sends name='A-Turnado1' value='0.639999866486' min='0.0' max='1.0' />
-		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
-		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
-		<device name='Pitch'>
-			<parameter name='Pitch' value='0.0' min='-128.0' max='128.0'/>
-			<parameter name='Lowest' value='60.0' min='0.0' max='127.0'/>
-			<parameter name='Range' value='127.0' min='0.0' max='127.0'/>
-		</device>
-		<device name='nK Receiver'>
-			<parameter name='Send A (*LowBass-fxA*)' value='127.0' min='0.0' max='127.0'/>
-			<parameter name='Send B (*LowBass-fxB*)' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Send C (*LowBass-fxC*)' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 4' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 5' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 6' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 7' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 8' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
-		</device>
-	</track>
-	<track channel='14' name='RM-Sisters' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='5538020'>
-		<clip index='4' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='5' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
-		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
-		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
-		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
-		<device name='Pitch'>
-			<parameter name='Pitch' value='0.0' min='-128.0' max='128.0'/>
-			<parameter name='Lowest' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Range' value='59.0' min='0.0' max='127.0'/>
-		</device>
-		<device name='nK Receiver'>
-			<parameter name='Send A (*Sisters-fxA*)' value='127.0' min='0.0' max='127.0'/>
-			<parameter name='Send B (*Sisters-fxB*)' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Send C (*Sisters-fxC*)' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 4' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 5' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 6' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 7' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 8' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
-		</device>
-	</track>
-	<track channel='18' name='M-7sisters' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='9160191'>
-		<clip index='4' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='5' name='MystChords' color='8754719' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='6' name='6 LightCycleArp' color='5480241' mute='False' looping='True' playing='False' triggered='False' />
-		<clip index='9' name='4 R-7sisters' color='3101346' mute='False' looping='True' playing='False' triggered='False' />
-		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
-		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
-		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
-		<device name='Pitch'>
-			<parameter name='Pitch' value='0.0' min='-128.0' max='128.0'/>
-			<parameter name='Lowest' value='60.0' min='0.0' max='127.0'/>
-			<parameter name='Range' value='127.0' min='0.0' max='127.0'/>
-		</device>
-		<device name='nK Receiver'>
-			<parameter name='Send A (*7Sisters-fxA*)' value='127.0' min='0.0' max='127.0'/>
-			<parameter name='Send B (*7Sisters-fxB*)' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Send C (*7Sisters-fxC*)' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 4' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 5' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 6' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 7' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 8' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
-		</device>
-	</track>
-	<track channel='22' name='RM-Orch' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='10204100'>
-		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
-		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
-		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
-		<device name='Pitch'>
-			<parameter name='Pitch' value='0.0' min='-128.0' max='128.0'/>
-			<parameter name='Lowest' value='60.0' min='0.0' max='127.0'/>
-			<parameter name='Range' value='127.0' min='0.0' max='127.0'/>
-		</device>
-		<device name='nK Receiver'>
-			<parameter name='Send A (*Orch-fxA*)' value='127.0' min='0.0' max='127.0'/>
-			<parameter name='Send B (*Orch-fxB*)' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Send C (*Orch-fxC*)' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 4' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 5' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 6' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 7' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 8' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
-		</device>
-	</track>
-	<track channel='26' name='RM-Percuss1' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' arm='False' color='13011836'>
-		<sends name='A-Turnado1' value='0.0' min='0.0' max='1.0' />
-		<sends name='B-Turnado2' value='0.0' min='0.0' max='1.0' />
-		<sends name='C-Turnado3' value='0.0' min='0.0' max='1.0' />
-		<device name='Pitch'>
-			<parameter name='Pitch' value='0.0' min='-128.0' max='128.0'/>
-			<parameter name='Lowest' value='60.0' min='0.0' max='127.0'/>
-			<parameter name='Range' value='127.0' min='0.0' max='127.0'/>
-		</device>
-		<device name='nK Receiver'>
-			<parameter name='Send A (*Perc-fxA*)' value='127.0' min='0.0' max='127.0'/>
-			<parameter name='Send B (*Perc-fxB*)' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Send C (*Perc-fxC*)' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 4' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 5' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 6' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 7' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Macro 8' value='0.0' min='0.0' max='127.0'/>
-			<parameter name='Chain Selector' value='0.0' min='0.0' max='127.0'/>
-		</device>
-	</track>
-	<trackReturn name='A-Turnado1' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' color='15810688'>
-		<device name='Turnado'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
-			<parameter name='Dictator' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 1' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 2' value='0.0299999974668' min='0.0' max='1.0'/>
-			<parameter name='Control 3' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 4' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 5' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 6' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 7' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 8' value='0.0' min='0.0' max='1.0'/>
-		</device>
-	</trackReturn>
-	<trackReturn name='B-Turnado2' volume='0.0 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' color='14183652'>
-		<device name='Turnado'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
-			<parameter name='Dictator' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 1' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 2' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 3' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 4' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 5' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 6' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 7' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 8' value='0.0' min='0.0' max='1.0'/>
-		</device>
-	</trackReturn>
-	<trackReturn name='C-Turnado3' volume='1.3 dB' pan='C' output_meter_level='0.0' mute='False' solo='False' color='10701741'>
-		<device name='Turnado'>
-			<parameter name='Device On' value='1.0' min='0.0' max='1.0'/>
-			<parameter name='Dictator' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 1' value='0.285252988338' min='0.0' max='1.0'/>
-			<parameter name='Control 2' value='0.6590949893' min='0.0' max='1.0'/>
-			<parameter name='Control 3' value='0.651542007923' min='0.0' max='1.0'/>
-			<parameter name='Control 4' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 5' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 6' value='0.646781027317' min='0.0' max='1.0'/>
-			<parameter name='Control 7' value='0.0' min='0.0' max='1.0'/>
-			<parameter name='Control 8' value='0.0' min='0.0' max='1.0'/>
-		</device>
-	</trackReturn>
-</song>
-
-UnityEngine.Debug:Internal_Log(Int32, String, Object)
-UnityEngine.Debug:Log(Object)
-InstrumentFactory:LoadLiveSessionXml() (at C:\Code\TeslaRift\TeslaRift-Unity\Assets\Scripts\MusicIO\InstrumentFactory.cs:75)
-InstrumentFactory:Start() (at C:\Code\TeslaRift\TeslaRift-Unity\Assets\Scripts\MusicIO\InstrumentFactory.cs:47)
- 
-(Filename: C Line: 0)
-
 Waiting for finish
