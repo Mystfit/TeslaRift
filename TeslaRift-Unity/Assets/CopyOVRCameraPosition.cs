@@ -3,8 +3,7 @@ using System.Collections;
 
 public class CopyOVRCameraPosition : MonoBehaviour {
 
-	public OVRCamera m_leftCamera;
-	public OVRCamera m_rightCamera;
+	public OVRCamera m_camera;
 
 
 	// Use this for initialization
@@ -19,7 +18,7 @@ public class CopyOVRCameraPosition : MonoBehaviour {
 //			m_targetCamera.transform.parent.position.x, 
 //			m_targetCamera.transform.position.y, 
 //			m_targetCamera.transform.parent.position.z);
-		transform.position = Vector3.Lerp(m_leftCamera.transform.position, m_rightCamera.transform.position, 0.5f);
-		transform.rotation = m_leftCamera.transform.rotation;
+		transform.position = HydraController.Instance.EyeCenter;
+		transform.rotation = m_camera.transform.rotation;
 	}
 }

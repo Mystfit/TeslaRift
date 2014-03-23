@@ -40,6 +40,8 @@ public class HydraController : MonoBehaviour {
 	public Transform m_leftHandTip;
 	public Transform m_rightHandTip;
 	public GameObject m_performer;
+	public OVRCamera m_leftCamera;
+	public OVRCamera m_rightCamera;
 	public GloveCalibrator m_gloveCalibrator;
 	
 	//Collision lists
@@ -118,6 +120,10 @@ public class HydraController : MonoBehaviour {
 	 * Gets the OVR performer
 	 */
 	public GameObject GetPerformer{ get { return m_performer; }}
+	public Vector3 EyeCenter{ get { 
+			return Vector3.Lerp(m_leftCamera.transform.position, m_rightCamera.transform.position, 0.5f);
+		}
+	}
 
 	/*
 	 * Checks distance between hand, performer, and a target object
