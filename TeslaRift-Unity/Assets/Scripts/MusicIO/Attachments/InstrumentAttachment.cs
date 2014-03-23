@@ -36,6 +36,11 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 			}
 
 			paramScroller.transform.localScale = UIFactory.SliderScale;
+			if(gameObject.name == "TeslaArp"){ 
+			} else if(gameObject.name == "B-Turnado2"){
+			} else {
+				gameObject.SetActive(false);
+			}
 		}
 
 	}

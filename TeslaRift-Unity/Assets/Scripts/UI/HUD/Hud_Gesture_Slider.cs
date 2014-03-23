@@ -18,7 +18,9 @@ public class Hud_Gesture_Slider : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		double[] gestureVals = m_targetGlove.GetRawGestures();
-		float val = Convert.ToSingle(gestureVals[m_gestureindex]);
-		m_slider.SetSliderVal( val );
+		if(m_gestureindex < gestureVals.Length){
+			float val = Convert.ToSingle(gestureVals[m_gestureindex]);
+			m_slider.SetSliderVal( val );
+		}
 	}
 }

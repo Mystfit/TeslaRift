@@ -266,7 +266,9 @@ public class GloveController : MonoBehaviour {
 	}
 	
 	public string GetGestureName(int index){
-		return m_gestures[index];
+		if(index < m_gestures.Length)
+			return m_gestures[index];
+		return null;
 	}
 
 	/*
