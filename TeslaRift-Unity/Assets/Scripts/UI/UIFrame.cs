@@ -19,8 +19,8 @@ public class UIFrame : MonoBehaviour {
 	public Transform m_guiPanels;
 	public Transform m_selectGuiPanels;
 	public Transform m_backgroundQuad;
-	public HandProximityTrigger m_interiorTrigger;
-	public HandProximityTrigger m_exteriorTrigger;
+	//public HandProximityTrigger m_interiorTrigger;
+	//public HandProximityTrigger m_exteriorTrigger;
 	
 	/*
 	 * Externally set dimensions
@@ -439,8 +439,8 @@ public class UIFrame : MonoBehaviour {
 	 */
 	public void SetWidth(float width){
 		m_currentWidth = width;
-		m_interiorTrigger.UpdateCollider(GetAnchorOffset(width, m_currentHeight, m_anchorPoint), width, m_currentHeight, m_frameCollisionDepth);
-		m_exteriorTrigger.UpdateCollider(GetAnchorOffset(width, m_currentHeight, m_anchorPoint), width, m_currentHeight, m_frameCollisionDepth);
+		//m_interiorTrigger.UpdateBoxCollider(GetAnchorOffset(width, m_currentHeight, m_anchorPoint), width, m_currentHeight, m_frameCollisionDepth);
+		//m_exteriorTrigger.UpdateBoxCollider(GetAnchorOffset(width, m_currentHeight, m_anchorPoint), width, m_currentHeight, m_frameCollisionDepth);
 		UpdatePanel();
 		UpdatePanelOutline();
 	}
@@ -451,8 +451,8 @@ public class UIFrame : MonoBehaviour {
 	 */
 	public void SetHeight(float height){
 		m_currentHeight = height;
-		m_interiorTrigger.UpdateCollider(GetAnchorOffset(m_currentWidth, height, m_anchorPoint), m_currentWidth, height, m_frameCollisionDepth);
-		m_exteriorTrigger.UpdateCollider(GetAnchorOffset(m_currentWidth, height, m_anchorPoint), m_currentWidth, height, m_frameCollisionDepth);
+		//m_interiorTrigger.UpdateBoxCollider(GetAnchorOffset(m_currentWidth, height, m_anchorPoint), m_currentWidth, height, m_frameCollisionDepth);
+		//m_exteriorTrigger.UpdateBoxCollider(GetAnchorOffset(m_currentWidth, height, m_anchorPoint), m_currentWidth, height, m_frameCollisionDepth);
 		UpdatePanel();
 		UpdatePanelOutline();
 	}

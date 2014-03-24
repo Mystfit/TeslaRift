@@ -19,9 +19,16 @@ public class HandProximityTrigger : MonoBehaviour {
 	
 	}
 
-	public void UpdateCollider(Vector3 position, float width, float height, float depth){
-		transform.localScale = new Vector3(width*2, height*2, depth*2);
-		transform.localPosition = position;
+	public void UpdateBoxCollider(Vector3 position, float width, float height, float depth){
+		BoxCollider box = collider as BoxCollider;
+		box.size = new Vector3(width, height, depth);
+		box.center = position;
+	}
+
+	public void UpdateSphereCollider(Vector3 position, float radius){
+		SphereCollider sphere = collider as SphereCollider;
+		sphere.radius = radius;
+		sphere.center = position;
 	}
 
 	

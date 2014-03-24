@@ -31,6 +31,25 @@ public abstract class BaseAttachment : MonoBehaviour{
 		return false;
 	}
 
+	//Collider references
+	public HandProximityTrigger m_interiorCollider;
+	public HandProximityTrigger m_exteriorCollider;
+	public virtual Collider interiorCollider{ get {return m_interiorCollider.collider; }}
+	public virtual Collider exteriorCollider{ get {return m_exteriorCollider.collider; }}
+
+	public void UpdateBoxColliders(Vector3 position, float width, float height, float depth){
+		UpdateBoxColliders(position, width ,height, depth, 1.2f);
+	}
+
+	public void UpdateBoxColliders(Vector3 position, float width, float height, float depth, float extMultiplier){
+		BoxCollider boxIn = m_interiorCollider.collider as BoxCollider;
+		BoxCollider boxExt = m_exteriorCollider.collider as BoxCollider;
+		boxIn.size = new Vector3(width, height, depth);
+		boxIn.center = position;
+		boxExt.size = new Vector3(width * extMultiplier, height * extMultiplier, depth * extMultiplier);
+		boxExt.center = position;
+	}
+
 	/*
 	 * Music reference state
 	 */

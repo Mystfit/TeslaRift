@@ -17,6 +17,7 @@ namespace UI
 		public GameObject instrumentIconPrefab;
 		public GameObject rotaryPrefab;
 		public GameObject paramScrollerPrefab;
+		public GameObject instrumentPrefab;
 
 		public float m_sliderScale = 0.1f;
 		public static Vector3 SliderScale{get {return new Vector3(Instance.m_sliderScale, Instance.m_sliderScale, Instance.m_sliderScale); }}
@@ -44,6 +45,9 @@ namespace UI
 			SliderAttachment attach = slider.GetComponent<SliderAttachment>();
 			attach.Init(param);
 			attach.SetOwner(owner);
+
+			//Wake up colliders
+			object temp = attach.interiorCollider; temp = attach.exteriorCollider;
 
 			return attach;
 		}
@@ -90,6 +94,9 @@ namespace UI
 			ClipButtonAttachment attach = button.GetComponent<ClipButtonAttachment>();
 			attach.Init(clip);
 
+			//Wake up colliders
+			object temp = attach.interiorCollider; temp = attach.exteriorCollider;
+
 			if(owner != null)
 				attach.SetOwner(owner);
 
@@ -116,6 +123,10 @@ namespace UI
 		public static ParamScrollerAttachment CreateParamScroller(){
 			GameObject paramScroller = Instantiate(Instance.paramScrollerPrefab) as GameObject;
 			ParamScrollerAttachment attach = paramScroller.GetComponent<ParamScrollerAttachment>();
+
+			//Wake up colliders
+			object temp = attach.interiorCollider; temp = attach.exteriorCollider;
+
 			return attach;
 		}
 
@@ -149,6 +160,36 @@ namespace UI
 			insObj.renderer.material.SetColor("_Color", instrument.color);
 			return insObj;
 		}
+
+
+		/*
+		 * Main instrument prefab
+		 * Grabbable instrument with clips and parameter buttons/sliders
+		 */
+		/*
+	 * Creates a layered GameInstrument with rotary panel parameters seperated by layer
+	 */
+		public static InstrumentAttachment CreateInstrument(BaseInstrument instrument, Color instrumentColor){
+			//Create an instrument prefab
+			GameObject instrumentGame = Instantiate(Instance.instrumentPrefab) as GameObject;
+			instrumentGame.name = instrument.Name;
+
+			//Create instrument attachment
+			InstrumentAttachment attach = instrumentGame.AddComponent<InstrumentAttachment>();	//Instrument attachment needs to be manually added
+			
+			//Init instrumentRef and GUI controls
+			attach.Init(instrument);
+			attach.InitInstrumentControls();
+
+			//Wake up colliders
+			object temp = attach.interiorCollider; temp = attach.exteriorCollider;
+			
+			//Set listener prefixes
+			instrumentGame.GetComponent<InstrumentListener>().SetPrefixedOSCAddresses(instrument.Name);		//Set instrument prefixes for OSC listener
+			instrumentGame.renderer.material.SetColor("_Color", instrumentColor);
+			
+			return attach;
+		}	
 	}
 }
 

@@ -12,25 +12,7 @@ public class GlobalConfig : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
-
 		m_instance = this;
-		
-		if(IsClient){
-			GameObject.Find("__HydraController").SetActive(false);
-			GameObject.Find("__InstrumentSpawner").SetActive(false);
-			GameObject.Find("OVRPlayerController").SetActive(false);
-			GameObject.Find("__IOController").GetComponent<OSCcontroller>().isServer = false;
-			GameObject.Find("__IOController").GetComponent<OSCcontroller>().loopback = false;
-			GameObject.Find("ClientCamera").SetActive(true);
-#if UNITY_STANDALONE_OSX
-			GameObject.Find("ClientCamera").AddComponent<Syphon>();
-			GameObject.Find("ClientCamera").AddComponent<SyphonServerTexture>();
-#endif
-		} else {
-			GameObject.Find("ClientCamera").SetActive(false);
-		}
-		
-		GameObject.Find("OVRPlayerController").GetComponent<OVRPlayerController>().SetAllowMouseRotation(false);
 	}
 
 	public static GlobalConfig Instance{ get { return m_instance; }}

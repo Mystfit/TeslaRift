@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System;
 using MusicIO;
+using UI;
 using System.IO;
 
 public class InstrumentFactory : MonoBehaviour {
@@ -118,35 +119,13 @@ public class InstrumentFactory : MonoBehaviour {
 			}
 			
 			m_instrumentControllerRef.AddInstrument(instrumentDef);
-			m_instrumentHolder.AddInstrument( CreateLayeredInstrument(instrumentDef, color) );
+			InstrumentAttachment instrument = UIFactory.CreateInstrument(instrumentDef, color);
+			instrument.transform.parent = m_instrumentHolder.transform;
+
+			m_instrumentHolder.AddInstrument( instrument.gameObject );
 		}
 
 		//Sort instruments
 		m_instrumentHolder.PlaceObjects();
 	}
-
-	
-	
-	/*
-	 * Creates a layered GameInstrument with rotary panel parameters seperated by layer
-	 */
-	private GameObject CreateLayeredInstrument(BaseInstrument instrument, Color instrumentColor){
-		//Create an instrument prefab
-		GameObject instrumentGame = Instantiate(instrumentPrefab, transform.position, Quaternion.identity ) as GameObject;
-		instrumentGame.name = instrument.Name;
-		instrumentGame.transform.parent = m_instrumentHolder.transform;
-
-		//Create instrument attachment
-		InstrumentAttachment attach = instrumentGame.AddComponent<InstrumentAttachment>();	//Instrument attachment needs to be manually added
-
-		//Init instrumentRef and GUI controls
-		attach.Init(instrument);
-		attach.InitInstrumentControls();
-
-		//Set listener prefixes
-		instrumentGame.GetComponent<InstrumentListener>().SetPrefixedOSCAddresses(instrument.Name);		//Set instrument prefixes for OSC listener
-		instrumentGame.renderer.material.SetColor("_Color", instrumentColor);
-
-		return instrumentGame;
-	}	
 }

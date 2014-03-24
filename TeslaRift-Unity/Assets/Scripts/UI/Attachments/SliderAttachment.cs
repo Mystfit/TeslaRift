@@ -25,6 +25,30 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 		sliderFrame.SetLabel(managedReference.name);
 	}
 
+	public override Collider interiorCollider {
+		get {
+			if(m_interiorCollider == null){
+				m_interiorCollider = transform.Find("BoxAreaTrigger").Find("interiorTrigger").GetComponent<HandProximityTrigger>();
+				Debug.Log( transform.Find("BoxAreaTrigger"));
+				Debug.Log(transform.Find("BoxAreaTrigger").Find("interiorTrigger"));
+				Debug.Log(transform.Find("BoxAreaTrigger").Find("interiorTrigger").GetComponent<HandProximityTrigger>());
+				Debug.Log(m_interiorCollider);
+			}
+			base.m_interiorCollider = m_interiorCollider;
+			return base.interiorCollider;
+		}
+	}
+	
+	public override Collider exteriorCollider {
+		get {
+			if(m_exteriorCollider == null){
+				m_exteriorCollider = transform.Find("BoxAreaTrigger").Find("proximityTrigger").GetComponent<HandProximityTrigger>();
+			}
+			base.m_exteriorCollider = m_exteriorCollider;
+			return base.exteriorCollider;
+		}
+	}
+
 	/*
 	 * Owning panel for this UI object
 	 */

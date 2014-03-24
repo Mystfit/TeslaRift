@@ -10,6 +10,24 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 		base.Awake ();
 	}
 
+	public override Collider interiorCollider {
+		get {
+			if(m_interiorCollider == null){
+				m_interiorCollider = transform.Find("AreaTrigger").Find("interiorTrigger").GetComponent<HandProximityTrigger>();
+			}
+			return base.interiorCollider;
+		}
+	}
+	
+	public override Collider exteriorCollider {
+		get {
+			if(m_exteriorCollider == null){
+				m_exteriorCollider = transform.Find("AreaTrigger").Find("proximityTrigger").GetComponent<HandProximityTrigger>();
+			}
+			return base.exteriorCollider;
+		}
+	}
+
 	public void InitInstrumentControls(){
 		if(musicRef  != null){
 			//Create clip buttons
@@ -32,9 +50,11 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 			paramScroller.transform.localPosition = Vector3.zero;
 
 			foreach(BaseInstrumentParam param in musicRef.paramList){ 
-				paramScroller.AddParam(param);
+				SliderAttachment slider = UIFactory.CreateSlider(param, UIFrame.AnchorLocation.BOTTOM_LEFT);
+				paramScroller.AddControl(slider);
 			}
 
+			//Temp instrument filtering to cut down on visual clutter
 			paramScroller.transform.localScale = UIFactory.SliderScale;
 			if(gameObject.name == "TeslaArp"){ 
 			} else if(gameObject.name == "B-Turnado2"){
