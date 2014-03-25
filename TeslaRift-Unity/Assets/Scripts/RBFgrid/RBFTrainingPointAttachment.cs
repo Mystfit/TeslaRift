@@ -29,6 +29,7 @@ namespace RBF{
 		 * Init
 		 */
 		public override void Awake(){
+			base.Awake();
 			m_pointState = UIState.STATIONARY;
 			m_paramValues = new Dictionary<BaseInstrumentParam, float>();
 		}

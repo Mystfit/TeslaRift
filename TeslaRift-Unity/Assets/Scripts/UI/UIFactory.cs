@@ -6,9 +6,11 @@ namespace UI
 {
 	public class UIFactory : MonoBehaviour
 	{
+		//Singletons
 		private static UIFactory m_instance;
 		public static UIFactory Instance{ get { return m_instance; }}
 
+		//Prefab objects
 		public GameObject sliderPrefab;
 		public GameObject framePrefab;
 		public GameObject rbfTrainingPrefab;
@@ -19,10 +21,11 @@ namespace UI
 		public GameObject paramScrollerPrefab;
 		public GameObject instrumentPrefab;
 
+		//Slider localscale amount
 		public float m_sliderScale = 0.1f;
 		public static Vector3 SliderScale{get {return new Vector3(Instance.m_sliderScale, Instance.m_sliderScale, Instance.m_sliderScale); }}
 
-		void Start(){
+		void Awake(){
 			m_instance = this;
 		}
 
@@ -32,23 +35,18 @@ namespace UI
 		 * A controllable parameter slider
 		 */
 		public static SliderAttachment CreateSlider(BaseInstrumentParam param, UIFrame.AnchorLocation anchor){
-			return CreateSlider(param, anchor, null);
-		}
-
-		public static SliderAttachment CreateSlider(BaseInstrumentParam param, UIFrame.AnchorLocation anchor,  ParamSliderPanelAttachment owner){
 			GameObject slider = Instantiate(Instance.sliderPrefab) as GameObject;
-
+			
 			UIFrame frame = slider.GetComponent<UIFrame>();
 			//frame.SetAnchor(UIFrame.AnchorLocation.TOP_LEFT);
 			frame.SetAnchor(anchor);
-
+			
 			SliderAttachment attach = slider.GetComponent<SliderAttachment>();
 			attach.Init(param);
-			attach.SetOwner(owner);
-
+			
 			//Wake up colliders
 			object temp = attach.interiorCollider; temp = attach.exteriorCollider;
-
+			
 			return attach;
 		}
 
@@ -82,23 +80,16 @@ namespace UI
 		 * Pressable clip button
 		 */
 		public static ClipButtonAttachment CreateClipButton(InstrumentClip clip, UIFrame.AnchorLocation anchor){
-			return CreateClipButton(clip, anchor, null);
-		}
-
-		public static ClipButtonAttachment CreateClipButton(InstrumentClip clip, UIFrame.AnchorLocation anchor, ClipBufferAttachment owner){
 			GameObject button = Instantiate(Instance.clipButtonPrefab) as GameObject;
-
+			
 			ClipButtonAttachment attach = button.GetComponent<ClipButtonAttachment>();
 			attach.Init(clip);
-
+			
 			//Wake up colliders
 			object temp = attach.interiorCollider; temp = attach.exteriorCollider;
-
+			
 			UIFrame frame = button.GetComponent<UIFrame>();
 			frame.SetAnchor(anchor);
-
-			if(owner != null)
-				attach.SetOwner(owner);
 
 			return attach;
 		}
@@ -166,9 +157,6 @@ namespace UI
 		 * Main instrument prefab
 		 * Grabbable instrument with clips and parameter buttons/sliders
 		 */
-		/*
-	 * Creates a layered GameInstrument with rotary panel parameters seperated by layer
-	 */
 		public static InstrumentAttachment CreateInstrument(BaseInstrument instrument, Color instrumentColor){
 			//Create an instrument prefab
 			GameObject instrumentGame = Instantiate(Instance.instrumentPrefab) as GameObject;

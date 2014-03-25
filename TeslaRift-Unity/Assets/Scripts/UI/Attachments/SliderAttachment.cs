@@ -14,8 +14,11 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 
 	// Use this for initialization
 	public override void Awake () {
+		base.Awake();
 		m_slider = GetComponent<BarSlider>();
 		m_frame = GetComponent<UIFrame>();
+
+		object temp = interiorCollider; temp = exteriorCollider;
 	}
 
 	public override void Init (BaseInstrumentParam managedReference)
@@ -25,6 +28,10 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 		sliderFrame.SetLabel(managedReference.name);
 	}
 
+
+	/*
+	 * Collider transforms
+	 */
 	public override Collider interiorCollider {
 		get {
 			if(m_interiorCollider == null)
@@ -43,14 +50,6 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 			base.m_exteriorCollider = m_exteriorCollider;
 			return base.exteriorCollider;
 		}
-	}
-
-	/*
-	 * Owning panel for this UI object
-	 */
-	public void SetOwner (ParamSliderPanelAttachment panelOwner)
-	{
-		m_owner = panelOwner;
 	}
 
 

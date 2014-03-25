@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using UI;
 
 public class MusicgroupSpawnerAttachment : BaseAttachment {
 
 	public Transform UIFacingTarget;
-	public VRCarousel m_instrumentCarousel;
+	public CarouselAttachment m_instrumentCarousel;
 	protected MusicgroupFactory m_factory;
 
 	//Kinetic scrolling

@@ -24,7 +24,7 @@ public class InstrumentFactory : MonoBehaviour {
 	public TextAsset m_liveSessionFile;
 
 	private InstrumentController m_instrumentControllerRef;
-	public VRCarousel m_instrumentHolder;
+	public CarouselAttachment m_instrumentHolder;
 
 	void Start () {
 		m_instance = this;
@@ -125,26 +125,23 @@ public class InstrumentFactory : MonoBehaviour {
 			
 			m_instrumentControllerRef.AddInstrument(instrumentDef);
 			InstrumentAttachment instrument = UIFactory.CreateInstrument(instrumentDef, color);
-			instrument.transform.parent = m_instrumentHolder.transform;
 
-			m_instrumentHolder.AddInstrument( instrument );
+			instrument.DockInto(m_instrumentHolder);
 		}
 
+		//Filter all instruments out excepted listed - good for debugging visual clutter
 		if(m_instrumentFilter.Length > 0){
-			foreach(InstrumentAttachment instrument in m_instrumentHolder.GetInstrumentList()){
-				instrument.gameObject.SetActive(false);
-			}
-
-			foreach(InstrumentAttachment instrument in m_instrumentHolder.GetInstrumentList()){
-				foreach(string filterStr in m_instrumentFilter){
-					if(instrument.gameObject.name == filterStr){ 
-						instrument.gameObject.SetActive(true);	
+			foreach(Transform t in m_instrumentHolder.transform){
+				InstrumentAttachment instrument = t.GetComponent<InstrumentAttachment>();
+				if(instrument != null){
+					instrument.gameObject.SetActive(false);
+					foreach(string filterStr in m_instrumentFilter){
+						if(instrument.gameObject.name == filterStr){ 
+							instrument.gameObject.SetActive(true);	
+						}
 					}
 				}
 			}
 		}
-
-		//Sort instruments
-		m_instrumentHolder.PlaceObjects();
 	}
 }

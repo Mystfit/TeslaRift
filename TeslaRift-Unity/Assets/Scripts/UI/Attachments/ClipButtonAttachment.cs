@@ -21,8 +21,6 @@ public class ClipButtonAttachment : UIAttachment<InstrumentClip> {
 	 */
 	public ClipBufferAttachment m_owner;
 	public ClipBufferAttachment owner{ get { return m_owner; }}
-	public void SetOwner(ClipBufferAttachment owner){ m_owner = owner; }
-
 
 	/*
 	 * Queue status
@@ -32,8 +30,31 @@ public class ClipButtonAttachment : UIAttachment<InstrumentClip> {
 	public void SetQueued(bool state){ bIsQueued = state; }
 
 
+	/*
+	 * Collider transforms
+	 */
+	public override Collider interiorCollider { get {
+			if(m_interiorCollider == null)
+				m_interiorCollider = transform.Find("BoxAreaTrigger").Find("interiorTrigger").GetComponent<HandProximityTrigger>();
+			
+			base.m_interiorCollider = m_interiorCollider;
+			return base.interiorCollider;
+		}
+	}
+	
+	public override Collider exteriorCollider { get {
+			if(m_exteriorCollider == null)
+				m_exteriorCollider = transform.Find("BoxAreaTrigger").Find("proximityTrigger").GetComponent<HandProximityTrigger>();
+			
+			base.m_exteriorCollider = m_exteriorCollider;
+			return base.exteriorCollider;
+		}
+	}
+
+
 	// Use this for initialization
-	public override void Start () {
+	public override void Awake () {
+		base.Awake();
 		m_frame = GetComponent<UIFrame>();
 		SetPlayState(ClipState.IS_DISABLED);
 	}
@@ -78,7 +99,6 @@ public class ClipButtonAttachment : UIAttachment<InstrumentClip> {
 	public override void Gesture_PushIn ()
 	{
 		base.Gesture_PushIn ();
-		owner.PlayClip(this, false);
 	}
 
 	public override void Gesture_PullOut ()

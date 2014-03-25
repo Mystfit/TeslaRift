@@ -1,26 +1,24 @@
 ﻿using UnityEngine;
 //using UnityEditor;
 using System.Collections;
+using System.Collections.Generic;
 using MusicIO;
-
-
-public enum ParameterType {
-		CLIP = 0,
-		PARAM
-}
-
 
 public abstract class BaseAttachment : MonoBehaviour{
 
-	public virtual void Awake(){}
+	public virtual void Awake(){ m_acceptedTypes = new List<System.Type>(); }
 	public virtual void Start(){}
 	public virtual void Update(){}
 
+	/*
+	 * Unity status setters
+	 */
 	public void SetActive(){gameObject.SetActive(true);}
 	public void SetInactive(){gameObject.SetActive(false);}
 
+
 	/*
-	 * Filter for attachment to only respond to defined tool modes
+	 * Filter to only respond to defined tool modes
 	 */
 	public BaseTool.ToolMode[] m_respondsToToolMode;
 	public bool respondsToToolMode(BaseTool.ToolMode mode){
@@ -34,16 +32,22 @@ public abstract class BaseAttachment : MonoBehaviour{
 		return false;
 	}
 
-	//Collider references
-	public HandProximityTrigger m_interiorCollider;
-	public HandProximityTrigger m_exteriorCollider;
+
+	/*
+	 * Collider references
+	 */
+	protected HandProximityTrigger m_interiorCollider;
+	protected HandProximityTrigger m_exteriorCollider;
 	public virtual Collider interiorCollider{ get {return m_interiorCollider.collider; }}
 	public virtual Collider exteriorCollider{ get {return m_exteriorCollider.collider; }}
 
+
+	/*
+	 * Box collider updaters
+	 */
 	public void UpdateBoxColliders(Vector3 position, float width, float height, float depth){
 		UpdateBoxColliders(position, width ,height, depth, 1.2f);
 	}
-
 	public void UpdateBoxColliders(Vector3 position, float width, float height, float depth, float extMultiplier){
 		BoxCollider boxIn = m_interiorCollider.collider as BoxCollider;
 		BoxCollider boxExt = m_exteriorCollider.collider as BoxCollider;
@@ -53,11 +57,13 @@ public abstract class BaseAttachment : MonoBehaviour{
 		boxExt.center = position;
 	}
 
+
 	/*
 	 * Music reference state
 	 */
 	protected bool bHasMusicRef;
 	public bool HasMusicRef{ get { return bHasMusicRef; }}
+
 
 	/*
 	 * First gesture states
@@ -66,14 +72,15 @@ public abstract class BaseAttachment : MonoBehaviour{
 	public bool IsFirstGesture{ get { return bIsFirstGesture; }}
 	public void ResetFirstGesture(){ bIsFirstGesture = false; }
 
+
 	/*
 	 * Active tool hand
 	 */
 	protected BaseTool.ToolHand m_hand;
 	public BaseTool.ToolHand ActiveHand{ get { return m_hand; }}
 	public void SetActiveHand(BaseTool.ToolHand hand){ m_hand = hand; }
-	
-	
+
+
 	/*
 	 * Active tool modes
 	 */
@@ -81,60 +88,161 @@ public abstract class BaseAttachment : MonoBehaviour{
 	public BaseTool.ToolMode mode{ get { return m_mode; }}
 	public virtual void SetToolMode(BaseTool.ToolMode mode){ m_mode = mode; }
 		
+
 	/*
 	 * Selection
 	 */
 	protected bool m_selected;
 	public bool selected{ get { return m_selected; }}
-	
-	public virtual void ToggleSelected(){ 
-		SetSelected(!m_selected); 
+	public virtual void ToggleSelected(){ SetSelected(!m_selected); }
+    public virtual void SetSelected(bool state){m_selected = state;}
+
+
+	/*
+	 * Dragging states
+	 */
+	protected bool m_isDragging;
+	protected void SetIsDragging(bool state){ m_isDragging = (IsDraggable) ? state : false; }
+	public bool IsDragging{ get { return (IsDraggable) ? m_isDragging : false; }}
+
+	protected bool m_isDraggable;
+	public bool IsDraggable{ 
+		get { return m_isDraggable; } 
 	}
-	
-	public virtual void SetSelected(bool state)
-	{
-		m_selected = state;
+	public void SetIsDraggable(bool state){
+		m_isDraggable = state; 
+		if(!m_isDraggable) m_isDragging = false;
 	}
+
+	public virtual void StartDragging(GameObject target){
+		if(IsDragging) StopDragging();
+		SetIsDragging(true);
+		Undock();
+		FixedJoint joint = gameObject.AddComponent<FixedJoint>();
+		joint.connectedBody = target.GetComponent<Rigidbody>();
+	}
+
+
+	public virtual void StopDragging(){
+		FixedJoint[] jointList = gameObject.GetComponents<FixedJoint>(); 
+		for(int i = 0 ; i < jointList.Length; i++){
+			Destroy( jointList[i] );
+		}
+		SetIsDragging(false);
 	
+		//If we're a dockable object, we need to find something to slot into.
+		if(IsDockable) DockIntoClosest();
+	}
+
+
+	/*
+	 * Docking states
+	 */
+	protected bool m_acceptsDockables;
+	protected bool m_isDockable;
+	public void SetAsDock(bool state){ m_acceptsDockables = state;}
+	public void SetIsDockable(bool state){ m_isDockable = state;}
+	public bool IsDock{ get { return m_acceptsDockables;}}
+	public bool IsDockable{ get { return m_isDockable; }}
+
+
+	/*
+	 * Docked children / owner accessors
+	 */
+	protected BaseAttachment m_dockedInto;
+	public BaseAttachment DockedInto{ get { return m_dockedInto; }}
+	protected List<BaseAttachment> m_childDockables;
+	public List<BaseAttachment> DockedChildren{ get { return m_childDockables; }}
+
+
+	/*
+	 * Dockable object modifiers
+	 */
+	public virtual void DockInto(BaseAttachment attach){
+		attach.AddDockableAttachment(this);
+		m_dockedInto = attach; 
+		if(IsDraggable) SetIsDragging(false);
+	}
+	public virtual void Undock(){
+		if(m_dockedInto != null){
+			m_dockedInto.RemoveDockableAttachment(this);
+			m_dockedInto = null;
+		}
+	}
+	public virtual void DockIntoClosest(){
+		GameObject[] docks = GameObject.FindGameObjectsWithTag("ParentIsADock");
+		BaseAttachment closestValidDock = null;
+		float closestDist = 0.0f;
+		
+		foreach(GameObject dockTag in docks){
+			BaseAttachment dockAttach = dockTag.transform.parent.GetComponent<BaseAttachment>();		
+			
+			if(dockAttach.DockAcceptsType(this.GetType())){
+				if(closestValidDock == null){
+					closestDist = Vector3.Distance( dockAttach.transform.position, transform.position);
+					closestValidDock = dockAttach;
+				}
+				float dist = Vector3.Distance( dockAttach.transform.position, transform.position);
+				if( dist < closestDist ){
+					closestValidDock = dockAttach;
+					closestDist = dist;
+				}
+			}
+		}
+		
+		DockInto(closestValidDock);	
+	}
+
+
+	/*
+	 * Dock modifiers
+	 */
+	public virtual void AddDockableAttachment(BaseAttachment attach){
+		if(m_childDockables == null)
+			m_childDockables = new List<BaseAttachment>();
+
+		if(DockAcceptsType(attach.GetType())){
+			m_childDockables.Add(attach);
+		} else {
+			Debug.LogError(this + " can't dock with a " + attach.GetType());
+		}
+	}
+	public virtual void RemoveDockableAttachment(BaseAttachment attach){
+		m_childDockables.Remove(attach);
+	}
+
+
+	/*
+	 * Dock type / distance checking
+	 */
+	protected List<System.Type> m_acceptedTypes;
+	public void AddAcceptedDocktype<T>(){m_acceptedTypes.Add(typeof(T));}
+	public bool DockAcceptsType(System.Type type){
+		foreach(System.Type acceptedType in m_acceptedTypes){
+			if(type == acceptedType)
+				return true;
+		}
+		return false;
+	}
+	public float m_dockingRange = 1.5f;
+	public virtual bool IsInDockingRange(Vector3 position){
+		return (Vector3.Distance(transform.position, position) < m_dockingRange) ? true : false;
+	}
 
 	/*
 	 * Gesture implementations
 	 */
-	public virtual void Gesture_First(){
-		bIsFirstGesture = false;
-	}
-	
-	public virtual void Gesture_IdleInterior(){
-	}
-	
-	public virtual void Gesture_IdleProximity(){
-	}
-	
-	public virtual void Gesture_IdleExterior(){
-	}
-	
-	public virtual void Gesture_ExitIdleInterior(){
-	}
-	
-	public virtual void Gesture_ExitIdleProximity(){
-	}
-	
-	public virtual void Gesture_ExitIdleExterior(){
-	}
-	
-	public virtual void Gesture_PushIn(){
-	}
-	
-	public virtual void Gesture_PullOut(){
-	}
-	
-	public virtual void Gesture_Twist(float amount){
-	}
-	
-	public virtual void Gesture_Exit(){
-		bIsFirstGesture = true;
-		//SetToolMode(BaseTool.ToolMode.PRIMARY);	//Reset tool modes in case we forget to intialize
-	}	
+	public virtual void Gesture_First(){ bIsFirstGesture = false; }
+	public virtual void Gesture_Exit(){ bIsFirstGesture = true; }	
+	public virtual void Gesture_IdleInterior(){}
+	public virtual void Gesture_IdleProximity(){}
+	public virtual void Gesture_IdleExterior(){}
+	public virtual void Gesture_ExitIdleInterior(){}
+	public virtual void Gesture_ExitIdleProximity(){}
+	public virtual void Gesture_ExitIdleExterior(){}
+	public virtual void Gesture_PushIn(){}
+	public virtual void Gesture_PullOut(){}
+	public virtual void Gesture_Twist(float amount){}
 }
 
 

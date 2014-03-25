@@ -26,6 +26,7 @@ public class MusicControllerAttachment : BaseAttachment {
 
 	// Use this for initialization
 	public override void Awake () {
+		base.Awake();
 		m_clipBuffer.Init(this);
 		m_paramControls.Init(this);
 		m_rbfPanel.Init(this);

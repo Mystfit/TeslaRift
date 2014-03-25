@@ -24,7 +24,7 @@ public class BaseTool : MonoBehaviour {
 	public ToolHand Hand{get { return m_hand; }}
 	
 	//Tool modes
-	public enum ToolMode{PRIMARY = 0, SECONDARY, TERTIARY};
+	public enum ToolMode{PRIMARY = 0, SECONDARY, TERTIARY, GRABBING};
 	protected ToolMode m_mode = ToolMode.PRIMARY;
 	public ToolMode mode{ get { return m_mode; }}
 
@@ -105,7 +105,7 @@ public class BaseTool : MonoBehaviour {
  */
 public static class InteractableTypes
 {
-    public const string  GENERATOR = "Generator"; 
+    public const string GENERATOR = "Generator"; 
     public const string INSTRUMENT = "Instrument"; 
     public const string RBFPOINT = "RBFPoint";
 	public const string MUSICGROUP = "MusicGroup";

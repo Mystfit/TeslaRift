@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using RBF;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PhysGrabberTool : BaseTool {
 	
@@ -26,11 +27,6 @@ public class PhysGrabberTool : BaseTool {
 	
 	public override void Update(){
 		CheckForSelection();
-		
-		if(m_mode == BaseTool.ToolMode.SECONDARY){
-			ApplyForceToInstruments(PhysDirection.SUCK, 0.4f);
-		}
-		
 		base.Update();
 	}
 	
@@ -40,13 +36,6 @@ public class PhysGrabberTool : BaseTool {
 	 */
 	public override void TransitionIn ()
 	{
-		if( ToolController.Instance.SelectedGenerator != null ){
-			ToolController.Instance.SetSelectedGenerator(null);
-			GeneratorLine[] lines = gameObject.GetComponents<GeneratorLine>();
-			foreach(GeneratorLine line in lines)
-				line.Remove();
-			Debug.Log("Resetting generator selection" + m_selectedGenerator);
-		}
 	}
 
 	
@@ -63,60 +52,50 @@ public class PhysGrabberTool : BaseTool {
 		}
 		
 		//Handle releasing of held objects
-		switch(m_heldType){
-		case InteractableTypes.INSTRUMENT:
-			if(m_heldObject != null){
-				m_heldObject.rigidbody.velocity = m_deltaVelocity * 50;	
-				m_heldObject = null;
-			}
-			break;
-		case InteractableTypes.GENERATOR:
-			if(m_selectedGenerator != null){
-				GeneratorLine[] lines = gameObject.GetComponents<GeneratorLine>();
-				foreach(GeneratorLine line in lines)
-					line.Remove();
-				//m_toolControlRef.SetSelectedGenerator(null);
-			}
-			break;
-		case InteractableTypes.RBFPOINT:
-			if(m_heldObject != null){
+		if(m_heldObject != null){
+			switch(m_heldType){
+			case InteractableTypes.INSTRUMENT:
+				BaseAttachment attach = m_heldObject.GetComponent<BaseAttachment>();
+
+				//If we're a dockable object, we need to find something to slot into.
+				if(attach.IsDockable){
+					GameObject[] docks = GameObject.FindGameObjectsWithTag("ParentIsADock");
+					BaseAttachment closestValidDock = null;
+					float closestDist = 0.0f;
+
+					foreach(GameObject dockTag in docks){
+						BaseAttachment dockAttach = dockTag.transform.parent.GetComponent<BaseAttachment>();		
+
+						if(dockAttach.DockAcceptsType(attach.GetType())){
+							if(closestValidDock == null){
+								closestDist = Vector3.Distance( dockAttach.transform.position, attach.transform.position);
+								closestValidDock = dockAttach;
+							}
+							float dist = Vector3.Distance( dockAttach.transform.position, attach.transform.position);
+							if( dist < closestDist ){
+								closestValidDock = dockAttach;
+								closestDist = dist;
+							}
+						}
+					}
+
+					attach.DockInto(closestValidDock);	
+				}
+				break;
+			case InteractableTypes.RBFPOINT:
 				RBF.RBFTrainingPointAttachment m_selectedTrainingPoint = m_heldObject.GetComponent<RBF.RBFTrainingPointAttachment>();
 				if(m_selectedTrainingPoint != null){
 					m_selectedTrainingPoint.SetInactive();
 					m_selectedTrainingPoint.rbfOwner.owner.UpdateRBF();
 				}
+				break;
 			}
-			break;
+
+			m_heldObject.rigidbody.velocity = m_deltaVelocity * 50;	
+			m_heldObject = null;
 		}
-	
+
 		m_toolHandState = BaseTool.HandState.RELEASING;
-	}
-	
-	
-	/*
-	 * Moves all instruments towards or away from the tool
-	 */
-	public void ApplyForceToInstruments(PhysDirection physAction, float strength){
-		
-		GameObject[] instruments = GameObject.FindGameObjectsWithTag("Instrument");
-		foreach( GameObject instr in instruments){
-			Vector3 dir;
-			float dist;
-			
-			if(physAction == PhysDirection.BLOW){
-				dir = new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y - 90.0f, transform.rotation.eulerAngles.z).normalized;
-				dist = Mathf.Abs((transform.position - instr.transform.position).magnitude);
-				Debug.Log(dist);
-				if(dist < 10.0f)
-					instr.rigidbody.AddForce(dir * 20.0f * strength);
-			} else if(physAction == PhysDirection.SUCK){
-				dir = transform.position - instr.transform.position;
-				dist = Mathf.Abs(dir.magnitude);
-				
-				if(dist > 0.5f)
-					instr.rigidbody.AddForce(dir * 20.0f * strength);
-			}
-		}
 	}
 	
 	
@@ -143,8 +122,10 @@ public class PhysGrabberTool : BaseTool {
 							m_instrumentControlRef.SetLastSelectedGameInstrument(m_heldObject);
 							m_toolHandState = BaseTool.HandState.HOLDING;
 
+							BaseAttachment attach = m_heldObject.GetComponent<InstrumentAttachment>();
+							attach.Undock();
 							//pop the instrument off the carousel
-							InstrumentController.Instance.Carousel.HoldInstrument(m_heldObject.GetComponent<InstrumentAttachment>());
+							//InstrumentController.Instance.Carousel.HoldInstrument(attach);
 						} else if(handTarget.CompareTag(InteractableTypes.MUSICGROUP)){
 							m_heldObject = closestObject;
 							m_heldType = InteractableTypes.MUSICGROUP;

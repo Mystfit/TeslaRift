@@ -29,10 +29,9 @@ public class ParamScrollerAttachment : BaseAttachment {
 
 	// Use this for initialization
 	public override void Awake () {
+		base.Awake();
 		m_controlList = new List<BaseAttachment>();
-
 		m_controlHolder = transform.Find("paramHolder");
-		base.Start();
 	}
 
 	public override Collider interiorCollider {
@@ -130,7 +129,6 @@ public class ParamScrollerAttachment : BaseAttachment {
 	protected void DragScroller(){
 		Vector3 inversePoint = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(m_hand));
 		float posY = inversePoint.y;
-		Debug.Log(posY);
 		m_controlHolder.localPosition = m_offset + new Vector3(0.0f, posY, 0.0f);
 		m_scrollVel = (m_controlHolder.localPosition - m_lastPosition).y;
 		m_lastPosition = m_controlHolder.localPosition;

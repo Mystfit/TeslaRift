@@ -31,6 +31,7 @@ public class ClipBufferAttachment : UIAttachment {
 	 * Music object intialization and reference
 	 */
 	public override void Awake () {
+		base.Awake();
 		//Add the buffer to the instrument controller
 		InstrumentController.Instance.AddBuffer(this);
 		
@@ -87,7 +88,7 @@ public class ClipBufferAttachment : UIAttachment {
 				return;
 		}
 		
-		ClipButtonAttachment buttonObj = UI.UIFactory.CreateClipButton(clip, UIFrame.AnchorLocation.BOTTOM_RIGHT, this);
+		ClipButtonAttachment buttonObj = UI.UIFactory.CreateClipButton(clip, UIFrame.AnchorLocation.BOTTOM_RIGHT);
 		buttonObj.transform.position = transform.position;
 		buttonObj.transform.rotation = transform.rotation;
 		buttonObj.transform.parent = transform;

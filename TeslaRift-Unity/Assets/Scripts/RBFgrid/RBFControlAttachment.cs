@@ -26,6 +26,7 @@ public class RBFControlAttachment : UIAttachment {
 	protected Transform m_dragSource;
 
 	public override void Awake () {
+		base.Awake();
 		m_frame = GetComponent<UIFrame>();
 		m_trainingPoints = new List<RBFTrainingPointAttachment>();
 		m_rbf = new RBFCore(1,1);

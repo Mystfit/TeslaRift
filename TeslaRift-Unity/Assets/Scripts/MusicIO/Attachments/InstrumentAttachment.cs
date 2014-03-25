@@ -7,7 +7,15 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 	
 	public override void Awake ()
 	{
+		//Since instrument attachments are created at runtime, we need to set the filter here
+		m_respondsToToolMode = new BaseTool.ToolMode[]{
+			BaseTool.ToolMode.PRIMARY, 
+			BaseTool.ToolMode.SECONDARY, 
+			BaseTool.ToolMode.GRABBING
+		};
 		base.Awake ();
+		SetIsDockable(true);
+		SetIsDraggable(true);
 	}
 
 	public override Collider interiorCollider {
@@ -31,17 +39,29 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 	public void InitInstrumentControls(){
 		if(musicRef  != null){
 			//Create clip buttons
-			GameObject clipHolder = new GameObject();
-			clipHolder.transform.parent = transform;
-			clipHolder.transform.localPosition = Vector3.zero;
-			clipHolder.name = "clipHolder";
+//			GameObject clipHolder = new GameObject();
+//			clipHolder.transform.parent = transform;
+//			clipHolder.transform.localPosition = Vector3.zero;
+//			clipHolder.name = "clipHolder";
+//
+//			for(int i = 0; i < musicRef.clipList.Count; i++){
+//				InstrumentClip clip = musicRef.clipList[i] as InstrumentClip;
+//				ClipButtonAttachment clipButton = UIFactory.CreateClipButton(clip, UIFrame.AnchorLocation.CENTER);
+//				clipButton.transform.parent = clipHolder.transform;
+//				clipButton.transform.localPosition = new Vector3(0.0f, i * 0.2f, 0.0f);
+//			}
 
-			for(int i = 0; i < musicRef.clipList.Count; i++){
-				InstrumentClip clip = musicRef.clipList[i] as InstrumentClip;
-				ClipButtonAttachment clipButton = UIFactory.CreateClipButton(clip, UIFrame.AnchorLocation.BOTTOM);
-				clipButton.transform.parent = clipHolder.transform;
-				clipButton.transform.localPosition = new Vector3(0.0f, i * 0.2f, 0.0f);
+			//Create clipbuttons
+			ParamScrollerAttachment clipScroller = UIFactory.CreateParamScroller();
+			clipScroller.transform.parent = transform;
+			clipScroller.transform.localPosition = Vector3.zero;
+			
+			foreach(InstrumentClip clip in musicRef.clipList){ 
+				ClipButtonAttachment clipButton = UIFactory.CreateClipButton(clip, UIFrame.AnchorLocation.BOTTOM_LEFT);
+				clipScroller.AddControl(clipButton);
 			}
+			
+		
 
 			//Create param sliders
 			ParamScrollerAttachment paramScroller = UIFactory.CreateParamScroller();
@@ -53,12 +73,16 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 				paramScroller.AddControl(slider);
 			}
 
+
+			//Set clip scroller scale
+			clipScroller.transform.localScale = UIFactory.SliderScale;
+
 			//Set param scroller scale
 			paramScroller.transform.localScale = UIFactory.SliderScale;
 
 			//Hide controls
-			clipHolder.SetActive(false);
-			//paramScroller.gameObject.SetActive(false);
+			clipScroller.SetInactive();
+			paramScroller.SetInactive();
 		}
 
 	}
@@ -85,6 +109,11 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 	public override void Gesture_First ()
 	{
 		base.Gesture_First ();
+
+		//Make sure to start dragging the object if we're using the drag gesture
+		if(m_mode == BaseTool.ToolMode.GRABBING && IsDraggable){
+			StartDragging(HydraController.Instance.GetHand(m_hand));
+		}
 	}
 	
 	public override void Gesture_IdleProximity ()
@@ -95,6 +124,9 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 	public override void Gesture_Exit ()
 	{
 		base.Gesture_Exit ();
+		if(m_mode == BaseTool.ToolMode.GRABBING && IsDragging){
+			StopDragging();
+		}
 	}
 
 	public override void Gesture_PushIn (){

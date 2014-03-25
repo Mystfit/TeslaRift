@@ -7,7 +7,6 @@ public class UIFrame : MonoBehaviour {
 	/*
 	 * Frame objects
 	 */
-	protected ParameterType m_paramType;
 	protected List<GameObject> m_frameComponents;
 	protected List<GameObject> m_outlineFrameComponents;
 	protected List<GameObject> m_gridColumns;
@@ -21,6 +20,7 @@ public class UIFrame : MonoBehaviour {
 	public Transform m_backgroundQuad;
 	//public HandProximityTrigger m_interiorTrigger;
 	//public HandProximityTrigger m_exteriorTrigger;
+	protected BaseAttachment m_attach;
 	
 	/*
 	 * Externally set dimensions
@@ -77,6 +77,7 @@ public class UIFrame : MonoBehaviour {
 	
 	
 	void Awake () {
+		m_attach = GetComponent<BaseAttachment>();
 		m_frameComponents = new List<GameObject>();
 		m_outlineFrameComponents = new List<GameObject>();
 		m_gridColumns = new List<GameObject>();
@@ -439,8 +440,12 @@ public class UIFrame : MonoBehaviour {
 	 */
 	public void SetWidth(float width){
 		m_currentWidth = width;
-		//m_interiorTrigger.UpdateBoxCollider(GetAnchorOffset(width, m_currentHeight, m_anchorPoint), width, m_currentHeight, m_frameCollisionDepth);
-		//m_exteriorTrigger.UpdateBoxCollider(GetAnchorOffset(width, m_currentHeight, m_anchorPoint), width, m_currentHeight, m_frameCollisionDepth);
+//		m_attach.UpdateBoxColliders(
+//			GetAnchorOffset(width, m_currentHeight, m_anchorPoint),
+//			width, 
+//			m_currentHeight, 
+//			m_frameCollisionDepth
+//		);
 		UpdatePanel();
 		UpdatePanelOutline();
 	}
@@ -451,8 +456,12 @@ public class UIFrame : MonoBehaviour {
 	 */
 	public void SetHeight(float height){
 		m_currentHeight = height;
-		//m_interiorTrigger.UpdateBoxCollider(GetAnchorOffset(m_currentWidth, height, m_anchorPoint), m_currentWidth, height, m_frameCollisionDepth);
-		//m_exteriorTrigger.UpdateBoxCollider(GetAnchorOffset(m_currentWidth, height, m_anchorPoint), m_currentWidth, height, m_frameCollisionDepth);
+//		m_attach.UpdateBoxColliders(
+//			GetAnchorOffset(m_currentWidth, height, m_anchorPoint),
+//			m_currentWidth, 
+//			height, 
+//			m_frameCollisionDepth
+//		);
 		UpdatePanel();
 		UpdatePanelOutline();
 	}

@@ -14,7 +14,7 @@ public class SessionSyncer : MonoBehaviour {
 	protected bool bDownloadComplete;
 	protected string m_syncedSessionString;
 	
-	void Awake () {
+	void Start () {
 		//Create web client
 		m_insFactory = GetComponent<InstrumentFactory>();
 		m_sessionClient = new WebClient();

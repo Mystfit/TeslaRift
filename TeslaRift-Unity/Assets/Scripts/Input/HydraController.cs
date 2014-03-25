@@ -353,7 +353,7 @@ public class HydraController : MonoBehaviour {
 		//Physics selector
 		//------------
 		if(m_glove.GetGestureDown("CLOSED_HAND") || Input.GetKeyDown(KeyCode.LeftControl)){
-			m_toolControlRef.PushTool(typeof(PhysGrabberTool), hand, BaseTool.ToolMode.PRIMARY);
+			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.GRABBING);
 		} 
 		
 		//Physics pull

@@ -26,8 +26,8 @@ public class InstrumentController : MonoBehaviour {
 	public void SetSourceName(string sourceName){ m_sourceName = sourceName; }
 
 	//Carousel ref
-	public VRCarousel m_carousel;
-	public VRCarousel Carousel { get { return m_carousel; }}
+	public CarouselAttachment m_carousel;
+	public CarouselAttachment Carousel { get { return m_carousel; }}
 
 	//Inspector toggles
 	public bool m_blastAllParameters;

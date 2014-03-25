@@ -33,6 +33,7 @@ public class ParamSliderPanelAttachment : UIAttachment {
 
 	// Use this for initialization
 	public override void Awake () {
+		base.Awake();
 		m_sliders = new List<SliderAttachment>();
 		m_frame = GetComponent<UIFrame>();
 	}
@@ -90,10 +91,8 @@ public class ParamSliderPanelAttachment : UIAttachment {
 				return;
 		}
 
-		SliderAttachment sliderAttach = UI.UIFactory.CreateSlider(param, UIFrame.AnchorLocation.TOP_LEFT, this);
+		SliderAttachment sliderAttach = UI.UIFactory.CreateSlider(param, UIFrame.AnchorLocation.TOP_LEFT);
 		sliderAttach.transform.parent = transform;
-		//sliderAttach.transform.localPosition = transform.localPosition;
-		//sliderAttach.transform.localRotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, 90.0f));
 		m_sliders.Add(sliderAttach);		
 
 		QueueSort();
