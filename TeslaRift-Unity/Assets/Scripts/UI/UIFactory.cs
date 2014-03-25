@@ -88,14 +88,14 @@ namespace UI
 		public static ClipButtonAttachment CreateClipButton(InstrumentClip clip, UIFrame.AnchorLocation anchor, ClipBufferAttachment owner){
 			GameObject button = Instantiate(Instance.clipButtonPrefab) as GameObject;
 
-			UIFrame frame = button.GetComponent<UIFrame>();
-			frame.SetAnchor(anchor);
-
 			ClipButtonAttachment attach = button.GetComponent<ClipButtonAttachment>();
 			attach.Init(clip);
 
 			//Wake up colliders
 			object temp = attach.interiorCollider; temp = attach.exteriorCollider;
+
+			UIFrame frame = button.GetComponent<UIFrame>();
+			frame.SetAnchor(anchor);
 
 			if(owner != null)
 				attach.SetOwner(owner);

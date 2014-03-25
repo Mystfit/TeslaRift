@@ -88,20 +88,31 @@ public class ParamScrollerAttachment : BaseAttachment {
 			m_scrollVel = 0.0f;
 			m_lastPosition = m_controlHolder.localPosition;
 		}
+		else if(m_controlHolder.localPosition.y < (m_controlList.Count - m_displayedSliderCount) * m_lastSliderHeight * -1.0f) {
+			m_controlHolder.localPosition = new Vector3(m_controlHolder.transform.localPosition.x, 
+			                                            (m_controlList.Count - m_displayedSliderCount) * m_lastSliderHeight * -1.0f, 
+			                                            m_controlHolder.transform.localPosition.z);
+			m_scrollVel = 0.0f;
+			m_lastPosition = m_controlHolder.localPosition;
+		}
 
-		MaskSliders();
+		MaskControls();
 	}
-	
-	protected void MaskSliders(){
+
+	/*
+	 * Hide and reveal sliders to keep them in range
+	 */
+	protected void MaskControls(){
 		for(int i =0; i < m_controlList.Count; i++){
 			float y = (m_controlHolder.localPosition.y < 0.0f) ? m_controlHolder.localPosition.y * -1.0f : m_controlHolder.localPosition.y;
 
 			if(i < y/m_lastSliderHeight || i > y/m_lastSliderHeight + m_displayedSliderCount){
 				if(m_controlList[i].gameObject.GetComponent<iTween>() == null && m_controlList[i].transform.localScale.x != 0.0f)
-					iTween.ScaleTo(m_controlList[i].gameObject, iTween.Hash("x", 0.0f, "time", 0.3f));
+					iTween.ScaleTo(m_controlList[i].gameObject, iTween.Hash("x", 0.0f, "time", 0.15f, "oncomplete", "SetInactive", "easetype", iTween.EaseType.easeOutQuad));
 			} else {
 				if(m_controlList[i].gameObject.GetComponent<iTween>() == null && m_controlList[i].transform.localScale.x == 0.0f)
-					iTween.ScaleTo(m_controlList[i].gameObject, iTween.Hash("x", 1.0f, "time", 0.3f));
+					m_controlList[i].SetActive();
+				iTween.ScaleTo(m_controlList[i].gameObject, iTween.Hash("x", 1.0f, "time", 0.15f, "easetype", iTween.EaseType.easeInQuad));
 			}
 		}
 	}

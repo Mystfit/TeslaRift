@@ -144,7 +144,7 @@ public class PhysGrabberTool : BaseTool {
 							m_toolHandState = BaseTool.HandState.HOLDING;
 
 							//pop the instrument off the carousel
-							InstrumentController.Instance.Carousel.HoldInstrument(m_heldObject);
+							InstrumentController.Instance.Carousel.HoldInstrument(m_heldObject.GetComponent<InstrumentAttachment>());
 						} else if(handTarget.CompareTag(InteractableTypes.MUSICGROUP)){
 							m_heldObject = closestObject;
 							m_heldType = InteractableTypes.MUSICGROUP;

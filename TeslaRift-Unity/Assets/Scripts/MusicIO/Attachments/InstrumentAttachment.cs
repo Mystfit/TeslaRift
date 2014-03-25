@@ -38,11 +38,10 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 
 			for(int i = 0; i < musicRef.clipList.Count; i++){
 				InstrumentClip clip = musicRef.clipList[i] as InstrumentClip;
-				ClipButtonAttachment clipButton = UIFactory.CreateClipButton(clip, UIFrame.AnchorLocation.BOTTOM_LEFT);
+				ClipButtonAttachment clipButton = UIFactory.CreateClipButton(clip, UIFrame.AnchorLocation.BOTTOM);
 				clipButton.transform.parent = clipHolder.transform;
 				clipButton.transform.localPosition = new Vector3(0.0f, i * 0.2f, 0.0f);
 			}
-			clipHolder.SetActive(false);
 
 			//Create param sliders
 			ParamScrollerAttachment paramScroller = UIFactory.CreateParamScroller();
@@ -54,13 +53,12 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 				paramScroller.AddControl(slider);
 			}
 
-			//Temp instrument filtering to cut down on visual clutter
+			//Set param scroller scale
 			paramScroller.transform.localScale = UIFactory.SliderScale;
-			if(gameObject.name == "TeslaArp"){ 
-			} else if(gameObject.name == "B-Turnado2"){
-			} else {
-				gameObject.SetActive(false);
-			}
+
+			//Hide controls
+			clipHolder.SetActive(false);
+			//paramScroller.gameObject.SetActive(false);
 		}
 
 	}

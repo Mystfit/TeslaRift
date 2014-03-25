@@ -16,6 +16,9 @@ public abstract class BaseAttachment : MonoBehaviour{
 	public virtual void Start(){}
 	public virtual void Update(){}
 
+	public void SetActive(){gameObject.SetActive(true);}
+	public void SetInactive(){gameObject.SetActive(false);}
+
 	/*
 	 * Filter for attachment to only respond to defined tool modes
 	 */

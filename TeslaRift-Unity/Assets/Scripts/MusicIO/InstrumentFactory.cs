@@ -14,7 +14,8 @@ public class InstrumentFactory : MonoBehaviour {
 	
 	public string m_client;		//Target OSC for instruments
 	protected string m_source;		//Source we are sending messages from (first adress prefix in outgoing OSC)
-	
+
+	public string[] m_instrumentFilter;
 	public GameObject instrumentPrefab = null;
 	public GameObject paramPanelPrefab;
 	public float m_radialInnerRadius = 0.05f;	
@@ -31,17 +32,21 @@ public class InstrumentFactory : MonoBehaviour {
 		m_instrumentControllerRef = this.GetComponent<InstrumentController>();
 		m_source = GlobalConfig.Instance.ProjectSourceName;
 
-		LoadLiveSessionXml();
+		//LoadLiveSessionXml();
 	}
 	
 	
 	/*
 	 * Creates instruments from Live's dumped session xml
 	 */
-	private void LoadLiveSessionXml(){
+	public void LoadLiveSessionXml(string xmlString){
 
 		XmlDocument sessionXml = new XmlDocument ();
-		sessionXml.LoadXml(m_liveSessionFile.text);
+
+		if(xmlString != null)
+			sessionXml.LoadXml(xmlString);
+		else
+			sessionXml.LoadXml(m_liveSessionFile.text);
 
 		//Get track, return, master information
 		XmlNodeList trackList = sessionXml.GetElementsByTagName("track"); //instrument array	
@@ -122,7 +127,21 @@ public class InstrumentFactory : MonoBehaviour {
 			InstrumentAttachment instrument = UIFactory.CreateInstrument(instrumentDef, color);
 			instrument.transform.parent = m_instrumentHolder.transform;
 
-			m_instrumentHolder.AddInstrument( instrument.gameObject );
+			m_instrumentHolder.AddInstrument( instrument );
+		}
+
+		if(m_instrumentFilter.Length > 0){
+			foreach(InstrumentAttachment instrument in m_instrumentHolder.GetInstrumentList()){
+				instrument.gameObject.SetActive(false);
+			}
+
+			foreach(InstrumentAttachment instrument in m_instrumentHolder.GetInstrumentList()){
+				foreach(string filterStr in m_instrumentFilter){
+					if(instrument.gameObject.name == filterStr){ 
+						instrument.gameObject.SetActive(true);	
+					}
+				}
+			}
 		}
 
 		//Sort instruments

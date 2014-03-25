@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 public class VRCarousel : MonoBehaviour {
 
-	protected List<GameObject> m_instruments;
-	protected GameObject m_floatingInstrument;
+	protected List<InstrumentAttachment> m_instruments;
+	protected InstrumentAttachment m_floatingInstrument;
 	public float m_carouselRadius = 5.0f;
 
 	// Use this for initialization
 	void Start () {
-		m_instruments = new List<GameObject>();
+		m_instruments = new List<InstrumentAttachment>();
 	}
 	
 	// Update is called once per frame
@@ -22,15 +22,19 @@ public class VRCarousel : MonoBehaviour {
 	/*
 	 * Adds an instrument to the carousel
 	 */
-	public void AddInstrument(GameObject instrument){
+	public void AddInstrument(InstrumentAttachment instrument){
 		m_instruments.Add(instrument);
+	}
+
+	public List<InstrumentAttachment> GetInstrumentList(){
+		return m_instruments;
 	}
 
 
 	/*
 	 * Pops an instrument off the carousel to be held by another object (control or hand)
 	 */
-	public void HoldInstrument(GameObject instrument){
+	public void HoldInstrument(InstrumentAttachment instrument){
 		//DropInstrument();
 
 		if(m_instruments.Remove(instrument)){
@@ -63,7 +67,7 @@ public class VRCarousel : MonoBehaviour {
 				Mathf.Sin(i * angleInc) * m_carouselRadius,
 				0.0f
 			);
-			iTween.MoveTo(m_instruments[i], iTween.Hash("position", pos, "time", 0.5f, "islocal", true));
+			iTween.MoveTo(m_instruments[i].gameObject, iTween.Hash("position", pos, "time", 0.5f, "islocal", true));
 
 		}
 	}
