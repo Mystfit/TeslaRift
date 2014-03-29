@@ -171,9 +171,7 @@ public class InstrumentGestureTool : BaseTool {
 		if(m_gestureTimer <= 0){
 			m_gestureTimer = 0;
 			m_lastGestureState = m_gestureState;
-		}	
-
-		Debug.Log(m_lastGestureState);
+		}	 
 	}
 	
 	

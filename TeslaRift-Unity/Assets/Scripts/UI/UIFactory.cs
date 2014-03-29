@@ -20,6 +20,7 @@ namespace UI
 		public GameObject rotaryPrefab;
 		public GameObject paramScrollerPrefab;
 		public GameObject instrumentPrefab;
+		public GameObject rotaryInstrumentSlotPrefab;
 
 		//Slider localscale amount
 		public float m_sliderScale = 0.1f;
@@ -105,6 +106,18 @@ namespace UI
 			attach.Init(param);
 			return attach;
 		}
+
+
+		/*
+		 * Rotary slot
+		 * Creates a rotary param that will hold an instrument
+		 */
+//		public static GameObject CreateRotaryInstru(BaseInstrumentParam param){
+//			GameObject rotary = Instantiate(Instance.rotaryPrefab) as GameObject;
+//			RotaryAttachment attach = rotary.GetComponent<RotaryAttachment>();
+//			attach.Init(param);
+//			return attach;
+//		}
 
 
 		/*

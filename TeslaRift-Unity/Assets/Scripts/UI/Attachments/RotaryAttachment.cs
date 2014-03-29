@@ -18,7 +18,7 @@ public class RotaryAttachment : UIAttachment<BaseInstrumentParam> {
 	}
 	
 	public override void Update(){
-		if(m_rotaryFill != null)
+		if(m_rotaryFill != null && musicRef != null)
 			m_rotaryFill.renderer.material.SetFloat("_Cutoff", 1.0f - musicRef.val);
 	}
 }

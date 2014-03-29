@@ -4,6 +4,8 @@ using System.Collections;
 using MusicIO;
 	
 public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
+
+	protected GameObject m_parameterScroller;
 	
 	public override void Awake ()
 	{
@@ -83,6 +85,7 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 			//Hide controls
 			clipScroller.SetInactive();
 			paramScroller.SetInactive();
+			m_parameterScroller = paramScroller.gameObject;
 		}
 
 	}
@@ -113,6 +116,10 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 		//Make sure to start dragging the object if we're using the drag gesture
 		if(m_mode == BaseTool.ToolMode.GRABBING && IsDraggable){
 			StartDragging(HydraController.Instance.GetHand(m_hand));
+		}
+
+		if(m_mode == BaseTool.ToolMode.SECONDARY){
+			m_parameterScroller.SetActive(!m_parameterScroller.activeSelf);
 		}
 	}
 	

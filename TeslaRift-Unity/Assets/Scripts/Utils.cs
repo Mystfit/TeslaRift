@@ -128,6 +128,30 @@ public static class Utils
 	public static Color intToColor(int input){
 		return new Color( (float)((input >> 16) & 255) / 255, (float)((input >> 8) & 255) / 255, (float)((input) & 255) / 255 );
 	}
+
+	public static Vector3[] BuildArcPositions(float radius, float arcLength, int numPoints){
+		return BuildArcPositions(radius, arcLength, numPoints, 0.0f, false);
+	}
+
+	public static Vector3[] BuildArcPositions(float radius, float arcLength, int numPoints, float minAngle, bool centered){
+		Vector3[] points = new Vector3[numPoints];
+		float angleInc = arcLength / numPoints;
+		float diffAngle = angleInc;
+
+		if(angleInc < minAngle) angleInc = minAngle;
+		float startAngle = (centered) ? (numPoints * angleInc) * 0.5f : 0.0f;
+
+		for(int i =0; i < numPoints; i++){
+			//Move this to the carousel
+			points[i] = new Vector3(
+				Mathf.Cos((i * angleInc) - (startAngle * 2.0f)) * radius,
+				Mathf.Sin((i * angleInc) - (startAngle * 2.0f)) * radius,
+				0.0f
+			);
+		}
+
+		return points;
+	}
 }
 
 

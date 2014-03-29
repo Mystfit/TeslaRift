@@ -34,17 +34,9 @@ public class CarouselAttachment : BaseAttachment {
 	}
 
 	public void PlaceObjects(){
-		float angleInc = Mathf.PI * 2 / m_childDockables.Count;
-
-		for(int i =0; i < m_childDockables.Count; i++){
-			//Move this to the carousel
-			Vector3 pos = new Vector3(
-				Mathf.Cos(i * angleInc) * m_carouselRadius,
-				Mathf.Sin(i * angleInc) * m_carouselRadius,
-				0.0f
-			);
-			iTween.MoveTo(m_childDockables[i].gameObject, iTween.Hash("position", pos, "time", 0.5f, "islocal", true));
-
+		Vector3[] points = Utils.BuildArcPositions(m_carouselRadius, Mathf.PI * 2, m_childDockables.Count);
+		for(int i = 0; i < m_childDockables.Count; i++){
+			iTween.MoveTo(m_childDockables[i].gameObject, iTween.Hash("position", points[i], "time", 0.5f, "islocal", true));
 		}
 	}
 }
