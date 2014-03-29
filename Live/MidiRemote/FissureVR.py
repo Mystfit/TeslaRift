@@ -2,6 +2,8 @@ import Live
 from _Framework.ControlSurface import ControlSurface
 from _Framework.ClipSlotComponent import ClipSlotComponent
 from _Framework.SceneComponent import SceneComponent
+import urllib
+from urllib2 import Request, urlopen, URLError, HTTPError
 
 
 class FissureVR(ControlSurface):
@@ -50,8 +52,23 @@ class FissureVR(ControlSurface):
 
     def tracks_updated(self):
         self.log_message("Tracks updated")
-        self.DumpSongDetails()
+        xmlOutput = self.DumpSongDetails()
+        self.PostToServer(xmlOutput)
 
+    def PostToServer(self, xmlString):
+        self.log_message("Posting session to node")
+        url = "http://localhost:2350"
+        xmlData = {'sessionXml': xmlString}
+        data = urllib.urlencode(xmlData)
+        headers = {'Content-Type': 'text/xml'}
+        request = Request(url=url, data=data, headers=headers)
+
+        try:
+            response = urlopen(request, data)
+            self.log_message(response.read())
+        except URLError:
+           self.log_message("Posting error!")
+        
     def DumpSongDetails(self):
 
         xmlString = "<?xml version='1.0' encoding='UTF-8'?>\n"
@@ -233,5 +250,7 @@ class FissureVR(ControlSurface):
         f = open(
             "/Users/mystfit/Code/TeslaRift/Live/MidiRemote/sessionDump.xml", "w")
         f.write(xmlString)
+
+        return xmlString;
 
         # self.log_message(xmlString)
