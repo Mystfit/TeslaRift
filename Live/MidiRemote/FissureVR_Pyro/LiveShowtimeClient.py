@@ -3,7 +3,7 @@ import Pyro.util
 import Pyro.core
 from Pyro.errors import NamingError
 import PyroServerStarter
-from LiveOutgoingSubscriber import LiveOutgoingSubscriber
+from LiveRouter import LiveRouter
 
 
 if len(sys.argv) < 2:
@@ -16,21 +16,10 @@ PyroServerStarter.startServer()
 #Event listener
 Pyro.core.initClient()
 
-connector = None
-listener = LiveOutgoingSubscriber(sys.argv[1])
-print "Looking for Live remote connection..."
-
-while not connector:
-    try:
-        connector = Pyro.core.getProxyForURI("PYRONAME://:LivePyro.connector")
-    except:
-        pass
-
-print "...found connector. Starting listener."
-listener.live = connector
+router = LiveRouter(sys.argv[1])
 
 try:
     while True:
-        listener.handle_requests()
+        router.handle_requests()
 except NamingError:
     print 'Cannot find service. Is the Event Service running?'

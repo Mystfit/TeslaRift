@@ -23,7 +23,7 @@ class LiveIncomingSubscriber(Subscriber):
         self.getDaemon().handleRequests(0.01)
 
     def event(self, event):
-        self.log_message("IN: " + event.subject)
+        #self.log_message("\nIN: " + event.subject)
         if hasattr(self, event.subject):
             getattr(self, event.subject)(event.msg)
         else:
