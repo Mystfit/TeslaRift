@@ -3,7 +3,7 @@ import Pyro.util
 import Pyro.core
 from Pyro.errors import NamingError
 import PyroServerStarter
-import LiveSubscriber
+from LiveOutgoingSubscriber import LiveOutgoingSubscriber
 
 
 if len(sys.argv) < 2:
@@ -17,7 +17,7 @@ PyroServerStarter.startServer()
 Pyro.core.initClient()
 
 connector = None
-listener = LiveSubscriber.LiveSubscriber(sys.argv[1])
+listener = LiveOutgoingSubscriber(sys.argv[1])
 print "Looking for Live remote connection..."
 
 while not connector:

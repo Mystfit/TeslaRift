@@ -28,10 +28,10 @@ from _Framework.ClipSlotComponent import ClipSlotComponent
 
 # Import custom live objects
 from LiveUtils import *
-from ControlSurfaceComponents.PyroButtonElement import PyroButtonElement
-from ControlSurfaceComponents.PyroClipSlotComponent import PyroClipSlotComponent
-from ControlSurfaceComponents.PyroEncoderElement import PyroEncoderElement
+from ControlSurfaceComponents import *
+from LiveApiWrappers.PyroTrack import PyroTrack
 import LiveConnector
+from LiveIncomingSubscriber import LiveIncomingSubscriber
 
 
 class FissureVR_Pyro(ControlSurface):
@@ -44,6 +44,7 @@ class FissureVR_Pyro(ControlSurface):
             debug_log(self, "--------------------------")
             debug_log(self, "FissureVR Pyro DEBUG_START")
             self._suppress_send_midi = True
+            self.tracks = []
 
             self.initPyroServer()
             self.build_session()
@@ -56,6 +57,9 @@ class FissureVR_Pyro(ControlSurface):
         self.pyrodaemon = Pyro.core.Daemon()
         self.pyrodaemon.useNameServer(ns)
 
+        # Event listener
+        Pyro.core.initClient()
+
         try:
             ns.createGroup(":LivePyro")
         except NamingError:
@@ -63,12 +67,13 @@ class FissureVR_Pyro(ControlSurface):
 
         # Create publisher
         self.publisher = Pyro.core.getProxyForURI("PYRONAME://" + Pyro.constants.EVENTSERVER_NAME)
+        self.subscriber = LiveIncomingSubscriber(self.log_message)
 
         # Create remote connector
         self.connector = LiveConnector.LiveConnector()
         uri = self.pyrodaemon.connect(self.connector, ":LivePyro.connector")
 
-        self.connector.init(self.publisher, self.log_message, )
+        self.connector.init(self.publisher, self.log_message)
         debug_log(self, "Pyro remote handle URI: " + str(uri))
 
         # Hook requests to the song timer for max performance. Thanks to Remix.net's LiveOSC module.
@@ -94,6 +99,7 @@ class FissureVR_Pyro(ControlSurface):
 
     def requestLoop(self):
         self.pyrodaemon.handleRequests(0.01)
+        self.subscriber.handle_requests()
 
 
     # Building attachments for different controls
@@ -106,7 +112,8 @@ class FissureVR_Pyro(ControlSurface):
     def build_clip_controls(self):
         debug_log(self, "Creating Session Controls")
         for track in self.session.tracks_to_use():
-            track.add_fired_slot_index_listener(self.connector.track_fired_slot)
+            self.tracks.append(PyroTrack(track, self.connector))
+
 
     # def build_devices(self):
     #     debug_log(self, "Creating Device components")

@@ -4,7 +4,7 @@ import Pyro.core
 from Pyro.errors import NamingError
 
 import PyroServerStarter
-import LiveSubscriber
+from LiveOutgoingSubscriber import LiveOutgoingSubscriber
 import zmq
 
 import sys
@@ -30,7 +30,7 @@ print "...found connector"
 print "Starting listener..."
 
 try:
-    listener = LiveSubscriber.LiveSubscriber(connector)
+    listener = LiveOutgoingSubscriber(connector)
 
     while True:
         listener.handleRequests()

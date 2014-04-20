@@ -14,12 +14,18 @@ class LiveConnector(Pyro.core.SynchronizedObjBase):
         Pyro.core.initClient()
         return "Remote init successful"
 
-    def publish_clip_launch(self, clip, value):
-        self.publisher.publish("CLIP_EVENT", {"name": clip, "value": value})
+    def fired_slot_index(self, trackname, value):
+        self.publisher.publish("fired_slot_index", {"trackname": trackname, "value": value})
 
-    def track_fired_slot(self):
-        self.publisher.publish("TRACK_EVENT", {"name": "Some track fired"})
+    def playing_slot_index(self, trackname, value):
+        self.publisher.publish("playing_slot_index", {"trackname": trackname, "value": value})
 
+
+
+    #
+    # --------------------------------------------------------------------
+    # --------------------------------------------------------------------
+    #
     def add_control(self, control):
         self.controls[control.name] = control
         print "Added " + control.name
