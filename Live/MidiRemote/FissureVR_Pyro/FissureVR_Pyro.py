@@ -65,7 +65,7 @@ class FissureVR_Pyro(ControlSurface):
         self.publisher = Pyro.core.getProxyForURI("PYRONAME://" + Pyro.constants.EVENTSERVER_NAME)
 
         # Create remote connector
-        self.connector = LiveConnector()
+        self.connector = LiveConnector.LiveConnector()
         uri = self.pyrodaemon.connect(self.connector, ":LivePyro.connector")
 
         self.connector.init(self.publisher, self.log_message, )
@@ -105,31 +105,8 @@ class FissureVR_Pyro(ControlSurface):
 
     def build_clip_controls(self):
         debug_log(self, "Creating Session Controls")
-        buttonId = 0
-        channelId = 0
         for track in self.session.tracks_to_use():
-            for clipSlot in track.clip_slots:
-                button = PyroButtonElement( MIDI_SYSEX_TYPE, 1, 1, buttonId)
-                button.set_remote(self.connector)
-
-                #Create remote instance of clipslot
-                name = ""
-                try:
-                    name = str(buttonId) + "-" + clipSlot.clipSlot.name.replace(" ", "_")
-                except:
-                    name = str(buttonId) + "-emptyclipslot"
-                button.name = name
-
-                clipSlotComponent = ClipSlotComponent()
-                clipSlotComponent.name = name
-                clipSlotComponent.set_clip_slot(clipSlot)
-                clipSlotComponent.set_launch_button(button)
-                self.connector.add_control(clipSlotComponent)
-                buttonId += 1
-
-                #clipSlotComponent.set_launch_button(button)
-                # is_momentary, msg_type, channel, identifier, undo_step_handler = DummyUndoStepHandler(), *a, **k
-            channelId += 1
+            track.add_fired_slot_index_listener(self.connector.track_fired_slot)
 
     # def build_devices(self):
     #     debug_log(self, "Creating Device components")

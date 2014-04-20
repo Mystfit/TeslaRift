@@ -17,6 +17,9 @@ class LiveConnector(Pyro.core.SynchronizedObjBase):
     def publish_clip_launch(self, clip, value):
         self.publisher.publish("CLIP_EVENT", {"name": clip, "value": value})
 
+    def track_fired_slot(self):
+        self.publisher.publish("TRACK_EVENT", {"name": "Some track fired"})
+
     def add_control(self, control):
         self.controls[control.name] = control
         print "Added " + control.name

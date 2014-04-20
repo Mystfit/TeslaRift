@@ -33,7 +33,7 @@ try:
     listener = LiveSubscriber.LiveSubscriber(connector)
 
     while True:
-        listener.getDaemon().handleRequests()
+        listener.handleRequests()
     print '...listener active!'
 except NamingError:
     print 'Cannot find service. Is the Event Service running?'
