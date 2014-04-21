@@ -2,6 +2,7 @@ from __future__ import with_statement
 
 # Import std python libs
 import sys
+import encodings
 
 # Append Pyro and missing standard python scripts to the path
 sys.path.append("/System/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5")
@@ -9,7 +10,6 @@ sys.path.append("/System/Library/Frameworks/Python.framework/Versions/2.5/lib/py
 sys.path.append("/Library/Python/2.5/site-packages")
 
 # Import pyro
-import encoding
 import Pyro.naming
 import Pyro.core
 Pyro.config.PYRO_STORAGE = "/tmp"
