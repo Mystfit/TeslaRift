@@ -1,16 +1,18 @@
 from __future__ import with_statement
 
-# Import std python libs
-import sys
-import encodings
-
 # Append Pyro and missing standard python scripts to the path
+import sys
 sys.path.append("/System/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5")
 sys.path.append("/System/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5/lib-dynload")
 sys.path.append("/Library/Python/2.5/site-packages")
 
+import sys
+import encodings
+import select
+
 # Import pyro
 import Pyro.naming
+import Pyro.errors
 import Pyro.core
 Pyro.config.PYRO_STORAGE = "/tmp"
 
@@ -22,7 +24,7 @@ from _Framework.ControlSurface import ControlSurface
 from LiveUtils import *
 from ControlSurfaceComponents import *
 from LiveWrappers import *
-from LiveIncomingSubscriber import LiveIncomingSubscriber
+from LiveSubscriber import LiveSubscriber
 
 
 class FissureVR_Pyro(ControlSurface):
@@ -44,33 +46,20 @@ class FissureVR_Pyro(ControlSurface):
             self.build_wrappers()
 
     def initPyroServer(self):
-        Pyro.core.initServer()
-        ns = Pyro.naming.NameServerLocator().getNS()
-        self.pyrodaemon = Pyro.core.Daemon()
-        self.pyrodaemon.useNameServer(ns)
+        Pyro.config.PYRO_ES_BLOCKQUEUE = False
 
         # Event listener
         Pyro.core.initClient()
 
-        try:
-            ns.createGroup(":LivePyro")
-        except NamingError:
-            pass
-
         # Create publisher
         self.publisher = Pyro.core.getProxyForURI("PYRONAME://" + Pyro.constants.EVENTSERVER_NAME)
-        self.subscriber = LiveIncomingSubscriber(self.log_message)
+        self.subscriber = LiveSubscriber(self.log_message)
 
         # Hook requests to the song timer for max performance. Thanks to Remix.net's LiveOSC module.
         getSong().add_current_song_time_listener(self.requestLoop)
 
     def disconnect(self):
         self._suppress_send_midi = True
-
-        #Kill Pyro server
-        self.pyrodaemon.shutdown(True)
-        self.requestThread.exit()
-
         self._suppress_send_midi = False
         ControlSurface.disconnect(self)
 
@@ -80,19 +69,20 @@ class FissureVR_Pyro(ControlSurface):
         ControlSurface.update_display(self)
 
     def requestLoop(self):
-        self.pyrodaemon.handleRequests(0.01)
+
+        #self.pyrodaemon.handleRequests(0)
         self.subscriber.handle_requests()
 
     def build_wrappers(self):
         debug_log(self, "Creating clip controls")
-        for track in getTracks():
-            trackWrapper = PyroTrack(track, self.publisher)
+        for trackindex in range(len(getTracks())):
+            trackWrapper = PyroTrack(trackindex, self.publisher)
             self.tracks.append(trackWrapper)
 
-            for device in track.devices:
-                deviceWrapper = PyroDevice(track, device, self.publisher)
+            for deviceindex in range(len(getTrack(trackindex).devices)):
+                deviceWrapper = PyroDevice(trackindex, deviceindex, self.publisher)
                 trackWrapper.devices.append(deviceWrapper)
 
-                for parameter in device.parameters:
-                    parameterWrapper = PyroDeviceParameter(track, device, parameter, self.publisher)
+                for parameterindex in range(len(getTrack(trackindex).devices[deviceindex].parameters)):
+                    parameterWrapper = PyroDeviceParameter(trackindex, deviceindex, parameterindex, self.publisher)
                     deviceWrapper.parameters.append(parameterWrapper)

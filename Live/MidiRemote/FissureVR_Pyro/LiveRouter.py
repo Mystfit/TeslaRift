@@ -18,7 +18,9 @@ class LiveRouter(Subscriber):
 
         subscribedMethods = [
             PyroTrack.FIRED_SLOT_INDEX,
-            PyroTrack.PLAYING_SLOT_INDEX]
+            PyroTrack.PLAYING_SLOT_INDEX,
+            PyroDevice.PARAMETERS_UPDATED,
+            PyroDeviceParameter.VALUE_UPDATED]
         self.subscribe(subscribedMethods)
 
         uri = "PYRONAME://" + Pyro.constants.EVENTSERVER_NAME
@@ -44,15 +46,29 @@ class LiveRouter(Subscriber):
         self.node.request_register_method(
             PyroTrack.FIRE_CLIP,
             ZstMethod.WRITE,
-            {"trackindex": 0, "clipindex": 0},
+            {
+                "trackindex": None,
+                "clipindex": None
+            },
             self.fire_clip)
 
+        self.node.request_register_method(
+            PyroDeviceParameter.SET_VALUE,
+            ZstMethod.WRITE,
+            {
+                "trackindex": None,
+                "deviceindex": None,
+                "parameterindex": None,
+                "value": None
+            },
+            self.set_value)
+
     def handle_requests(self):
-        self.getDaemon().handleRequests(0.01)
+        self.getDaemon().handleRequests(0)
         self.node.handle_requests()
 
     def event(self, event):
-        #print "\nIN: " + event.subject, '=', event.msg
+        print "IN-->OUT: " + event.subject, '=', event.msg
         if event.subject in self.node.methods:
             if isinstance(event.msg, dict):
                 self.node.update_local_method_by_name(event.subject, event.msg)
@@ -71,4 +87,9 @@ class LiveRouter(Subscriber):
         except Pyro.errors.ConnectionClosedError:
             print "Lost connection to event service"
 
-        #self.live.turn_on_clip(args["clipindex"])
+    def set_value(self, args):
+        print "About to set value!"
+        try:
+            self.publisher.publish(PyroDeviceParameter.SET_VALUE, args)
+        except Pyro.errors.ConnectionClosedError:
+            print "Lost connection to event service"
