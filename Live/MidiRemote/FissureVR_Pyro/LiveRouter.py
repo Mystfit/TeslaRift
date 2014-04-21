@@ -6,7 +6,7 @@ import sys
 sys.path.append("/Users/mystfit/Code/zmqshowtime")
 from zst_node import ZstNode
 from zst_method import ZstMethod
-from ExposedMethods import ExposedMethods
+from LiveWrappers import *
 
 
 # Event listener class for recieving/parsing messages from Live
@@ -17,8 +17,8 @@ class LiveRouter(Subscriber):
         self.setThreading(False)
 
         subscribedMethods = [
-            ExposedMethods.Out.FIRED_SLOT_INDEX,
-            ExposedMethods.Out.PLAYING_SLOT_INDEX]
+            PyroTrack.FIRED_SLOT_INDEX,
+            PyroTrack.PLAYING_SLOT_INDEX]
         self.subscribe(subscribedMethods)
 
         uri = "PYRONAME://" + Pyro.constants.EVENTSERVER_NAME
@@ -29,15 +29,20 @@ class LiveRouter(Subscriber):
         self.register_methods()
 
     def register_methods(self):
-        # Incoming methods
-        self.node.request_register_method(
-            ExposedMethods.Out.FIRED_SLOT_INDEX, ZstMethod.READ)
-        self.node.request_register_method(
-            ExposedMethods.Out.PLAYING_SLOT_INDEX, ZstMethod.READ)
-
         # Outgoing methods
         self.node.request_register_method(
-            ExposedMethods.In.FIRE_CLIP,
+            PyroTrack.FIRED_SLOT_INDEX, ZstMethod.READ)
+        self.node.request_register_method(
+            PyroTrack.PLAYING_SLOT_INDEX, ZstMethod.READ)
+
+        self.node.request_register_method(
+            PyroDeviceParameter.VALUE_UPDATED, ZstMethod.READ)
+        self.node.request_register_method(
+            PyroDevice.PARAMETERS_UPDATED, ZstMethod.READ)
+
+        # Incoming methods
+        self.node.request_register_method(
+            PyroTrack.FIRE_CLIP,
             ZstMethod.WRITE,
             {"trackindex": 0, "clipindex": 0},
             self.fire_clip)
@@ -62,9 +67,7 @@ class LiveRouter(Subscriber):
     def fire_clip(self, args):
         print "About to fire clip!"
         try:
-            self.publisher.publish(
-                ExposedMethods.In.FIRE_CLIP,
-                {"trackindex": args["trackindex"], "clipindex": args["clipindex"]})
+            self.publisher.publish(PyroTrack.FIRE_CLIP, args)
         except Pyro.errors.ConnectionClosedError:
             print "Lost connection to event service"
 

@@ -2,7 +2,6 @@ from __future__ import with_statement
 
 # Import std python libs
 import sys
-import encodings
 
 # Append Pyro and missing standard python scripts to the path
 sys.path.append("/System/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5")
@@ -10,6 +9,7 @@ sys.path.append("/System/Library/Frameworks/Python.framework/Versions/2.5/lib/py
 sys.path.append("/Library/Python/2.5/site-packages")
 
 # Import pyro
+import encoding
 import Pyro.naming
 import Pyro.core
 Pyro.config.PYRO_STORAGE = "/tmp"
@@ -21,7 +21,7 @@ from _Framework.ControlSurface import ControlSurface
 # Import custom live objects
 from LiveUtils import *
 from ControlSurfaceComponents import *
-from LiveApiWrappers.PyroTrack import PyroTrack
+from LiveWrappers import *
 from LiveIncomingSubscriber import LiveIncomingSubscriber
 
 
@@ -35,11 +35,13 @@ class FissureVR_Pyro(ControlSurface):
             debug_log(self, "--------------------------")
             debug_log(self, "FissureVR Pyro DEBUG_START")
             self._suppress_send_midi = True
+
+            # Wrappers for Ableton objects
             self.tracks = []
+            self.parameters = []
 
             self.initPyroServer()
-            self.build_clip_controls()
-            # self.build_devices()
+            self.build_wrappers()
 
     def initPyroServer(self):
         Pyro.core.initServer()
@@ -81,15 +83,16 @@ class FissureVR_Pyro(ControlSurface):
         self.pyrodaemon.handleRequests(0.01)
         self.subscriber.handle_requests()
 
-    def build_clip_controls(self):
-        debug_log(self, "Creating Session Controls")
+    def build_wrappers(self):
+        debug_log(self, "Creating clip controls")
         for track in getTracks():
-            self.tracks.append(PyroTrack(track, self.publisher))
+            trackWrapper = PyroTrack(track, self.publisher)
+            self.tracks.append(trackWrapper)
 
+            for device in track.devices:
+                deviceWrapper = PyroDevice(track, device, self.publisher)
+                trackWrapper.devices.append(deviceWrapper)
 
-    # def build_devices(self):
-    #     debug_log(self, "Creating Device components")
-
-    #     for track in self.session.tracks_to_use():
-    #         for device in track.devices:
-    #             for parameter in device.parameters:
+                for parameter in device.parameters:
+                    parameterWrapper = PyroDeviceParameter(track, device, parameter, self.publisher)
+                    deviceWrapper.parameters.append(parameterWrapper)
