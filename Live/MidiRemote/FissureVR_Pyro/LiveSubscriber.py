@@ -16,8 +16,13 @@ class LiveSubscriber(Subscriber):
         self.requestLock = True
         self.requestCounter = 0
 
+        self.set_encoder_value = None
+
         subscribed = [PyroTrack.FIRE_CLIP, PyroDeviceParameter.SET_VALUE]
         self.subscribe(subscribed)
+
+    def set_encoder_list(self, encoderlist):
+        self.encoderlist = encoderlist
 
     def handle_requests(self):
         while self.requestLock:
@@ -54,14 +59,15 @@ class LiveSubscriber(Subscriber):
         parameter = device.parameters[int(args["parameterindex"])]
 
         #parameter.value = float(args["value"])
-
+        key = (int(args["trackindex"]), int(args["deviceindex"]), int(args["parameterindex"]))
         if not self.valueChangedMessages:
             self.valueChangedMessages = {}
-        self.valueChangedMessages[parameter] = float(args["value"])
+        self.valueChangedMessages[key] = float(args["value"])
 
     def process_value_changed_messages(self, queue):
-        for parameter, value in queue.iteritems():
+        for parametertuple, value in queue.iteritems():
             try:
-                parameter.value = value
+                self.set_encoder_value(parametertuple, value)
+                #parameter.value = value
             except RuntimeError, e:
                 self.log_message(e)

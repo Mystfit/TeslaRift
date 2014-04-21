@@ -23,6 +23,7 @@ from _Framework.ControlSurface import ControlSurface
 # Import custom live objects
 from LiveUtils import *
 from ControlSurfaceComponents import *
+from ControlSurfaceComponents.PyroEncoderElement import PyroEncoderElement
 from LiveWrappers import *
 from LiveSubscriber import LiveSubscriber
 
@@ -40,7 +41,7 @@ class FissureVR_Pyro(ControlSurface):
 
             # Wrappers for Ableton objects
             self.tracks = []
-            self.parameters = []
+            self.encoders = {}
 
             self.initPyroServer()
             self.build_wrappers()
@@ -54,9 +55,10 @@ class FissureVR_Pyro(ControlSurface):
         # Create publisher
         self.publisher = Pyro.core.getProxyForURI("PYRONAME://" + Pyro.constants.EVENTSERVER_NAME)
         self.subscriber = LiveSubscriber(self.log_message)
+        self.subscriber.set_encoder_value = self.set_encoder_value
 
         # Hook requests to the song timer for max performance. Thanks to Remix.net's LiveOSC module.
-        getSong().add_current_song_time_listener(self.requestLoop)
+        #getSong().add_current_song_time_listener(self.requestLoop)
 
     def disconnect(self):
         self._suppress_send_midi = True
@@ -69,9 +71,14 @@ class FissureVR_Pyro(ControlSurface):
         ControlSurface.update_display(self)
 
     def requestLoop(self):
-
-        #self.pyrodaemon.handleRequests(0)
         self.subscriber.handle_requests()
+
+    def set_encoder_value(self, parametertuple, value):
+        self.log_message("Setting encoder " + str(parametertuple) + " to " + str(value))
+        self.encoders[parametertuple].mapped_parameter().value = value
+        self.encoders[parametertuple].receive_value(value)
+        self.encoders[parametertuple].notify_value(value)
+        self.log_message("--------------------")
 
     def build_wrappers(self):
         debug_log(self, "Creating clip controls")
@@ -86,3 +93,10 @@ class FissureVR_Pyro(ControlSurface):
                 for parameterindex in range(len(getTrack(trackindex).devices[deviceindex].parameters)):
                     parameterWrapper = PyroDeviceParameter(trackindex, deviceindex, parameterindex, self.publisher)
                     deviceWrapper.parameters.append(parameterWrapper)
+
+                    parameter = getTrack(trackindex).devices[deviceindex].parameters[parameterindex]
+                    encoder = PyroEncoderElement(parameter=parameter)
+                    encoder.set_publisher(self.publisher)
+                    encoder.set_debugger(self.log_message)
+                    encoder.set_indexes(trackindex, deviceindex, parameterindex)
+                    self.encoders[(trackindex, deviceindex, parameterindex)] = encoder
