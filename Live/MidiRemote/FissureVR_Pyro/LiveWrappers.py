@@ -5,6 +5,7 @@ except ImportError:
 
 import Pyro.errors
 
+
 class PyroTrack():
     # Out
     FIRED_SLOT_INDEX = "fired_slot_index"

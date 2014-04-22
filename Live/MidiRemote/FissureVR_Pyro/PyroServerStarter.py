@@ -29,7 +29,6 @@ class EventServer(Thread):
         print "Launching Pyro Event Server"
         # we're using the OS's automatic port allocation
         es_port = 0
-        #Pyro.config.PYRO_ES_QUEUESIZE = 0
         Pyro.config.PYRO_ES_BLOCKQUEUE = False
         Pyro.config.PYRO_ES_QUEUESIZE = 10
         self.starter.start(port=es_port, norange=(es_port == 0))

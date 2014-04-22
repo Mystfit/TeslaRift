@@ -73,28 +73,8 @@ class LiveRouter(Subscriber):
         else:
             print "Outgoing method not registered!"
 
-    # ------------------------
-    # Incoming method wrappers
-    # ------------------------
-
     def incoming(self, message):
         try:
-            print "Args:", message.data[ZstMethod.METHOD_ARGS]
             self.publisher.publish(message.method, message.data[ZstMethod.METHOD_ARGS])
         except Pyro.errors.ConnectionClosedError:
             print "Lost connection to event service"
-
-
-    # def fire_clip(self, args):
-    #     print "About to fire clip!"
-    #     try:
-    #         self.publisher.publish(PyroTrack.FIRE_CLIP, args)
-    #     except Pyro.errors.ConnectionClosedError:
-    #         print "Lost connection to event service"
-
-    # def set_value(self, args):
-    #     print "About to set value!"
-    #     try:
-    #         self.publisher.publish(PyroDeviceParameter.SET_VALUE, args)
-    #     except Pyro.errors.ConnectionClosedError:
-    #         print "Lost connection to event service"

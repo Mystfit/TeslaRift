@@ -9,10 +9,7 @@ import Pyro.errors
 class PyroEncoderElement(EncoderElement):
 
     def __init__(self, channel, identifier, parameter, parametertuple):
-        #InputControlElement.__init__(self, msg_type=MIDI_SYSEX_TYPE, sysex_identifier=parametertuple)
         EncoderElement.__init__(self, msg_type=MIDI_CC_TYPE, channel=channel, identifier=identifier, map_mode=Live.MidiMap.MapMode.absolute)
-        #Sysex init - self, msg_type = None, channel = None, identifier = None, sysex_identifier = None, request_rebuild_midi_map = None, *a, **k
-        #Encoder init - self, msg_type, channel, identifier, map_mode, encoder_sensitivity = None, *a, **k
         self.trackindex = parametertuple[0]
         self.deviceindex = parametertuple[1]
         self.parameterindex = parametertuple[2]
@@ -33,7 +30,6 @@ class PyroEncoderElement(EncoderElement):
         return True
 
     def connect(self, parameter):
-        # self.parameterslot = ParameterSlot(parameter, self)
         if parameter:
             InputControlElement.connect_to(self, parameter)
             if self.mapped_parameter() is not None:
