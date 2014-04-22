@@ -4,6 +4,26 @@ import Pyro.core
 from Pyro.errors import NamingError
 import PyroServerStarter
 from LiveRouter import LiveRouter
+import rtmidi_python as rtmidi
+import threading
+import time
+
+exitFlag = 0
+
+class Clock(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+        self.clockVal = 0
+        self.midi_out = rtmidi.MidiOut()
+        self.midi_out.open_virtual_port("LiveShowtime_Clock")
+
+    def run(self):
+        while not exitFlag:
+            self.clockVal += 1
+            self.clockVal  = self.clockVal % 127
+            self.midi_out.send_message([0xB0, 1, self.clockVal])
+            time.sleep(0.001)
 
 
 if len(sys.argv) < 2:
@@ -16,10 +36,16 @@ PyroServerStarter.startServer()
 #Event listener
 Pyro.core.initClient()
 
+# Set up midi clock
+clock = Clock()
+clock.start()
+
 router = LiveRouter(sys.argv[1])
 
 try:
     while True:
         router.handle_requests()
-except NamingError:
-    print 'Cannot find service. Is the Event Service running?'
+except KeyboardInterrupt:
+    print "\nExiting..."
+    exitFlag = 1
+    clock.join()

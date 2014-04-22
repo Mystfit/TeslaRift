@@ -14,24 +14,29 @@ class LiveSubscriber(Subscriber):
 
         self.valueChangedMessages = None
         self.requestLock = True
-        self.requestCounter = 0
 
         self.set_encoder_value = None
+        self.parameters = None
 
         subscribed = [PyroTrack.FIRE_CLIP, PyroDeviceParameter.SET_VALUE]
         self.subscribe(subscribed)
 
-    def set_encoder_list(self, encoderlist):
-        self.encoderlist = encoderlist
+    def set_parameter_list(self, parameterList):
+        self.parameters = parameterList
+
+    def add_parameter(self, parametertuple, parameter):
+        self.parameters[parametertuple] = parameter
 
     def handle_requests(self):
+        #self.log_message("Processing messages")
+        requestCounter = 0
         while self.requestLock:
             self.requestLock = False
             self.getDaemon().handleRequests(0)
-            self.requestCounter  += 1
+            requestCounter  += 1
         self.requestLock = True
-        self.log_message(str(self.requestCounter) + " loop")
-        self.requestCounter = 0
+        #if requestCounter > 1:
+            #self.log_message(str(requestCounter) + " loops")
 
         if self.valueChangedMessages:
             self.process_value_changed_messages(self.valueChangedMessages)
@@ -39,7 +44,7 @@ class LiveSubscriber(Subscriber):
 
     def event(self, event):
         self.requestLock = True     # Lock the request loop
-        print event.subject, event.msg
+        self.log_message(str(event.subject) + " " + str(event.msg))
         if hasattr(self, event.subject):
             getattr(self, event.subject)(event.msg)
         else:
@@ -67,7 +72,7 @@ class LiveSubscriber(Subscriber):
     def process_value_changed_messages(self, queue):
         for parametertuple, value in queue.iteritems():
             try:
-                self.set_encoder_value(parametertuple, value)
-                #parameter.value = value
+                #self.set_encoder_value(parametertuple, value)
+                self.parameters[parametertuple].get_parameter().value = value
             except RuntimeError, e:
                 self.log_message(e)

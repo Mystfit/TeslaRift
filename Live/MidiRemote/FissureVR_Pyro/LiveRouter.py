@@ -16,6 +16,7 @@ class LiveRouter(Subscriber):
         Subscriber.__init__(self)
         self.setThreading(False)
 
+        # Methods for Pyro to subscribe to
         subscribedMethods = [
             PyroTrack.FIRED_SLOT_INDEX,
             PyroTrack.PLAYING_SLOT_INDEX,
@@ -32,15 +33,10 @@ class LiveRouter(Subscriber):
 
     def register_methods(self):
         # Outgoing methods
-        self.node.request_register_method(
-            PyroTrack.FIRED_SLOT_INDEX, ZstMethod.READ)
-        self.node.request_register_method(
-            PyroTrack.PLAYING_SLOT_INDEX, ZstMethod.READ)
-
-        self.node.request_register_method(
-            PyroDeviceParameter.VALUE_UPDATED, ZstMethod.READ)
-        self.node.request_register_method(
-            PyroDevice.PARAMETERS_UPDATED, ZstMethod.READ)
+        self.node.request_register_method(PyroTrack.FIRED_SLOT_INDEX, ZstMethod.READ)
+        self.node.request_register_method(PyroTrack.PLAYING_SLOT_INDEX, ZstMethod.READ)
+        self.node.request_register_method(PyroDeviceParameter.VALUE_UPDATED, ZstMethod.READ)
+        self.node.request_register_method(PyroDevice.PARAMETERS_UPDATED, ZstMethod.READ)
 
         # Incoming methods
         self.node.request_register_method(
@@ -50,7 +46,7 @@ class LiveRouter(Subscriber):
                 "trackindex": None,
                 "clipindex": None
             },
-            self.fire_clip)
+            self.incoming)
 
         self.node.request_register_method(
             PyroDeviceParameter.SET_VALUE,
@@ -61,7 +57,7 @@ class LiveRouter(Subscriber):
                 "parameterindex": None,
                 "value": None
             },
-            self.set_value)
+            self.incoming)
 
     def handle_requests(self):
         self.getDaemon().handleRequests(0)
@@ -80,16 +76,25 @@ class LiveRouter(Subscriber):
     # ------------------------
     # Incoming method wrappers
     # ------------------------
-    def fire_clip(self, args):
-        print "About to fire clip!"
+
+    def incoming(self, message):
         try:
-            self.publisher.publish(PyroTrack.FIRE_CLIP, args)
+            print "Args:", message.data[ZstMethod.METHOD_ARGS]
+            self.publisher.publish(message.method, message.data[ZstMethod.METHOD_ARGS])
         except Pyro.errors.ConnectionClosedError:
             print "Lost connection to event service"
 
-    def set_value(self, args):
-        print "About to set value!"
-        try:
-            self.publisher.publish(PyroDeviceParameter.SET_VALUE, args)
-        except Pyro.errors.ConnectionClosedError:
-            print "Lost connection to event service"
+
+    # def fire_clip(self, args):
+    #     print "About to fire clip!"
+    #     try:
+    #         self.publisher.publish(PyroTrack.FIRE_CLIP, args)
+    #     except Pyro.errors.ConnectionClosedError:
+    #         print "Lost connection to event service"
+
+    # def set_value(self, args):
+    #     print "About to set value!"
+    #     try:
+    #         self.publisher.publish(PyroDeviceParameter.SET_VALUE, args)
+    #     except Pyro.errors.ConnectionClosedError:
+    #         print "Lost connection to event service"

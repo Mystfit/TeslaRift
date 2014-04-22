@@ -71,10 +71,12 @@ class PyroDeviceParameter():
         self.trackindex = trackindex
         self.deviceindex = deviceindex
         self.parameterindex = parameterindex
-        self.parameter = getTrack(trackindex).devices[deviceindex].parameters[parameterindex]
         self.publisher = publisher
 
-        #self.parameter.add_value_listener(self.value_updated)
+        self.get_parameter().add_value_listener(self.value_updated)
+
+    def get_parameter(self):
+        return getTrack(self.trackindex).devices[self.deviceindex].parameters[self.parameterindex]
 
     def value_updated(self):
         try:
@@ -82,6 +84,6 @@ class PyroDeviceParameter():
                 "trackindex": self.trackindex,
                 "deviceindex": self.deviceindex,
                 "parameterindex": self.parameterindex,
-                "value": self.parameter.value})
+                "value": self.get_parameter().value})
         except Pyro.errors.ConnectionClosedError:
             print "Lost connection to event service"

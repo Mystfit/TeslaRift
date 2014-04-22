@@ -8,11 +8,14 @@ import Pyro.errors
 
 class PyroEncoderElement(EncoderElement):
 
-    def __init__(self, parameter=None):
-        super(PyroEncoderElement, self).__init__(MIDI_SYSEX_TYPE, None, None, None, None)
-        self.trackindex = None
-        self.deviceindex = None
-        self.parameterindex = None
+    def __init__(self, channel, identifier, parameter, parametertuple):
+        #InputControlElement.__init__(self, msg_type=MIDI_SYSEX_TYPE, sysex_identifier=parametertuple)
+        EncoderElement.__init__(self, msg_type=MIDI_CC_TYPE, channel=channel, identifier=identifier, map_mode=Live.MidiMap.MapMode.absolute)
+        #Sysex init - self, msg_type = None, channel = None, identifier = None, sysex_identifier = None, request_rebuild_midi_map = None, *a, **k
+        #Encoder init - self, msg_type, channel, identifier, map_mode, encoder_sensitivity = None, *a, **k
+        self.trackindex = parametertuple[0]
+        self.deviceindex = parametertuple[1]
+        self.parameterindex = parametertuple[2]
         self._report_input = True
         self._report_output = True
         self.connect(parameter)
@@ -20,23 +23,25 @@ class PyroEncoderElement(EncoderElement):
     def set_publisher(self, publisher):
         self.publisher = publisher
 
-    def set_indexes(self, trackindex, deviceindex, parameterindex):
-        self.trackindex = trackindex
-        self.deviceindex = deviceindex
-        self.parameterindex = parameterindex
-
     def set_debugger(self, logger):
         self.log_message = logger
 
+    def message_map_mode(self):
+        return Live.MidiMap.MapMode.absolute
+
+    def script_wants_forwarding(self):
+        return True
+
     def connect(self, parameter):
         # self.parameterslot = ParameterSlot(parameter, self)
-        EncoderElement.connect_to(self, parameter)
-        if self.mapped_parameter() is not None:
-            try:
-                self.mapped_parameter().remove_value_listener(self.value_updated)
-            except:
-                pass
-        self.mapped_parameter().add_value_listener(self.value_updated)
+        if parameter:
+            InputControlElement.connect_to(self, parameter)
+            if self.mapped_parameter() is not None:
+                try:
+                    self.mapped_parameter().remove_value_listener(self.value_updated)
+                except:
+                    pass
+            #self.mapped_parameter().add_value_listener(self.value_updated)
 
     def send_value(self, value):
         #EncoderElement.send_value(self, value)
