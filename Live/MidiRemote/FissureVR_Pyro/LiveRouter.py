@@ -7,6 +7,7 @@ sys.path.append("/Users/mystfit/Code/zmqshowtime")
 from zst_node import ZstNode
 from zst_method import ZstMethod
 from LiveWrappers import *
+import json
 
 
 # Event listener class for recieving/parsing messages from Live
@@ -66,15 +67,19 @@ class LiveRouter(Subscriber):
     def event(self, event):
         print "IN-->OUT: " + event.subject, '=', event.msg
         if event.subject in self.node.methods:
-            if isinstance(event.msg, dict):
-                self.node.update_local_method_by_name(event.subject, event.msg)
-            else:
-                print "Remote method argument not a dictionary! Got '{0}' instead.".format(event.msg)
+            self.node.update_local_method_by_name(event.subject, event.msg)
+            # if isinstance(event.msg, dict):
+            #     self.node.update_local_method_by_name(event.subject, event.msg)
+            # else:
+            #     print "Remote method argument not a dictionary! Got '{0}' instead.".format(event.msg)
         else:
             print "Outgoing method not registered!"
 
     def incoming(self, message):
-        try:
-            self.publisher.publish(message.method, message.data[ZstMethod.METHOD_ARGS])
-        except Pyro.errors.ConnectionClosedError:
-            print "Lost connection to event service"
+        # try:
+            try:
+                self.publisher.publish(message.name, message.args)
+            except Exception, e:
+                print e
+        # except Pyro.errors.ConnectionClosedError:
+        #     print "Lost connection to event service"

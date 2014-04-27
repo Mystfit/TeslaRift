@@ -28,7 +28,10 @@ class LiveSubscriber(Subscriber):
         # Loop through all messages in the Pyro queue till it's empty
         while self.requestLock:
             self.requestLock = False
-            self.getDaemon().handleRequests(0)
+            try:
+                self.getDaemon().handleRequests(0)
+            except Exception, e:
+                print e
             requestCounter += 1
         self.requestLock = True
         if requestCounter > 10:
