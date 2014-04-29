@@ -6,6 +6,34 @@ except ImportError:
 import Pyro.errors
 
 
+class PyroSong():
+
+    # Out
+    GET_SONG_LAYOUT = "get_song_layout"
+
+    def __init__(self, publisher):
+        self.publisher = publisher
+
+    def get_song_layout(self, args):
+        song = {"tracks": [], "returns": []}
+        for track in getTracks():
+            trackObj = {"name": track.name, "devices": []}
+
+            for device in track.devices:
+                deviceObj = {"name": device.name, "parameters": []}
+
+                for parameter in device.parameters:
+                    paramObj = {
+                        "name": parameter.name,
+                        "min": parameter.min,
+                        "max": parameter.max,
+                        "value": parameter.value}
+                    deviceObj["devices"].append(paramObj)
+                trackObj["devices"].append(deviceObj)
+            song["tracks"].append(trackObj)
+        self.publisher.publish(PyroSong.GET_SONG_LAYOUT, song)
+
+
 class PyroTrack():
     # Out
     FIRED_SLOT_INDEX = "fired_slot_index"

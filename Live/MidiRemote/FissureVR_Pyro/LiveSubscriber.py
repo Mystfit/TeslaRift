@@ -7,10 +7,11 @@ from LiveUtils import *
 # Event listener class for recieving/parsing messages from Live
 class LiveSubscriber(Subscriber):
 
-    def __init__(self, logger):
+    def __init__(self, publisher, logger):
         Subscriber.__init__(self)
         self.log_message = logger
         self.setThreading(False)
+        self.publisher = publisher
 
         self.valueChangedMessages = None
         self.requestLock = True
@@ -29,7 +30,7 @@ class LiveSubscriber(Subscriber):
         while self.requestLock:
             self.requestLock = False
             try:
-                self.getDaemon().handleRequests(0)
+                self.getDaemon().handleRequests()
             except Exception, e:
                 print e
             requestCounter += 1
@@ -58,6 +59,11 @@ class LiveSubscriber(Subscriber):
     # ---------------------------
     # Incoming method controllers
     # ---------------------------
+    def get_song_layout(self, args):
+        self.log_message("Requesting song layout")
+        song = PyroSong(self.publisher)
+        song.get_song_layout(args)
+
     def fire_clip(self, args):
         try:
             launchClip(int(args["trackindex"]), int(args["clipindex"]))

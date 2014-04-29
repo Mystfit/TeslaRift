@@ -39,6 +39,7 @@ class FissureVR_Pyro(ControlSurface):
             debug_log(self, "FissureVR Pyro DEBUG_START")
 
             # Wrappers for Ableton objects
+            self.song = None
             self.tracks = []
             self.clock = None
 
@@ -54,7 +55,7 @@ class FissureVR_Pyro(ControlSurface):
 
         # Create publisher
         self.publisher = Pyro.core.getProxyForURI("PYRONAME://" + Pyro.constants.EVENTSERVER_NAME)
-        self.subscriber = LiveSubscriber(self.log_message)
+        self.subscriber = LiveSubscriber(self.publisher, self.log_message)
 
     def disconnect(self):
         self._suppress_send_midi = True
@@ -86,7 +87,7 @@ class FissureVR_Pyro(ControlSurface):
         self.subscriber.handle_requests()
 
     def build_wrappers(self):
-        debug_log(self, "Creating clip controls")
+        debug_log(self, "Creating Live/Pyro wrappers")
 
         self.clock = PyroEncoderElement( 0, 1, None, (0, 0, 1))
         parameters = {}
