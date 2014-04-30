@@ -18,12 +18,14 @@ class LiveRouter(Subscriber):
         self.setThreading(True)
 
         # Methods for Pyro to subscribe to
-        subscribedMethods = [
+        subscribed = [
             PyroTrack.FIRED_SLOT_INDEX,
             PyroTrack.PLAYING_SLOT_INDEX,
             PyroDevice.PARAMETERS_UPDATED,
-            PyroDeviceParameter.VALUE_UPDATED]
-        self.subscribe(subscribedMethods)
+            PyroDeviceParameter.VALUE_UPDATED,
+            PyroSong.GET_SONG_LAYOUT]
+        subscribed = [OUTGOING_PREFIX + method for method in subscribed] 
+        self.subscribe(subscribed)
 
         uri = "PYRONAME://" + Pyro.constants.EVENTSERVER_NAME
         self.publisher = Pyro.core.getProxyForURI(uri)
@@ -35,9 +37,8 @@ class LiveRouter(Subscriber):
         self.register_methods()
 
     def close(self):
-        self.getDaemon().shutdown()
-        self.node.stop()
-        self.node.join(4.0)
+        self.node.close()
+        self.getDaemon().shutdown(True)
 
     def register_methods(self):
         # Outgoing methods
@@ -67,21 +68,23 @@ class LiveRouter(Subscriber):
             },
             self.incoming)
 
-        self.node.request_register_method(
+        getSongLayout = self.node.request_register_method(
             PyroSong.GET_SONG_LAYOUT,
-            ZstMethod.READ,
-            None,
-            self.incoming)
+            ZstMethod.RESPONDER, None,
+            self.incoming, None)
 
     def event(self, event):
         print "IN-->OUT: " + event.subject, '=', event.msg
-        if event.subject in self.node.methods:
-            self.node.update_local_method_by_name(event.subject, event.msg)
+        subject = event.subject[len(OUTGOING_PREFIX):]
+        if subject in self.node.methods:
+            self.node.update_local_method_by_name(subject, event.msg)
         else:
             print "Outgoing method not registered!"
 
     def incoming(self, message):
         try:
-            self.publisher.publish(message.name, message.args)
+            print "Publishing message " + message.name
+            args = message.args if message.args else {}
+            self.publisher.publish(INCOMING_PREFIX + message.name, args)
         except Exception, e:
             print e

@@ -55,4 +55,3 @@ except KeyboardInterrupt:
     print "\nExiting..."
     router.close()
     clock.stop()
-    clock.join(2.0)

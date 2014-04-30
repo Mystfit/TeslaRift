@@ -5,6 +5,8 @@ except ImportError:
 
 import Pyro.errors
 
+INCOMING_PREFIX = "I_"
+OUTGOING_PREFIX = "O_"
 
 class PyroSong():
 
@@ -14,24 +16,27 @@ class PyroSong():
     def __init__(self, publisher):
         self.publisher = publisher
 
-    def get_song_layout(self, args):
+    def get_song_layout(self, args=None):
         song = {"tracks": [], "returns": []}
+
         for track in getTracks():
             trackObj = {"name": track.name, "devices": []}
-
             for device in track.devices:
                 deviceObj = {"name": device.name, "parameters": []}
-
                 for parameter in device.parameters:
                     paramObj = {
                         "name": parameter.name,
                         "min": parameter.min,
                         "max": parameter.max,
                         "value": parameter.value}
-                    deviceObj["devices"].append(paramObj)
+                    deviceObj["parameters"].append(paramObj)
                 trackObj["devices"].append(deviceObj)
             song["tracks"].append(trackObj)
-        self.publisher.publish(PyroSong.GET_SONG_LAYOUT, song)
+        try:
+            self.publisher.publish(OUTGOING_PREFIX + PyroSong.GET_SONG_LAYOUT, song)
+        except Pyro.errors.ConnectionClosedError:
+            print "Lost connection to event service"
+        return song
 
 
 class PyroTrack():
@@ -54,7 +59,7 @@ class PyroTrack():
 
     def fired_slot_index(self):
         try:
-            self.publisher.publish(PyroTrack.FIRED_SLOT_INDEX, {
+            self.publisher.publish(OUTGOING_PREFIX + PyroTrack.FIRED_SLOT_INDEX, {
                 "track": self.track.name,
                 "slotindex": self.track.fired_slot_index})
         except Pyro.errors.ConnectionClosedError:
@@ -84,7 +89,7 @@ class PyroDevice():
 
     def parameters_updated(self):
         try:
-            self.publisher.publish(PyroDevice.PARAMETERS_UPDATED, {
+            self.publisher.publish(OUTGOING_PREFIX + PyroDevice.PARAMETERS_UPDATED, {
                 "track": self.track.name,
                 "device": self.device.name})
         except Pyro.errors.ConnectionClosedError:
@@ -109,7 +114,7 @@ class PyroDeviceParameter():
 
     def value_updated(self):
         try:
-            self.publisher.publish(PyroDeviceParameter.VALUE_UPDATED, {
+            self.publisher.publish(OUTGOING_PREFIX + PyroDeviceParameter.VALUE_UPDATED, {
                 "trackindex": self.trackindex,
                 "deviceindex": self.deviceindex,
                 "parameterindex": self.parameterindex,

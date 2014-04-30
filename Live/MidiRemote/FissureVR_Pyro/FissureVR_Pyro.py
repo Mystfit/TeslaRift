@@ -89,6 +89,8 @@ class FissureVR_Pyro(ControlSurface):
     def build_wrappers(self):
         debug_log(self, "Creating Live/Pyro wrappers")
 
+        self.subscriber.set_song(PyroSong(self.publisher))
+
         self.clock = PyroEncoderElement( 0, 1, None, (0, 0, 1))
         parameters = {}
         for trackindex in range(len(getTracks())):
