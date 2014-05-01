@@ -25,6 +25,7 @@ from ControlSurfaceComponents import *
 from ControlSurfaceComponents.PyroEncoderElement import PyroEncoderElement
 from LiveWrappers import *
 from LiveSubscriber import LiveSubscriber
+from LivePublisher import LivePublisher
 
 
 class FissureVR_Pyro(ControlSurface):
@@ -54,7 +55,8 @@ class FissureVR_Pyro(ControlSurface):
         Pyro.core.initClient()
 
         # Create publisher
-        self.publisher = Pyro.core.getProxyForURI("PYRONAME://" + Pyro.constants.EVENTSERVER_NAME)
+        #self.publisher = Pyro.core.getProxyForURI("PYRONAME://" + Pyro.constants.EVENTSERVER_NAME)
+        self.publisher = LivePublisher(self.log_message)
         self.subscriber = LiveSubscriber(self.publisher, self.log_message)
 
     def disconnect(self):

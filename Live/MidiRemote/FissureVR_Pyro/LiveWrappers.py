@@ -8,6 +8,7 @@ import Pyro.errors
 INCOMING_PREFIX = "I_"
 OUTGOING_PREFIX = "O_"
 
+
 class PyroSong():
 
     # Out
@@ -32,11 +33,8 @@ class PyroSong():
                     deviceObj["parameters"].append(paramObj)
                 trackObj["devices"].append(deviceObj)
             song["tracks"].append(trackObj)
-        try:
-            self.publisher.publish(OUTGOING_PREFIX + PyroSong.GET_SONG_LAYOUT, song)
-        except Pyro.errors.ConnectionClosedError:
-            print "Lost connection to event service"
-        return song
+        self.publisher.publish_check(
+            OUTGOING_PREFIX + PyroSong.GET_SONG_LAYOUT, song)
 
 
 class PyroTrack():
@@ -58,20 +56,14 @@ class PyroTrack():
         self.track.add_playing_slot_index_listener(self.playing_slot_index)
 
     def fired_slot_index(self):
-        try:
-            self.publisher.publish(OUTGOING_PREFIX + PyroTrack.FIRED_SLOT_INDEX, {
-                "track": self.track.name,
-                "slotindex": self.track.fired_slot_index})
-        except Pyro.errors.ConnectionClosedError:
-            print "Lost connection to event service"
+        self.publisher.publish_check(OUTGOING_PREFIX + PyroTrack.FIRED_SLOT_INDEX, {
+            "track": self.track.name,
+            "slotindex": self.track.fired_slot_index})
 
     def playing_slot_index(self):
-        try:
-            self.publisher.publish(PyroTrack.PLAYING_SLOT_INDEX, {
-                "track": self.track.name,
-                "slotindex": self.track.playing_slot_index})
-        except Pyro.errors.ConnectionClosedError:
-            print "Lost connection to event service"
+        self.publisher.publish_check(PyroTrack.PLAYING_SLOT_INDEX, {
+            "track": self.track.name,
+            "slotindex": self.track.playing_slot_index})
 
 
 class PyroDevice():
@@ -88,12 +80,9 @@ class PyroDevice():
         self.device.add_parameters_listener(self.parameters_updated)
 
     def parameters_updated(self):
-        try:
-            self.publisher.publish(OUTGOING_PREFIX + PyroDevice.PARAMETERS_UPDATED, {
-                "track": self.track.name,
-                "device": self.device.name})
-        except Pyro.errors.ConnectionClosedError:
-            print "Lost connection to event service"
+        self.publisher.publish_check(OUTGOING_PREFIX + PyroDevice.PARAMETERS_UPDATED, {
+            "track": self.track.name,
+            "device": self.device.name})
 
 
 class PyroDeviceParameter():
@@ -113,11 +102,8 @@ class PyroDeviceParameter():
         return getTrack(self.trackindex).devices[self.deviceindex].parameters[self.parameterindex]
 
     def value_updated(self):
-        try:
-            self.publisher.publish(OUTGOING_PREFIX + PyroDeviceParameter.VALUE_UPDATED, {
-                "trackindex": self.trackindex,
-                "deviceindex": self.deviceindex,
-                "parameterindex": self.parameterindex,
-                "value": self.get_parameter().value})
-        except Pyro.errors.ConnectionClosedError:
-            print "Lost connection to event service"
+        self.publisher.publish_check(OUTGOING_PREFIX + PyroDeviceParameter.VALUE_UPDATED, {
+            "trackindex": self.trackindex,
+            "deviceindex": self.deviceindex,
+            "parameterindex": self.parameterindex,
+            "value": self.get_parameter().value})

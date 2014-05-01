@@ -7,6 +7,7 @@ sys.path.append("/Users/mystfit/Code/zmqshowtime/python")
 from zst_node import ZstNode
 from zst_method import ZstMethod
 from LiveWrappers import *
+from LivePublisher import LivePublisher
 import json
 
 
@@ -27,8 +28,9 @@ class LiveRouter(Subscriber):
         subscribed = [OUTGOING_PREFIX + method for method in subscribed] 
         self.subscribe(subscribed)
 
-        uri = "PYRONAME://" + Pyro.constants.EVENTSERVER_NAME
-        self.publisher = Pyro.core.getProxyForURI(uri)
+        # uri = "PYRONAME://" + Pyro.constants.EVENTSERVER_NAME
+        # self.publisher = Pyro.core.getProxyForURI(uri)
+        self.publisher = LivePublisher()
 
         # Create showtime node
         self.node = ZstNode("LiveNode", stageaddress)
@@ -82,9 +84,6 @@ class LiveRouter(Subscriber):
             print "Outgoing method not registered!"
 
     def incoming(self, message):
-        try:
-            print "Publishing message " + message.name
-            args = message.args if message.args else {}
-            self.publisher.publish(INCOMING_PREFIX + message.name, args)
-        except Exception, e:
-            print e
+        print "Publishing message " + message.name
+        args = message.args if message.args else {}
+        self.publisher.publish_check(INCOMING_PREFIX + message.name, args)
