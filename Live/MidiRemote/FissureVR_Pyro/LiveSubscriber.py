@@ -53,7 +53,8 @@ class LiveSubscriber(Subscriber):
     def process_value_changed_messages(self, queue):
         for parametertuple, value in queue.iteritems():
             try:
-                self.parameters[parametertuple].get_parameter().value = value
+                if parametertuple in self.parameters:
+                    self.parameters[parametertuple].get_parameter().value = value
             except RuntimeError, e:
                 self.log_message(e)
 
@@ -70,13 +71,10 @@ class LiveSubscriber(Subscriber):
     # Incoming method controllers
     # ---------------------------
     def get_song_layout(self, args):
-        try:
-            self.log_message("Requesting song layout...")
-            layout = self.song.get_song_layout(args)
-            self.log_message(layout)
-        except:
-            self.log_message("Song layout failed")
-
+        self.log_message("Requesting song layout...")
+        layout = self.song.get_song_layout(args)
+        self.log_message(layout)
+        
     def fire_clip(self, args):
         try:
             launchClip(int(args["trackindex"]), int(args["clipindex"]))
