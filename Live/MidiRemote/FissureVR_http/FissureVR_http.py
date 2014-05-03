@@ -5,14 +5,15 @@ from _Framework.SceneComponent import SceneComponent
 import urllib
 from urllib2 import Request, urlopen, URLError, HTTPError
 
+import site
+import sys
 
-class FissureVR(ControlSurface):
+class FissureVR_http(ControlSurface):
 
     def __init__(self, c_instance):
         ControlSurface.__init__(self, c_instance)
-
-        self.log_message("FissureVR DEBUG_START")
-        self.log_message("-----------------------------------------------")
+        self.log_message("--------------------------")
+        self.log_message("FissureVR Http DEBUG_START")
         self.cInstance = c_instance
 
         self.ignoreList = ["Grabber", "RH-", "RG-", "RA-", "Device On", "Scale"]
@@ -22,10 +23,13 @@ class FissureVR(ControlSurface):
             self.cInstance.song().add_tracks_listener(self.tracks_updated)
 
         self.add_clipslot_listeners()
+        self.log_message("Python ver: " + sys.version)
+        self.log_message(sys.path)
+        self.log_message(sys.executable)
 
     def disconnect(self):
-        rem_tracks_listener()
-        rem_clipslot_listeners()
+        self.rem_tracks_listener()
+        self.rem_clipslot_listeners()
 
     def add_tracks_listener(self):
         self.rem_tracks_listener()

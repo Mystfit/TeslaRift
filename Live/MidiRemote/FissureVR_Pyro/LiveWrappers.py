@@ -234,7 +234,7 @@ class PyroDeviceParameter():
         self.get_parameter().add_value_listener(self.value_updated)
 
     def get_parameter(self):
-        return getTrack(self.trackindex).devices[self.deviceindex].parameters[self.parameterindex-1]
+        return getTrack(self.trackindex).devices[self.deviceindex].parameters[self.parameterindex]
 
     def value_updated(self):
         self.publisher.publish_check(OUTGOING_PREFIX + PyroDeviceParameter.VALUE_UPDATED, {
