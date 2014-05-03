@@ -16,6 +16,8 @@ public class ClipButtonAttachment : UIAttachment<InstrumentClip> {
 	protected ClipState m_clipState;
 	public ClipState clipState{ get { return m_clipState; }}
 
+	public bool m_toggleClip = false;
+
 	/*
 	 * Owner of this button
 	 */
@@ -49,6 +51,14 @@ public class ClipButtonAttachment : UIAttachment<InstrumentClip> {
 			base.m_exteriorCollider = m_exteriorCollider;
 			return base.exteriorCollider;
 		}
+	}
+
+	public override void Update(){
+		if(m_toggleClip){
+			m_toggleClip = false;
+			musicRef.Play();
+		}
+		base.Update();
 	}
 
 

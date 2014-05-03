@@ -143,6 +143,27 @@ public class InstrumentController : MonoBehaviour {
 
 		return null;
 	}
+
+    /*
+     * Finds a specific parameter by index
+     */
+    public BaseInstrumentParam findParameter(int trackindex, int deviceindex, int parameterindex){
+        foreach (BaseInstrument instrument in m_instruments)
+        {
+            if (instrument.trackIndex == trackindex)
+            {
+                foreach (BaseInstrumentParam param in instrument.paramList)
+                {
+                    if (param.deviceIndex == deviceindex && param.parameterIndex == parameterindex)
+                    {
+                        return param;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
 	
 	
 	/*

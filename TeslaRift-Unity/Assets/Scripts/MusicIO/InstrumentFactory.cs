@@ -6,6 +6,7 @@ using System;
 using MusicIO;
 using UI;
 using System.IO;
+using Newtonsoft.Json;
 
 public class InstrumentFactory : MonoBehaviour {
 
@@ -33,6 +34,35 @@ public class InstrumentFactory : MonoBehaviour {
 		m_source = GlobalConfig.Instance.ProjectSourceName;
 
 		//LoadLiveSessionXml();
+	}
+
+
+	/*
+	 * Creates instruments from Live's song info
+	 */
+	public void LoadLiveSessionJson(string jsonString){
+		Debug.Log (jsonString);
+
+        Dictionary<string, object> song = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonString);
+
+        object[] tracks = JsonConvert.DeserializeObject<object[]>(song["tracks"].ToString());
+        foreach (object trackStr in tracks)
+        {
+            Dictionary<string, object> track = JsonConvert.DeserializeObject<Dictionary<string, object>>(trackStr.ToString());
+            object[] devices = JsonConvert.DeserializeObject<object[]>(track["devices"].ToString());
+
+            foreach(object deviceStr in devices){
+                Dictionary<string, object> device = JsonConvert.DeserializeObject<Dictionary<string, object>>(deviceStr.ToString());
+                object[] parameters = JsonConvert.DeserializeObject<object[]>(device["parameters"].ToString());
+
+				foreach (object parameterStr in parameters)
+                {
+                    Dictionary<string, object> parameter = JsonConvert.DeserializeObject<Dictionary<string, object>>(parameterStr.ToString());
+                    Debug.Log(parameter);
+                }
+            }
+        }
+		
 	}
 	
 	
@@ -66,6 +96,10 @@ public class InstrumentFactory : MonoBehaviour {
 
 		float angleInc = 360 / xmlList.Count;
 		//Tracks are converted to instruments
+		int trackIndex = 0;
+		int deviceIndex = 0;
+		int parameterIndex = 1;
+
 		foreach(XmlNode track in xmlList){	
 			//Get track definition
 			Color color = Utils.intToColor( int.Parse(track.Attributes["color"].Value) );		
@@ -75,8 +109,9 @@ public class InstrumentFactory : MonoBehaviour {
 			if(armedNode != null)
 			   armed = bool.Parse( track.Attributes["arm"].Value );
 			
-			BaseInstrument instrumentDef = new BaseInstrument( m_client, m_source, track.Attributes["name"].Value, color, armed);
-			
+			BaseInstrument instrumentDef = new BaseInstrument( m_client, m_source, track.Attributes["name"].Value, color, armed, trackIndex);
+			trackIndex++;
+
 			//Get devices present in track
 			XmlNodeList deviceList = track.SelectNodes("device"); //device array	
 			foreach(XmlNode device in deviceList){
@@ -96,11 +131,14 @@ public class InstrumentFactory : MonoBehaviour {
 
 						float min = Convert.ToSingle(parameter.Attributes["min"].Value);
 						float max = Convert.ToSingle(parameter.Attributes["max"].Value);
-						instrumentDef.AddParam(name, "float", min, max, deviceName);
+						instrumentDef.AddParam(name, "float", min, max, deviceName, deviceIndex, parameterIndex);
+						parameterIndex++;
 					}
+					parameterIndex = 1;
 				}
-	
+				deviceIndex++;
 			}
+			deviceIndex = 0;
 			
 			//Get clips in track
 			XmlNodeList clipList = track.SelectNodes("clip");

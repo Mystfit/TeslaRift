@@ -6,6 +6,7 @@ using DotNumerics.LinearAlgebra;
 public class GlobalConfig : MonoBehaviour {
 	
 	public bool IsClient = false;
+	public bool ShowtimeEnabled = true;
 	public string ProjectSourceName;
 
 	public static GlobalConfig m_instance;

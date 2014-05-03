@@ -95,20 +95,26 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 		else
 			sliderVal = Utils.Scale(sliderPosVal.y, m_frame.width*-0.5f, m_frame.height*0.5f);
 
-		m_slider.SetSliderVal(sliderVal);
-
-		if(musicRef != null)
-			musicRef.setVal(sliderVal);
+        SetSliderValue(sliderVal);
 	}
+
+
+    public override void Update()
+    {
+        if (musicRef != null)
+            m_slider.SetSliderVal(musicRef.val);
+       
+        base.Update();
+    }
 
 
 	/*
 	 * Sets slider value from an exterior value
 	 */
-	public void SetSliderValue(float val){
-		m_slider.SetSliderVal(val);
-		
+	public void SetSliderValue(float val){		
 		if(musicRef != null)
 			musicRef.setVal(val);
+        else
+            m_slider.SetSliderVal(val);
 	}
 }

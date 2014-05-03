@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityOSC;
@@ -25,15 +26,17 @@ namespace MusicIO
 		string m_owner = "";
 		bool m_playable = false;
 		Color m_color;
+		int m_trackIndex;
 		
 		protected InstrumentClip m_loadedClip;		// Last played clip
 		
-		public BaseInstrument(string instrumentClient, string instrumentOwner, string instrumentName, Color color, bool playable){
+		public BaseInstrument(string instrumentClient, string instrumentOwner, string instrumentName, Color color, bool playable, int trackIndex){
 			m_name = instrumentName;
 			m_owner = instrumentOwner;
 			m_client = instrumentClient;
 			m_color = color;
 			m_playable = playable;
+			m_trackIndex = trackIndex;
 			
 			m_clips = new List<BaseInstrumentParam>();
 			m_params = new List<BaseInstrumentParam>();
@@ -45,6 +48,7 @@ namespace MusicIO
 		public string Client{ get {return m_client; } }
 		public Color color{ get { return m_color; }}
 		public bool playable{ get { return m_playable; }}
+		public int trackIndex{ get{ return m_trackIndex; }}
 		
 		
 		//Reset instrument to default
@@ -69,19 +73,13 @@ namespace MusicIO
 		// Parameter functions
 		//-----------------
 		public void AddParam(string name, string valueType, float min, float max){
-			AddParam(name, valueType, min, max, "");
+			AddParam(name, valueType, min, max, "", -1, -1);
 		}
 
-		public void AddParam(string name, string valueType, float min, float max, string deviceName){
-			if(valueType == "chord"){
-				m_params.Add(new NoteParam(name, this)); 
-			} else if(valueType == "toggle"){
-				m_params.Add(new ToggleParam(name, this));
-			} else{
-				GenericMusicParam param = new GenericMusicParam(name, this, min, max);
-				param.setDeviceName(deviceName);
-				m_params.Add(param); 
-			}
+		public void AddParam(string name, string valueType, float min, float max, string deviceName, int deviceIndex, int parameterIndex){
+			GenericMusicParam param = new GenericMusicParam(name, this, min, max, deviceIndex, parameterIndex);
+			param.setDeviceName(deviceName);
+			m_params.Add(param); 
 		}
 	
 		
@@ -163,7 +161,10 @@ namespace MusicIO
 						string paramName = param.name;
 						if(param.deviceName != "")
 							paramName = param.deviceName + "/" + param.name;
-						
+
+                        if (GlobalConfig.Instance.ShowtimeEnabled)
+                            ZmqMusicNode.Instance.updateInstrumentValue(m_trackIndex, param.deviceIndex, param.parameterIndex, Convert.ToInt32(param.scaledVal));
+
 						addMessageToQueue(paramName, param.val);
 					}
 						

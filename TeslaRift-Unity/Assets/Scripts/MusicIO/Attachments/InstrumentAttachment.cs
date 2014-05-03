@@ -117,10 +117,6 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 		if(m_mode == BaseTool.ToolMode.GRABBING && IsDraggable){
 			StartDragging(HydraController.Instance.GetHand(m_hand));
 		}
-
-		if(m_mode == BaseTool.ToolMode.SECONDARY){
-			m_parameterScroller.SetActive(!m_parameterScroller.activeSelf);
-		}
 	}
 	
 	public override void Gesture_IdleProximity ()
@@ -143,6 +139,9 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 
 	public override void Gesture_PullOut ()
 	{
+		if(m_mode == BaseTool.ToolMode.SECONDARY){
+			m_parameterScroller.SetActive(!m_parameterScroller.activeSelf);
+		}
 		base.Gesture_PullOut ();
 		Gesture_Exit();
 	}

@@ -12,8 +12,8 @@ namespace MusicIO
 	 */
 	public class ToggleParam : BaseInstrumentParam {
 		
-		public ToggleParam(string name, BaseInstrument paramOwner)
-				: base(name, paramOwner, 0.0f, 1.0f)
+		public ToggleParam(string name, BaseInstrument paramOwner, int deviceIndex, int parameterIndex)
+				: base(name, paramOwner, 0.0f, 1.0f, deviceIndex, parameterIndex)
 		{
 			m_generators = new List<BaseGenerator>();
 		}
@@ -46,8 +46,8 @@ namespace MusicIO
 		protected List<Note> m_chordNotes;
 		
 		
-		public NoteParam(string name, BaseInstrument paramOwner)
-				: base(name, paramOwner, 0.0f, 127.0f)
+		public NoteParam(string name, BaseInstrument paramOwner, int deviceIndex, int parameterIndex)
+				: base(name, paramOwner, 0.0f, 127.0f, deviceIndex, parameterIndex)
 		{
 			m_chordNotes = new List<Note>();
 		}
@@ -75,7 +75,7 @@ namespace MusicIO
 			}
 			
 			if(!noteExists){
-				m_chordNotes.Add(new Note(m_name, m_owner, false));
+				m_chordNotes.Add(new Note(m_name, m_owner, false, 0, 0));
 				m_chordNotes[m_chordNotes.Count-1].setNote(notePitch, noteVelocity, index, trigger);			
 			}		
 		}
@@ -104,8 +104,8 @@ namespace MusicIO
 			m_isDirty = true;
 		}
 				
-		public Note(string name, BaseInstrument paramOwner, bool isExpectingReturnMessage)
-				: base(name, paramOwner, 0.0f, 127.0f)
+		public Note(string name, BaseInstrument paramOwner, bool isExpectingReturnMessage, int deviceIndex, int parameterIndex)
+				: base(name, paramOwner, 0.0f, 127.0f, deviceIndex, parameterIndex)
 		{
 		}
 	}
@@ -121,12 +121,15 @@ namespace MusicIO
 		public bool isPlaying;
 		
 		public InstrumentClip(string name, BaseInstrument paramOwner, int clipScene) 
-			: base(name, paramOwner, 0.0f, 1.0f)
+			: base(name, paramOwner, 0.0f, 1.0f, -1, -1)
 		{
 			scene = clipScene;
 		}
 		
 		public void Play(){
+			if(GlobalConfig.Instance.ShowtimeEnabled)
+                ZmqMusicNode.Instance.fireClip(m_owner.trackIndex, this.scene);
+
 			this.owner.addClipMessageToQueue(this.scene);
 		}
 	}
@@ -136,8 +139,8 @@ namespace MusicIO
 	 * Generic parameter
 	 */
 	public class GenericMusicParam : BaseInstrumentParam {
-		public GenericMusicParam(string name, BaseInstrument paramOwner, float min, float max) 
-			: base(name, paramOwner, min, max)
+		public GenericMusicParam(string name, BaseInstrument paramOwner, float min, float max, int deviceIndex, int parameterIndex) 
+			: base(name, paramOwner, min, max, deviceIndex, parameterIndex)
 		{
 		}
 	}
