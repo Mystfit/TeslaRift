@@ -8,7 +8,7 @@ using UI;
 
 namespace RBF{
 	
-	public class RBFSphereTraining : UIAttachment {
+	public class RBFSphereTraining : BaseAttachment {
 
         public RBFSphere owner { 
             get { return m_owner; }
@@ -22,19 +22,33 @@ namespace RBF{
         public Dictionary<RbfPlugAttachment, double> plugValues { get { return m_outputValues; } }
         protected Dictionary<RbfPlugAttachment, double> m_outputValues;
 
-        public void SetPlugValue(RbfPlugAttachment plug, double value)
+        public void StorePlugValue(RbfPlugAttachment plug)
         {
-            if(m_outputValues.Keys.Contains(plug)){
-                m_outputValues[plug] = value;
-            }
+            m_outputValues[plug] = plug.val;
         }
 
         public override void Awake()
         {
-            base.Awake();
+            SetIsDraggable(true);
             m_outputValues = new Dictionary<RbfPlugAttachment, double>();
+            base.Awake();
         }
 
-        
+        public override void Gesture_First()
+        {
+            if(m_mode == BaseTool.ToolMode.GRABBING){
+                m_owner.SetSelectedtraining(this);
+				StartDragging(HydraController.Instance.GetHand(m_hand));
+            }
+            base.Gesture_First();
+        }
+
+		public override void Gesture_Exit ()
+		{
+			base.Gesture_Exit ();
+			if(m_mode == BaseTool.ToolMode.GRABBING){
+				StopDragging();
+			}
+		}
 	}
 }

@@ -7,6 +7,19 @@ public class RbfPlugAttachment : BaseAttachment<BaseInstrumentParam> {
     public RBFSphere m_parentRbf;
     public RotaryAttachment m_rotary;
 
+    public void SetVal(float val) { 
+        m_val = val;
+        m_rotary.setVal(val);
+        setDirty(); 
+    }
+    public float val { get { return m_val; } }
+    protected float m_val;
+
+    public bool isDirty;
+    public void setClean() { isDirty = false; }
+    public void setDirty() { isDirty = true; }
+
+
 	// Use this for initialization
 	void Start () {
 		AddAcceptedDocktype(typeof(SliderAttachment));
@@ -36,14 +49,28 @@ public class RbfPlugAttachment : BaseAttachment<BaseInstrumentParam> {
 
             float val = Mathf.Clamp(pos.z, 0.0f, 1.1f);
 
-            m_rotary.setVal(val);
+            SetVal(val);
         }
 
         base.Gesture_IdleInterior();
     }
+
+    public void setSliderVals(float value)
+    {
+		if(m_childDockables != null){
+	        foreach (SliderAttachment attach in m_childDockables)
+	        {
+	            if (attach.HasMusicRef)
+	            {
+	                attach.musicRef.setVal(value);
+	            }
+	        }
+		}
+		SetVal(value);
+    }
 	
-	// Update is called once per frame
-	void Update () {
-	   
+	void Update () {            
 	}
+
+    
 }

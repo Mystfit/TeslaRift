@@ -131,6 +131,7 @@ public abstract class BaseAttachment : MonoBehaviour{
                 Undock();
                 FixedJoint joint = gameObject.AddComponent<FixedJoint>();
                 joint.connectedBody = target.GetComponent<Rigidbody>();
+				rigidbody.isKinematic = false;
                 HydraController.Instance.SetHandDragging(m_hand, this);
             }
         }
@@ -144,9 +145,9 @@ public abstract class BaseAttachment : MonoBehaviour{
 		    for(int i = 0 ; i < jointList.Length; i++){
 			    Destroy( jointList[i] );
 		    }
-			GetComponent<Rigidbody>().isKinematic = true;
+			rigidbody.isKinematic = true;
 
-		    SetIsDragging(false);
+			SetIsDragging(false);
 	
 		    //If we're a dockable object, we need to find something to slot into.
 		    if(IsDockable) DockIntoClosest();
