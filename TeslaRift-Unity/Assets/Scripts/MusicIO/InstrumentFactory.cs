@@ -85,7 +85,7 @@ public class InstrumentFactory : MonoBehaviour {
 		InstrumentController.Instance.SetSourceName(m_source);
 
 		CreateInstrumentFromXmlList( trackList);
-		CreateInstrumentFromXmlList( returnList);
+		//CreateInstrumentFromXmlList( returnList);
 	}
 	
 	
@@ -95,22 +95,17 @@ public class InstrumentFactory : MonoBehaviour {
 	private void CreateInstrumentFromXmlList(XmlNodeList xmlList){
 
 		float angleInc = 360 / xmlList.Count;
-		//Tracks are converted to instruments
-		int trackIndex = 0;
-		int deviceIndex = 0;
-		int parameterIndex = 1;
 
 		foreach(XmlNode track in xmlList){	
 			//Get track definition
-			Color color = Utils.intToColor( int.Parse(track.Attributes["color"].Value) );		
-
+			Color color = Utils.intToColor( int.Parse(track.Attributes["color"].Value) );
+			int trackIndex = int.Parse(track.Attributes["index"].Value);
 			bool armed = false;
 			XmlNode armedNode = track.Attributes["arm"];
 			if(armedNode != null)
 			   armed = bool.Parse( track.Attributes["arm"].Value );
 			
 			BaseInstrument instrumentDef = new BaseInstrument( m_client, m_source, track.Attributes["name"].Value, color, armed, trackIndex);
-			trackIndex++;
 
 			//Get devices present in track
 			XmlNodeList deviceList = track.SelectNodes("device"); //device array	
@@ -120,6 +115,7 @@ public class InstrumentFactory : MonoBehaviour {
 				   (String)device.Attributes["name"].Value != "Scale"){
 					//Get params in device
 					XmlNodeList paramList = device.SelectNodes("parameter"); //parameter array	
+					int deviceIndex = int.Parse(device.Attributes["index"].Value);
 					
 					foreach(XmlNode parameter in paramList){
 						string name = parameter.Attributes["name"].Value as String;
@@ -128,17 +124,14 @@ public class InstrumentFactory : MonoBehaviour {
 						string deviceName = device.Attributes["name"].Value as String;
 						deviceName = deviceName.Replace("/", "-");
 						deviceName = deviceName.Replace(" ", "_");
+						int parameterIndex =int.Parse(parameter.Attributes["index"].Value);
 
 						float min = Convert.ToSingle(parameter.Attributes["min"].Value);
 						float max = Convert.ToSingle(parameter.Attributes["max"].Value);
 						instrumentDef.AddParam(name, "float", min, max, deviceName, deviceIndex, parameterIndex);
-						parameterIndex++;
 					}
-					parameterIndex = 1;
 				}
-				deviceIndex++;
 			}
-			deviceIndex = 0;
 			
 			//Get clips in track
 			XmlNodeList clipList = track.SelectNodes("clip");

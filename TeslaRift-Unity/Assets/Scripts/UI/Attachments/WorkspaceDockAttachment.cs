@@ -10,7 +10,7 @@ public class WorkspaceDockAttachment : BaseAttachment {
 	// Use this for initialization
 	public override void Start () {
 		SetAsDock(true);
-		AddAcceptedDocktype<InstrumentAttachment>();
+        AddAcceptedDocktype(typeof(InstrumentAttachment));
 	}
 
 	public override void AddDockableAttachment (BaseAttachment attach)

@@ -14,6 +14,7 @@ namespace UI
 		public GameObject sliderPrefab;
 		public GameObject framePrefab;
 		public GameObject rbfTrainingPrefab;
+        public GameObject rbfSphereTrainingPrefab;
 		public GameObject clipButtonPrefab;
 		public GameObject musicGroupPrefab;
 		public GameObject instrumentIconPrefab;
@@ -29,6 +30,24 @@ namespace UI
 		void Awake(){
 			m_instance = this;
 		}
+
+
+        public static BaseAttachment CreateGhostDragger(BaseAttachment attach)
+        {
+            BaseAttachment ghostAttach = null;
+            if(attach.GetType() == typeof(SliderAttachment)){
+                SliderAttachment slider = attach as SliderAttachment;
+                ghostAttach = UIFactory.CreateSlider(slider.musicRef, UIFrame.AnchorLocation.BOTTOM_LEFT);
+            }
+
+            ghostAttach.transform.parent = attach.transform;
+            ghostAttach.transform.position = attach.transform.position;
+            ghostAttach.transform.localScale = attach.transform.localScale;
+            ghostAttach.transform.parent = null;
+            ghostAttach.SetTransient(true);
+
+            return ghostAttach;
+        }
 
 
 		/*
@@ -74,6 +93,20 @@ namespace UI
 
 			return attach;
 		}
+
+
+        /*
+		 * RBF Training point
+		 * A draggable RBF training point for the sphere RBF ccontroller
+		 */
+        public static RBF.RBFSphereTraining CreateRBFSphereTraining()
+        {
+            GameObject training = Instantiate(Instance.rbfSphereTrainingPrefab) as GameObject;
+            RBF.RBFSphereTraining attach = training.GetComponent<RBF.RBFSphereTraining>();
+
+            return attach;
+        }
+
 
 
 		/*

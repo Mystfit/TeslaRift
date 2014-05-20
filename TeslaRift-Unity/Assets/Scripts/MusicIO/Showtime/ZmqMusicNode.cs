@@ -39,18 +39,34 @@ public class ZmqMusicNode : MonoBehaviour {
 
         //Subscribe to value updates
         m_node.subscribeToMethod(m_livePeer.methods["value_updated"], instrumentValueUpdated);
+        //m_node.subscribeToMethod(m_livePeer.methods["value_updated"], clipFired);
 	}
 
+    /* 
+     * Incoming methods
+     */
     public object instrumentValueUpdated(ZstMethod methodData)
     {
         Debug.Log(methodData.output);
         Dictionary<string, object> output = JsonConvert.DeserializeObject<Dictionary<string, object>>(methodData.output.ToString());
-        BaseInstrumentParam param = InstrumentController.Instance.findParameter(Convert.ToInt32(output["trackindex"]), Convert.ToInt32(output["deviceindex"]), Convert.ToInt32(output["parameterindex"]));
+        BaseInstrumentParam param = InstrumentController.Instance.FindParameter(Convert.ToInt32(output["trackindex"]), Convert.ToInt32(output["deviceindex"]), Convert.ToInt32(output["parameterindex"]));
         if (param != null)
             param.setScaledVal(Convert.ToSingle(output["value"]), true);
         return null;
     }
 
+    public object clipFired(ZstMethod methodData)
+    {
+        Debug.Log(methodData.output);
+        Dictionary<string, object> output = JsonConvert.DeserializeObject<Dictionary<string, object>>(methodData.output.ToString());
+        InstrumentClip clip = InstrumentController.Instance.FindClip(Convert.ToInt32(output["trackindex"]), Convert.ToInt32(output["clipindex"]));
+        clip.setScaledVal(Convert.ToInt32(output["value"]));
+        return null;
+    }
+
+    /* 
+    * Outgoing methods
+    */
 	public void updateInstrumentValue(int trackIndex, int deviceIndex, int parameterIndex, int value){
 		m_node.updateRemoteMethod(
 			m_livePeer.methods["set_value"], 
@@ -71,13 +87,9 @@ public class ZmqMusicNode : MonoBehaviour {
 		});
 	}
 
-	
-	// Update is called once per frame
-	void Update () {
-
-	}
-
-
+    /*
+     * Exit and cleanup
+     */
 	public void OnApplicationQuit(){
 		bool result = m_node.close();
 		Debug.Log("Network cleanup: " + result);

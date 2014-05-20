@@ -121,7 +121,7 @@ namespace MusicIO
 		public bool isPlaying;
 		
 		public InstrumentClip(string name, BaseInstrument paramOwner, int clipScene) 
-			: base(name, paramOwner, 0.0f, 1.0f, -1, -1)
+			: base(name, paramOwner, 0, 127, -1, -1)
 		{
 			scene = clipScene;
 		}

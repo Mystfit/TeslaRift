@@ -15,6 +15,8 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 	// Use this for initialization
 	public override void Awake () {
 		base.Awake();
+		SetIsDraggable(true);
+		SetIsDockable(true);
 		m_slider = GetComponent<BarSlider>();
 		m_frame = GetComponent<UIFrame>();
 
@@ -56,6 +58,19 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 	/*
 	 * Gesture overrides
 	 */
+    public override void Gesture_First()
+    {
+        if(mode == BaseTool.ToolMode.GRABBING){
+			if(!HydraController.Instance.IsHandDragging(m_hand)){
+	            //Clone parameter here
+                SliderAttachment attach = UIFactory.CreateGhostDragger(this) as SliderAttachment;
+	            attach.StartDragging(HydraController.Instance.GetHand(m_hand));
+			}
+        }
+
+        base.Gesture_First();
+    }
+
 	public override void Gesture_IdleInterior ()
 	{
 		base.Gesture_IdleInterior ();
@@ -73,10 +88,27 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 	{
 		if(m_owner != null)
 			m_owner.SlidersUpdated();
+
+        if (IsTransient && IsDragging)
+        {
+            StopDragging();
+        }
+
 		base.Gesture_Exit ();
 	}
 
-
+	public override void Floating ()
+	{
+		if (IsTransient)
+		{
+			if (DockedInto == null)
+			{
+				GameObject.Destroy(gameObject);
+			}
+		}
+	}
+	
+	
 	/*
 	 * Sets the value of the slider(0,1) based on location inside the slider frame
 	 */

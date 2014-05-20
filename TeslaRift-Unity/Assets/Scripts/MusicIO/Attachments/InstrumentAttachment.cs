@@ -114,8 +114,8 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 		base.Gesture_First ();
 
 		//Make sure to start dragging the object if we're using the drag gesture
-		if(m_mode == BaseTool.ToolMode.GRABBING && IsDraggable){
-			StartDragging(HydraController.Instance.GetHand(m_hand));
+		if(m_mode == BaseTool.ToolMode.GRABBING){
+            StartDragging(HydraController.Instance.GetHand(m_hand));
 		}
 	}
 	
@@ -127,7 +127,7 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 	public override void Gesture_Exit ()
 	{
 		base.Gesture_Exit ();
-		if(m_mode == BaseTool.ToolMode.GRABBING && IsDragging){
+		if(m_mode == BaseTool.ToolMode.GRABBING){
 			StopDragging();
 		}
 	}

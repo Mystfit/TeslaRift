@@ -256,8 +256,11 @@ public class InstrumentGestureTool : BaseTool {
 	{		
 		if(m_attachment != null){
 			LeavingProximity();
+			if(HydraController.Instance.IsHandDragging(m_hand))
+				HydraController.Instance.GetHandDragging(m_hand).StopDragging();
 			m_attachment.Gesture_Exit();
 		}
+        
 		m_heldObject = null;
 		m_attachment = null;
 	}

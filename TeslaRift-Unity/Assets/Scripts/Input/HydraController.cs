@@ -36,6 +36,8 @@ public class HydraController : MonoBehaviour {
 	protected Vector3 m_rightHandVelocity;
 	private Vector3 m_lastLeftHandPos;
 	private Vector3 m_lastRightHandPos;
+	protected BaseAttachment m_leftHandDragTarget;
+	protected BaseAttachment m_rightHandDragTarget;
 
 	public Transform m_leftHandTip;
 	public Transform m_rightHandTip;
@@ -115,6 +117,37 @@ public class HydraController : MonoBehaviour {
 		return m_rightHandVelocity;
 	}
 
+
+    /*
+     * Gets sets hand dragging state
+     */
+    public BaseAttachment IsHandDragging(BaseTool.ToolHand hand)
+    {
+        if (hand == BaseTool.ToolHand.LEFT)
+		{
+			if(m_leftHandDragTarget != null)
+				return m_leftHandDragTarget;
+		}
+        
+		if(m_rightHandDragTarget != null)
+			return m_rightHandDragTarget;
+
+		return null;
+    }
+
+    public void SetHandDragging(BaseTool.ToolHand hand, BaseAttachment target)
+    {
+        if (hand == BaseTool.ToolHand.LEFT)
+			m_leftHandDragTarget = target;
+		m_rightHandDragTarget = target;
+    }
+
+	public BaseAttachment GetHandDragging(BaseTool.ToolHand hand)
+	{
+		if (hand == BaseTool.ToolHand.LEFT)
+			return m_leftHandDragTarget;
+		return m_rightHandDragTarget;
+	}
 
 	/*
 	 * Gets the OVR performer
@@ -408,6 +441,7 @@ public class HydraController : MonoBehaviour {
 			openHand )
 		{
 			m_toolControlRef.PopTool(hand);
+            m_glove.SetCollider(m_glove.activeGesture);
 		}
 	}
 	

@@ -13,7 +13,13 @@ Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\Assemb
 Loading C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
 Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\DotNumerics.dll (this message is harmless)
 Loading C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\DotNumerics.dll into Unity Child Domain
-- Completed reload, in  0.045 seconds
+Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\NetMQA.dll (this message is harmless)
+Loading C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\NetMQA.dll into Unity Child Domain
+Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\Newtonsoft.Json.dll (this message is harmless)
+Loading C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\Newtonsoft.Json.dll into Unity Child Domain
+Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\ZstShowtime.dll (this message is harmless)
+Loading C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\ZstShowtime.dll into Unity Child Domain
+- Completed reload, in  0.044 seconds
 desktop: 2560x1440 59Hz; virtual: 2560x1440 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
@@ -22,143 +28,19 @@ Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\System
 Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\System.Core.dll (this message is harmless)
 The referenced script on this Behaviour is missing!
  
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Mono/MonoBehaviour.cpp Line: 1699)
+(Filename:  Line: 1699)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/sharedassets0.assets' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 8756964 > 8756960]
+[Position out of bounds! 10537640 > 10537636]
  
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
+(Filename:  Line: 276)
 
 The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/sharedassets0.assets' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 8757012 > 8757008]
+[Position out of bounds! 10537692 > 10537688]
  
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/sharedassets0.assets' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 8757045 > 8757044]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/sharedassets0.assets' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 8757188 > 8757184]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/sharedassets0.assets' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 8757220 > 8757216]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/sharedassets0.assets' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 8757244 > 8757240]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/sharedassets0.assets' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 8758509 > 8758508]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/sharedassets0.assets' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 8758756 > 8758752]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/sharedassets0.assets' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 8758964 > 8758960]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/sharedassets0.assets' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 8759112 > 8759108]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 116936 > 116932]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 117048 > 117044]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 117208 > 117204]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
+(Filename:  Line: 276)
 
 The referenced script on this Behaviour is missing!
  
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Mono/MonoBehaviour.cpp Line: 1699)
+(Filename:  Line: 1699)
 
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 117520 > 117516]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 117824 > 117820]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 117904 > 117900]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 118104 > 118100]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 118208 > 118204]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The referenced script on this Behaviour is missing!
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Mono/MonoBehaviour.cpp Line: 1699)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 119760 > 119756]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The referenced script on this Behaviour is missing!
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Mono/MonoBehaviour.cpp Line: 1699)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 119928 > 119924]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 120048 > 120044]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The referenced script on this Behaviour is missing!
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Mono/MonoBehaviour.cpp Line: 1699)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 123460 > 123456]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 123532 > 123528]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 269)
-
-The file 'C:/Code/TeslaRift/TeslaRift-Unity/fissure_Data/mainData' is corrupted! Remove it and launch unity again!
-[Position out of bounds! 123532 > 123528]
- 
-(Filename: C:/BuildAgent/work/d3d49558e4d408f4/Runtime/Serialize/CacheWrap.cpp Line: 276)
-
-Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\fissure_Data\Managed\System.Configuration.dll (this message is harmless)
-Waiting for finish

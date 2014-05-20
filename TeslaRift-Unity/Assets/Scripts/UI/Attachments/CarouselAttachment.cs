@@ -12,7 +12,7 @@ public class CarouselAttachment : BaseAttachment {
 	public override void Awake() {
 		base.Awake();
 		SetAsDock(true);
-		AddAcceptedDocktype<InstrumentAttachment>();
+		AddAcceptedDocktype(typeof(InstrumentAttachment));
 	}
 
 	/*

@@ -194,7 +194,7 @@ public class GloveController : MonoBehaviour {
 						m_activeGestureDown = m_activeGesture;
 						activeGestureVelocity = m_gestureVelocity[activeIndex];
 						SetDirty();
-						SetCollider(activeIndex);
+						//SetCollider(activeIndex);
 					} else {
 						m_activeGestureDown = "";
 						SetClean();
@@ -215,9 +215,12 @@ public class GloveController : MonoBehaviour {
 	 * Collider center/size for different gestures
 	 */
 	public void SetCollider(int gestureIndex){
+		SetCollider(m_gestures[gestureIndex]);
+	}
+
+	public void SetCollider(string gesture){
 		BoxCollider col = collider as BoxCollider;
-		string ges = m_gestures[gestureIndex];
-		switch(ges){
+		switch(gesture){
 		case "IDLE_HAND":
 			col.center  = new Vector3(0.0f, 0.01f, 0.06f);
 			col.size = new Vector3(0.11f, -0.03f, 0.11f);

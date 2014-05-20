@@ -8,13 +8,15 @@ public class BaseTool : MonoBehaviour {
 	protected HydraController m_hydraRef = null;
 	protected InstrumentController m_instrumentControlRef = null;
 	protected ToolController m_toolControlRef = null;
-	
+
+	public GloveController glove{ get { return m_gloveController; }}
+	protected GloveController m_gloveController = null;
+
 	//For inspector previewing of active states
 	public HandState activeGestureState;
 	public ToolMode toolMode;
 
-
-	
+		
 	//Variables
 	protected List<object> m_targets = null;
 	protected BaseInstrument m_instrumentRef = null;
@@ -42,6 +44,8 @@ public class BaseTool : MonoBehaviour {
 		m_instrumentControlRef = InstrumentController.Instance;
 		m_toolControlRef = ToolController.Instance;
 		m_toolHandState = BaseTool.HandState.SEARCHING;
+		m_gloveController = GetComponent<GloveController>();
+
 		m_targets = new List<object>();	
 		
 	}
@@ -63,6 +67,11 @@ public class BaseTool : MonoBehaviour {
 	public virtual void Init(ToolHand hand, BaseTool.ToolMode mode){
 		m_hand = hand;
 		m_mode = mode;
+
+		//Set collider model for hand based on active gesture
+		glove.SetCollider(glove.activeGesture);
+
+		//Trigger the transition
 		TransitionIn();
 	}
 	

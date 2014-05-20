@@ -5,10 +5,11 @@ C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\NetMQA.dll
 C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\Newtonsoft.Json.dll
 C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\UnityEditor.dll
 C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\UnityEngine.dll
-C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\ZstShowtime.dll
 C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\Mono.Cecil.dll
 C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\nunit.framework.dll
 C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\Unity.DataContract.dll
 C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\ICSharpCode.NRefactory.dll
 C:\Code\TeslaRift\TeslaRift-Unity\obj\Debug\Assembly-CSharp.dll
 C:\Code\TeslaRift\TeslaRift-Unity\obj\Debug\Assembly-CSharp.pdb
+C:\Code\TeslaRift\TeslaRift-Unity\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
+C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\ZstShowtime.dll

@@ -57,6 +57,13 @@ public abstract class BaseAttachment : MonoBehaviour{
 		boxExt.center = position;
 	}
 
+    /*
+     * Transient states
+     */
+    public void SetTransient(bool state) { m_isTransient = state; }
+    public bool IsTransient { get { return m_isTransient; } }
+    protected bool m_isTransient;
+
 
 	/*
 	 * Music reference state
@@ -115,23 +122,36 @@ public abstract class BaseAttachment : MonoBehaviour{
 	}
 
 	public virtual void StartDragging(GameObject target){
-		if(IsDragging) StopDragging();
-		SetIsDragging(true);
-		Undock();
-		FixedJoint joint = gameObject.AddComponent<FixedJoint>();
-		joint.connectedBody = target.GetComponent<Rigidbody>();
+        if (!HydraController.Instance.IsHandDragging(m_hand))
+        {
+            if (IsDraggable)
+            {
+                if (IsDragging) StopDragging();
+                SetIsDragging(true);
+                Undock();
+                FixedJoint joint = gameObject.AddComponent<FixedJoint>();
+                joint.connectedBody = target.GetComponent<Rigidbody>();
+                HydraController.Instance.SetHandDragging(m_hand, this);
+            }
+        }
 	}
 
 
 	public virtual void StopDragging(){
-		FixedJoint[] jointList = gameObject.GetComponents<FixedJoint>(); 
-		for(int i = 0 ; i < jointList.Length; i++){
-			Destroy( jointList[i] );
-		}
-		SetIsDragging(false);
+        if (IsDragging)
+        {
+		    FixedJoint[] jointList = gameObject.GetComponents<FixedJoint>(); 
+		    for(int i = 0 ; i < jointList.Length; i++){
+			    Destroy( jointList[i] );
+		    }
+			GetComponent<Rigidbody>().isKinematic = true;
+
+		    SetIsDragging(false);
 	
-		//If we're a dockable object, we need to find something to slot into.
-		if(IsDockable) DockIntoClosest();
+		    //If we're a dockable object, we need to find something to slot into.
+		    if(IsDockable) DockIntoClosest();
+            HydraController.Instance.SetHandDragging(m_hand, null);
+        }
 	}
 
 
@@ -150,6 +170,7 @@ public abstract class BaseAttachment : MonoBehaviour{
 	 * Docked children / owner accessors
 	 */
 	protected BaseAttachment m_dockedInto;
+    protected BaseAttachment m_dockedIntoLast;
 	public BaseAttachment DockedInto{ get { return m_dockedInto; }}
 	protected List<BaseAttachment> m_childDockables;
 	public List<BaseAttachment> DockedChildren{ get { return m_childDockables; }}
@@ -159,8 +180,10 @@ public abstract class BaseAttachment : MonoBehaviour{
 	 * Dockable object modifiers
 	 */
 	public virtual void DockInto(BaseAttachment attach){
+
 		attach.AddDockableAttachment(this);
-		m_dockedInto = attach; 
+		m_dockedInto = attach;
+        m_dockedIntoLast = attach;
 		if(IsDraggable) SetIsDragging(false);
 	}
 	public virtual void Undock(){
@@ -189,9 +212,17 @@ public abstract class BaseAttachment : MonoBehaviour{
 				}
 			}
 		}
-		
-		DockInto(closestValidDock);	
+
+        if (IsInDockingRange(closestValidDock.transform.position, closestValidDock.dockingRange))
+            DockInto(closestValidDock);
+        else
+            Floating();
 	}
+
+    public virtual void Floating()
+    {
+        DockInto(m_dockedIntoLast);
+    }
 
 
 	/*
@@ -216,7 +247,7 @@ public abstract class BaseAttachment : MonoBehaviour{
 	 * Dock type / distance checking
 	 */
 	protected List<System.Type> m_acceptedTypes;
-	public void AddAcceptedDocktype<T>(){m_acceptedTypes.Add(typeof(T));}
+	public void AddAcceptedDocktype(System.Type type){m_acceptedTypes.Add(type);}
 	public bool DockAcceptsType(System.Type type){
 		foreach(System.Type acceptedType in m_acceptedTypes){
 			if(type == acceptedType)
@@ -224,9 +255,10 @@ public abstract class BaseAttachment : MonoBehaviour{
 		}
 		return false;
 	}
-	public float m_dockingRange = 1.5f;
-	public virtual bool IsInDockingRange(Vector3 position){
-		return (Vector3.Distance(transform.position, position) < m_dockingRange) ? true : false;
+    
+	public float dockingRange = 1.5f;
+	public virtual bool IsInDockingRange(Vector3 position, float range){
+        return (Vector3.Distance(transform.position, position) < range) ? true : false;
 	}
 
 	/*

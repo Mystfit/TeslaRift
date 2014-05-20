@@ -147,7 +147,7 @@ public class InstrumentController : MonoBehaviour {
     /*
      * Finds a specific parameter by index
      */
-    public BaseInstrumentParam findParameter(int trackindex, int deviceindex, int parameterindex){
+    public BaseInstrumentParam FindParameter(int trackindex, int deviceindex, int parameterindex){
         foreach (BaseInstrument instrument in m_instruments)
         {
             if (instrument.trackIndex == trackindex)
@@ -161,7 +161,27 @@ public class InstrumentController : MonoBehaviour {
                 }
             }
         }
+        return null;
+    }
 
+    /*
+     * Find a specific clip by index
+     */
+    public InstrumentClip FindClip(int trackindex, int clipindex)
+    {
+        foreach (BaseInstrument instrument in m_instruments)
+        {
+            if (instrument.trackIndex == trackindex)
+            {
+                foreach (InstrumentClip clip in instrument.clipList)
+                {
+                    if (clip.scene == clipindex)
+                    {
+                        return clip;
+                    }
+                }
+            }
+        }
         return null;
     }
 	
