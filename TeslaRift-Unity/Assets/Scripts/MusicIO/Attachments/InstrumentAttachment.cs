@@ -16,55 +16,27 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 			BaseTool.ToolMode.GRABBING
 		};
 		base.Awake ();
+
+		//Set the collision state
+		SetCollideable(true);
 		SetIsDockable(true);
 		SetIsDraggable(true);
 	}
 
-	public override Collider interiorCollider {
-		get {
-			if(m_interiorCollider == null){
-				m_interiorCollider = transform.Find("AreaTrigger").Find("interiorTrigger").GetComponent<HandProximityTrigger>();
-			}
-			return base.interiorCollider;
-		}
-	}
-	
-	public override Collider exteriorCollider {
-		get {
-			if(m_exteriorCollider == null){
-				m_exteriorCollider = transform.Find("AreaTrigger").Find("proximityTrigger").GetComponent<HandProximityTrigger>();
-			}
-			return base.exteriorCollider;
-		}
-	}
-
 	public void InitInstrumentControls(){
 		if(musicRef  != null){
-			//Create clip buttons
-//			GameObject clipHolder = new GameObject();
-//			clipHolder.transform.parent = transform;
-//			clipHolder.transform.localPosition = Vector3.zero;
-//			clipHolder.name = "clipHolder";
-//
-//			for(int i = 0; i < musicRef.clipList.Count; i++){
-//				InstrumentClip clip = musicRef.clipList[i] as InstrumentClip;
-//				ClipButtonAttachment clipButton = UIFactory.CreateClipButton(clip, UIFrame.AnchorLocation.CENTER);
-//				clipButton.transform.parent = clipHolder.transform;
-//				clipButton.transform.localPosition = new Vector3(0.0f, i * 0.2f, 0.0f);
-//			}
-
 			//Create clipbuttons
 			ParamScrollerAttachment clipScroller = UIFactory.CreateParamScroller();
+            clipScroller.AddAcceptedDocktype(typeof(ClipButtonAttachment));
 			clipScroller.transform.parent = transform;
 			clipScroller.transform.localPosition = Vector3.zero;
 			
 			foreach(InstrumentClip clip in musicRef.clipList){ 
 				ClipButtonAttachment clipButton = UIFactory.CreateClipButton(clip, UIFrame.AnchorLocation.BOTTOM_LEFT);
-				clipScroller.AddControl(clipButton);
+                clipButton.transform.localScale = UIFactory.SliderScale;
+                clipButton.DockInto(clipScroller);
 			}
 			
-		
-
 			//Create param sliders
 			ParamScrollerAttachment paramScroller = UIFactory.CreateParamScroller();
 			paramScroller.transform.parent = transform;
@@ -72,15 +44,15 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 
 			foreach(BaseInstrumentParam param in musicRef.paramList){ 
 				SliderAttachment slider = UIFactory.CreateSlider(param, UIFrame.AnchorLocation.BOTTOM_LEFT);
-				paramScroller.AddControl(slider);
+                slider.transform.localScale = UIFactory.SliderScale;
+                slider.DockInto(paramScroller);
 			}
-
-
+                
 			//Set clip scroller scale
-			clipScroller.transform.localScale = UIFactory.SliderScale;
+			//clipScroller.transform.localScale = UIFactory.SliderScale;
 
 			//Set param scroller scale
-			paramScroller.transform.localScale = UIFactory.SliderScale;
+			//paramScroller.transform.localScale = UIFactory.SliderScale;
 
 			//Hide controls
 			clipScroller.SetInactive();

@@ -64,9 +64,6 @@ namespace UI
 			SliderAttachment attach = slider.GetComponent<SliderAttachment>();
 			attach.Init(param);
 			
-			//Wake up colliders
-			object temp = attach.interiorCollider; temp = attach.exteriorCollider;
-			
 			return attach;
 		}
 
@@ -118,10 +115,7 @@ namespace UI
 			
 			ClipButtonAttachment attach = button.GetComponent<ClipButtonAttachment>();
 			attach.Init(clip);
-			
-			//Wake up colliders
-			object temp = attach.interiorCollider; temp = attach.exteriorCollider;
-			
+
 			UIFrame frame = button.GetComponent<UIFrame>();
 			frame.SetAnchor(anchor);
 
@@ -160,9 +154,6 @@ namespace UI
 		public static ParamScrollerAttachment CreateParamScroller(){
 			GameObject paramScroller = Instantiate(Instance.paramScrollerPrefab) as GameObject;
 			ParamScrollerAttachment attach = paramScroller.GetComponent<ParamScrollerAttachment>();
-
-			//Wake up colliders
-			object temp = attach.interiorCollider; temp = attach.exteriorCollider;
 
 			return attach;
 		}
@@ -214,9 +205,6 @@ namespace UI
 			//Init instrumentRef and GUI controls
 			attach.Init(instrument);
 			attach.InitInstrumentControls();
-
-			//Wake up colliders
-			object temp = attach.interiorCollider; temp = attach.exteriorCollider;
 			
 			//Set listener prefixes
 			instrumentGame.GetComponent<InstrumentListener>().SetPrefixedOSCAddresses(instrument.Name);		//Set instrument prefixes for OSC listener

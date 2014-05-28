@@ -14,6 +14,7 @@ public class RbfPlugAttachment : BaseAttachment<BaseInstrumentParam> {
     }
     public float val { get { return m_val; } }
     protected float m_val;
+    protected float m_lastAngle;
 
     public bool isDirty;
     public void setClean() { isDirty = false; }
@@ -25,14 +26,19 @@ public class RbfPlugAttachment : BaseAttachment<BaseInstrumentParam> {
 		AddAcceptedDocktype(typeof(SliderAttachment));
 	}
 
-	public override void AddDockableAttachment (BaseAttachment attach)
+	public override bool AddDockableAttachment (BaseAttachment attach)
 	{
-        animation.Play("drawer_out");
-		SliderAttachment slider = attach as SliderAttachment;
-        iTween.MoveTo(slider.gameObject, iTween.Hash("position", transform.position, "time", 0.5f));
-        iTween.RotateTo(slider.gameObject, iTween.Hash("rotation", transform.rotation, "time", 0.5f));
+        if (base.AddDockableAttachment(attach))
+        {
 
-		base.AddDockableAttachment (attach);
+            animation.Play("drawer_out");
+            SliderAttachment slider = attach as SliderAttachment;
+            iTween.MoveTo(slider.gameObject, iTween.Hash("position", transform.position, "time", 0.5f));
+            iTween.RotateTo(slider.gameObject, iTween.Hash("rotation", transform.rotation, "time", 0.5f));
+            return true;
+        }
+        return false;
+
 	}
 
     public override void Gesture_First()
@@ -40,16 +46,25 @@ public class RbfPlugAttachment : BaseAttachment<BaseInstrumentParam> {
         base.Gesture_First();
     }
 
+    public override void Gesture_Exit()
+    {
+        m_lastAngle = 0.0f;
+        base.Gesture_Exit();
+    }
+
     public override void Gesture_IdleInterior()
     {
         if (m_mode == BaseTool.ToolMode.SECONDARY)
         {
             Vector3 pos = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition( m_hand ));
-            pos.y = 0.0f;
-
-            float val = Mathf.Clamp(pos.z, 0.0f, 1.1f);
-
-            SetVal(val);
+            pos.z = 0.0f;
+            float angle = Mathf.Atan2(pos.y, pos.x);
+            angle = (angle / Mathf.PI * 180.0f) + (angle > 0 ? 0 : 360);
+            float delta = m_lastAngle - angle;
+            float newVal = m_val - (delta/360.0f);
+            Debug.Log(newVal);
+            SetVal(Utils.Clamp(newVal, 0.0f, 1.0f));
+            m_lastAngle = angle;
         }
 
         base.Gesture_IdleInterior();

@@ -18,12 +18,16 @@ public class CarouselAttachment : BaseAttachment {
 	/*
 	 * Adds an instrument to the carousel
 	 */
-	public override void AddDockableAttachment(BaseAttachment attach){
-		base.AddDockableAttachment(attach);
-		attach.transform.parent = transform;
-		attach.rigidbody.velocity = Vector3.zero;
-		attach.rigidbody.isKinematic = true;
-		PlaceObjects();
+	public override bool AddDockableAttachment(BaseAttachment attach){
+        if (base.AddDockableAttachment(attach))
+        {
+            attach.transform.parent = transform;
+            attach.rigidbody.velocity = Vector3.zero;
+            attach.rigidbody.isKinematic = true;
+            PlaceObjects();
+            return true;
+        }
+        return false;
 	}
 
 	public override void RemoveDockableAttachment (BaseAttachment attach)

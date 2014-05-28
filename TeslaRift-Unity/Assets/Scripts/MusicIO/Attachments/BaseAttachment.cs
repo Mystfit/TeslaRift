@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 //using UnityEditor;
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using MusicIO;
 
 public abstract class BaseAttachment : MonoBehaviour{
 
-	public virtual void Awake(){ m_acceptedTypes = new List<System.Type>(); }
+	public virtual void Awake(){ 
+		m_acceptedTypes = new List<System.Type>(); 
+		SetCollideable(m_doesCollide);
+	}
 	public virtual void Start(){}
 	public virtual void Update(){}
 
@@ -36,26 +40,46 @@ public abstract class BaseAttachment : MonoBehaviour{
 	/*
 	 * Collider references
 	 */
-	protected HandProximityTrigger m_interiorCollider;
-	protected HandProximityTrigger m_exteriorCollider;
-	public virtual Collider interiorCollider{ get {return m_interiorCollider.collider; }}
-	public virtual Collider exteriorCollider{ get {return m_exteriorCollider.collider; }}
+	public bool m_doesCollide = false;
+	public bool IsCollideable{ get { return m_doesCollide; }}
+	public void SetCollideable(bool state){ 
+		m_doesCollide = state; 
+		if(m_doesCollide){
+			if(m_interiorTrigger == null || m_proximityTrigger == null){
+				Transform area = transform.Find("areaTrigger");
+				Transform interior = area.Find("interiorTrigger");
+				Transform proximity = area.Find("proximityTrigger");
+				m_interiorTrigger = interior.GetComponent<HandProximityTrigger>();
+				m_proximityTrigger = proximity.GetComponent<HandProximityTrigger>();
+			}
+		}
+	}
+	protected HandProximityTrigger m_interiorTrigger;
+	protected HandProximityTrigger m_proximityTrigger;
+    public HandProximityTrigger interiorTrigger { get { return m_interiorTrigger; } }
+    public HandProximityTrigger proximityTrigger { get { return m_proximityTrigger; } }
+	public virtual Collider interiorCollider{ get {return m_interiorTrigger.collider; }}
+	public virtual Collider proximityCollider{ get {return m_proximityTrigger.collider; }}
 
 
 	/*
-	 * Box collider updaters
+	 * Collider size updaters
 	 */
-	public void UpdateBoxColliders(Vector3 position, float width, float height, float depth){
-		UpdateBoxColliders(position, width ,height, depth, 1.2f);
-	}
-	public void UpdateBoxColliders(Vector3 position, float width, float height, float depth, float extMultiplier){
-		BoxCollider boxIn = m_interiorCollider.collider as BoxCollider;
-		BoxCollider boxExt = m_exteriorCollider.collider as BoxCollider;
-		boxIn.size = new Vector3(width, height, depth);
-		boxIn.center = position;
-		boxExt.size = new Vector3(width * extMultiplier, height * extMultiplier, depth * extMultiplier);
-		boxExt.center = position;
-	}
+    public void UpdateColliders(Vector3 position, Vector3 size)
+    {
+        UpdateColliders(position, size, 1.2f);
+    }
+
+    public void UpdateColliders(Vector3 position, float size)
+    {
+        UpdateColliders(position, new Vector3(size, size, size), 1.2f);
+    }
+
+    public void UpdateColliders(Vector3 position, Vector3 size, float extMultiplier)
+    {
+        m_interiorTrigger.UpdateCollider(position, size);
+        m_proximityTrigger.UpdateCollider(position, size * extMultiplier);
+    }
 
     /*
      * Transient states
@@ -229,18 +253,22 @@ public abstract class BaseAttachment : MonoBehaviour{
 	/*
 	 * Dock modifiers
 	 */
-	public virtual void AddDockableAttachment(BaseAttachment attach){
+	public virtual bool AddDockableAttachment(BaseAttachment attach){
 		if(m_childDockables == null)
 			m_childDockables = new List<BaseAttachment>();
 
 		if(DockAcceptsType(attach.GetType())){
 			m_childDockables.Add(attach);
+            return true;
 		} else {
 			Debug.LogError(this + " can't dock with a " + attach.GetType());
 		}
+        return false;
 	}
 	public virtual void RemoveDockableAttachment(BaseAttachment attach){
-		m_childDockables.Remove(attach);
+		while(m_childDockables.Contains(attach))
+			m_childDockables.Remove(attach);	
+		attach.transform.parent = null;
 	}
 
 

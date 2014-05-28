@@ -5,23 +5,36 @@ public class HandProximityTrigger : MonoBehaviour {
 	
 	public GameObject proximityRoot;
 	public ProximityType proximityTarget;
-
+	
 	public void Init(ProximityType type){
 		proximityTarget = type;
 	}
-	
-	// Use this for initialization
-	void Awake () {
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
-	public void UpdateBoxCollider(Vector3 position, float width, float height, float depth){
+    /*
+     * Updates the collider of this collision trigger
+     */
+    public void UpdateCollider(Vector3 position, Vector3 size)
+    {
+        if (collider.GetType() == typeof(BoxCollider))
+        {
+            UpdateBoxCollider(position, size);
+        }
+        else
+        {
+            UpdateSphereCollider(position, size.x);
+        }
+    }
+
+    public Vector3 GetSize()
+    {
+        if (collider.GetType() == typeof(SphereCollider))
+            return collider.bounds.size;
+        return collider.bounds.size; 
+    }
+
+	public void UpdateBoxCollider(Vector3 position, Vector3 size){
 		BoxCollider box = collider as BoxCollider;
-		box.size = new Vector3(width, height, depth);
+        box.size = size;
 		box.center = position;
 	}
 

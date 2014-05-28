@@ -25,10 +25,6 @@ public class InstrumentController : MonoBehaviour {
 	private string m_sourceName;
 	public void SetSourceName(string sourceName){ m_sourceName = sourceName; }
 
-	//Carousel ref
-	public CarouselAttachment m_carousel;
-	public CarouselAttachment Carousel { get { return m_carousel; }}
-
 	//Inspector toggles
 	public bool m_blastAllParameters;
 	

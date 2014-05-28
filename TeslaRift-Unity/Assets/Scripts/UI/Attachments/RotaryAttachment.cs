@@ -21,7 +21,7 @@ public class RotaryAttachment : UIAttachment<BaseInstrumentParam> {
             m_value = musicRef.val;
 
 		if(m_rotaryFill != null)
-            m_rotaryFill.renderer.material.SetFloat("_Cutoff", Utils.Clamp( Utils.Remap( 1.0f - m_value, 0.0f, 1.0f, 0.0f, 0.8f), 0.0f, 1.0f));
+            m_rotaryFill.renderer.material.SetFloat("_Cutoff", Utils.Clamp( Utils.Remap( 1.0f - m_value, 0.0f, 1.0f, 0.01f, 1.0f), 0.0f, 1.0f));
 	}
 
     /*

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using RBF;
 using UI;
 
-public class RBFSphere : UIAttachment {
+public class RBFSphere : BaseAttachment {
 
 	//Training points
     public List<RBF.RBFSphereTraining> points { get { return m_trainingPoints; } }
@@ -109,6 +109,7 @@ public class RBFSphere : UIAttachment {
     {
         if (m_mode == BaseTool.ToolMode.PRIMARY)
         {
+            //Set rbf value from hand position inside sphere
             Vector3 handPosition = transform.InverseTransformPoint(HydraController.Instance.GetHand(m_hand).transform.position);
             Quaternion handAngle = Quaternion.LookRotation(handPosition);
             float distance = Vector3.Distance(transform.position, handPosition);

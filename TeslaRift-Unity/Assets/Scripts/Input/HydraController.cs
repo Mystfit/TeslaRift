@@ -124,15 +124,8 @@ public class HydraController : MonoBehaviour {
     public BaseAttachment IsHandDragging(BaseTool.ToolHand hand)
     {
         if (hand == BaseTool.ToolHand.LEFT)
-		{
-			if(m_leftHandDragTarget != null)
-				return m_leftHandDragTarget;
-		}
-        
-		if(m_rightHandDragTarget != null)
-			return m_rightHandDragTarget;
-
-		return null;
+			return m_leftHandDragTarget;
+		return m_rightHandDragTarget;
     }
 
     public void SetHandDragging(BaseTool.ToolHand hand, BaseAttachment target)

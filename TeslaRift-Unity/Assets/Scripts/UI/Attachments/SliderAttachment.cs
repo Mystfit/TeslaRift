@@ -20,7 +20,7 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 		m_slider = GetComponent<BarSlider>();
 		m_frame = GetComponent<UIFrame>();
 
-		object temp = interiorCollider; temp = exteriorCollider;
+		object temp = interiorCollider; temp = proximityCollider;
 	}
 
 	public override void Init (BaseInstrumentParam managedReference)
@@ -28,30 +28,6 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 		base.Init (managedReference);
 		BarSlider sliderFrame = GetComponent<BarSlider>();
 		sliderFrame.SetLabel(managedReference.name);
-	}
-
-
-	/*
-	 * Collider transforms
-	 */
-	public override Collider interiorCollider {
-		get {
-			if(m_interiorCollider == null)
-				m_interiorCollider = transform.Find("BoxAreaTrigger").Find("interiorTrigger").GetComponent<HandProximityTrigger>();
-			
-			base.m_interiorCollider = m_interiorCollider;
-			return base.interiorCollider;
-		}
-	}
-	
-	public override Collider exteriorCollider {
-		get {
-			if(m_exteriorCollider == null)
-				m_exteriorCollider = transform.Find("BoxAreaTrigger").Find("proximityTrigger").GetComponent<HandProximityTrigger>();
-			
-			base.m_exteriorCollider = m_exteriorCollider;
-			return base.exteriorCollider;
-		}
 	}
 
 

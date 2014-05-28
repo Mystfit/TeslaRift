@@ -13,14 +13,18 @@ public class WorkspaceDockAttachment : BaseAttachment {
         AddAcceptedDocktype(typeof(InstrumentAttachment));
 	}
 
-	public override void AddDockableAttachment (BaseAttachment attach)
+	public override bool AddDockableAttachment (BaseAttachment attach)
 	{
-		base.AddDockableAttachment (attach);
-		attach.transform.parent = transform;
-		attach.rigidbody.velocity = Vector3.zero;
-		attach.rigidbody.isKinematic = true;
-		PlaceObjects();
-		//iTween.MoveTo(attach.gameObject, iTween.Hash("position", transform.localPosition, "uselocal", true ));
+        if (base.AddDockableAttachment(attach))
+        {
+            attach.transform.parent = transform;
+            attach.rigidbody.velocity = Vector3.zero;
+            attach.rigidbody.isKinematic = true;
+            PlaceObjects();
+            //iTween.MoveTo(attach.gameObject, iTween.Hash("position", transform.localPosition, "uselocal", true ));
+            return true;
+        }
+        return false;
 	}
 
 	public override void RemoveDockableAttachment (BaseAttachment attach)
