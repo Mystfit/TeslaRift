@@ -13,14 +13,7 @@ public class InstrumentController : MonoBehaviour {
 	protected List<BaseInstrument> m_instruments;
 	protected BaseInstrument m_selectedInstrument;
 	protected GameObject m_lastSelectedGameInstrument = null;
-	
-	//Buffer references
-	protected List<ClipBufferAttachment> m_buffers;
-	protected MusicControllerAttachment m_selectedMusicController;
 
-	//Controller references
-	protected List<MusicControllerAttachment> m_musicGroups;
-	
 	//Prefix source name in front of OSC messages
 	private string m_sourceName;
 	public void SetSourceName(string sourceName){ m_sourceName = sourceName; }
@@ -33,8 +26,6 @@ public class InstrumentController : MonoBehaviour {
 	//-------------------------------------
 	void Awake () {
 		m_instruments = new List<BaseInstrument>();
-		m_buffers = new List<ClipBufferAttachment>();
-		m_musicGroups = new List<MusicControllerAttachment>();
 		m_instance = this;
 
 		SetSourceName(GlobalConfig.Instance.ProjectSourceName);
@@ -77,43 +68,7 @@ public class InstrumentController : MonoBehaviour {
 			param.removeGenerators();
 		}
 	}
-	
-	
-	
-	// Buffer manipulation
-	//-------------------------------------
-	
-	/*
-	 * Adds a new buffer
-	 */
-	public void AddBuffer(ClipBufferAttachment buffer){
-		m_buffers.Add(buffer);
-	}
 
-
-	/*
-	 * Adds an object to the controller
-	 */
-	public void AddToActivePanel(BaseInstrumentParam param){
-		if(m_selectedMusicController != null){
-			if( param.GetType() == typeof(InstrumentClip)){
-				m_selectedMusicController.clipBuffer.AddClipToBuffer ( (InstrumentClip) param );
-			} else if( param.GetType() == typeof(GenericMusicParam) ){
-				m_selectedMusicController.paramControls.CreateSlider( (GenericMusicParam) param );
-			}
-		}
-	}
-
-
-	/*
-	 * Selects a buffer
-	 */
-	public void SelectMusicController(MusicControllerAttachment musicControl){
-		if(m_selectedMusicController != null)
-			m_selectedMusicController.SetSelected(false);
-		m_selectedMusicController = musicControl;
-		m_selectedMusicController.SetSelected(true);
-	}
 
 	//Instrument selection
 	//--------------------
@@ -194,16 +149,6 @@ public class InstrumentController : MonoBehaviour {
 	 * Gets last selected isntrument
 	 */
 	public GameObject LastSelectedGameInstrument{ get { return m_lastSelectedGameInstrument; }}
-
-
-	/*
-	 * Music controller interaction
-	 */
-	public void AddMusicGroup(MusicControllerAttachment mGroup){
-		m_musicGroups.Add(mGroup);
-	}
-
-	public List<MusicControllerAttachment> MusicGroups{ get { return m_musicGroups; }}
 
 
 	/*

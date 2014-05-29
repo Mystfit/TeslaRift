@@ -19,12 +19,6 @@ public class ClipButtonAttachment : UIAttachment<InstrumentClip> {
 	public bool m_toggleClip = false;
 
 	/*
-	 * Owner of this button
-	 */
-	public ClipBufferAttachment m_owner;
-	public ClipBufferAttachment owner{ get { return m_owner; }}
-
-	/*
 	 * Queue status
 	 */
 	protected bool bIsQueued = false;
@@ -87,26 +81,10 @@ public class ClipButtonAttachment : UIAttachment<InstrumentClip> {
             }
         }
 
+        else if(mode == BaseTool.ToolMode.PRIMARY){
+            musicRef.Play();
+        }
+
         base.Gesture_First();
     }
-
-
-
-	public override void Gesture_ExitIdleInterior ()
-	{
-		base.Gesture_ExitIdleInterior ();
-		if(mode == BaseTool.ToolMode.PRIMARY){
-			owner.PlayClip(this, true);
-		} 
-	}
-
-	public override void Gesture_PushIn ()
-	{
-		base.Gesture_PushIn ();
-	}
-
-	public override void Gesture_PullOut ()
-	{
-		base.Gesture_PullOut ();
-	}
 }

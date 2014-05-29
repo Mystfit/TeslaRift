@@ -9,8 +9,6 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 	protected BarSlider m_slider;
 	protected UIFrame m_frame;
 	public UIFrame frame{ get { return m_frame; }}
-	protected ParamSliderPanelAttachment m_owner;
-	public ParamSliderPanelAttachment owner{ get { return m_owner; }}
 
 	// Use this for initialization
 	public override void Awake () {
@@ -62,9 +60,6 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 
 	public override void Gesture_Exit ()
 	{
-		if(m_owner != null)
-			m_owner.SlidersUpdated();
-
         if (IsTransient && IsDragging)
         {
             StopDragging();
