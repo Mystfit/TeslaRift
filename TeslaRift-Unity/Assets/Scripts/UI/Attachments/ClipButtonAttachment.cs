@@ -75,6 +75,22 @@ public class ClipButtonAttachment : UIAttachment<InstrumentClip> {
 	}
 
 
+    public override void Gesture_First()
+    {
+        if (mode == BaseTool.ToolMode.GRABBING)
+        {
+            if (!HydraController.Instance.IsHandDragging(m_hand))
+            {
+                //Clone parameter here
+                ClipButtonAttachment attach = UIFactory.CreateGhostDragger(this) as ClipButtonAttachment;
+                attach.StartDragging(HydraController.Instance.GetHand(m_hand));
+            }
+        }
+
+        base.Gesture_First();
+    }
+
+
 
 	public override void Gesture_ExitIdleInterior ()
 	{
