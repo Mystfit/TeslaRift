@@ -133,6 +133,262 @@ ModelImporter:
     100254: polySurface7
     100256: polySurface8
     100258: polySurface9
+    100260: clipcube0
+    100262: clipcube1
+    100264: clipcube10
+    100266: clipcube11
+    100268: clipcube12
+    100270: clipcube13
+    100272: clipcube14
+    100274: clipcube15
+    100276: clipcube16
+    100278: clipcube17
+    100280: clipcube18
+    100282: clipcube19
+    100284: clipcube2
+    100286: clipcube20
+    100288: clipcube21
+    100290: clipcube22
+    100292: clipcube23
+    100294: clipcube24
+    100296: clipcube25
+    100298: clipcube26
+    100300: clipcube27
+    100302: clipcube28
+    100304: clipcube29
+    100306: clipcube3
+    100308: clipcube30
+    100310: clipcube31
+    100312: clipcube32
+    100314: clipcube33
+    100316: clipcube34
+    100318: clipcube35
+    100320: clipcube36
+    100322: clipcube37
+    100324: clipcube38
+    100326: clipcube39
+    100328: clipcube4
+    100330: clipcube40
+    100332: clipcube41
+    100334: clipcube42
+    100336: clipcube43
+    100338: clipcube44
+    100340: clipcube45
+    100342: clipcube46
+    100344: clipcube47
+    100346: clipcube48
+    100348: clipcube49
+    100350: clipcube5
+    100352: clipcube50
+    100354: clipcube51
+    100356: clipcube52
+    100358: clipcube53
+    100360: clipcube54
+    100362: clipcube55
+    100364: clipcube56
+    100366: clipcube57
+    100368: clipcube58
+    100370: clipcube59
+    100372: clipcube6
+    100374: clipcube60
+    100376: clipcube61
+    100378: clipcube62
+    100380: clipcube63
+    100382: clipcube7
+    100384: clipcube8
+    100386: clipcube9
+    100388: clipCube:cube
+    100390: clipCube:cube 1
+    100392: clipCube:cube 10
+    100394: clipCube:cube 11
+    100396: clipCube:cube 12
+    100398: clipCube:cube 13
+    100400: clipCube:cube 14
+    100402: clipCube:cube 15
+    100404: clipCube:cube 16
+    100406: clipCube:cube 17
+    100408: clipCube:cube 18
+    100410: clipCube:cube 19
+    100412: clipCube:cube 2
+    100414: clipCube:cube 20
+    100416: clipCube:cube 21
+    100418: clipCube:cube 22
+    100420: clipCube:cube 23
+    100422: clipCube:cube 24
+    100424: clipCube:cube 25
+    100426: clipCube:cube 26
+    100428: clipCube:cube 27
+    100430: clipCube:cube 28
+    100432: clipCube:cube 29
+    100434: clipCube:cube 3
+    100436: clipCube:cube 30
+    100438: clipCube:cube 31
+    100440: clipCube:cube 32
+    100442: clipCube:cube 33
+    100444: clipCube:cube 34
+    100446: clipCube:cube 35
+    100448: clipCube:cube 36
+    100450: clipCube:cube 37
+    100452: clipCube:cube 38
+    100454: clipCube:cube 39
+    100456: clipCube:cube 4
+    100458: clipCube:cube 40
+    100460: clipCube:cube 41
+    100462: clipCube:cube 42
+    100464: clipCube:cube 43
+    100466: clipCube:cube 44
+    100468: clipCube:cube 45
+    100470: clipCube:cube 46
+    100472: clipCube:cube 47
+    100474: clipCube:cube 48
+    100476: clipCube:cube 49
+    100478: clipCube:cube 5
+    100480: clipCube:cube 50
+    100482: clipCube:cube 51
+    100484: clipCube:cube 52
+    100486: clipCube:cube 53
+    100488: clipCube:cube 54
+    100490: clipCube:cube 55
+    100492: clipCube:cube 56
+    100494: clipCube:cube 57
+    100496: clipCube:cube 58
+    100498: clipCube:cube 59
+    100500: clipCube:cube 6
+    100502: clipCube:cube 60
+    100504: clipCube:cube 61
+    100506: clipCube:cube 62
+    100508: clipCube:cube 63
+    100510: clipCube:cube 7
+    100512: clipCube:cube 8
+    100514: clipCube:cube 9
+    100516: clipCube:frame
+    100518: clipCube:frame 1
+    100520: clipCube:frame 10
+    100522: clipCube:frame 11
+    100524: clipCube:frame 12
+    100526: clipCube:frame 13
+    100528: clipCube:frame 14
+    100530: clipCube:frame 15
+    100532: clipCube:frame 16
+    100534: clipCube:frame 17
+    100536: clipCube:frame 18
+    100538: clipCube:frame 19
+    100540: clipCube:frame 2
+    100542: clipCube:frame 20
+    100544: clipCube:frame 21
+    100546: clipCube:frame 22
+    100548: clipCube:frame 23
+    100550: clipCube:frame 24
+    100552: clipCube:frame 25
+    100554: clipCube:frame 26
+    100556: clipCube:frame 27
+    100558: clipCube:frame 28
+    100560: clipCube:frame 29
+    100562: clipCube:frame 3
+    100564: clipCube:frame 30
+    100566: clipCube:frame 31
+    100568: clipCube:frame 32
+    100570: clipCube:frame 33
+    100572: clipCube:frame 34
+    100574: clipCube:frame 35
+    100576: clipCube:frame 36
+    100578: clipCube:frame 37
+    100580: clipCube:frame 38
+    100582: clipCube:frame 39
+    100584: clipCube:frame 4
+    100586: clipCube:frame 40
+    100588: clipCube:frame 41
+    100590: clipCube:frame 42
+    100592: clipCube:frame 43
+    100594: clipCube:frame 44
+    100596: clipCube:frame 45
+    100598: clipCube:frame 46
+    100600: clipCube:frame 47
+    100602: clipCube:frame 48
+    100604: clipCube:frame 49
+    100606: clipCube:frame 5
+    100608: clipCube:frame 50
+    100610: clipCube:frame 51
+    100612: clipCube:frame 52
+    100614: clipCube:frame 53
+    100616: clipCube:frame 54
+    100618: clipCube:frame 55
+    100620: clipCube:frame 56
+    100622: clipCube:frame 57
+    100624: clipCube:frame 58
+    100626: clipCube:frame 59
+    100628: clipCube:frame 6
+    100630: clipCube:frame 60
+    100632: clipCube:frame 61
+    100634: clipCube:frame 62
+    100636: clipCube:frame 63
+    100638: clipCube:frame 7
+    100640: clipCube:frame 8
+    100642: clipCube:frame 9
+    100644: clipCube1
+    100646: clipCube10
+    100648: clipCube11
+    100650: clipCube12
+    100652: clipCube13
+    100654: clipCube14
+    100656: clipCube15
+    100658: clipCube16
+    100660: clipCube17
+    100662: clipCube18
+    100664: clipCube19
+    100666: clipCube2
+    100668: clipCube20
+    100670: clipCube21
+    100672: clipCube22
+    100674: clipCube23
+    100676: clipCube24
+    100678: clipCube25
+    100680: clipCube26
+    100682: clipCube27
+    100684: clipCube28
+    100686: clipCube29
+    100688: clipCube3
+    100690: clipCube30
+    100692: clipCube31
+    100694: clipCube32
+    100696: clipCube33
+    100698: clipCube34
+    100700: clipCube35
+    100702: clipCube36
+    100704: clipCube37
+    100706: clipCube38
+    100708: clipCube39
+    100710: clipCube4
+    100712: clipCube40
+    100714: clipCube41
+    100716: clipCube42
+    100718: clipCube43
+    100720: clipCube44
+    100722: clipCube45
+    100724: clipCube46
+    100726: clipCube47
+    100728: clipCube48
+    100730: clipCube49
+    100732: clipCube5
+    100734: clipCube50
+    100736: clipCube51
+    100738: clipCube52
+    100740: clipCube53
+    100742: clipCube54
+    100744: clipCube55
+    100746: clipCube56
+    100748: clipCube57
+    100750: clipCube58
+    100752: clipCube59
+    100754: clipCube6
+    100756: clipCube60
+    100758: clipCube61
+    100760: clipCube62
+    100762: clipCube63
+    100764: clipCube64
+    100766: clipCube7
+    100768: clipCube8
+    100770: clipCube9
     400000: //RootNode
     400002: group1
     400004: pCube10
@@ -263,6 +519,262 @@ ModelImporter:
     400254: polySurface7
     400256: polySurface8
     400258: polySurface9
+    400260: clipcube0
+    400262: clipcube1
+    400264: clipcube10
+    400266: clipcube11
+    400268: clipcube12
+    400270: clipcube13
+    400272: clipcube14
+    400274: clipcube15
+    400276: clipcube16
+    400278: clipcube17
+    400280: clipcube18
+    400282: clipcube19
+    400284: clipcube2
+    400286: clipcube20
+    400288: clipcube21
+    400290: clipcube22
+    400292: clipcube23
+    400294: clipcube24
+    400296: clipcube25
+    400298: clipcube26
+    400300: clipcube27
+    400302: clipcube28
+    400304: clipcube29
+    400306: clipcube3
+    400308: clipcube30
+    400310: clipcube31
+    400312: clipcube32
+    400314: clipcube33
+    400316: clipcube34
+    400318: clipcube35
+    400320: clipcube36
+    400322: clipcube37
+    400324: clipcube38
+    400326: clipcube39
+    400328: clipcube4
+    400330: clipcube40
+    400332: clipcube41
+    400334: clipcube42
+    400336: clipcube43
+    400338: clipcube44
+    400340: clipcube45
+    400342: clipcube46
+    400344: clipcube47
+    400346: clipcube48
+    400348: clipcube49
+    400350: clipcube5
+    400352: clipcube50
+    400354: clipcube51
+    400356: clipcube52
+    400358: clipcube53
+    400360: clipcube54
+    400362: clipcube55
+    400364: clipcube56
+    400366: clipcube57
+    400368: clipcube58
+    400370: clipcube59
+    400372: clipcube6
+    400374: clipcube60
+    400376: clipcube61
+    400378: clipcube62
+    400380: clipcube63
+    400382: clipcube7
+    400384: clipcube8
+    400386: clipcube9
+    400388: clipCube:cube
+    400390: clipCube:cube 1
+    400392: clipCube:cube 10
+    400394: clipCube:cube 11
+    400396: clipCube:cube 12
+    400398: clipCube:cube 13
+    400400: clipCube:cube 14
+    400402: clipCube:cube 15
+    400404: clipCube:cube 16
+    400406: clipCube:cube 17
+    400408: clipCube:cube 18
+    400410: clipCube:cube 19
+    400412: clipCube:cube 2
+    400414: clipCube:cube 20
+    400416: clipCube:cube 21
+    400418: clipCube:cube 22
+    400420: clipCube:cube 23
+    400422: clipCube:cube 24
+    400424: clipCube:cube 25
+    400426: clipCube:cube 26
+    400428: clipCube:cube 27
+    400430: clipCube:cube 28
+    400432: clipCube:cube 29
+    400434: clipCube:cube 3
+    400436: clipCube:cube 30
+    400438: clipCube:cube 31
+    400440: clipCube:cube 32
+    400442: clipCube:cube 33
+    400444: clipCube:cube 34
+    400446: clipCube:cube 35
+    400448: clipCube:cube 36
+    400450: clipCube:cube 37
+    400452: clipCube:cube 38
+    400454: clipCube:cube 39
+    400456: clipCube:cube 4
+    400458: clipCube:cube 40
+    400460: clipCube:cube 41
+    400462: clipCube:cube 42
+    400464: clipCube:cube 43
+    400466: clipCube:cube 44
+    400468: clipCube:cube 45
+    400470: clipCube:cube 46
+    400472: clipCube:cube 47
+    400474: clipCube:cube 48
+    400476: clipCube:cube 49
+    400478: clipCube:cube 5
+    400480: clipCube:cube 50
+    400482: clipCube:cube 51
+    400484: clipCube:cube 52
+    400486: clipCube:cube 53
+    400488: clipCube:cube 54
+    400490: clipCube:cube 55
+    400492: clipCube:cube 56
+    400494: clipCube:cube 57
+    400496: clipCube:cube 58
+    400498: clipCube:cube 59
+    400500: clipCube:cube 6
+    400502: clipCube:cube 60
+    400504: clipCube:cube 61
+    400506: clipCube:cube 62
+    400508: clipCube:cube 63
+    400510: clipCube:cube 7
+    400512: clipCube:cube 8
+    400514: clipCube:cube 9
+    400516: clipCube:frame
+    400518: clipCube:frame 1
+    400520: clipCube:frame 10
+    400522: clipCube:frame 11
+    400524: clipCube:frame 12
+    400526: clipCube:frame 13
+    400528: clipCube:frame 14
+    400530: clipCube:frame 15
+    400532: clipCube:frame 16
+    400534: clipCube:frame 17
+    400536: clipCube:frame 18
+    400538: clipCube:frame 19
+    400540: clipCube:frame 2
+    400542: clipCube:frame 20
+    400544: clipCube:frame 21
+    400546: clipCube:frame 22
+    400548: clipCube:frame 23
+    400550: clipCube:frame 24
+    400552: clipCube:frame 25
+    400554: clipCube:frame 26
+    400556: clipCube:frame 27
+    400558: clipCube:frame 28
+    400560: clipCube:frame 29
+    400562: clipCube:frame 3
+    400564: clipCube:frame 30
+    400566: clipCube:frame 31
+    400568: clipCube:frame 32
+    400570: clipCube:frame 33
+    400572: clipCube:frame 34
+    400574: clipCube:frame 35
+    400576: clipCube:frame 36
+    400578: clipCube:frame 37
+    400580: clipCube:frame 38
+    400582: clipCube:frame 39
+    400584: clipCube:frame 4
+    400586: clipCube:frame 40
+    400588: clipCube:frame 41
+    400590: clipCube:frame 42
+    400592: clipCube:frame 43
+    400594: clipCube:frame 44
+    400596: clipCube:frame 45
+    400598: clipCube:frame 46
+    400600: clipCube:frame 47
+    400602: clipCube:frame 48
+    400604: clipCube:frame 49
+    400606: clipCube:frame 5
+    400608: clipCube:frame 50
+    400610: clipCube:frame 51
+    400612: clipCube:frame 52
+    400614: clipCube:frame 53
+    400616: clipCube:frame 54
+    400618: clipCube:frame 55
+    400620: clipCube:frame 56
+    400622: clipCube:frame 57
+    400624: clipCube:frame 58
+    400626: clipCube:frame 59
+    400628: clipCube:frame 6
+    400630: clipCube:frame 60
+    400632: clipCube:frame 61
+    400634: clipCube:frame 62
+    400636: clipCube:frame 63
+    400638: clipCube:frame 7
+    400640: clipCube:frame 8
+    400642: clipCube:frame 9
+    400644: clipCube1
+    400646: clipCube10
+    400648: clipCube11
+    400650: clipCube12
+    400652: clipCube13
+    400654: clipCube14
+    400656: clipCube15
+    400658: clipCube16
+    400660: clipCube17
+    400662: clipCube18
+    400664: clipCube19
+    400666: clipCube2
+    400668: clipCube20
+    400670: clipCube21
+    400672: clipCube22
+    400674: clipCube23
+    400676: clipCube24
+    400678: clipCube25
+    400680: clipCube26
+    400682: clipCube27
+    400684: clipCube28
+    400686: clipCube29
+    400688: clipCube3
+    400690: clipCube30
+    400692: clipCube31
+    400694: clipCube32
+    400696: clipCube33
+    400698: clipCube34
+    400700: clipCube35
+    400702: clipCube36
+    400704: clipCube37
+    400706: clipCube38
+    400708: clipCube39
+    400710: clipCube4
+    400712: clipCube40
+    400714: clipCube41
+    400716: clipCube42
+    400718: clipCube43
+    400720: clipCube44
+    400722: clipCube45
+    400724: clipCube46
+    400726: clipCube47
+    400728: clipCube48
+    400730: clipCube49
+    400732: clipCube5
+    400734: clipCube50
+    400736: clipCube51
+    400738: clipCube52
+    400740: clipCube53
+    400742: clipCube54
+    400744: clipCube55
+    400746: clipCube56
+    400748: clipCube57
+    400750: clipCube58
+    400752: clipCube59
+    400754: clipCube6
+    400756: clipCube60
+    400758: clipCube61
+    400760: clipCube62
+    400762: clipCube63
+    400764: clipCube64
+    400766: clipCube7
+    400768: clipCube8
+    400770: clipCube9
     2300000: pCube10
     2300002: pCube11
     2300004: pCube12
@@ -391,6 +903,198 @@ ModelImporter:
     2300250: polySurface7
     2300252: polySurface8
     2300254: polySurface9
+    2300256: clipCube:cube
+    2300258: clipCube:cube 1
+    2300260: clipCube:cube 10
+    2300262: clipCube:cube 11
+    2300264: clipCube:cube 12
+    2300266: clipCube:cube 13
+    2300268: clipCube:cube 14
+    2300270: clipCube:cube 15
+    2300272: clipCube:cube 16
+    2300274: clipCube:cube 17
+    2300276: clipCube:cube 18
+    2300278: clipCube:cube 19
+    2300280: clipCube:cube 2
+    2300282: clipCube:cube 20
+    2300284: clipCube:cube 21
+    2300286: clipCube:cube 22
+    2300288: clipCube:cube 23
+    2300290: clipCube:cube 24
+    2300292: clipCube:cube 25
+    2300294: clipCube:cube 26
+    2300296: clipCube:cube 27
+    2300298: clipCube:cube 28
+    2300300: clipCube:cube 29
+    2300302: clipCube:cube 3
+    2300304: clipCube:cube 30
+    2300306: clipCube:cube 31
+    2300308: clipCube:cube 32
+    2300310: clipCube:cube 33
+    2300312: clipCube:cube 34
+    2300314: clipCube:cube 35
+    2300316: clipCube:cube 36
+    2300318: clipCube:cube 37
+    2300320: clipCube:cube 38
+    2300322: clipCube:cube 39
+    2300324: clipCube:cube 4
+    2300326: clipCube:cube 40
+    2300328: clipCube:cube 41
+    2300330: clipCube:cube 42
+    2300332: clipCube:cube 43
+    2300334: clipCube:cube 44
+    2300336: clipCube:cube 45
+    2300338: clipCube:cube 46
+    2300340: clipCube:cube 47
+    2300342: clipCube:cube 48
+    2300344: clipCube:cube 49
+    2300346: clipCube:cube 5
+    2300348: clipCube:cube 50
+    2300350: clipCube:cube 51
+    2300352: clipCube:cube 52
+    2300354: clipCube:cube 53
+    2300356: clipCube:cube 54
+    2300358: clipCube:cube 55
+    2300360: clipCube:cube 56
+    2300362: clipCube:cube 57
+    2300364: clipCube:cube 58
+    2300366: clipCube:cube 59
+    2300368: clipCube:cube 6
+    2300370: clipCube:cube 60
+    2300372: clipCube:cube 61
+    2300374: clipCube:cube 62
+    2300376: clipCube:cube 63
+    2300378: clipCube:cube 7
+    2300380: clipCube:cube 8
+    2300382: clipCube:cube 9
+    2300384: clipCube:frame
+    2300386: clipCube:frame 1
+    2300388: clipCube:frame 10
+    2300390: clipCube:frame 11
+    2300392: clipCube:frame 12
+    2300394: clipCube:frame 13
+    2300396: clipCube:frame 14
+    2300398: clipCube:frame 15
+    2300400: clipCube:frame 16
+    2300402: clipCube:frame 17
+    2300404: clipCube:frame 18
+    2300406: clipCube:frame 19
+    2300408: clipCube:frame 2
+    2300410: clipCube:frame 20
+    2300412: clipCube:frame 21
+    2300414: clipCube:frame 22
+    2300416: clipCube:frame 23
+    2300418: clipCube:frame 24
+    2300420: clipCube:frame 25
+    2300422: clipCube:frame 26
+    2300424: clipCube:frame 27
+    2300426: clipCube:frame 28
+    2300428: clipCube:frame 29
+    2300430: clipCube:frame 3
+    2300432: clipCube:frame 30
+    2300434: clipCube:frame 31
+    2300436: clipCube:frame 32
+    2300438: clipCube:frame 33
+    2300440: clipCube:frame 34
+    2300442: clipCube:frame 35
+    2300444: clipCube:frame 36
+    2300446: clipCube:frame 37
+    2300448: clipCube:frame 38
+    2300450: clipCube:frame 39
+    2300452: clipCube:frame 4
+    2300454: clipCube:frame 40
+    2300456: clipCube:frame 41
+    2300458: clipCube:frame 42
+    2300460: clipCube:frame 43
+    2300462: clipCube:frame 44
+    2300464: clipCube:frame 45
+    2300466: clipCube:frame 46
+    2300468: clipCube:frame 47
+    2300470: clipCube:frame 48
+    2300472: clipCube:frame 49
+    2300474: clipCube:frame 5
+    2300476: clipCube:frame 50
+    2300478: clipCube:frame 51
+    2300480: clipCube:frame 52
+    2300482: clipCube:frame 53
+    2300484: clipCube:frame 54
+    2300486: clipCube:frame 55
+    2300488: clipCube:frame 56
+    2300490: clipCube:frame 57
+    2300492: clipCube:frame 58
+    2300494: clipCube:frame 59
+    2300496: clipCube:frame 6
+    2300498: clipCube:frame 60
+    2300500: clipCube:frame 61
+    2300502: clipCube:frame 62
+    2300504: clipCube:frame 63
+    2300506: clipCube:frame 7
+    2300508: clipCube:frame 8
+    2300510: clipCube:frame 9
+    2300512: clipCube1
+    2300514: clipCube10
+    2300516: clipCube11
+    2300518: clipCube12
+    2300520: clipCube13
+    2300522: clipCube14
+    2300524: clipCube15
+    2300526: clipCube16
+    2300528: clipCube17
+    2300530: clipCube18
+    2300532: clipCube19
+    2300534: clipCube2
+    2300536: clipCube20
+    2300538: clipCube21
+    2300540: clipCube22
+    2300542: clipCube23
+    2300544: clipCube24
+    2300546: clipCube25
+    2300548: clipCube26
+    2300550: clipCube27
+    2300552: clipCube28
+    2300554: clipCube29
+    2300556: clipCube3
+    2300558: clipCube30
+    2300560: clipCube31
+    2300562: clipCube32
+    2300564: clipCube33
+    2300566: clipCube34
+    2300568: clipCube35
+    2300570: clipCube36
+    2300572: clipCube37
+    2300574: clipCube38
+    2300576: clipCube39
+    2300578: clipCube4
+    2300580: clipCube40
+    2300582: clipCube41
+    2300584: clipCube42
+    2300586: clipCube43
+    2300588: clipCube44
+    2300590: clipCube45
+    2300592: clipCube46
+    2300594: clipCube47
+    2300596: clipCube48
+    2300598: clipCube49
+    2300600: clipCube5
+    2300602: clipCube50
+    2300604: clipCube51
+    2300606: clipCube52
+    2300608: clipCube53
+    2300610: clipCube54
+    2300612: clipCube55
+    2300614: clipCube56
+    2300616: clipCube57
+    2300618: clipCube58
+    2300620: clipCube59
+    2300622: clipCube6
+    2300624: clipCube60
+    2300626: clipCube61
+    2300628: clipCube62
+    2300630: clipCube63
+    2300632: clipCube64
+    2300634: clipCube7
+    2300636: clipCube8
+    2300638: clipCube9
     3300000: pCube10
     3300002: pCube11
     3300004: pCube12
@@ -519,6 +1223,198 @@ ModelImporter:
     3300250: polySurface7
     3300252: polySurface8
     3300254: polySurface9
+    3300256: clipCube:cube
+    3300258: clipCube:cube 1
+    3300260: clipCube:cube 10
+    3300262: clipCube:cube 11
+    3300264: clipCube:cube 12
+    3300266: clipCube:cube 13
+    3300268: clipCube:cube 14
+    3300270: clipCube:cube 15
+    3300272: clipCube:cube 16
+    3300274: clipCube:cube 17
+    3300276: clipCube:cube 18
+    3300278: clipCube:cube 19
+    3300280: clipCube:cube 2
+    3300282: clipCube:cube 20
+    3300284: clipCube:cube 21
+    3300286: clipCube:cube 22
+    3300288: clipCube:cube 23
+    3300290: clipCube:cube 24
+    3300292: clipCube:cube 25
+    3300294: clipCube:cube 26
+    3300296: clipCube:cube 27
+    3300298: clipCube:cube 28
+    3300300: clipCube:cube 29
+    3300302: clipCube:cube 3
+    3300304: clipCube:cube 30
+    3300306: clipCube:cube 31
+    3300308: clipCube:cube 32
+    3300310: clipCube:cube 33
+    3300312: clipCube:cube 34
+    3300314: clipCube:cube 35
+    3300316: clipCube:cube 36
+    3300318: clipCube:cube 37
+    3300320: clipCube:cube 38
+    3300322: clipCube:cube 39
+    3300324: clipCube:cube 4
+    3300326: clipCube:cube 40
+    3300328: clipCube:cube 41
+    3300330: clipCube:cube 42
+    3300332: clipCube:cube 43
+    3300334: clipCube:cube 44
+    3300336: clipCube:cube 45
+    3300338: clipCube:cube 46
+    3300340: clipCube:cube 47
+    3300342: clipCube:cube 48
+    3300344: clipCube:cube 49
+    3300346: clipCube:cube 5
+    3300348: clipCube:cube 50
+    3300350: clipCube:cube 51
+    3300352: clipCube:cube 52
+    3300354: clipCube:cube 53
+    3300356: clipCube:cube 54
+    3300358: clipCube:cube 55
+    3300360: clipCube:cube 56
+    3300362: clipCube:cube 57
+    3300364: clipCube:cube 58
+    3300366: clipCube:cube 59
+    3300368: clipCube:cube 6
+    3300370: clipCube:cube 60
+    3300372: clipCube:cube 61
+    3300374: clipCube:cube 62
+    3300376: clipCube:cube 63
+    3300378: clipCube:cube 7
+    3300380: clipCube:cube 8
+    3300382: clipCube:cube 9
+    3300384: clipCube:frame
+    3300386: clipCube:frame 1
+    3300388: clipCube:frame 10
+    3300390: clipCube:frame 11
+    3300392: clipCube:frame 12
+    3300394: clipCube:frame 13
+    3300396: clipCube:frame 14
+    3300398: clipCube:frame 15
+    3300400: clipCube:frame 16
+    3300402: clipCube:frame 17
+    3300404: clipCube:frame 18
+    3300406: clipCube:frame 19
+    3300408: clipCube:frame 2
+    3300410: clipCube:frame 20
+    3300412: clipCube:frame 21
+    3300414: clipCube:frame 22
+    3300416: clipCube:frame 23
+    3300418: clipCube:frame 24
+    3300420: clipCube:frame 25
+    3300422: clipCube:frame 26
+    3300424: clipCube:frame 27
+    3300426: clipCube:frame 28
+    3300428: clipCube:frame 29
+    3300430: clipCube:frame 3
+    3300432: clipCube:frame 30
+    3300434: clipCube:frame 31
+    3300436: clipCube:frame 32
+    3300438: clipCube:frame 33
+    3300440: clipCube:frame 34
+    3300442: clipCube:frame 35
+    3300444: clipCube:frame 36
+    3300446: clipCube:frame 37
+    3300448: clipCube:frame 38
+    3300450: clipCube:frame 39
+    3300452: clipCube:frame 4
+    3300454: clipCube:frame 40
+    3300456: clipCube:frame 41
+    3300458: clipCube:frame 42
+    3300460: clipCube:frame 43
+    3300462: clipCube:frame 44
+    3300464: clipCube:frame 45
+    3300466: clipCube:frame 46
+    3300468: clipCube:frame 47
+    3300470: clipCube:frame 48
+    3300472: clipCube:frame 49
+    3300474: clipCube:frame 5
+    3300476: clipCube:frame 50
+    3300478: clipCube:frame 51
+    3300480: clipCube:frame 52
+    3300482: clipCube:frame 53
+    3300484: clipCube:frame 54
+    3300486: clipCube:frame 55
+    3300488: clipCube:frame 56
+    3300490: clipCube:frame 57
+    3300492: clipCube:frame 58
+    3300494: clipCube:frame 59
+    3300496: clipCube:frame 6
+    3300498: clipCube:frame 60
+    3300500: clipCube:frame 61
+    3300502: clipCube:frame 62
+    3300504: clipCube:frame 63
+    3300506: clipCube:frame 7
+    3300508: clipCube:frame 8
+    3300510: clipCube:frame 9
+    3300512: clipCube1
+    3300514: clipCube10
+    3300516: clipCube11
+    3300518: clipCube12
+    3300520: clipCube13
+    3300522: clipCube14
+    3300524: clipCube15
+    3300526: clipCube16
+    3300528: clipCube17
+    3300530: clipCube18
+    3300532: clipCube19
+    3300534: clipCube2
+    3300536: clipCube20
+    3300538: clipCube21
+    3300540: clipCube22
+    3300542: clipCube23
+    3300544: clipCube24
+    3300546: clipCube25
+    3300548: clipCube26
+    3300550: clipCube27
+    3300552: clipCube28
+    3300554: clipCube29
+    3300556: clipCube3
+    3300558: clipCube30
+    3300560: clipCube31
+    3300562: clipCube32
+    3300564: clipCube33
+    3300566: clipCube34
+    3300568: clipCube35
+    3300570: clipCube36
+    3300572: clipCube37
+    3300574: clipCube38
+    3300576: clipCube39
+    3300578: clipCube4
+    3300580: clipCube40
+    3300582: clipCube41
+    3300584: clipCube42
+    3300586: clipCube43
+    3300588: clipCube44
+    3300590: clipCube45
+    3300592: clipCube46
+    3300594: clipCube47
+    3300596: clipCube48
+    3300598: clipCube49
+    3300600: clipCube5
+    3300602: clipCube50
+    3300604: clipCube51
+    3300606: clipCube52
+    3300608: clipCube53
+    3300610: clipCube54
+    3300612: clipCube55
+    3300614: clipCube56
+    3300616: clipCube57
+    3300618: clipCube58
+    3300620: clipCube59
+    3300622: clipCube6
+    3300624: clipCube60
+    3300626: clipCube61
+    3300628: clipCube62
+    3300630: clipCube63
+    3300632: clipCube64
+    3300634: clipCube7
+    3300636: clipCube8
+    3300638: clipCube9
     4300000: pCube3
     4300002: pCube4
     4300004: pCube5
@@ -647,6 +1543,198 @@ ModelImporter:
     4300250: polySurface62
     4300252: polySurface63
     4300254: polySurface64
+    4300256: clipCube:frame
+    4300258: clipCube:cube
+    4300260: clipCube:frame
+    4300262: clipCube:cube
+    4300264: clipCube:frame
+    4300266: clipCube:cube
+    4300268: clipCube:frame
+    4300270: clipCube:cube
+    4300272: clipCube:frame
+    4300274: clipCube:cube
+    4300276: clipCube:frame
+    4300278: clipCube:cube
+    4300280: clipCube:frame
+    4300282: clipCube:cube
+    4300284: clipCube:frame
+    4300286: clipCube:cube
+    4300288: clipCube:frame
+    4300290: clipCube:cube
+    4300292: clipCube:frame
+    4300294: clipCube:cube
+    4300296: clipCube:frame
+    4300298: clipCube:cube
+    4300300: clipCube:frame
+    4300302: clipCube:cube
+    4300304: clipCube:frame
+    4300306: clipCube:cube
+    4300308: clipCube:frame
+    4300310: clipCube:cube
+    4300312: clipCube:frame
+    4300314: clipCube:cube
+    4300316: clipCube:frame
+    4300318: clipCube:cube
+    4300320: clipCube:frame
+    4300322: clipCube:cube
+    4300324: clipCube:frame
+    4300326: clipCube:cube
+    4300328: clipCube:frame
+    4300330: clipCube:cube
+    4300332: clipCube:frame
+    4300334: clipCube:cube
+    4300336: clipCube:frame
+    4300338: clipCube:cube
+    4300340: clipCube:frame
+    4300342: clipCube:cube
+    4300344: clipCube:frame
+    4300346: clipCube:cube
+    4300348: clipCube:frame
+    4300350: clipCube:cube
+    4300352: clipCube:frame
+    4300354: clipCube:cube
+    4300356: clipCube:frame
+    4300358: clipCube:cube
+    4300360: clipCube:frame
+    4300362: clipCube:cube
+    4300364: clipCube:frame
+    4300366: clipCube:cube
+    4300368: clipCube:frame
+    4300370: clipCube:cube
+    4300372: clipCube:frame
+    4300374: clipCube:cube
+    4300376: clipCube:frame
+    4300378: clipCube:cube
+    4300380: clipCube:frame
+    4300382: clipCube:cube
+    4300384: clipCube:frame
+    4300386: clipCube:cube
+    4300388: clipCube:frame
+    4300390: clipCube:cube
+    4300392: clipCube:frame
+    4300394: clipCube:cube
+    4300396: clipCube:frame
+    4300398: clipCube:cube
+    4300400: clipCube:frame
+    4300402: clipCube:cube
+    4300404: clipCube:frame
+    4300406: clipCube:cube
+    4300408: clipCube:frame
+    4300410: clipCube:cube
+    4300412: clipCube:frame
+    4300414: clipCube:cube
+    4300416: clipCube:frame
+    4300418: clipCube:cube
+    4300420: clipCube:frame
+    4300422: clipCube:cube
+    4300424: clipCube:frame
+    4300426: clipCube:cube
+    4300428: clipCube:frame
+    4300430: clipCube:cube
+    4300432: clipCube:frame
+    4300434: clipCube:cube
+    4300436: clipCube:frame
+    4300438: clipCube:cube
+    4300440: clipCube:frame
+    4300442: clipCube:cube
+    4300444: clipCube:frame
+    4300446: clipCube:cube
+    4300448: clipCube:frame
+    4300450: clipCube:cube
+    4300452: clipCube:frame
+    4300454: clipCube:cube
+    4300456: clipCube:frame
+    4300458: clipCube:cube
+    4300460: clipCube:frame
+    4300462: clipCube:cube
+    4300464: clipCube:frame
+    4300466: clipCube:cube
+    4300468: clipCube:frame
+    4300470: clipCube:cube
+    4300472: clipCube:frame
+    4300474: clipCube:cube
+    4300476: clipCube:frame
+    4300478: clipCube:cube
+    4300480: clipCube:frame
+    4300482: clipCube:cube
+    4300484: clipCube:frame
+    4300486: clipCube:cube
+    4300488: clipCube:frame
+    4300490: clipCube:cube
+    4300492: clipCube:frame
+    4300494: clipCube:cube
+    4300496: clipCube:frame
+    4300498: clipCube:cube
+    4300500: clipCube:frame
+    4300502: clipCube:cube
+    4300504: clipCube:frame
+    4300506: clipCube:cube
+    4300508: clipCube:frame
+    4300510: clipCube:cube
+    4300512: clipCube1
+    4300514: clipCube2
+    4300516: clipCube3
+    4300518: clipCube4
+    4300520: clipCube5
+    4300522: clipCube6
+    4300524: clipCube7
+    4300526: clipCube8
+    4300528: clipCube9
+    4300530: clipCube10
+    4300532: clipCube11
+    4300534: clipCube12
+    4300536: clipCube13
+    4300538: clipCube14
+    4300540: clipCube15
+    4300542: clipCube16
+    4300544: clipCube17
+    4300546: clipCube18
+    4300548: clipCube19
+    4300550: clipCube20
+    4300552: clipCube21
+    4300554: clipCube22
+    4300556: clipCube23
+    4300558: clipCube24
+    4300560: clipCube25
+    4300562: clipCube26
+    4300564: clipCube27
+    4300566: clipCube28
+    4300568: clipCube29
+    4300570: clipCube30
+    4300572: clipCube31
+    4300574: clipCube32
+    4300576: clipCube33
+    4300578: clipCube34
+    4300580: clipCube35
+    4300582: clipCube36
+    4300584: clipCube37
+    4300586: clipCube38
+    4300588: clipCube39
+    4300590: clipCube40
+    4300592: clipCube41
+    4300594: clipCube42
+    4300596: clipCube43
+    4300598: clipCube44
+    4300600: clipCube45
+    4300602: clipCube46
+    4300604: clipCube47
+    4300606: clipCube48
+    4300608: clipCube49
+    4300610: clipCube50
+    4300612: clipCube51
+    4300614: clipCube52
+    4300616: clipCube53
+    4300618: clipCube54
+    4300620: clipCube55
+    4300622: clipCube56
+    4300624: clipCube57
+    4300626: clipCube58
+    4300628: clipCube59
+    4300630: clipCube60
+    4300632: clipCube61
+    4300634: clipCube62
+    4300636: clipCube63
+    4300638: clipCube64
     9500000: //RootNode
   materials:
     importMaterials: 1

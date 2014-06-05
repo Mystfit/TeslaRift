@@ -24,6 +24,7 @@ public abstract class BaseAttachment : MonoBehaviour{
 	/*
 	 * Filter to only respond to defined tool modes
 	 */
+	public void SetToolmodeResponse(BaseTool.ToolMode[] modes){ m_respondsToToolMode = modes; }
 	public BaseTool.ToolMode[] m_respondsToToolMode;
 	public bool respondsToToolMode(BaseTool.ToolMode mode){
 		if(m_respondsToToolMode.Length > 0){
@@ -40,19 +41,22 @@ public abstract class BaseAttachment : MonoBehaviour{
 	/*
 	 * Collider references
 	 */
-	public bool m_doesCollide = false;
+	public bool m_doesCollide = true;
 	public bool IsCollideable{ get { return m_doesCollide; }}
 	public void SetCollideable(bool state){ 
-		m_doesCollide = state; 
-		if(m_doesCollide){
-			if(m_interiorTrigger == null || m_proximityTrigger == null){
-				Transform area = transform.Find("areaTrigger");
-				Transform interior = area.Find("interiorTrigger");
-				Transform proximity = area.Find("proximityTrigger");
-				m_interiorTrigger = interior.GetComponent<HandProximityTrigger>();
-				m_proximityTrigger = proximity.GetComponent<HandProximityTrigger>();
+		m_doesCollide = state;
+        if (m_interiorTrigger == null || m_proximityTrigger == null)
+        {
+            Transform area = transform.Find("areaTrigger");
+			if(area != null){
+	            Transform interior = area.Find("interiorTrigger");
+	            Transform proximity = area.Find("proximityTrigger");
+	            m_interiorTrigger = interior.GetComponent<HandProximityTrigger>();
+	            m_proximityTrigger = proximity.GetComponent<HandProximityTrigger>();
+	            m_interiorTrigger.isActive = m_doesCollide;
+	            m_proximityTrigger.isActive = m_doesCollide;
 			}
-		}
+        }
 	}
 	protected HandProximityTrigger m_interiorTrigger;
 	protected HandProximityTrigger m_proximityTrigger;
@@ -87,7 +91,9 @@ public abstract class BaseAttachment : MonoBehaviour{
     public void SetTransient(bool state) { m_isTransient = state; }
     public bool IsTransient { get { return m_isTransient; } }
     protected bool m_isTransient;
-
+    public void SetCloneable(bool state) { m_isCloneable = state; }
+    public bool IsCloneable { get { return m_isCloneable; } }
+    protected bool m_isCloneable;
 
 	/*
 	 * Music reference state
@@ -205,7 +211,6 @@ public abstract class BaseAttachment : MonoBehaviour{
 	 * Dockable object modifiers
 	 */
 	public virtual void DockInto(BaseAttachment attach){
-
 		attach.AddDockableAttachment(this);
 		m_dockedInto = attach;
         m_dockedIntoLast = attach;
@@ -238,15 +243,29 @@ public abstract class BaseAttachment : MonoBehaviour{
 			}
 		}
 
-        if (IsInDockingRange(closestValidDock.transform.position, closestValidDock.dockingRange))
-            DockInto(closestValidDock);
-        else
+		if(closestValidDock != null){
+			if (IsInDockingRange(closestValidDock, closestValidDock.dockingRange))
+            	DockInto(closestValidDock);
+			else 
+				Floating();
+		} else {
             Floating();
+		}
 	}
 
     public virtual void Floating()
     {
-        DockInto(m_dockedIntoLast);
+		if (IsTransient)
+		{
+			if (DockedInto == null)
+			{
+				GameObject.Destroy(gameObject);
+                return;
+			}
+		}
+
+        if (m_dockedIntoLast != null)
+            DockInto(m_dockedIntoLast);
     }
 
 
@@ -286,9 +305,29 @@ public abstract class BaseAttachment : MonoBehaviour{
 	}
     
 	public float dockingRange = 1.5f;
-	public virtual bool IsInDockingRange(Vector3 position, float range){
-        return (Vector3.Distance(transform.position, position) < range) ? true : false;
+	public virtual bool IsInDockingRange(BaseAttachment attach, float range){
+		if(attach == null) 
+			return false;
+        return (Vector3.Distance(transform.position, attach.transform.position) < range) ? true : false;
 	}
+
+    /*
+     * Child UI controls
+     */
+    public bool controlsEnabled { get { return m_controlsEnabled; } }
+    protected bool m_controlsEnabled;
+
+    public bool controlsVisible { get { return m_controlsVisible; } }
+    protected bool m_controlsVisible;
+
+    public void EnableControls() { m_controlsEnabled = true;  }
+    public void DisableControls()
+    {
+        m_controlsEnabled = false;
+        HideControls();
+    }
+    public virtual void ShowControls() { m_controlsVisible = true; }
+    public virtual void HideControls() { m_controlsVisible = false; }
 
 	/*
 	 * Gesture implementations

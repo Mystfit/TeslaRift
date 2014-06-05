@@ -25,7 +25,7 @@ public class InstrumentFactory : MonoBehaviour {
 	public TextAsset m_liveSessionFile;
 
 	private InstrumentController m_instrumentControllerRef;
-	public ParamScrollerAttachment m_instrumentHolder;
+	public ScrollerAttachment m_instrumentHolder;
 
 	void Start () {
 		m_instance = this;
@@ -101,13 +101,14 @@ public class InstrumentFactory : MonoBehaviour {
 			Color color = Utils.intToColor( int.Parse(track.Attributes["color"].Value) );
 			int trackIndex = int.Parse(track.Attributes["index"].Value);
 			bool armed = false;
-			XmlNode armedNode = track.Attributes["arm"];
+            bool isMidi = bool.Parse(track.Attributes["midi"].Value);
+			XmlNode armedNode = track.Attributes["armed"];
 			if(armedNode != null)
-			   armed = bool.Parse( track.Attributes["arm"].Value );
-			
-			BaseInstrument instrumentDef = new BaseInstrument( m_client, m_source, track.Attributes["name"].Value, color, armed, trackIndex);
+			   armed = bool.Parse( track.Attributes["armed"].Value );
 
-			//Get devices present in track
+            BaseInstrument instrumentDef = new BaseInstrument(m_client, m_source, track.Attributes["name"].Value, color, armed, trackIndex, isMidi);
+
+            //Get devices present in track
 			XmlNodeList deviceList = track.SelectNodes("device"); //device array	
 			foreach(XmlNode device in deviceList){
 
@@ -155,7 +156,7 @@ public class InstrumentFactory : MonoBehaviour {
 			}
 			
 			m_instrumentControllerRef.AddInstrument(instrumentDef);
-			InstrumentAttachment instrument = UIFactory.CreateInstrument(instrumentDef, color);
+            InstrumentAttachment instrument = UIFactory.CreateInstrument(instrumentDef);
 
 			instrument.DockInto(m_instrumentHolder);
 		}

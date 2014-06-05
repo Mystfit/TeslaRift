@@ -24,13 +24,13 @@ namespace MusicIO
 		string m_client = "";
 		string m_name = "";
 		string m_owner = "";
+        bool m_isMidi = false;
 		bool m_playable = false;
 		Color m_color;
 		int m_trackIndex;
-		
-		protected InstrumentClip m_loadedClip;		// Last played clip
-		
-		public BaseInstrument(string instrumentClient, string instrumentOwner, string instrumentName, Color color, bool playable, int trackIndex){
+		int m_lastPlayedNote;
+
+		public BaseInstrument(string instrumentClient, string instrumentOwner, string instrumentName, Color color, bool playable, int trackIndex, bool isMidi){
 			m_name = instrumentName;
 			m_owner = instrumentOwner;
 			m_client = instrumentClient;
@@ -41,6 +41,10 @@ namespace MusicIO
 			m_clips = new List<BaseInstrumentParam>();
 			m_params = new List<BaseInstrumentParam>();
 			m_messageQueue = new List<OSCMessage>();
+
+            m_isMidi = isMidi;
+            if (isMidi)
+                m_params.Add(new Note("note", this));
 		}
 		
 		public string Name{ get {return m_name; } }
@@ -48,6 +52,7 @@ namespace MusicIO
 		public string Client{ get {return m_client; } }
 		public Color color{ get { return m_color; }}
 		public bool playable{ get { return m_playable; }}
+        public bool isMidi { get { return m_isMidi; } }
 		public int trackIndex{ get{ return m_trackIndex; }}
 		
 		
@@ -60,6 +65,10 @@ namespace MusicIO
 		
 		// Clip functions
 		//---------------
+        public void SetPlayingClip(InstrumentClip clip) { m_playingClip = clip; }
+        public InstrumentClip playingClip { get { return m_playingClip; } }
+        protected InstrumentClip m_playingClip;		// Last played clip
+
 		public void AddClip(string name, bool looping, int scene){
 			m_clips.Add(new InstrumentClip(name, this, scene));
 		}
@@ -68,7 +77,6 @@ namespace MusicIO
 
 			return m_clips[index-1] as InstrumentClip;
 		}
-
 
 		// Parameter functions
 		//-----------------
@@ -152,11 +160,20 @@ namespace MusicIO
 				param.UpdateGenerators();
 				if(param.isDirty){
 					
-					if(param.GetType() == typeof(NoteParam)){
-						NoteParam chord = param as NoteParam;
-						foreach(Note note in chord.getNoteList()){
-							addMidiNoteMessageToQueue(note.name, note.val, note.velocity, note.noteIndex, note.noteTrigger );
-						}
+					if(param.GetType() == typeof(Note)){
+						//NoteParam chord = param as NoteParam;
+						Note note = param as Note;
+						//foreach(Note note in chord.getNoteList()){
+							//addMidiNoteMessageToQueue(note.name, note.val, note.velocity, note.noteIndex, note.noteTrigger );
+                            if (GlobalConfig.Instance.ShowtimeEnabled)
+                            {
+                                if (m_lastPlayedNote >= 0)
+									ZmqMusicNode.Instance.playNote(m_trackIndex, m_lastPlayedNote, 0, 0);
+                                
+								ZmqMusicNode.Instance.playNote(m_trackIndex, (int)note.scaledVal, note.velocity, 1);
+								m_lastPlayedNote = (int)note.scaledVal;
+                            }    
+                        //}
 					} else {
 						string paramName = param.name;
 						if(param.deviceName != "")

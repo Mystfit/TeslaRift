@@ -15,12 +15,15 @@ namespace UI
 		public GameObject framePrefab;
         public GameObject rbfSphereTrainingPrefab;
 		public GameObject clipButtonPrefab;
+        public GameObject clipCubePrefab;
+		public GameObject clipPlaceholderPrefab;
 		public GameObject instrumentIconPrefab;
 		public GameObject rotaryPrefab;
 		public GameObject paramScrollerPrefab;
 		public GameObject instrumentPrefab;
 		public GameObject rotaryInstrumentSlotPrefab;
         public GameObject guiQuadPrefab;
+        public GameObject volumetricCylinderPrefab;
 
 		//Slider localscale amount
 		public float m_sliderScale = 0.1f;
@@ -38,12 +41,22 @@ namespace UI
                 SliderAttachment slider = attach as SliderAttachment;
                 ghostAttach = UIFactory.CreateSlider(slider.musicRef, UIFrame.AnchorLocation.BOTTOM_LEFT);
             }
-            if (attach.GetType() == typeof(ClipButtonAttachment))
+            else if (attach.GetType() == typeof(ClipButtonAttachment))
             {
                 ClipButtonAttachment clipButton = attach as ClipButtonAttachment;
                 ghostAttach = UIFactory.CreateClipButton(clipButton.musicRef, UIFrame.AnchorLocation.BOTTOM_LEFT);
             }
-
+            else if (attach.GetType() == typeof(ClipCubeAttachment))
+            {
+                ClipCubeAttachment cubeButton = attach as ClipCubeAttachment;
+                ghostAttach = UIFactory.CreateClipCube(cubeButton.musicRef);
+            }
+			else if (attach.GetType() == typeof(InstrumentAttachment))
+            {
+                InstrumentAttachment instrument = attach as InstrumentAttachment;
+                ghostAttach = UIFactory.CreateInstrument(instrument.musicRef);
+            }
+                
             ghostAttach.transform.parent = attach.transform;
             ghostAttach.transform.position = attach.transform.position;
             ghostAttach.transform.localScale = attach.transform.localScale;
@@ -97,7 +110,6 @@ namespace UI
         }
 
 
-
 		/*
 		 * Button
 		 * Pressable clip button
@@ -115,6 +127,39 @@ namespace UI
 		}
 
 
+        /*
+         * ClipCube
+         * Draggable clip cube
+         */
+		public static ClipCubeAttachment CreateClipCube(InstrumentClip clip){
+			return CreateClipCube(clip, false);
+		}
+
+        public static ClipCubeAttachment CreateClipCube(InstrumentClip clip, bool autoResize)
+        {
+            GameObject cube = Instantiate(Instance.clipCubePrefab) as GameObject;
+
+            ClipCubeAttachment attach = cube.GetComponent<ClipCubeAttachment>();
+			attach.frame.SetMatchTextWidth(autoResize);
+
+            if(clip != null)
+                attach.Init(clip);
+
+            return attach;
+        }
+
+
+		/*
+         * ClipPlaceholder
+         * Draggable clip cube
+         */
+		public static GameObject CreateClipPlaceholder()
+		{
+			GameObject cubePlaceholder = Instantiate(Instance.clipPlaceholderPrefab) as GameObject;
+			return cubePlaceholder;
+		}
+		
+		
 		/*
 		 * Rotary Control
 		 * Creates a rotary param controller that uses twists to set values
@@ -128,24 +173,12 @@ namespace UI
 
 
 		/*
-		 * Rotary slot
-		 * Creates a rotary param that will hold an instrument
-		 */
-//		public static GameObject CreateRotaryInstru(BaseInstrumentParam param){
-//			GameObject rotary = Instantiate(Instance.rotaryPrefab) as GameObject;
-//			RotaryAttachment attach = rotary.GetComponent<RotaryAttachment>();
-//			attach.Init(param);
-//			return attach;
-//		}
-
-
-		/*
 		 * Parameter scroller
 		 * Creates a holder for parameter sliders that uses kinetic scrolling.
 		 */
-		public static ParamScrollerAttachment CreateParamScroller(){
+		public static ScrollerAttachment CreateParamScroller(){
 			GameObject paramScroller = Instantiate(Instance.paramScrollerPrefab) as GameObject;
-			ParamScrollerAttachment attach = paramScroller.GetComponent<ParamScrollerAttachment>();
+			ScrollerAttachment attach = paramScroller.GetComponent<ScrollerAttachment>();
 
 			return attach;
 		}
@@ -166,7 +199,7 @@ namespace UI
 		 * Main instrument prefab
 		 * Grabbable instrument with clips and parameter buttons/sliders
 		 */
-		public static InstrumentAttachment CreateInstrument(BaseInstrument instrument, Color instrumentColor){
+		public static InstrumentAttachment CreateInstrument(BaseInstrument instrument){
 			//Create an instrument prefab
 			GameObject instrumentGame = Instantiate(Instance.instrumentPrefab) as GameObject;
 			instrumentGame.name = instrument.Name;
@@ -180,7 +213,7 @@ namespace UI
 			
 			//Set listener prefixes
 			instrumentGame.GetComponent<InstrumentListener>().SetPrefixedOSCAddresses(instrument.Name);		//Set instrument prefixes for OSC listener
-			instrumentGame.renderer.material.SetColor("_Color", instrumentColor);
+            instrumentGame.renderer.material.SetColor("_Color", instrument.color);
 			
 			return attach;
 		}
@@ -193,6 +226,17 @@ namespace UI
         {
             GameObject quad = Instantiate(Instance.guiQuadPrefab) as GameObject;
             return quad;
+        }
+
+
+        /*
+         * Qui quad prefab
+         * Creates a quad for gui items
+         */
+        public static GameObject CreateVolumetricCylinder()
+        {
+            GameObject cylinder = Instantiate(Instance.volumetricCylinderPrefab) as GameObject;
+            return cylinder;
         }
 	}
 }

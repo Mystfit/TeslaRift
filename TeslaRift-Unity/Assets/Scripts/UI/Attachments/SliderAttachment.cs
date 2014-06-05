@@ -17,15 +17,13 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 		SetIsDockable(true);
 		m_slider = GetComponent<BarSlider>();
 		m_frame = GetComponent<UIFrame>();
-
-		object temp = interiorCollider; temp = proximityCollider;
 	}
 
 	public override void Init (BaseInstrumentParam managedReference)
 	{
 		base.Init (managedReference);
-		BarSlider sliderFrame = GetComponent<BarSlider>();
-		sliderFrame.SetLabel(managedReference.name);
+        BarSlider m_slider = GetComponent<BarSlider>();
+		m_frame.SetLabel(managedReference.name);
 	}
 
 
@@ -37,8 +35,11 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
         if(mode == BaseTool.ToolMode.GRABBING){
 			if(!HydraController.Instance.IsHandDragging(m_hand)){
 	            //Clone parameter here
-                SliderAttachment attach = UIFactory.CreateGhostDragger(this) as SliderAttachment;
-	            attach.StartDragging(HydraController.Instance.GetHand(m_hand));
+                if (IsCloneable)
+                {
+                    SliderAttachment attach = UIFactory.CreateGhostDragger(this) as SliderAttachment;
+                    attach.StartDragging(HydraController.Instance.GetHand(m_hand));
+                }
 			}
         }
 

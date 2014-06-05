@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UI;
 using MusicIO;
 
-public class ParamScrollerAttachment : BaseAttachment
+public class ScrollerAttachment : BaseAttachment
 {
     //Accepted dockable objects for this ui control
     public enum ScrollerDockTypes { INSTRUMENT, SLIDER, CLIP };
@@ -13,15 +13,31 @@ public class ParamScrollerAttachment : BaseAttachment
     //Colliders
     public float m_faceDampening;
     public bool m_facePerformer;
+
+    public float m_collisionWidth = 0.5f;
     public float m_collisionDepth = 0.5f;
 
     public float m_overflow = 2.0f;
     public float m_dampening = 0.95f;
     public float m_scrollMultiplier = 1.2f;
     public float m_speedCutoff = 0.01f;
-    public int m_displayedSliderCount = 6;
+
+    public void SetItemScale(float scale) { m_itemScale = scale; }
+    public float m_itemScale = 1.0f;
+
+    public void SetItemSpacing(float spacing) { m_itemSpacing = spacing; }
+    public float m_itemSpacing = 0.0f;
+
+    public float upperVisibleBounds { get { return m_upperVisibleBounds; } }
     public float m_upperVisibleBounds = 1.2f;
+
+    public float lowerVisibleBounds { get { return m_lowerVisibleBounds; } }
     public float m_lowerVisibleBounds = 0.0f;
+
+    public void SetNumDisplayedAttachments(int numAttachments){ m_numDisplayedAttachments = numAttachments; }
+	public int numDisplayedAttachments{ get { return m_numDisplayedAttachments; }}
+    public int m_numDisplayedAttachments = 6;
+
 
     protected float m_scrollVel;		//Current scrolling velocity
     protected Vector3 m_offset;
@@ -59,11 +75,11 @@ public class ParamScrollerAttachment : BaseAttachment
         if (base.AddDockableAttachment(attach))
         {
             attach.transform.parent = m_controlHolder.transform;
-			attach.transform.localPosition = new Vector3(0.0f, m_childDockables.Count * attach.interiorTrigger.GetSize().y, 0.0f);
-			//PlaceObjects();	
-            m_lastAttachHeight = attach.interiorTrigger.GetSize().y;
-			UpdateColliders( Vector3.zero, new Vector3(attach.interiorTrigger.GetSize().x, m_upperVisibleBounds - m_lowerVisibleBounds, m_collisionDepth));
-
+			//attach.transform.localPosition = new Vector3(0.0f, m_childDockables.Count * attach.interiorTrigger.GetSize().y, 0.0f);
+			PlaceObjects();
+            m_lastAttachHeight = attach.interiorTrigger.GetSize().y + m_itemSpacing;
+            UpdateColliders(Vector3.zero, new Vector3(m_collisionWidth, m_upperVisibleBounds - m_lowerVisibleBounds, m_collisionDepth));
+            attach.transform.localScale = new Vector3(m_itemScale, m_itemScale, m_itemScale);
             return true;
         }
         return false;
@@ -78,10 +94,25 @@ public class ParamScrollerAttachment : BaseAttachment
 
 	public void PlaceObjects(){
 		for(int i =0; i < m_childDockables.Count; i++){
-			Vector3 pos = new Vector3(0.0f, i * m_childDockables[i].interiorTrigger.GetSize().y, 0.0f);
+            iTween tween = m_childDockables[i].GetComponent<iTween>();
+            if (tween != null)
+                Destroy(tween);
+            Vector3 pos = new Vector3(0.0f, i * (m_childDockables[i].interiorTrigger.GetSize().y + m_itemSpacing), 0.0f);
 			iTween.MoveTo(m_childDockables[i].gameObject, iTween.Hash("position", pos, "time", 0.3f, "islocal", true));
 		}
 	}
+
+    public void SetCollisionWidth(float width) 
+    { 
+        m_collisionWidth = width;
+        UpdateColliders(Vector3.zero, new Vector3(m_collisionWidth, m_upperVisibleBounds - m_lowerVisibleBounds, m_collisionDepth));
+    }
+
+    public void SetCollisionDepth(float depth) 
+    { 
+        m_collisionDepth = depth;
+        UpdateColliders(Vector3.zero, new Vector3(m_collisionWidth, m_upperVisibleBounds - m_lowerVisibleBounds, m_collisionDepth));
+    }
 
     // Update is called once per frame
     public override void Update()
@@ -107,10 +138,10 @@ public class ParamScrollerAttachment : BaseAttachment
             m_scrollVel = 0.0f;
             m_lastPosition = m_controlHolder.localPosition;
         }
-        else if (m_controlHolder.localPosition.y < (m_childDockables.Count - m_displayedSliderCount) * m_lastAttachHeight * -1.0f)
+        else if (m_controlHolder.localPosition.y < (m_childDockables.Count - m_numDisplayedAttachments) * m_lastAttachHeight * -1.0f)
         {
             m_controlHolder.localPosition = new Vector3(m_controlHolder.transform.localPosition.x,
-                                                        (m_childDockables.Count - m_displayedSliderCount) * m_lastAttachHeight * -1.0f,
+                                                        (m_childDockables.Count - m_numDisplayedAttachments) * m_lastAttachHeight * -1.0f,
                                                         m_controlHolder.transform.localPosition.z);
             m_scrollVel = 0.0f;
             m_lastPosition = m_controlHolder.localPosition;
@@ -120,7 +151,7 @@ public class ParamScrollerAttachment : BaseAttachment
     }
 
     /*
-     * Hide and reveal sliders to keep them in range
+     * Hide and reveal attatchments to keep them in range
      */
     protected void MaskControls()
     {
@@ -136,26 +167,23 @@ public class ParamScrollerAttachment : BaseAttachment
             {
                 if (!m_childDockables[i].gameObject.activeSelf)
                 {
-                    if (m_childDockables[i].gameObject.GetComponent<iTween>() == null && m_childDockables[i].transform.localScale.x == 0.0f)
-                        m_childDockables[i].SetActive();
-                    iTween.ScaleTo(m_childDockables[i].gameObject, iTween.Hash("x", 1.0f, "time", 0.15f, "easetype", iTween.EaseType.easeInQuad));
+					m_childDockables[i].SetActive();
+                    iTween.ScaleTo(m_childDockables[i].gameObject, iTween.Hash("x", m_itemScale, "time", 0.15f, "easetype", iTween.EaseType.easeInQuad));
                 }
             }
         }
     }
 
-    void FixedUpdate()
-    {
-        //Rotate to face player eyes
-        if (m_facePerformer)
-        {
-            // Look at and dampen the rotation
-            Quaternion rotation = Quaternion.LookRotation(this.interiorCollider.bounds.center - HydraController.Instance.EyeCenter);
-            //transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * m_faceDampening);
-            //transform.rotation = rotation;
-            transform.rotation = Quaternion.Euler(new Vector3(0.0f, rotation.eulerAngles.y, 0.0f));
-        }
-    }
+    //void FixedUpdate()
+    //{
+    //    //Rotate to face player eyes
+    //    if (m_facePerformer)
+    //    {
+    //        // Look at and dampen the rotation
+    //        Quaternion rotation = Quaternion.LookRotation(this.interiorCollider.bounds.center - HydraController.Instance.EyeCenter);
+    //        transform.rotation = Quaternion.Euler(new Vector3(0.0f, rotation.eulerAngles.y, 0.0f));
+    //    }
+    //}
 
     protected void DragScroller()
     {
@@ -171,7 +199,7 @@ public class ParamScrollerAttachment : BaseAttachment
      */
     public override void Gesture_IdleProximity()
     {
-        if (m_mode == BaseTool.ToolMode.TERTIARY)
+        if (m_mode == BaseTool.ToolMode.SECONDARY)
         {
             if (bIsDragging)
                 DragScroller();
@@ -215,7 +243,7 @@ public class ParamScrollerAttachment : BaseAttachment
     public override void Gesture_First()
     {
         base.Gesture_First();
-        if (m_mode == BaseTool.ToolMode.TERTIARY)
+        if (m_mode == BaseTool.ToolMode.SECONDARY)
         {
             bIsDragging = true;
             m_scrollVel = 0.0f;
@@ -223,6 +251,7 @@ public class ParamScrollerAttachment : BaseAttachment
             handPos.x = 0;
             handPos.z = 0;
             m_offset = m_controlHolder.localPosition - handPos;
+            
         }
     }
 

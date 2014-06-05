@@ -139,13 +139,13 @@ public static class Utils
 		float diffAngle = angleInc;
 
 		if(angleInc < minAngle) angleInc = minAngle;
-		float startAngle = (centered) ? (numPoints * angleInc) * 0.5f : 0.0f;
+        float startAngle = (centered) ? ((numPoints-1) * angleInc) * 0.5f : 0.0f;
 
 		for(int i =0; i < numPoints; i++){
 			//Move this to the carousel
 			points[i] = new Vector3(
-				Mathf.Cos((i * angleInc) - (startAngle * 2.0f)) * radius,
-				Mathf.Sin((i * angleInc) - (startAngle * 2.0f)) * radius,
+				Mathf.Cos((i * angleInc) - (startAngle)) * radius,
+				Mathf.Sin((i * angleInc) - (startAngle)) * radius,
 				0.0f
 			);
 		}

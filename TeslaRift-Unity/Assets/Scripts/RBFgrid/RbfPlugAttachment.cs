@@ -22,7 +22,8 @@ public class RbfPlugAttachment : BaseAttachment<BaseInstrumentParam> {
 
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
+		base.Awake();
 		AddAcceptedDocktype(typeof(SliderAttachment));
 	}
 
@@ -30,15 +31,14 @@ public class RbfPlugAttachment : BaseAttachment<BaseInstrumentParam> {
 	{
         if (base.AddDockableAttachment(attach))
         {
-
             animation.Play("drawer_out");
             SliderAttachment slider = attach as SliderAttachment;
+            slider.SetCloneable(false);
             iTween.MoveTo(slider.gameObject, iTween.Hash("position", transform.position, "time", 0.5f));
             iTween.RotateTo(slider.gameObject, iTween.Hash("rotation", transform.rotation, "time", 0.5f));
             return true;
         }
         return false;
-
 	}
 
     public override void Gesture_First()

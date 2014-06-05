@@ -95,6 +95,17 @@ public class InstrumentController : MonoBehaviour {
 		return null;
 	}
 
+    public BaseInstrument GetInstrumentByTrackindex(int trackindex)
+    {
+        foreach (BaseInstrument instrument in m_instruments)
+        {
+            if (instrument.trackIndex == trackindex)
+                return instrument;
+        }
+
+        return null;
+    }
+
     /*
      * Finds a specific parameter by index
      */

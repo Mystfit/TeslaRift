@@ -25,6 +25,7 @@ public class UIFrame : MonoBehaviour {
 	/*
 	 * Externally set dimensions
 	 */
+    public Vector3 m_frameOffset;
 	public float m_frameThickness = 0.01f;
 	public float m_easeTime = 0.5f;
 	public float m_braceLength = 0.01f;
@@ -75,7 +76,6 @@ public class UIFrame : MonoBehaviour {
 	private bool bRotated = false;
 	private bool bIsOutlineVisible = false;
 	
-	
 	void Awake () {
 		m_attach = GetComponent<BaseAttachment>();
 		m_frameComponents = new List<GameObject>();
@@ -94,6 +94,11 @@ public class UIFrame : MonoBehaviour {
 						
 		if(m_hasGrid)
 			CreateGrid(m_numGridRows, m_numGridColumns);
+
+        if(m_label != null){
+			SetLabel(m_sliderLabel);
+			m_label.transform.localPosition = m_frameOffset * 2.0f;
+		}
 	}
 	
 	
@@ -162,7 +167,7 @@ public class UIFrame : MonoBehaviour {
 		int i = 0;
 		float colSpacing = targetWidth / (m_gridColumns.Count+1);
 		float rowSpacing = targetHeight / (m_gridRows.Count+1);
-		m_gridParent.transform.localPosition = GetAnchorOffset(m_currentWidth, m_currentHeight, m_anchorPoint);
+        m_gridParent.transform.localPosition = GetAnchorOffset(m_currentWidth, m_currentHeight, m_anchorPoint) + m_frameOffset;
 		
 		for(i = 0; i < m_gridRows.Count; i++){
 			m_gridRows[i].transform.localPosition = new Vector3( -m_currentWidth*0.5f, ((i+1) * rowSpacing) - m_currentHeight*0.5f, 0.0f);
@@ -182,11 +187,11 @@ public class UIFrame : MonoBehaviour {
 	protected void UpdateQuadTransform(GameObject quad, float x, float y, float z, float width, float height, bool mirrored){
 		if(mirrored){
 			quad.transform.localRotation = Quaternion.Euler( new Vector3(0.0f, 0.0f, 180.0f) );
-			quad.transform.localPosition = new Vector3(x, y, z);
+            quad.transform.localPosition = new Vector3(x, y, z) + m_frameOffset;
 			quad.transform.localScale = new Vector3(width, height, 0.0f);
 		} else {
 			quad.transform.localRotation = Quaternion.Euler( new Vector3(0.0f, 0.0f, 0.0f) );
-			quad.transform.localPosition = new Vector3(x - m_frameThickness, y - height, z);
+            quad.transform.localPosition = new Vector3(x - m_frameThickness, y - height, z) + m_frameOffset;
 			quad.transform.localScale = new Vector3(width, height, 0.0f);
 		}
 	}
@@ -196,7 +201,7 @@ public class UIFrame : MonoBehaviour {
 			m_backgroundQuad.localScale = new Vector3(width, height - (m_frameThickness*2));
 			//m_backgroundQuad.localPosition = new Vector3(-(m_frameThickness*0.5f), -(m_frameThickness*0.5f), 0.0f);
 			Vector3 borderOffset = new Vector3(-(m_frameThickness*0.5f), -(m_frameThickness*0.5f), 0.0f);
-			m_backgroundQuad.localPosition = GetAnchorOffset(width, height, m_anchorPoint) + borderOffset;
+            m_backgroundQuad.localPosition = GetAnchorOffset(width, height, m_anchorPoint) + borderOffset + m_frameOffset * 2.0f;
 		}
 	}
 	
@@ -216,8 +221,8 @@ public class UIFrame : MonoBehaviour {
 		if(m_hasGrid)
 			UpdateGridLines();
 
-		m_guiPanels.localPosition = GetAnchorOffset(m_currentWidth, m_currentHeight, m_anchorPoint);
-		m_selectGuiPanels.localPosition = GetAnchorOffset(m_currentWidth, m_currentHeight, m_anchorPoint);
+        m_guiPanels.localPosition = GetAnchorOffset(m_currentWidth, m_currentHeight, m_anchorPoint) + m_frameOffset;
+        m_selectGuiPanels.localPosition = GetAnchorOffset(m_currentWidth, m_currentHeight, m_anchorPoint) + m_frameOffset;
 		
 		UpdateBackground(m_currentWidth, m_currentHeight);
 	}
@@ -482,6 +487,58 @@ public class UIFrame : MonoBehaviour {
 		m_anchorPoint = anchor;
 		toggleUpdate = true;
 	}
+
+
+    /*
+     * Text label
+     */
+    public TextMesh label { get { return m_label; } }
+    public TextMesh m_label;
+    public string m_sliderLabel = "";
+
+    public void SetMatchTextWidth(bool state) { m_matchTextWidth = state; }
+    public bool m_matchTextWidth = false;
+
+    public void SetLabel(string label)
+    {
+        m_sliderLabel = label;
+		if(m_label != null){
+        	m_label.anchor = FrameAnchorToTextAnchor(m_anchorPoint);
+	        m_label.text = label;
+	        if(m_matchTextWidth)
+				AnimateSize(m_label.gameObject.renderer.bounds.size.x, m_frameHeight);
+		}
+    }
+
+    /*
+     * Converts frame anchors to text anchors
+     */
+    public static TextAnchor FrameAnchorToTextAnchor(UIFrame.AnchorLocation anchor)
+    {
+        switch (anchor)
+        {
+            case UIFrame.AnchorLocation.BOTTOM:
+                return TextAnchor.LowerCenter;
+            case UIFrame.AnchorLocation.BOTTOM_LEFT:
+                return TextAnchor.LowerLeft;
+            case UIFrame.AnchorLocation.BOTTOM_RIGHT:
+                return TextAnchor.LowerRight;
+            case UIFrame.AnchorLocation.CENTER:
+                return TextAnchor.MiddleCenter;
+            case UIFrame.AnchorLocation.LEFT:
+                return TextAnchor.MiddleLeft;
+            case UIFrame.AnchorLocation.RIGHT:
+                return TextAnchor.MiddleRight;
+            case UIFrame.AnchorLocation.TOP:
+                return TextAnchor.UpperCenter;
+            case UIFrame.AnchorLocation.TOP_LEFT:
+                return TextAnchor.UpperLeft;
+            case UIFrame.AnchorLocation.TOP_RIGHT:
+                return TextAnchor.UpperRight;
+        }
+        return TextAnchor.MiddleCenter;
+    }
+	
 
 	//Getters
 	public float width{ get { return m_frameWidth; }}

@@ -6,13 +6,21 @@ using MusicIO;
 public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 
 	protected GameObject m_parameterScroller;
-	
+    protected GameObject m_clipScroller;
+    protected GameObject m_dividingQuad;
+    protected GameObject m_rotator;
+
+    public float m_dividerWidth = 0.01f;
+    public float m_controlsMirrorOffset = 0.1f;
+    public float m_controlsYOffset = 0.15f;
+    public float m_clipCubeSpacing = 0.06f;
+    public bool m_facePerformer = true;
+
 	public override void Awake ()
 	{
 		//Since instrument attachments are created at runtime, we need to set the filter here
 		m_respondsToToolMode = new BaseTool.ToolMode[]{
 			BaseTool.ToolMode.PRIMARY, 
-			BaseTool.ToolMode.SECONDARY, 
 			BaseTool.ToolMode.GRABBING
 		};
 		base.Awake ();
@@ -21,63 +29,115 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 		SetCollideable(true);
 		SetIsDockable(true);
 		SetIsDraggable(true);
+		SetCloneable(true);
 	}
 
-	public void InitInstrumentControls(){
-		if(musicRef  != null){
-			//Create clipbuttons
-			ParamScrollerAttachment clipScroller = UIFactory.CreateParamScroller();
-            clipScroller.AddAcceptedDocktype(typeof(ClipButtonAttachment));
-			clipScroller.transform.parent = transform;
-			clipScroller.transform.localPosition = Vector3.zero;
-			
-			foreach(InstrumentClip clip in musicRef.clipList){ 
-				ClipButtonAttachment clipButton = UIFactory.CreateClipButton(clip, UIFrame.AnchorLocation.BOTTOM_LEFT);
-                clipButton.transform.localScale = UIFactory.SliderScale;
-                clipButton.DockInto(clipScroller);
-			}
-			
-			//Create param sliders
-			ParamScrollerAttachment paramScroller = UIFactory.CreateParamScroller();
-			paramScroller.transform.parent = transform;
-			paramScroller.transform.localPosition = Vector3.zero;
 
-			foreach(BaseInstrumentParam param in musicRef.paramList){ 
-				SliderAttachment slider = UIFactory.CreateSlider(param, UIFrame.AnchorLocation.BOTTOM_LEFT);
+    /*
+     * Controls
+     */
+    
+
+    public void InitInstrumentControls()
+    {
+        if (musicRef != null)
+        {
+            m_rotator = new GameObject("rotator");
+            m_rotator.transform.parent = transform;
+            m_rotator.transform.localPosition = Vector3.zero;
+
+            //Create clipbuttons
+            ScrollerAttachment clipScroller = UIFactory.CreateParamScroller();
+            clipScroller.SetItemSpacing(m_clipCubeSpacing);
+            clipScroller.AddAcceptedDocktype(typeof(ClipCubeAttachment));
+            clipScroller.transform.parent = m_rotator.transform;
+            clipScroller.transform.localPosition = new Vector3(-m_controlsMirrorOffset, m_controlsYOffset, 0.0f);
+            clipScroller.SetItemScale(UIFactory.SliderScale.x);
+            foreach (InstrumentClip clip in musicRef.clipList)
+            {
+                ClipCubeAttachment cube = UIFactory.CreateClipCube(clip, true);
+                cube.SetCloneable(true);
+                cube.SetColour(musicRef.color);
+                
+                cube.DockInto(clipScroller);
+            }
+
+            //Create param sliders
+            ScrollerAttachment paramScroller = UIFactory.CreateParamScroller();
+            paramScroller.transform.parent = m_rotator.transform;
+            paramScroller.transform.localPosition = new Vector3(m_controlsMirrorOffset, m_controlsYOffset, 0.0f);
+            paramScroller.SetItemScale(UIFactory.SliderScale.x);
+
+            foreach (BaseInstrumentParam param in musicRef.paramList)
+            {
+                SliderAttachment slider = UIFactory.CreateSlider(param, UIFrame.AnchorLocation.BOTTOM_LEFT);
+                slider.SetCloneable(true);
                 slider.transform.localScale = UIFactory.SliderScale;
                 slider.DockInto(paramScroller);
-			}
-                
-			//Set clip scroller scale
-			//clipScroller.transform.localScale = UIFactory.SliderScale;
+            }
 
-			//Set param scroller scale
-			//paramScroller.transform.localScale = UIFactory.SliderScale;
+			if(musicRef.clipList.Count < clipScroller.numDisplayedAttachments)
+            	clipScroller.SetNumDisplayedAttachments(musicRef.clipList.Count);
 
-			//Hide controls
-			clipScroller.SetInactive();
-			paramScroller.SetInactive();
-			m_parameterScroller = paramScroller.gameObject;
-		}
+			if(musicRef.paramList.Count < paramScroller.numDisplayedAttachments)
+            	paramScroller.SetNumDisplayedAttachments(musicRef.paramList.Count);
 
-	}
-	
-	
-	public override void Update () {
+            m_parameterScroller = paramScroller.gameObject;
+            m_clipScroller = clipScroller.gameObject;
 
-	}
+            //Central divider 
+            float largestHeight = (clipScroller.upperVisibleBounds > paramScroller.upperVisibleBounds) ? clipScroller.upperVisibleBounds : paramScroller.upperVisibleBounds;
+            m_dividingQuad = UIFactory.CreateGuiQuad();
+            m_dividingQuad.transform.localScale = new Vector3(m_dividerWidth, largestHeight, 1.0f);
+            m_dividingQuad.transform.parent = m_rotator.transform;
+            m_dividingQuad.transform.localPosition = new Vector3(0.0f, m_controlsYOffset, 0.0f);
 
-	
-	//Tool interface implementations
-	//-----------------------------------
-	
-	/*
-	 * Handles code for the mode of the interacting tool
-	 */
-	public override void SetToolMode(BaseTool.ToolMode mode){
-		base.SetToolMode(mode);
-	}
-	
+            DisableControls();
+        }
+    }
+
+    public override void ShowControls()
+    {
+        if (controlsEnabled)
+        {
+            //m_clipScroller.SetActive(true);
+            //m_parameterScroller.SetActive(true);
+            m_rotator.SetActive(true);
+
+            if (m_dockedInto != null)
+            {
+                //Let dock know that our controls are visible
+                if (m_dockedInto.GetType() == typeof(WorkspaceDockAttachment))
+                {
+                    WorkspaceDockAttachment dock = m_dockedInto as WorkspaceDockAttachment;
+                    dock.InstrumentControlsAreVisible(this);
+                }
+            }
+            base.ShowControls();
+        }
+    }
+
+    public override void HideControls()
+    {
+        //m_clipScroller.SetActive(false);
+        //m_parameterScroller.SetActive(false);
+        m_rotator.SetActive(false);
+
+        base.HideControls();
+    }
+
+    void FixedUpdate()
+    {
+        //Rotate to face player eyes
+        if (m_facePerformer)
+        {
+            // Look at and dampen the rotation
+            Quaternion rotation = Quaternion.LookRotation(this.interiorCollider.bounds.center - HydraController.Instance.EyeCenter);
+            m_rotator.transform.rotation = Quaternion.Euler(new Vector3(0.0f, rotation.eulerAngles.y, 0.0f));
+        }
+    }
+
+
 	/*
 	 *  Gesture handlers
 	 */
@@ -86,9 +146,26 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 		base.Gesture_First ();
 
 		//Make sure to start dragging the object if we're using the drag gesture
-		if(m_mode == BaseTool.ToolMode.GRABBING){
-            StartDragging(HydraController.Instance.GetHand(m_hand));
-		}
+        if (m_mode == BaseTool.ToolMode.GRABBING)
+        {
+            //StartDragging(HydraController.Instance.GetHand(m_hand));
+            if (!HydraController.Instance.IsHandDragging(m_hand))
+            {
+                //Clone instrument here
+                if (IsCloneable)
+                {
+                    InstrumentAttachment attach = UIFactory.CreateGhostDragger(this) as InstrumentAttachment;
+                    attach.StartDragging(HydraController.Instance.GetHand(m_hand));
+                    attach.collider.isTrigger = true;
+                } else {
+					StartDragging(HydraController.Instance.GetHand(m_hand));
+                    collider.isTrigger = true;
+				}
+            }
+        }
+
+        if (mode == BaseTool.ToolMode.PRIMARY)
+            ShowControls();
 	}
 	
 	public override void Gesture_IdleProximity ()
@@ -106,16 +183,11 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 
 	public override void Gesture_PushIn (){
 		base.Gesture_PushIn ();
-		Gesture_Exit();
 	}
 
 	public override void Gesture_PullOut ()
 	{
-		if(m_mode == BaseTool.ToolMode.SECONDARY){
-			m_parameterScroller.SetActive(!m_parameterScroller.activeSelf);
-		}
 		base.Gesture_PullOut ();
-		Gesture_Exit();
 	}
 }
 

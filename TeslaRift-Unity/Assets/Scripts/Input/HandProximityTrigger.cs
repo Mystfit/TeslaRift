@@ -5,6 +5,7 @@ public class HandProximityTrigger : MonoBehaviour {
 	
 	public GameObject proximityRoot;
 	public ProximityType proximityTarget;
+    public bool isActive = true;
 	
 	public void Init(ProximityType type){
 		proximityTarget = type;
@@ -46,16 +47,21 @@ public class HandProximityTrigger : MonoBehaviour {
 
 	
 	void OnTriggerEnter(Collider collider){
-		if(collider.gameObject.layer == LayerMask.NameToLayer("SoundCollideable")){
-			SixenseHands hand = collider.gameObject.GetComponent<HydraHand>().Hand;
-			HydraController.Instance.AddCollision(proximityRoot, hand, proximityTarget);
-		}
+        if (isActive)
+        {
+		    if(collider.gameObject.layer == LayerMask.NameToLayer("SoundCollideable")){
+			    SixenseHands hand = collider.gameObject.GetComponent<HydraHand>().Hand;
+			    HydraController.Instance.AddCollision(proximityRoot, hand, proximityTarget);
+		    }
+        }
 	}
 	
 	void OnTriggerExit(Collider collider){
-		if(collider.gameObject.layer == LayerMask.NameToLayer("SoundCollideable")){
-			SixenseHands hand = collider.gameObject.GetComponent<HydraHand>().Hand;
-			HydraController.Instance.RemoveCollision(proximityRoot, hand, proximityTarget);
-		}
+        if (isActive){
+		    if(collider.gameObject.layer == LayerMask.NameToLayer("SoundCollideable")){
+			    SixenseHands hand = collider.gameObject.GetComponent<HydraHand>().Hand;
+			    HydraController.Instance.RemoveCollision(proximityRoot, hand, proximityTarget);
+		    }
+        }
 	}
 }

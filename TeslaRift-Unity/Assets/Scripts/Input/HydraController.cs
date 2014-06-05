@@ -388,9 +388,9 @@ public class HydraController : MonoBehaviour {
 			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.TERTIARY);
 		}
 
-		else if(m_glove.GetGestureDown("THREE_SWIPE") || Input.GetKeyDown(KeyCode.LeftShift)){
-			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.TERTIARY);
-		}
+//		else if(m_glove.GetGestureDown("THREE_SWIPE") || Input.GetKeyDown(KeyCode.LeftShift)){
+//			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.TERTIARY);
+//		}
 		
 		//Gesture Selector Primary
 		//--------------------
@@ -401,12 +401,30 @@ public class HydraController : MonoBehaviour {
 					//Gesture selector secondary
 		//--------------------
 		else if(m_glove.GetGestureDown("INDEX_MIDDLE") || Input.GetKeyDown(KeyCode.E)){
-			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.SECONDARY);	//Secondary mode does a full reset
+			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.SECONDARY);	
 		}
 
-		else if(m_glove.GetGestureDown("ROCK_ON") || Input.GetKeyDown(KeyCode.S)){
-			m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.TERTIARY);	//Secondary mode does a full reset
-		}
+        else if (m_glove.GetGestureDown("ROCK_ON") || Input.GetKeyDown(KeyCode.S))
+        {
+            m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.TERTIARY);
+        }
+
+		//Fingerplay gestures
+		if(m_glove.GetGestureDown("PLAY_1"))
+        {
+            m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.PLAY1);
+		} else if(m_glove.GetGestureDown("PLAY_2"))
+        {
+            m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.PLAY2);
+        }
+        else if (m_glove.GetGestureDown("PLAY_3"))
+        {
+            m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.PLAY3);
+        }
+        else if (m_glove.GetGestureDown("PLAY_4"))
+        {
+            m_toolControlRef.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.PLAY4);
+        }
 	
 		//Normal reset
 		//--------------------

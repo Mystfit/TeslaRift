@@ -24,9 +24,7 @@ public class ZmqMusicNode : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		m_instance = this;
-		string address = "tcp://" + m_stageAddress + ":" + m_port;
-		Debug.Log(address);
-		m_node = new ZstNode("UnityNode", address);
+		m_node = new ZstNode("UnityNode", "tcp://" + m_stageAddress + ":" + m_port);
 		m_node.requestRegisterNode();
 		m_peers = m_node.requestNodePeerlinks();
 
@@ -39,7 +37,11 @@ public class ZmqMusicNode : MonoBehaviour {
 
         //Subscribe to value updates
         m_node.subscribeToMethod(m_livePeer.methods["value_updated"], instrumentValueUpdated);
-        //m_node.subscribeToMethod(m_livePeer.methods["value_updated"], clipFired);
+		m_node.subscribeToMethod(m_livePeer.methods["fired_slot_index"], clipFired);
+        m_node.subscribeToMethod(m_livePeer.methods["playing_slot_index"], clipPlaying);
+
+
+		//m_node.subscribeToMethod(m_livePeer.methods["value_updated"], clipFired);
 	}
 
     /* 
@@ -57,10 +59,41 @@ public class ZmqMusicNode : MonoBehaviour {
 
     public object clipFired(ZstMethod methodData)
     {
-        Debug.Log(methodData.output);
         Dictionary<string, object> output = JsonConvert.DeserializeObject<Dictionary<string, object>>(methodData.output.ToString());
-        InstrumentClip clip = InstrumentController.Instance.FindClip(Convert.ToInt32(output["trackindex"]), Convert.ToInt32(output["clipindex"]));
-        clip.setScaledVal(Convert.ToInt32(output["value"]));
+        int trackIndex = Convert.ToInt32(output["trackindex"]);
+        int slotIndex = Convert.ToInt32(output["slotindex"]);
+
+        if (slotIndex >= 0)
+        {
+            InstrumentClip clip = InstrumentController.Instance.FindClip(trackIndex, slotIndex);
+            clip.SetClipState(InstrumentClip.ClipState.IS_QUEUED);
+        }
+
+        return null;
+    }
+
+    public object clipPlaying(ZstMethod methodData)
+    {
+        Dictionary<string, object> output = JsonConvert.DeserializeObject<Dictionary<string, object>>(methodData.output.ToString());
+        int trackIndex = Convert.ToInt32(output["trackindex"]);
+        int slotIndex = Convert.ToInt32(output["slotindex"]);
+		InstrumentClip playingClip = InstrumentController.Instance.GetInstrumentByTrackindex(trackIndex).playingClip;
+
+        if (slotIndex < 0)
+        {
+            //Stopping
+			if(playingClip != null)
+				playingClip.SetClipState(InstrumentClip.ClipState.IS_DISABLED);
+		}
+        else
+        {
+			if(playingClip != null)
+				playingClip.SetClipState(InstrumentClip.ClipState.IS_DISABLED);
+
+            InstrumentClip clip = InstrumentController.Instance.FindClip(trackIndex, slotIndex);
+            clip.SetClipState(InstrumentClip.ClipState.IS_PLAYING);
+        }
+
         return null;
     }
 
@@ -77,6 +110,18 @@ public class ZmqMusicNode : MonoBehaviour {
 				{"value", value}
 		});
 	}
+
+    public void playNote(int trackIndex, int note, int velocity, int trigger)
+    {
+        m_node.updateRemoteMethod(
+            m_livePeer.methods["play_note"],
+            new Dictionary<string, object>(){
+				{"trackindex", trackIndex},
+				{"note", note},
+				{"state", trigger},
+				{"velocity", velocity}
+		});
+    }
 
 	public void fireClip(int trackIndex, int clipIndex){
 		m_node.updateRemoteMethod(

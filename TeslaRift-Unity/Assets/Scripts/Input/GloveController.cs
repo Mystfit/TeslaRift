@@ -22,7 +22,7 @@ public class GloveController : MonoBehaviour {
 	protected CalibrationState m_calibrationState = CalibrationState.AWAITING_CALIBRATION;
 	public CalibrationState GetCalibrationState(){ return m_calibrationState; }
 	private List<double[]> m_currentCalibrationSamples;
-	protected int m_calibrationSamples = 60;
+	public int m_calibrationSamples = 60;
 	protected bool bIsCollectingSamples;
 	protected double[] m_calibrationAvg;
 
@@ -122,33 +122,45 @@ public class GloveController : MonoBehaviour {
 
 					if(bIsCollectingSamples){
 						if(m_currentCalibrationSamples.Count < m_calibrationSamples){
-							m_currentCalibrationSamples.Add(m_bendValues.Clone() as Double[]);
-						} else {
-							double[] m_calibrationTotal = new double[m_bendValues.Length];
-							m_calibrationAvg = new double[m_bendValues.Length];
-							foreach(double[] vals in m_currentCalibrationSamples){
-								for(int i = 0; i < vals.Length; i++){
-									m_calibrationTotal[i] += vals[i];
-								}
+							double[] sensorValues = m_bendValues.Clone() as Double[];
+							m_currentCalibrationSamples.Add(sensorValues);
+							//m_rbf.addTrainingPoint(sensorValues, BuildRBFGestureOuput(m_calibratingGestureIndex));
+
+							string vals = "";
+							int count = 0;
+							foreach(double n in sensorValues){
+								vals += n.ToString() + ", ";
+								count++;
 							}
-							for(int i =0; i < m_calibrationTotal.Length; i++){
-								m_calibrationAvg[i] = m_calibrationTotal[i] / m_calibrationSamples;
-							}
-							bIsCollectingSamples = false;
-						}	
+							Debug.Log(count + "Glove Values:" + vals);
+						} 
+                        else {
+                            double[] m_calibrationTotal = new double[m_bendValues.Length];
+                            m_calibrationAvg = new double[m_bendValues.Length];
+                            foreach (double[] vals in m_currentCalibrationSamples)
+                            {
+                                for (int i = 0; i < vals.Length; i++)
+                                {
+                                    m_calibrationTotal[i] += vals[i];
+                                }
+                            }
+                            for (int i = 0; i < m_calibrationTotal.Length; i++)
+                            {
+                                m_calibrationAvg[i] = m_calibrationTotal[i] / m_calibrationSamples;
+                            }
+                            bIsCollectingSamples = false;
+                        }	
 					} else {
 						//Samples recorded, save into RBF engine.
 						m_toggleNextGestureCalibration = false;
 						
-						m_rbf.addTrainingPoint(m_calibrationAvg, GetRBFCalibrationArray( m_calibratingGestureIndex));
+						m_rbf.addTrainingPoint(m_calibrationAvg, BuildRBFGestureOuput( m_calibratingGestureIndex));
 						m_currentCalibrationSamples.Clear();
 						m_calibratingGestureIndex++;
 						
 						if(m_calibratingGestureIndex < m_gestures.Length){
 							m_activeGesture = m_gestures[m_calibratingGestureIndex];
 							Debug.Log("Calibrate " + m_gestures[m_calibratingGestureIndex]);
-							//Need some sort of gui text display for the current finger gesture to calibrate.
-							//Best way would be to show the gesture on the model for the performer to imitate before calibrating
 						} else {
 							m_calibrationState = CalibrationState.CALIBRATED;
 							m_rbf.calculateWeights();
@@ -284,7 +296,7 @@ public class GloveController : MonoBehaviour {
 	/*
 	 * Gets an array with the chosen gesture index set to 1.0. Used for finger RBF gesture matching
 	 */
-	protected double[] GetRBFCalibrationArray(int gestureIndex){
+	protected double[] BuildRBFGestureOuput(int gestureIndex){
 		double[] calibrationArr = new double[m_gestures.Length];
 		calibrationArr[gestureIndex] = 1.0;
 		return calibrationArr;
