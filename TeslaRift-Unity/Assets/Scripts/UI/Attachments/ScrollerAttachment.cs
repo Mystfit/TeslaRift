@@ -38,6 +38,10 @@ public class ScrollerAttachment : BaseAttachment
 	public int numDisplayedAttachments{ get { return m_numDisplayedAttachments; }}
     public int m_numDisplayedAttachments = 6;
 
+    public bool isDockablesTweenable{ get { return m_tweenDockables; } }
+    public void SetDockablesAsTweenable(bool tween) { m_tweenDockables = tween; }
+    public bool m_tweenDockables = false;
+
 
     protected float m_scrollVel;		//Current scrolling velocity
     protected Vector3 m_offset;
@@ -94,11 +98,18 @@ public class ScrollerAttachment : BaseAttachment
 
 	public void PlaceObjects(){
 		for(int i =0; i < m_childDockables.Count; i++){
-            iTween tween = m_childDockables[i].GetComponent<iTween>();
-            if (tween != null)
-                Destroy(tween);
             Vector3 pos = new Vector3(0.0f, i * (m_childDockables[i].interiorTrigger.GetSize().y + m_itemSpacing), 0.0f);
-			iTween.MoveTo(m_childDockables[i].gameObject, iTween.Hash("position", pos, "time", 0.3f, "islocal", true));
+            if (isDockablesTweenable)
+            {
+                iTween tween = m_childDockables[i].GetComponent<iTween>();
+                if (tween != null)
+                    Destroy(tween);
+                iTween.MoveTo(m_childDockables[i].gameObject, iTween.Hash("position", pos, "time", 0.3f, "islocal", true));
+            }
+            else
+            {
+                m_childDockables[i].transform.localPosition = pos;
+            }
 		}
 	}
 

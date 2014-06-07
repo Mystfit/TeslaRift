@@ -53,12 +53,12 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
             clipScroller.transform.parent = m_rotator.transform;
             clipScroller.transform.localPosition = new Vector3(-m_controlsMirrorOffset, m_controlsYOffset, 0.0f);
             clipScroller.SetItemScale(UIFactory.SliderScale.x);
+
             foreach (InstrumentClip clip in musicRef.clipList)
             {
                 ClipCubeAttachment cube = UIFactory.CreateClipCube(clip, true);
                 cube.SetCloneable(true);
                 cube.SetColour(musicRef.color);
-                
                 cube.DockInto(clipScroller);
             }
 
@@ -72,7 +72,6 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
             {
                 SliderAttachment slider = UIFactory.CreateSlider(param, UIFrame.AnchorLocation.BOTTOM_LEFT);
                 slider.SetCloneable(true);
-                slider.transform.localScale = UIFactory.SliderScale;
                 slider.DockInto(paramScroller);
             }
 
@@ -103,6 +102,8 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
             //m_clipScroller.SetActive(true);
             //m_parameterScroller.SetActive(true);
             m_rotator.SetActive(true);
+            m_parameterScroller.GetComponent<ScrollerAttachment>().SetDockablesAsTweenable(true);
+            m_clipScroller.GetComponent<ScrollerAttachment>().SetDockablesAsTweenable(true);
 
             if (m_dockedInto != null)
             {
