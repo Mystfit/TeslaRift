@@ -14,7 +14,7 @@ import json
 # Event listener class for recieving/parsing messages from Live
 class LiveRouter(Subscriber):
 
-    def __init__(self, stageaddress):
+    def __init__(self, stageaddress, midiPort):
         Subscriber.__init__(self)
         self.setThreading(True)
 
@@ -31,6 +31,8 @@ class LiveRouter(Subscriber):
         # uri = "PYRONAME://" + Pyro.constants.EVENTSERVER_NAME
         # self.publisher = Pyro.core.getProxyForURI(uri)
         self.publisher = LivePublisher()
+
+        self.midi = midiPort
 
         # Create showtime node
         self.node = ZstNode("LiveNode", stageaddress)
@@ -60,6 +62,14 @@ class LiveRouter(Subscriber):
             self.incoming)
 
         self.node.request_register_method(
+            PyroTrack.STOP_TRACK,
+            ZstMethod.WRITE,
+            {
+                "trackindex": None
+            },
+            self.incoming)
+
+        self.node.request_register_method(
             PyroDeviceParameter.SET_VALUE,
             ZstMethod.WRITE,
             {
@@ -70,10 +80,21 @@ class LiveRouter(Subscriber):
             },
             self.incoming)
 
-        getSongLayout = self.node.request_register_method(
+        self.node.request_register_method(
             PyroSong.GET_SONG_LAYOUT,
             ZstMethod.RESPONDER, None,
             self.incoming, None)
+
+        self.node.request_register_method(
+            "play_note",
+            ZstMethod.WRITE,
+            {
+                "trackindex": None,
+                "note": None,
+                "state": None,
+                "velocity": None
+            },
+            self.play_midi_note)
 
     def event(self, event):
         print "IN-->OUT: " + event.subject, '=', event.msg
@@ -87,3 +108,11 @@ class LiveRouter(Subscriber):
         print "Publishing message " + message.name
         args = message.args if message.args else {}
         self.publisher.publish_check(INCOMING_PREFIX + message.name, args)
+
+    def play_midi_note(self, message):
+        if int(message.args["state"]):
+            self.midi.send_message(
+                [0x90, int(message.args["note"]), int(message.args["velocity"])])
+        else:
+            self.midi.send_message(
+                [0x80, int(message.args["note"]), 0])

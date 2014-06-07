@@ -16,41 +16,67 @@ class PyroSong():
 
     def __init__(self, publisher):
         self.publisher = publisher
-        self.ignoreList = ["Grabber", "RH-", "RG-", "RA-", "Device On", "Scale"]
+        self.ignoreList = []
 
 
     def get_song_layout(self, args=None):
         self.publisher.publish_check(
             OUTGOING_PREFIX + PyroSong.GET_SONG_LAYOUT, self.dump_song_xml())
 
-    def dump_song_dict(self):
-        song = {"tracks": [], "returns": []}
+    def clips_to_json(self):
+        return None
 
-        for track in getTracks():
-            trackObj = {"name": track.name, "devices": []}
-            for device in track.devices:
-                deviceObj = {"name": device.name, "parameters": []}
-                for parameter in device.parameters:
+    def tracks_to_json(self):
+        tracks = []
+        for track in len(getTracks()):
+            t = getTracks()[track]
+            mixer = t.mixer_device
+
+            sends = []
+            for send in mixer.sends:
+                sends.append({
+                    "name": send.name,
+                    "value": send.value,
+                    "min": send.min,
+                    "max": send.max})
+
+            trackobj = {
+                "trackindex": track,
+                "name": t.name,
+                "armed": (True if r.can_be_armed else False),
+                "volume": mixer.volume,
+                "pan": mixer.panning,
+                "solo": t.solo,
+                "mute": t.mute,
+                "sends": sends}
+            tracks.append(trackobj)
+
+    def parameters_to_json(self, trackgroup):
+        parameters = []
+        for track in len(trackgroup):
+            for device in len(track.devices):
+                for parameter in len(device.parameters):
+                    param = track.devices[device].parameters[parameter]
                     paramObj = {
-                        "name": parameter.name,
-                        "min": parameter.min,
-                        "max": parameter.max,
-                        "value": parameter.value}
-                    deviceObj["parameters"].append(paramObj)
-                trackObj["devices"].append(deviceObj)
-            song["tracks"].append(trackObj)
-        return song
+                        "trackindex": track,
+                        "deviceindex": device,
+                        "parameterindex": parameter,
+                        "name": param.name,
+                        "min": param.min,
+                        "max": param.max,
+                        "value": param.value}
+                    parameters.append(paramObj)
+        return parameters
 
     def dump_song_xml(self):
 
         xmlString = "<?xml version='1.0' encoding='UTF-8'?>\n"
         xmlString += "<song tempo = '" + \
             str(getSong().tempo) + "'>\n"
-        trackChannel = 0
+        trackIndex = 0
 
         # iterate through the tracks
         for myTrack in getTracks():
-            trackChannel += 1
 
             myTrackMixer = myTrack.mixer_device
 
@@ -69,15 +95,13 @@ class PyroSong():
                 if(myTrack.can_be_armed):
                     armed = myTrack.arm
 
-                xmlString += "\t<track channel='" + str(trackChannel) + "' name='" + str(myTrack.name) + "' volume='" + str(myTrackMixer.volume) + "' pan='" + str(
-                    myTrackMixer.panning) + "' output_meter_level='" + str(myTrack.output_meter_level) + "' mute='" + str(myTrack.mute) + "' solo='" + str(myTrack.solo) + "' arm='" + str(armed) + "' color='" + str(myTrack.color) + "'>\n"
+                xmlString += "\t<track index='" + str(trackIndex) + "' name='" + str(myTrack.name) + "' volume='" + str(myTrackMixer.volume) + "' pan='" + str(
+                    myTrackMixer.panning) + "' output_meter_level='" + str(myTrack.output_meter_level) + "' mute='" + str(myTrack.mute) + "' solo='" + str(myTrack.solo) + "' midi='" + str(myTrack.has_midi_input) + "' armed='" + str(armed) + "' color='" + str(myTrack.color) + "'>\n"
 
                 clipIndex = 0
 
                 # iterate through clips of a track
                 for myClipSlot in myTrack.clip_slots:
-                    clipIndex += 1
-
                     if (myClipSlot.has_clip):
                         try:
                             myClip = myClipSlot.clip
@@ -88,6 +112,7 @@ class PyroSong():
                                 "' />\n"
                         except:
                             return ("!! error parsingclip !!")
+                    clipIndex += 1
 
                 # get sends
                 for mySends in myTrackMixer.sends:
@@ -97,6 +122,7 @@ class PyroSong():
 
                 # iterate through the device chain of a track
                 # get the devices and the associated parameters
+                deviceIndex = 0
                 for myDevice in myTrack.devices:
                     try:
                         # Ignore specific devices, OSC senders and stuff
@@ -106,11 +132,13 @@ class PyroSong():
                                 ignoreDevice = True
                         if(ignoreDevice):
                             continue
-                        xmlString += "\t\t<device name='" + \
+                        xmlString += "\t\t<device index='"+ str(deviceIndex) + "' name='" + \
                             str(myDevice.name) + "'>\n"
+                        deviceIndex += 1
                     except:
                         return "!! error parsing Device !!"
 
+                    parameterIndex = 0
                     for myParameter in myDevice.parameters:
                         try:
                             ignoreDeviceParam = False
@@ -119,14 +147,16 @@ class PyroSong():
                                     ignoreDeviceParam = True
                             if(ignoreDeviceParam):
                                 continue
-                            xmlString += "\t\t\t<parameter name='" + str(myParameter.name) + "' value='" + str(
+                            xmlString += "\t\t\t<parameter index='"+ str(parameterIndex) + "' name='" + str(myParameter.name) + "' value='" + str(
                                 myParameter.value) + "' min='" + str(myParameter.min) + "' max='" + str(myParameter.max) + "'/>\n"
+                            parameterIndex += 1;
                         except:
                             return "!! error parsing Parameter!!"
 
                     xmlString += "\t\t</device>\n"
 
                 xmlString += "\t</track>\n"
+                trackIndex += 1
 
             except:
                 return "!! error parsing track !!"
@@ -179,6 +209,7 @@ class PyroTrack():
 
     # In
     FIRE_CLIP = "fire_clip"
+    STOP_TRACK = "stop_track"
 
     def __init__(self, trackindex, publisher):
         self.trackindex = trackindex
@@ -192,12 +223,12 @@ class PyroTrack():
 
     def fired_slot_index(self):
         self.publisher.publish_check(OUTGOING_PREFIX + PyroTrack.FIRED_SLOT_INDEX, {
-            "track": self.track.name,
+            "trackindex": self.trackindex,
             "slotindex": self.track.fired_slot_index})
 
     def playing_slot_index(self):
-        self.publisher.publish_check(PyroTrack.PLAYING_SLOT_INDEX, {
-            "track": self.track.name,
+        self.publisher.publish_check(OUTGOING_PREFIX + PyroTrack.PLAYING_SLOT_INDEX, {
+            "trackindex": self.trackindex,
             "slotindex": self.track.playing_slot_index})
 
 
