@@ -12,13 +12,12 @@ import time
 # The clock class sends a 1ms midi CC message with an incrementing value
 # that the Live ControlSurface can use to trigger faster event updates
 class Clock(threading.Thread):
-    def __init__(self):
+    def __init__(self, midiPort):
         threading.Thread.__init__(self)
         self.exitFlag = 0
         self.setDaemon(True)
         self.clockVal = 0
-        self.midi_out = rtmidi.MidiOut()
-        self.midi_out.open_virtual_port("LiveShowtime_Clock")
+        self.midi_out = midiPort
 
     def stop(self):
         self.exitFlag = 1
@@ -35,6 +34,10 @@ if len(sys.argv) < 2:
     print "Need a ZST stage address."
     sys.exit(0)
 
+# Midi startup
+midi_out = rtmidi.MidiOut()
+midi_out.open_virtual_port("LiveShowtime_Midi")
+
 #Server startup
 PyroServerStarter.startServer()
 
@@ -42,11 +45,11 @@ PyroServerStarter.startServer()
 Pyro.core.initClient()
 
 # Set up midi clock
-clock = Clock()
+clock = Clock(midi_out)
 clock.start()
 
 # Set up Pyro/Showtime router
-router = LiveRouter(sys.argv[1])
+router = LiveRouter(sys.argv[1], midi_out)
 
 # Enter into the idle loop to handle message
 try:

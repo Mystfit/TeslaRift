@@ -18,9 +18,12 @@ class LiveSubscriber(Subscriber):
         self.parameters = None
         self.song = None
 
-        subscribed = [PyroTrack.FIRE_CLIP, 
+        subscribed = [
+            PyroTrack.FIRE_CLIP, 
             PyroDeviceParameter.SET_VALUE,
-            PyroSong.GET_SONG_LAYOUT]
+            PyroSong.GET_SONG_LAYOUT,
+            PyroTrack.STOP_TRACK]
+
         subscribed = [INCOMING_PREFIX + method for method in subscribed] 
         self.log_message(subscribed)
         self.subscribe(subscribed)
@@ -78,9 +81,12 @@ class LiveSubscriber(Subscriber):
     def fire_clip(self, args):
         try:
             launchClip(int(args["trackindex"]), int(args["clipindex"]))
-            self.log_message("Firing clip " + clipStr)
         except AttributeError:
-            self.log_message("Clip not found! " + clipStr)
+            self.log_message("Clip not found! " + str(args["trackindex"]) + ", " + str(args["clipindex"]))
+
+    def stop_track(self, args):
+        stopTrack(args["trackindex"])
+        self.log_message("Stopping track " + str(args["trackindex"]))
 
     def set_value(self, args):
         key = (
