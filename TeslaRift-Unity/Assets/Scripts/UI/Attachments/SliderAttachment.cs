@@ -3,7 +3,7 @@ using System.Collections;
 using MusicIO;
 using UI;
 
-public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
+public class SliderAttachment : BaseAttachmentIO<BaseInstrumentParam> {
 
 	public bool m_useHorizontalInput = true;
 	protected BarSlider m_slider;
@@ -32,16 +32,8 @@ public class SliderAttachment : UIAttachment<BaseInstrumentParam> {
 	 */
     public override void Gesture_First()
     {
-        if(mode == BaseTool.ToolMode.GRABBING){
-			if(!HydraController.Instance.IsHandDragging(m_hand)){
-	            //Clone parameter here
-                if (IsCloneable)
-                {
-                    SliderAttachment attach = UIFactory.CreateGhostDragger(this) as SliderAttachment;
-                    attach.StartDragging(HydraController.Instance.GetHand(m_hand));
-                }
-			}
-        }
+        if(mode == BaseTool.ToolMode.GRABBING)
+            StartDragging(HydraController.Instance.GetHand(m_hand));
 
         base.Gesture_First();
     }

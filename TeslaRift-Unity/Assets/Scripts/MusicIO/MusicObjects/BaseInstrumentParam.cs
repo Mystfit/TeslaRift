@@ -26,9 +26,7 @@ namespace MusicIO
 		protected bool m_isDirty = false;
 		protected int m_deviceIndex;
 		protected int m_parameterIndex;
-		
-		protected BaseGenerator m_generatorInput;
-	
+			
 		//OSC addresses
 		protected bool m_expectingReturnMessage = false;
         
@@ -50,7 +48,6 @@ namespace MusicIO
             m_owner = paramOwner;
             m_deviceIndex = deviceIndex;
             m_parameterIndex = parameterIndex;
-            m_generators = new List<BaseGenerator>();
         }
 		
 		//Getters / Setters
@@ -82,33 +79,5 @@ namespace MusicIO
 		public virtual void setEnabled(bool value){	
 			m_enabled = value;
 		}
-		
-		
-		//Generator references
-		//--------------------
-		protected List<BaseGenerator> m_generators;
-		
-		public void attachGenerator(BaseGenerator generator){
-			m_generators.Add(generator);
-		}
-		
-		public void removeGenerators(){
-			for(int i = 0; i < m_generators.Count; i++){
-				removeGenerator(m_generators[i]);
-			}
-		}
-		public void removeGenerator(BaseGenerator generator){
-			m_generators.Remove(generator);
-		}
-		
-		public void UpdateGenerators(){
-			float summedGenerators = 0.0f;
-			
-			foreach(BaseGenerator gen in m_generators)
-				summedGenerators += gen.val;
-			
-			if(m_generators.Count > 0)
-				setVal(summedGenerators * m_overrideValue);
-		}	
 	}
 }

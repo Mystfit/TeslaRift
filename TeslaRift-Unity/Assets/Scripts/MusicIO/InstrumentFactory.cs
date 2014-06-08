@@ -81,11 +81,9 @@ public class InstrumentFactory : MonoBehaviour {
 		//Get track, return, master information
 		XmlNodeList trackList = sessionXml.GetElementsByTagName("track"); //instrument array	
 		XmlNodeList returnList = sessionXml.GetElementsByTagName("trackReturn"); //instrument array	
-
-		InstrumentController.Instance.SetSourceName(m_source);
-
+		
 		CreateInstrumentFromXmlList( trackList);
-		//CreateInstrumentFromXmlList( returnList);
+		CreateInstrumentFromXmlList( returnList);
 	}
 	
 	
@@ -93,18 +91,29 @@ public class InstrumentFactory : MonoBehaviour {
 	 * Creates instruments from xml lists
 	 */
 	private void CreateInstrumentFromXmlList(XmlNodeList xmlList){
-
-		float angleInc = 360 / xmlList.Count;
-
 		foreach(XmlNode track in xmlList){	
 			//Get track definition
 			Color color = Utils.intToColor( int.Parse(track.Attributes["color"].Value) );
-			int trackIndex = int.Parse(track.Attributes["index"].Value);
+			int trackIndex = -1;
+			bool isReturn = false;
+
+			if(track.Attributes["index"] != null){
+				trackIndex = int.Parse(track.Attributes["index"].Value);
+				isReturn = false;
+			} else if(track.Attributes["returnTrackIndex"] != null){
+				trackIndex = int.Parse(track.Attributes["returnTrackIndex"].Value);
+				isReturn = true;
+			} else {
+				continue;
+			}
+
+			bool isMidi = false;
 			bool armed = false;
-            bool isMidi = bool.Parse(track.Attributes["midi"].Value);
-			XmlNode armedNode = track.Attributes["armed"];
-			if(armedNode != null)
-			   armed = bool.Parse( track.Attributes["armed"].Value );
+
+			if(!isReturn) {
+				isMidi = bool.Parse(track.Attributes["midi"].Value);
+				armed = bool.Parse( track.Attributes["armed"].Value );
+			}
 
             BaseInstrument instrumentDef = new BaseInstrument(m_client, m_source, track.Attributes["name"].Value, color, armed, trackIndex, isMidi);
 

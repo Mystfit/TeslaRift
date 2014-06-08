@@ -256,15 +256,6 @@ public class SixenseInput : MonoBehaviour
 	{
 		SixensePlugin.sixenseInit();
 
-
-		float nearRange = new int();
-		float nearVal = new int();
-		float farRange = new int();
-		float farVal = new int();
-		//SixensePlugin.sixenseGetFilterParams(ref nearRange, ref nearVal, ref farRange, ref farVal);
-		//Debug.Log (nearRange + " " + nearVal + " " + farRange + " " + farVal);
-
-
 		for ( int i = 0; i < MAX_CONTROLLERS; i++ )
 		{
 			m_Controllers[i] = new Controller();

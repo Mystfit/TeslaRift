@@ -2,8 +2,6 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityOSC;
-
 
 namespace MusicIO
 {
@@ -19,8 +17,7 @@ namespace MusicIO
 		
 		protected List<BaseInstrumentParam> m_clips;
 		protected List<BaseInstrumentParam> m_params;
-		protected List<OSCMessage> m_messageQueue;
-		
+
 		string m_client = "";
 		string m_name = "";
 		string m_owner = "";
@@ -40,7 +37,6 @@ namespace MusicIO
 			
 			m_clips = new List<BaseInstrumentParam>();
 			m_params = new List<BaseInstrumentParam>();
-			m_messageQueue = new List<OSCMessage>();
 
             m_isMidi = isMidi;
             if (isMidi)
@@ -107,59 +103,15 @@ namespace MusicIO
 		public List<BaseInstrumentParam> paramList{ get { return m_params; } }
 		public List<BaseInstrumentParam> clipList{ get { return m_clips; } }
 	
-		
-		/*
-		 * Queues a midi note OSC message
-		 */
-		public void addMidiNoteMessageToQueue(string paramName, float pitch, float velocity, float voice, int trigger){
-			object[] noteArr = {pitch, velocity , voice};
-			List<object> noteList = new List<object>(noteArr);
-			
-			this.addMessageToQueue(paramName, noteList );
-			this.addMessageToQueue("noteOn", trigger);
-		}
-		
-		
-		/*
-		 * Queues a clip activation OSC message
-		 */
-		public void addClipMessageToQueue(int scene){
-			//InstrumentController.instance.ChangeScene(scene);
-			OSCMessage msg = new OSCMessage("/" + m_owner + "/" + m_name + "/launch", scene);	//-1 is for MaxForLive trackgrabber index starting at 0
-			m_messageQueue.Add(msg);
-		}
-		
-		
-		/*
-		 * Queues a generic float OSC message
-		 */
-		public void addMessageToQueue<T>(string paramName, List<T> values){
-			OSCMessage msg = new OSCMessage("/" + m_owner + "/" + m_name + "/" + paramName);
-			foreach(T value in values){
-				msg.Append(value);
-			}
-			m_messageQueue.Add(msg);
-		}
-		
-		public void addMessageToQueue<T>(string paramName, T value){
-			List<object> valueList = new List<object>();
-			valueList.Add(value);
-			addMessageToQueue(paramName, valueList);
-		}
-		
-		
 		// Update functions
 		//-----------------
 		public void update(){
 			processParameters();
-			processMessageQueue();
 		}
 		
 		public virtual void processParameters(){
 			foreach(BaseInstrumentParam param in m_params){
-				param.UpdateGenerators();
 				if(param.isDirty){
-					
 					if(param.GetType() == typeof(Note)){
 						//NoteParam chord = param as NoteParam;
 						Note note = param as Note;
@@ -175,42 +127,14 @@ namespace MusicIO
                             }    
                         //}
 					} else {
-						string paramName = param.name;
-						if(param.deviceName != "")
-							paramName = param.deviceName + "/" + param.name;
 
                         if (GlobalConfig.Instance.ShowtimeEnabled)
                             ZmqMusicNode.Instance.updateInstrumentValue(m_trackIndex, param.deviceIndex, param.parameterIndex, Convert.ToInt32(param.scaledVal));
-
-						addMessageToQueue(paramName, param.val);
 					}
 						
 					param.setClean();
 				}
 			}
 		}
-		
-		public void processMessageQueue(){
-			List<OSCMessage> completed = new List<OSCMessage>();
-			foreach(OSCMessage msg in m_messageQueue){
-				OSCHandler.Instance.SendBuiltMessageToClient(m_client, msg.Address, msg);
-				OSCHandler.Instance.SendBuiltMessageToClient(OSCcontroller.Instance.loopbackName, msg.Address, msg);
-				
-				completed.Add(msg);
-			}
-			m_messageQueue.Clear();
-			completed.Clear();
-		}
-
-
-		/*
-		 * Playing functions
-		 */
-		 public void TriggerNote(){
-		 	if(m_playable)
-				Debug.Log(m_name + " playing a note");
-		 }
 	}
-
 }
-

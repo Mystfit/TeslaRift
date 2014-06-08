@@ -2,7 +2,7 @@
 using MusicIO;
 using System.Collections;
 
-public class RbfPlugAttachment : BaseAttachment<BaseInstrumentParam> {
+public class RbfPlugAttachment : BaseAttachment {
 
     public RBFSphere m_parentRbf;
     public RotaryAttachment m_rotary;
@@ -22,7 +22,7 @@ public class RbfPlugAttachment : BaseAttachment<BaseInstrumentParam> {
 
 
 	// Use this for initialization
-	void Awake () {
+	public override void Awake () {
 		base.Awake();
 		AddAcceptedDocktype(typeof(SliderAttachment));
 	}
@@ -84,7 +84,7 @@ public class RbfPlugAttachment : BaseAttachment<BaseInstrumentParam> {
 		SetVal(value);
     }
 	
-	void Update () {            
+	public override void Update () {            
 	}
 
     

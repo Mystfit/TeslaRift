@@ -650,7 +650,7 @@ ModelImporter:
       name: INDEX_PINKY
       takeName: Take 001
       firstFrame: 90
-      lastFrame: 90
+      lastFrame: 95
       wrapMode: 8
       orientationOffsetY: 0
       level: 0

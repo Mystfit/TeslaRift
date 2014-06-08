@@ -3,7 +3,7 @@ using System.Collections;
 using MusicIO;
 using UI;
 
-public class RotaryAttachment : UIAttachment<BaseInstrumentParam> {
+public class RotaryAttachment : BaseAttachmentIO<BaseInstrumentParam> {
 
 	public GameObject m_rotaryFill;
 

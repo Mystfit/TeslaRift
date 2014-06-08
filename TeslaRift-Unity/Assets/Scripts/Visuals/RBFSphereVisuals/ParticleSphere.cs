@@ -52,7 +52,7 @@ public class ParticleSphere : MonoBehaviour {
                     {
                         GameObject particle = GameObject.Instantiate(m_particlePrefab) as GameObject;
                         particle.transform.parent = transform;
-                        float randomScale = Random.RandomRange(m_minScale, m_maxScale);
+                        float randomScale = Random.Range(m_minScale, m_maxScale);
                         particle.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
                         particle.transform.localPosition = pos;
                         particle.renderer.material.SetColor("_Color", new Color(1.0f, 1.0f, 1.0f, m_baseOpacity));

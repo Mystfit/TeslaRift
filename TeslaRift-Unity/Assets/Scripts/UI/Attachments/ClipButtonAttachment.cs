@@ -3,7 +3,7 @@ using MusicIO;
 using UI;
 using System.Collections;
 
-public class ClipButtonAttachment : UIAttachment<InstrumentClip> {
+public class ClipButtonAttachment : BaseAttachmentIO<InstrumentClip> {
 
 	protected UIFrame m_frame;
 	public UIFrame frame { get { return m_frame; }}
@@ -68,22 +68,10 @@ public class ClipButtonAttachment : UIAttachment<InstrumentClip> {
     {
         if (mode == BaseTool.ToolMode.GRABBING)
         {
-            if (!HydraController.Instance.IsHandDragging(m_hand))
-            {
-                if (IsCloneable)
-                {
-                    //Clone parameter here
-                    ClipButtonAttachment attach = UIFactory.CreateGhostDragger(this) as ClipCubeAttachment;
-                    attach.StartDragging(HydraController.Instance.GetHand(m_hand));
-                }
-                else
-                {
-                    StartDragging(HydraController.Instance.GetHand(m_hand));
-                }
-            }
-        }
-
-        else if(mode == BaseTool.ToolMode.PRIMARY){
+            StartDragging(HydraController.Instance.GetHand(m_hand));
+        } 
+        else if (mode == BaseTool.ToolMode.PRIMARY)
+        {
             if (musicRef != null)
                 musicRef.Play();
         }

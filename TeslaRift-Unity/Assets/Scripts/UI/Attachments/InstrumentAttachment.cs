@@ -1,9 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UI;
 using System.Collections;
 using MusicIO;
 	
-public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
+public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
 
 	protected GameObject m_parameterScroller;
     protected GameObject m_clipScroller;
@@ -148,22 +148,7 @@ public class InstrumentAttachment : BaseAttachment<BaseInstrument> {
 
 		//Make sure to start dragging the object if we're using the drag gesture
         if (m_mode == BaseTool.ToolMode.GRABBING)
-        {
-            //StartDragging(HydraController.Instance.GetHand(m_hand));
-            if (!HydraController.Instance.IsHandDragging(m_hand))
-            {
-                //Clone instrument here
-                if (IsCloneable)
-                {
-                    InstrumentAttachment attach = UIFactory.CreateGhostDragger(this) as InstrumentAttachment;
-                    attach.StartDragging(HydraController.Instance.GetHand(m_hand));
-                    attach.collider.isTrigger = true;
-                } else {
-					StartDragging(HydraController.Instance.GetHand(m_hand));
-                    collider.isTrigger = true;
-				}
-            }
-        }
+            StartDragging(HydraController.Instance.GetHand(m_hand));
 
         if (mode == BaseTool.ToolMode.PRIMARY)
             ShowControls();

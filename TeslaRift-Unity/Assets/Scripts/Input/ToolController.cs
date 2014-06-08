@@ -13,11 +13,6 @@ public class ToolController : MonoBehaviour {
 	protected InstrumentController m_instrumentControlRef = null;
 	protected HydraController m_hydraRef = null;
 	
-	private BaseGenerator m_selectedGenerator;
-	public BaseGenerator SelectedGenerator{ get { return m_selectedGenerator; }}
-	public void SetSelectedGenerator(BaseGenerator gen){ m_selectedGenerator = gen; }
-
-	
 	void Awake () {
 		m_instance = this;
 		m_instrumentControlRef = this.gameObject.GetComponent<InstrumentController>();

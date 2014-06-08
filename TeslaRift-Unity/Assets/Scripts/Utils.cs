@@ -136,7 +136,6 @@ public static class Utils
 	public static Vector3[] BuildArcPositions(float radius, float arcLength, int numPoints, float minAngle, bool centered){
 		Vector3[] points = new Vector3[numPoints];
 		float angleInc = arcLength / numPoints;
-		float diffAngle = angleInc;
 
 		if(angleInc < minAngle) angleInc = minAngle;
         float startAngle = (centered) ? ((numPoints-1) * angleInc) * 0.5f : 0.0f;

@@ -42,8 +42,7 @@ public class GloveController : MonoBehaviour {
 	public double activeGestureVelocity;
 
 	private int m_calibratingGestureIndex;
-	private bool bIsCalibrateButtonLast = false;
-	
+
 	public string[] m_gestures;
 	public bool m_toggleCalibration = false;
 	public bool m_toggleNextGestureCalibration = false;

@@ -12,7 +12,6 @@ public class UIFrame : MonoBehaviour {
 	protected List<GameObject> m_gridColumns;
 	protected List<GameObject> m_gridRows;
 	protected GameObject m_gridParent;
-	protected bool bIsAnimating = false;
 
 	public Object m_guiQuadPrefab;
 	public Transform m_guiPanels;
@@ -71,8 +70,8 @@ public class UIFrame : MonoBehaviour {
 	private float m_currentOutlineOffset;
 	private float m_currentWidth;
 	private float m_currentHeight;
-	private float m_lastWidth;
-	private float m_lastHeight;
+	private float m_lastWidth = 0.0f;
+	private float m_lastHeight = 0.0f;
 	private bool bRotated = false;
 	private bool bIsOutlineVisible = false;
 	
@@ -333,7 +332,6 @@ public class UIFrame : MonoBehaviour {
 	 * Animates the panel size
 	 */
 	public void AnimateSize(float width, float height){
-		bIsAnimating = true;
 		float targetHeight = (bRotated) ? width : height;
 		float targetWidth = (bRotated) ? height : width;
 
@@ -383,8 +381,7 @@ public class UIFrame : MonoBehaviour {
 		float toVal = 0.0f;
 		
 		bIsOutlineVisible = state;
-		bIsAnimating = true;
-		
+
 		if(state){
 			fromVal = 0.0f;
 			toVal = m_outlineOffset;
@@ -412,7 +409,6 @@ public class UIFrame : MonoBehaviour {
 	private void AnimationComplete(){
 		m_lastWidth = m_currentWidth;
 		m_lastHeight = m_currentHeight;
-		bool bIsAnimating = false;
 	}
 	
 	
@@ -545,5 +541,4 @@ public class UIFrame : MonoBehaviour {
 	public float height{ get { return m_frameHeight; }}
 	public bool isRotated{ get { return bRotated; }}
 	public Transform background{ get { return m_backgroundQuad; }}
-	public bool isAnimating{ get { return bIsAnimating; }}
 }

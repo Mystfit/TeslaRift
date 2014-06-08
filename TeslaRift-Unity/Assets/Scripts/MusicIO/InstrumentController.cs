@@ -13,13 +13,6 @@ public class InstrumentController : MonoBehaviour {
 	protected List<BaseInstrument> m_instruments;
 	protected BaseInstrument m_selectedInstrument;
 	protected GameObject m_lastSelectedGameInstrument = null;
-
-	//Prefix source name in front of OSC messages
-	private string m_sourceName;
-	public void SetSourceName(string sourceName){ m_sourceName = sourceName; }
-
-	//Inspector toggles
-	public bool m_blastAllParameters;
 	
 	
 	// Unity
@@ -27,27 +20,12 @@ public class InstrumentController : MonoBehaviour {
 	void Awake () {
 		m_instruments = new List<BaseInstrument>();
 		m_instance = this;
-
-		SetSourceName(GlobalConfig.Instance.ProjectSourceName);
 	}
 	
 	
 	void Update () {
 		foreach(BaseInstrument instrument in m_instruments){
 			instrument.update();
-		}
-		
-		if(m_blastAllParameters){
-			m_blastAllParameters = false;
-			foreach(BaseInstrument instrument in m_instruments){
-				foreach(BaseInstrumentParam param in instrument.paramList){
-					param.setVal(1.0f);
-				}
-				
-				foreach(InstrumentClip clip in instrument.clipList){
-					clip.Play();
-				}
-			}
 		}
 	}
 	
@@ -64,9 +42,6 @@ public class InstrumentController : MonoBehaviour {
 		
 	public void ResetInstrument(BaseInstrument instrument){
 		ResetInstrumentParameters(instrument);
-		foreach(GenericMusicParam param in instrument.paramList){
-			param.removeGenerators();
-		}
 	}
 
 
@@ -160,15 +135,5 @@ public class InstrumentController : MonoBehaviour {
 	 * Gets last selected isntrument
 	 */
 	public GameObject LastSelectedGameInstrument{ get { return m_lastSelectedGameInstrument; }}
-
-
-	/*
-	 * Instrument playing
-	 */
-	 public void TriggerNote(){
-	 	if(m_selectedInstrument != null){
-	 		m_selectedInstrument.TriggerNote();
-	 	}
-	 }
 
 }

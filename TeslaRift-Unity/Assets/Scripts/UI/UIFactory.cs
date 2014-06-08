@@ -17,11 +17,9 @@ namespace UI
 		public GameObject clipButtonPrefab;
         public GameObject clipCubePrefab;
 		public GameObject clipPlaceholderPrefab;
-		public GameObject instrumentIconPrefab;
 		public GameObject rotaryPrefab;
 		public GameObject paramScrollerPrefab;
 		public GameObject instrumentPrefab;
-		public GameObject rotaryInstrumentSlotPrefab;
         public GameObject guiQuadPrefab;
         public GameObject volumetricCylinderPrefab;
 
@@ -62,6 +60,7 @@ namespace UI
             ghostAttach.transform.localScale = attach.transform.localScale;
             ghostAttach.transform.parent = null;
             ghostAttach.SetTransient(true);
+            ghostAttach.SetCloneable(false);
 
             return ghostAttach;
         }
@@ -185,17 +184,6 @@ namespace UI
 
 
 		/*
-		 * Floating Instrument icon
-		 * Coloured prefab representing an instrument reference
-		 */
-		public static GameObject CreateFloatingInstrumentIcon(BaseInstrument instrument){
-			GameObject insObj = GameObject.Instantiate(Instance.instrumentIconPrefab) as GameObject;
-			insObj.renderer.material.SetColor("_Color", instrument.color);
-			return insObj;
-		}
-
-
-		/*
 		 * Main instrument prefab
 		 * Grabbable instrument with clips and parameter buttons/sliders
 		 */
@@ -212,7 +200,6 @@ namespace UI
 			attach.InitInstrumentControls();
 			
 			//Set listener prefixes
-			instrumentGame.GetComponent<InstrumentListener>().SetPrefixedOSCAddresses(instrument.Name);		//Set instrument prefixes for OSC listener
             instrumentGame.renderer.material.SetColor("_Color", instrument.color);
 			
 			return attach;

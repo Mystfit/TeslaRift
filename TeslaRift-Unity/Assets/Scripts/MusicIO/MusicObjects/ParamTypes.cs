@@ -15,8 +15,7 @@ namespace MusicIO
 		public ToggleParam(string name, BaseInstrument paramOwner, int deviceIndex, int parameterIndex)
 				: base(name, paramOwner, 0.0f, 1.0f, deviceIndex, parameterIndex)
 		{
-			m_generators = new List<BaseGenerator>();
-		}
+ 		}
 		
 		public override void setEnabled (bool value)
 		{
@@ -161,8 +160,6 @@ namespace MusicIO
 		public void Play(){
 			if(GlobalConfig.Instance.ShowtimeEnabled)
                 ZmqMusicNode.Instance.fireClip(m_owner.trackIndex, this.scene);
-
-			this.owner.addClipMessageToQueue(this.scene);
 		}
 	}
 	
