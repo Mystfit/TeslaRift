@@ -37,6 +37,7 @@ public class ScrollerAttachment : BaseAttachment
     public void SetNumDisplayedAttachments(int numAttachments){ m_numDisplayedAttachments = numAttachments; }
 	public int numDisplayedAttachments{ get { return m_numDisplayedAttachments; }}
     public int m_numDisplayedAttachments = 6;
+    public int m_maxDisplayedAttachments = 6;
 
     public bool isDockablesTweenable{ get { return m_tweenDockables; } }
     public void SetDockablesAsTweenable(bool tween) { m_tweenDockables = tween; }
@@ -78,12 +79,21 @@ public class ScrollerAttachment : BaseAttachment
     {
         if (base.AddDockableAttachment(attach))
         {
+            if (m_childDockables.Count < m_maxDisplayedAttachments)
+                m_numDisplayedAttachments = m_childDockables.Count;
+            else
+                m_numDisplayedAttachments = m_maxDisplayedAttachments;
+
+            if (m_maxDisplayedAttachments < 0)
+                m_numDisplayedAttachments = m_childDockables.Count;
+
             attach.transform.parent = m_controlHolder.transform;
 			//attach.transform.localPosition = new Vector3(0.0f, m_childDockables.Count * attach.interiorTrigger.GetSize().y, 0.0f);
-			PlaceObjects();
-            m_lastAttachHeight = attach.interiorTrigger.GetSize().y + m_itemSpacing;
-            UpdateColliders(Vector3.zero, new Vector3(m_collisionWidth, m_upperVisibleBounds - m_lowerVisibleBounds, m_collisionDepth));
+            attach.transform.localRotation = Quaternion.identity;
             attach.transform.localScale = new Vector3(m_itemScale, m_itemScale, m_itemScale);
+            m_lastAttachHeight = attach.interiorTrigger.GetSize().y + m_itemSpacing;
+			PlaceObjects();
+            UpdateColliders(Vector3.zero, new Vector3(m_collisionWidth, m_upperVisibleBounds - m_lowerVisibleBounds, m_collisionDepth));
             return true;
         }
         return false;
@@ -185,16 +195,16 @@ public class ScrollerAttachment : BaseAttachment
         }
     }
 
-    //void FixedUpdate()
-    //{
-    //    //Rotate to face player eyes
-    //    if (m_facePerformer)
-    //    {
-    //        // Look at and dampen the rotation
-    //        Quaternion rotation = Quaternion.LookRotation(this.interiorCollider.bounds.center - HydraController.Instance.EyeCenter);
-    //        transform.rotation = Quaternion.Euler(new Vector3(0.0f, rotation.eulerAngles.y, 0.0f));
-    //    }
-    //}
+    void FixedUpdate()
+    {
+        //Rotate to face player eyes
+        if (m_facePerformer)
+        {
+            // Look at and dampen the rotation
+            Quaternion rotation = Quaternion.LookRotation(this.interiorCollider.bounds.center - HydraController.Instance.EyeCenter);
+            transform.rotation = Quaternion.Euler(new Vector3(0.0f, rotation.eulerAngles.y, 0.0f));
+        }
+    }
 
     protected void DragScroller()
     {

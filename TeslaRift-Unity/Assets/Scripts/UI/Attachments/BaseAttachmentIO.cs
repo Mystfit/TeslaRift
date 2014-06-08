@@ -8,8 +8,17 @@ using UI;
 
 public abstract class BaseAttachment : MonoBehaviour{
 
-	public virtual void Awake(){ 
+    public bool isCloneable;
+    public bool isDragable;
+    public bool isDockable;
+
+	public virtual void Awake(){
+        m_isCloneable = isCloneable;
+        m_isDockable = isDockable;
+        m_isDockable = isDockable;
+
 		m_acceptedTypes = new List<System.Type>(); 
+		m_childDockables = new List<BaseAttachment>();
 		SetCollideable(m_doesCollide);
 	}
 	public virtual void Start(){}
@@ -162,7 +171,7 @@ public abstract class BaseAttachment : MonoBehaviour{
                 //Clone instrument here
                 if (IsCloneable)
                 {
-                    InstrumentAttachment attach = UIFactory.CreateGhostDragger(this) as InstrumentAttachment;
+					BaseAttachment attach = UIFactory.CreateGhostDragger(this);
                     attach.StartDragging(HydraController.Instance.GetHand(m_hand));
                 }
                 else
@@ -174,7 +183,6 @@ public abstract class BaseAttachment : MonoBehaviour{
                     joint.connectedBody = target.GetComponent<Rigidbody>();
                     rigidbody.isKinematic = false;
                     HydraController.Instance.SetHandDragging(m_hand, this);
-                    collider.isTrigger = true;
                 }
             }
         }
@@ -291,6 +299,8 @@ public abstract class BaseAttachment : MonoBehaviour{
 
 		if(DockAcceptsType(attach.GetType())){
 			m_childDockables.Add(attach);
+			attach.transform.parent = transform;
+
             return true;
 		} else {
 			Debug.LogError(this + " can't dock with a " + attach.GetType());

@@ -14,7 +14,9 @@ public class WorkspaceDockAttachment : BaseAttachment {
     protected Dictionary<BaseAttachment, GameObject> m_volumetrics;
 
 	// Use this for initialization
-	public override void Start () {
+	public override void Awake () {
+        base.Awake();
+
 		SetAsDock(true);
         AddAcceptedDocktype(typeof(InstrumentAttachment));
 
@@ -25,7 +27,6 @@ public class WorkspaceDockAttachment : BaseAttachment {
 	{
         if (base.AddDockableAttachment(attach))
         {
-            attach.transform.parent = transform;
             //attach.rigidbody.velocity = Vector3.zero;
             attach.rigidbody.isKinematic = true;
 

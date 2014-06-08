@@ -17,13 +17,14 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
     public bool m_facePerformer = true;
 
 	public override void Awake ()
-	{
+    {
+        base.Awake();
+
 		//Since instrument attachments are created at runtime, we need to set the filter here
 		m_respondsToToolMode = new BaseTool.ToolMode[]{
 			BaseTool.ToolMode.PRIMARY, 
 			BaseTool.ToolMode.GRABBING
 		};
-		base.Awake ();
 
 		//Set the collision state
 		SetCollideable(true);

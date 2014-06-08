@@ -54,6 +54,11 @@ namespace UI
                 InstrumentAttachment instrument = attach as InstrumentAttachment;
                 ghostAttach = UIFactory.CreateInstrument(instrument.musicRef);
             }
+            else if (attach.GetType() == typeof(RBFTrainingSpawnerAttachment))
+            {
+                RBFTrainingAttachment rbfAttach = attach as RBFTrainingAttachment;
+                ghostAttach = UIFactory.CreateRBFSphereTraining();
+            }
                 
             ghostAttach.transform.parent = attach.transform;
             ghostAttach.transform.position = attach.transform.position;
@@ -100,10 +105,10 @@ namespace UI
 		 * RBF Training point
 		 * A draggable RBF training point for the sphere RBF ccontroller
 		 */
-        public static RBF.RBFSphereTraining CreateRBFSphereTraining()
+        public static RBFTrainingAttachment CreateRBFSphereTraining()
         {
             GameObject training = Instantiate(Instance.rbfSphereTrainingPrefab) as GameObject;
-            RBF.RBFSphereTraining attach = training.GetComponent<RBF.RBFSphereTraining>();
+            RBFTrainingAttachment attach = training.GetComponent<RBFTrainingAttachment>();
 
             return attach;
         }

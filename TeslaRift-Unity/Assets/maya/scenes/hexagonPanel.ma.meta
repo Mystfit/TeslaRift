@@ -14,6 +14,9 @@ ModelImporter:
     100016: transform1
     100018: hexInterior
     100020: hexPanel
+    100022: hexPanel1
+    100024: hexPanel2
+    100026: hexInterior1
     400000: //RootNode
     400002: hexBase
     400004: hexContainer
@@ -25,6 +28,9 @@ ModelImporter:
     400016: transform1
     400018: hexInterior
     400020: hexPanel
+    400022: hexPanel1
+    400024: hexPanel2
+    400026: hexInterior1
     2300000: //RootNode
     2300002: hexBase
     2300004: hexInner
@@ -34,6 +40,9 @@ ModelImporter:
     2300012: polySurface2
     2300014: hexInterior
     2300016: hexPanel
+    2300018: hexPanel1
+    2300020: hexPanel2
+    2300022: hexInterior1
     3300000: //RootNode
     3300002: hexBase
     3300004: hexInner
@@ -43,6 +52,9 @@ ModelImporter:
     3300012: polySurface2
     3300014: hexInterior
     3300016: hexPanel
+    3300018: hexPanel1
+    3300020: hexPanel2
+    3300022: hexInterior1
     4300000: pPrism1
     4300002: hexOuter
     4300004: hexBase
@@ -52,6 +64,9 @@ ModelImporter:
     4300012: polySurface2
     4300014: hexInterior
     4300016: hexPanel
+    4300018: hexPanel1
+    4300020: hexPanel2
+    4300022: hexInterior1
     7400000: drawer_in
     7400002: drawer_out
     9500000: //RootNode

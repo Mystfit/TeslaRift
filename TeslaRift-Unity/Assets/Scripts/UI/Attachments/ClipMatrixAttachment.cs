@@ -106,7 +106,6 @@ public class ClipMatrixAttachment : BaseAttachment {
     {
         base.Gesture_First();
         int[] matrixPosition = GetPositionInMatrix(HydraController.Instance.GetHandColliderPosition(m_hand));
-        Debug.Log((matrixPosition[0] + ", " + matrixPosition[1] + ", " + matrixPosition[2]).ToString());
         
         if(mode == BaseTool.ToolMode.PLAY1){
             TriggerClip(matrixPosition, 0);

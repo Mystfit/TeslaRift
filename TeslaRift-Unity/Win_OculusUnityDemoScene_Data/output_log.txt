@@ -1,0 +1,295 @@
+Initialize engine version: 4.3.4f1 (e444f76e01cd)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 9.0c [nvd3dumx.dll 9.18.13.637]
+    Renderer: NVIDIA GeForce GTX 675MX
+    Vendor:   NVIDIA
+    VRAM:     973 MB (via DXGI)
+    Caps:     Shader=30 DepthRT=1 NativeDepth=1 NativeShadow=1 DF16=0 INTZ=1 RAWZ=0 NULL=1 RESZ=0 SlowINTZ=0
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\Win_OculusUnityDemoScene_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Code\TeslaRift\TeslaRift-Unity\Win_OculusUnityDemoScene_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\Win_OculusUnityDemoScene_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Code\TeslaRift\TeslaRift-Unity\Win_OculusUnityDemoScene_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\Win_OculusUnityDemoScene_Data\Managed\DotNumerics.dll (this message is harmless)
+Loading C:\Code\TeslaRift\TeslaRift-Unity\Win_OculusUnityDemoScene_Data\Managed\DotNumerics.dll into Unity Child Domain
+Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\Win_OculusUnityDemoScene_Data\Managed\NetMQA.dll (this message is harmless)
+Loading C:\Code\TeslaRift\TeslaRift-Unity\Win_OculusUnityDemoScene_Data\Managed\NetMQA.dll into Unity Child Domain
+Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\Win_OculusUnityDemoScene_Data\Managed\Newtonsoft.Json.dll (this message is harmless)
+Loading C:\Code\TeslaRift\TeslaRift-Unity\Win_OculusUnityDemoScene_Data\Managed\Newtonsoft.Json.dll into Unity Child Domain
+Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\Win_OculusUnityDemoScene_Data\Managed\ZstShowtime.dll (this message is harmless)
+Loading C:\Code\TeslaRift\TeslaRift-Unity\Win_OculusUnityDemoScene_Data\Managed\ZstShowtime.dll into Unity Child Domain
+- Completed reload, in  0.039 seconds
+<RI> Initializing input.
+<RI> Input initialized.
+desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
+Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\Win_OculusUnityDemoScene_Data\Managed\System.Xml.dll (this message is harmless)
+Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\Win_OculusUnityDemoScene_Data\Managed\System.dll (this message is harmless)
+Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\Win_OculusUnityDemoScene_Data\Managed\System.Core.dll (this message is harmless)
+The referenced script on this Behaviour is missing!
+ 
+(Filename:  Line: 1699)
+
+The referenced script on this Behaviour is missing!
+ 
+(Filename:  Line: 1699)
+
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/sixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/.\sixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/sixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/libsixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/.\libsixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/libsixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/sixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/.\sixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/sixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/libsixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/.\libsixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/libsixense
+DllNotFoundException: sixense
+  at (wrapper managed-to-native) SixensePlugin:sixenseInit ()
+  at SixenseInput.Awake () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at RBFPlugAttachment.Awake () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at RBFPlugAttachment.Awake () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at RBFPlugAttachment.Awake () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\Win_OculusUnityDemoScene_Data\Managed\System.Configuration.dll (this message is harmless)
+Stage located at tcp://130.195.44.90:6000
+Node reply on address tcp://130.195.44.40:61200
+Node publisher on address tcp://130.195.44.40:61199
+Staring poller...
+REQ-->: Requesting remote node to register our addresses. Reply:tcp://130.195.44.40:61200, Publisher:tcp://130.195.44.40:61199
+Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\Win_OculusUnityDemoScene_Data\Managed\System.Runtime.Serialization.dll (this message is harmless)
+Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\Win_OculusUnityDemoScene_Data\Managed\System.Xml.Linq.dll (this message is harmless)
+Platform assembly: C:\Code\TeslaRift\TeslaRift-Unity\Win_OculusUnityDemoScene_Data\Managed\System.Data.dll (this message is harmless)
+REP<--: Remote node acknowledged our addresses. Reply:tcp://130.195.44.40:61200, Publisher:tcp://130.195.44.40:61199
+Connected to peer on tcp://130.195.44.90:51356
+REQ-->: Requesting remote node to register our addresses. Reply:tcp://130.195.44.40:61200, Publisher:tcp://130.195.44.40:61199
+REP<--: Remote node acknowledged our addresses. Reply:tcp://130.195.44.40:61200, Publisher:tcp://130.195.44.40:61199
+NullReferenceException: Object reference not set to an instance of an object
+  at SixenseObjectController.ActivateHand (.Controller controller) [0x00000] in <filename unknown>:0 
+  at HydraController.UnfreezeHands () [0x00000] in <filename unknown>:0 
+  at GloveCalibrator.Update () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+Glove calibration start:
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+Calibrate IDLE_HAND
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:275, 308, 495, 389, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+Glove calibration start:
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+Calibrate IDLE_HAND
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:5, 776, 752, 714, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:287, 310, 503, 401, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:7, 774, 752, 714, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:281, 307, 499, 401, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:6, 774, 752, 714, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:281, 310, 502, 401, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:4, 777, 752, 713, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:286, 311, 498, 399, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:4, 777, 752, 713, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:292, 309, 498, 399, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:6, 773, 752, 714, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:286, 304, 500, 402, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:3, 773, 750, 713, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:286, 304, 500, 402, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:3, 774, 752, 714, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:293, 312, 503, 411, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:7, 775, 752, 713, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:283, 312, 503, 401, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:6, 775, 752, 714, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:291, 312, 502, 402, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:6, 774, 752, 714, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:293, 310, 498, 398, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:6, 774, 752, 712, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:286, 311, 503, 405, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:6, 774, 752, 712, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:287, 306, 506, 399, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:5, 774, 752, 713, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:287, 306, 506, 399, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:6, 774, 752, 713, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:285, 309, 502, 401, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:5, 774, 752, 713, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:287, 311, 501, 398, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:8, 774, 751, 714, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:285, 304, 501, 396, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:6, 775, 750, 714, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:284, 311, 498, 400, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:6, 775, 751, 713, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:280, 309, 502, 400, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+4Glove Values:6, 774, 748, 713, 
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+Calibrate PLAY_1
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+Calibrate PLAY_1
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/sixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/.\sixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/sixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/libsixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/.\libsixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/libsixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/sixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/.\sixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/sixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/libsixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/.\libsixense
+Fallback handler could not load library C:/Code/TeslaRift/TeslaRift-Unity/Win_OculusUnityDemoScene_Data/Mono/libsixense
+DllNotFoundException: sixense
+  at (wrapper managed-to-native) SixensePlugin:sixenseExit ()
+  at SixenseInput.OnApplicationQuit () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+Network cleanup: True
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
