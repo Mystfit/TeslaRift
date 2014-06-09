@@ -22,7 +22,6 @@ public class SliderAttachment : BaseAttachmentIO<BaseInstrumentParam> {
 	public override void Init (BaseInstrumentParam managedReference)
 	{
 		base.Init (managedReference);
-        BarSlider m_slider = GetComponent<BarSlider>();
 		m_frame.SetLabel(managedReference.name);
 	}
 

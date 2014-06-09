@@ -11,9 +11,9 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
     protected GameObject m_rotator;
 
     public float m_dividerWidth = 0.01f;
-    public float m_controlsMirrorOffset = 0.1f;
-    public float m_controlsYOffset = 0.15f;
-    public float m_clipCubeSpacing = 0.06f;
+    public float m_controlsMirrorOffset = 0.05f;
+    public float m_controlsYOffset = 0.05f;
+    public float m_clipCubeSpacing = 0.03f;
     public bool m_facePerformer = true;
 
 	public override void Awake ()
@@ -52,7 +52,8 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
             clipScroller.SetItemSpacing(m_clipCubeSpacing);
             clipScroller.AddAcceptedDocktype(typeof(ClipCubeAttachment));
             clipScroller.transform.parent = m_rotator.transform;
-            clipScroller.transform.localPosition = new Vector3(-m_controlsMirrorOffset, m_controlsYOffset, 0.0f);
+            clipScroller.SetOffset(new Vector3(-m_controlsMirrorOffset, m_controlsYOffset + 0.02f, 0.0f));
+            //clipScroller.transform.localPosition = new Vector3(-m_controlsMirrorOffset, m_controlsYOffset + 0.02f, 0.0f);
             clipScroller.SetItemScale(UIFactory.SliderScale.x);
 
             foreach (InstrumentClip clip in musicRef.clipList)
@@ -66,7 +67,8 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
             //Create param sliders
             ScrollerAttachment paramScroller = UIFactory.CreateParamScroller();
             paramScroller.transform.parent = m_rotator.transform;
-            paramScroller.transform.localPosition = new Vector3(m_controlsMirrorOffset, m_controlsYOffset, 0.0f);
+            paramScroller.SetOffset(new Vector3(m_controlsMirrorOffset, m_controlsYOffset, 0.0f));
+            //paramScroller.transform.localPosition = new Vector3(m_controlsMirrorOffset, m_controlsYOffset, 0.0f);
             paramScroller.SetItemScale(UIFactory.SliderScale.x);
 
             foreach (BaseInstrumentParam param in musicRef.paramList)

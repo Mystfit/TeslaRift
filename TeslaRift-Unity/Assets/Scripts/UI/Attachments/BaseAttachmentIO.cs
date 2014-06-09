@@ -9,7 +9,7 @@ using UI;
 public abstract class BaseAttachment : MonoBehaviour{
 
     public bool isCloneable;
-    public bool isDragable;
+    public bool isDraggable;
     public bool isDockable;
 
 	public virtual void Awake(){
@@ -22,7 +22,14 @@ public abstract class BaseAttachment : MonoBehaviour{
 		SetCollideable(m_doesCollide);
 	}
 	public virtual void Start(){}
-	public virtual void Update(){}
+	public virtual void Update()
+    {
+        if (m_toggleControls)
+        {
+            m_toggleControls = false;
+            ToggleControls();
+        }
+    }
 
 	/*
 	 * Unity status setters
@@ -101,7 +108,7 @@ public abstract class BaseAttachment : MonoBehaviour{
     public void SetTransient(bool state) { m_isTransient = state; }
     public bool IsTransient { get { return m_isTransient; } }
     protected bool m_isTransient;
-    public void SetCloneable(bool state) { m_isCloneable = state; }
+	public void SetCloneable(bool state) { m_isCloneable = state; isCloneable = state;}
     public bool IsCloneable { get { return m_isCloneable; } }
     protected bool m_isCloneable;
 
@@ -141,6 +148,7 @@ public abstract class BaseAttachment : MonoBehaviour{
 	 */
 	protected bool m_selected;
 	public bool selected{ get { return m_selected; }}
+    public bool m_toggleControls;
 	public virtual void ToggleSelected(){ SetSelected(!m_selected); }
     public virtual void SetSelected(bool state){m_selected = state;}
 
@@ -149,7 +157,7 @@ public abstract class BaseAttachment : MonoBehaviour{
 	 * Dragging states
 	 */
 	protected bool m_isDragging;
-	protected void SetIsDragging(bool state){ m_isDragging = (IsDraggable) ? state : false; }
+	protected void SetIsDragging(bool state){ m_isDragging = (IsDraggable) ? state : false; isDraggable = state;}
 	public bool IsDragging{ get { return (IsDraggable) ? m_isDragging : false; }}
 
 	protected bool m_isDraggable;
@@ -215,7 +223,7 @@ public abstract class BaseAttachment : MonoBehaviour{
 	public void SetAsDock(bool state){ m_acceptsDockables = state;}
 	public void SetIsDockable(bool state){ m_isDockable = state;}
 	public bool IsDock{ get { return m_acceptsDockables;}}
-	public bool IsDockable{ get { return m_isDockable; }}
+	public bool IsDockable{ get { isDockable = true; return m_isDockable; }}
 
 
 	/*
@@ -351,6 +359,12 @@ public abstract class BaseAttachment : MonoBehaviour{
     }
     public virtual void ShowControls() { m_controlsVisible = true; }
     public virtual void HideControls() { m_controlsVisible = false; }
+    public void ToggleControls() {
+        if(controlsVisible)
+            HideControls();
+        else
+            ShowControls(); 
+    }
 
 	/*
 	 * Gesture implementations

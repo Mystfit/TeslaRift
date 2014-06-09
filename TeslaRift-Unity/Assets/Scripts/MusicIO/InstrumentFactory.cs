@@ -24,18 +24,12 @@ public class InstrumentFactory : MonoBehaviour {
 	public float m_panelOrbitDistance = 0.2f;
 	public TextAsset m_liveSessionFile;
 
-	private InstrumentController m_instrumentControllerRef;
 	public ScrollerAttachment m_instrumentHolder;
 
 	void Start () {
 		m_instance = this;
-
-		m_instrumentControllerRef = this.GetComponent<InstrumentController>();
 		m_source = GlobalConfig.Instance.ProjectSourceName;
-
-		//LoadLiveSessionXml();
 	}
-
 
 	/*
 	 * Creates instruments from Live's song info
@@ -164,10 +158,11 @@ public class InstrumentFactory : MonoBehaviour {
 				instrumentDef.AddParam(name, "float", min, max);
 			}
 			
-			m_instrumentControllerRef.AddInstrument(instrumentDef);
+			InstrumentController.Instance.AddInstrument(instrumentDef);
             InstrumentAttachment instrument = UIFactory.CreateInstrument(instrumentDef);
 
 			instrument.DockInto(m_instrumentHolder);
 		}
+        //m_instrumentHolder.HideControls();
 	}
 }

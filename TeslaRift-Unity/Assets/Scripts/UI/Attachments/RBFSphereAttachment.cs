@@ -8,15 +8,10 @@ using UI;
 public class RBFSphereAttachment : BaseAttachment {
 
 	//Training points
-    protected RBFPlugAttachment[] m_plugs;
+    public RBFPlugAttachment[] m_plugs;
 	public bool m_toggleResetRbf;
     public RBFTrainingAttachment m_selectedTraining;
-    
-    //Perform/edit mode light
-    public GameObject m_centerSphere;
-    public Color m_editingColor;
-    public Color m_performingColor;
-
+        
 	//RBF
 	protected RBFCore m_rbf;
 	public float m_sigma = 2;
@@ -27,7 +22,7 @@ public class RBFSphereAttachment : BaseAttachment {
 		m_rbf = new RBFCore(1,1);
 		m_rbf.setSigma(m_sigma);
 
-		m_plugs = GetComponentsInChildren<RBFPlugAttachment>();
+		//m_plugs = GetComponentsInChildren<RBFPlugAttachment>();
 
 		SetAsDock(true);
         AddAcceptedDocktype(typeof(RBFTrainingAttachment));
@@ -113,7 +108,8 @@ public class RBFSphereAttachment : BaseAttachment {
         SetToolmodeResponse(new BaseTool.ToolMode[0]);
         foreach (RBFTrainingAttachment attach in m_childDockables)
             attach.ShowControls();
-        iTween.ColorTo(m_centerSphere, iTween.Hash("color", m_performingColor, "time", 0.2f));
+        foreach (RBFPlugAttachment plug in m_plugs)
+            plug.ShowControls();
     }
 
     public override void HideControls()
@@ -123,7 +119,8 @@ public class RBFSphereAttachment : BaseAttachment {
         ResetRBF();
         foreach (RBFTrainingAttachment attach in m_childDockables)
             attach.HideControls();
-        iTween.ColorTo(m_centerSphere, iTween.Hash("color", m_editingColor, "time", 0.2f));
+        foreach (RBFPlugAttachment plug in m_plugs)
+            plug.HideControls();
     }
 
 	/*

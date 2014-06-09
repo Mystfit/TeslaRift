@@ -131,7 +131,6 @@ public class GloveController : MonoBehaviour {
 								vals += n.ToString() + ", ";
 								count++;
 							}
-							Debug.Log(count + "Glove Values:" + vals);
 						} 
                         else {
                             double[] m_calibrationTotal = new double[m_bendValues.Length];

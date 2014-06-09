@@ -56,7 +56,6 @@ namespace UI
             }
             else if (attach.GetType() == typeof(RBFTrainingSpawnerAttachment))
             {
-                RBFTrainingAttachment rbfAttach = attach as RBFTrainingAttachment;
                 ghostAttach = UIFactory.CreateRBFSphereTraining();
             }
                 
