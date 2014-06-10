@@ -6,21 +6,39 @@ ModelImporter:
     100000: //RootNode
     100002: pSolid1
     100004: pSolid2
+    100006: icosahedron
+    100008: polySurface1
+    100010: polySurface2
+    100012: polySurface3
+    100014: transform1
+    100016: transform2
+    100018: transform3
     400000: //RootNode
     400002: pSolid1
     400004: pSolid2
+    400006: icosahedron
+    400008: polySurface1
+    400010: polySurface2
+    400012: polySurface3
+    400014: transform1
+    400016: transform2
+    400018: transform3
     2300000: //RootNode
     2300002: pSolid1
     2300004: pSolid2
+    2300006: polySurface3
     3300000: //RootNode
     3300002: pSolid1
     3300004: pSolid2
+    3300006: polySurface3
     4300000: pSolid1
     4300002: pSolid2
     4300004: icosahedron
+    4300006: polySurface3
+    4300008: icos_mesh
     9500000: //RootNode
   materials:
-    importMaterials: 1
+    importMaterials: 0
     materialName: 0
     materialSearch: 1
   animations:
@@ -40,7 +58,7 @@ ModelImporter:
     globalScale: .5
     meshCompression: 0
     addColliders: 0
-    importBlendShapes: 1
+    importBlendShapes: 0
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
@@ -51,9 +69,9 @@ ModelImporter:
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
   tangentSpace:
-    normalSmoothAngle: 60
+    normalSmoothAngle: 133
     splitTangentsAcrossUV: 1
-    normalImportMode: 0
+    normalImportMode: 1
     tangentImportMode: 1
   importAnimation: 1
   copyAvatar: 0

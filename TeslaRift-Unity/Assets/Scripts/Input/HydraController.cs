@@ -406,33 +406,13 @@ public class HydraController : MonoBehaviour {
         {
             ToolController.Instance.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.PLAY4);
         }
-	
-		//Normal reset
-		//--------------------
-		/*else if(m_leftGlove.GetGestureDown("INDEX_POINT") || Input.GetKeyDown(KeyCode.W)){
-			ToolController.Instance.PushTool(typeof(ResetTool), hand);
-		}
-		
-		
-		//Full instrument reset
-		//---------------------
-		else if(Input.GetKeyDown(KeyCode.D)){  
-			ToolController.Instance.PushTool(typeof(ResetTool), hand, BaseTool.ToolMode.SECONDARY);
-		}*/
-		
+
 		//Return to idle
 		//--------------
-		
-		bool openHand = m_glove.GetGestureDown("IDLE_HAND");
-		
-		if(Input.GetKeyUp (KeyCode.Space) ||
-			Input.GetKeyUp(KeyCode.W) ||
-		    Input.GetKeyUp(KeyCode.LeftShift) ||
-			Input.GetKeyUp(KeyCode.E) ||
-		    Input.GetKeyUp(KeyCode.S) ||
-			openHand )
+		if(m_glove.GetGestureDown("IDLE_HAND"))
 		{
-			ToolController.Instance.PopTool(hand);
+			//ToolController.Instance.PopTool(hand);
+            ToolController.Instance.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.IDLE);
             m_glove.SetCollider(m_glove.activeGesture);
 		}
 	}

@@ -82,8 +82,8 @@ public class WorkspaceDockAttachment : BaseAttachment {
 
     public void InstrumentControlsAreVisible(BaseAttachment attach)
     {
-        if (m_activeAttachment != null)
-            m_activeAttachment.HideControls();
+		if (m_activeAttachment != null && attach != m_activeAttachment)
+    		m_activeAttachment.HideControls();
         m_activeAttachment = attach;
     }
 	

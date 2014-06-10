@@ -105,11 +105,15 @@ public class RBFSphereAttachment : BaseAttachment {
     public override void ShowControls()
     {
         base.ShowControls();
-        SetToolmodeResponse(new BaseTool.ToolMode[0]);
+		if(m_selectedTraining != null)
+        	m_selectedTraining.SetSelected(true);
+
         foreach (RBFTrainingAttachment attach in m_childDockables)
             attach.ShowControls();
         foreach (RBFPlugAttachment plug in m_plugs)
             plug.ShowControls();
+
+        SetToolmodeResponse(new BaseTool.ToolMode[0]);
     }
 
     public override void HideControls()
@@ -118,9 +122,12 @@ public class RBFSphereAttachment : BaseAttachment {
         SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.PRIMARY });
         ResetRBF();
         foreach (RBFTrainingAttachment attach in m_childDockables)
+        {
             attach.HideControls();
+        }
         foreach (RBFPlugAttachment plug in m_plugs)
             plug.HideControls();
+        
     }
 
 	/*
@@ -147,7 +154,8 @@ public class RBFSphereAttachment : BaseAttachment {
 			m_rbf.addTrainingPoint(positionVals, values);
 		}
 
-		m_rbf.calculateWeights();
+        if (m_childDockables.Count > 0)
+		    m_rbf.calculateWeights();
 	}
 
     public override void Update()

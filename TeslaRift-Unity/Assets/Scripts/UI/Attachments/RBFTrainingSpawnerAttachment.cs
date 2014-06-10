@@ -15,6 +15,8 @@ public class RBFTrainingSpawnerAttachment : BaseAttachment {
 
         SetIsDraggable(true);
         SetCloneable(true);
+
+        ShowControls();
     }
 
     public override void Gesture_First()

@@ -44,7 +44,7 @@ public class RBFPlugAttachment : BaseAttachment {
 		base.Awake();
 		AddAcceptedDocktype(typeof(SliderAttachment));
         SetAsDock(true);
-        m_paramscroller.SetItemScale(UIFactory.SliderScale.x);
+        m_paramscroller.SetItemScale(UIFactory.sliderScale.x);
 
 		m_innerPlugScale = m_plugInner.localScale;
         m_exteriorPlugScale = m_plugExterior.localScale;
@@ -75,7 +75,8 @@ public class RBFPlugAttachment : BaseAttachment {
     {
         base.HideControls();
         animation.Stop();
-        animation.Play("drawer_in");
+        animation.Play("drawer_out");
+
         foreach (SliderAttachment attach in m_paramscroller.DockedChildren)
         {
             attach.SetToolmodeResponse(new BaseTool.ToolMode[0]);
@@ -87,7 +88,8 @@ public class RBFPlugAttachment : BaseAttachment {
     {
         base.ShowControls();
         animation.Stop();
-        animation.Play("drawer_out");
+        animation.Play("drawer_in");
+
         foreach (SliderAttachment attach in m_paramscroller.DockedChildren)
         {
             attach.SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.GRABBING });
@@ -113,6 +115,7 @@ public class RBFPlugAttachment : BaseAttachment {
     public override void Gesture_Exit()
     {
         m_lastAngle = 0.0f;
+        m_lastPlugDragPos = 0.0f;
         base.Gesture_Exit();
     }
 

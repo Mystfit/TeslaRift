@@ -191,13 +191,16 @@ public class InstrumentGestureTool : BaseTool {
 					m_toolHandState = BaseTool.HandState.HOLDING;
 					m_attachment.SetToolMode( m_mode);
 					m_attachment.SetActiveHand( m_hand);
+
+                    if (mode == ToolMode.IDLE)
+                        m_attachment.StartHover();
 				}
 			}
 		}
 	}
 
 
-	public override void LeavingProximity ()
+    public override void LeavingProximity()
 	{
 		base.LeavingProximity ();
 
@@ -244,6 +247,7 @@ public class InstrumentGestureTool : BaseTool {
 				//m_attachment.Gesture_PushIn();
 				break;
 			}
+			m_attachment.StopHover();
 		}
 		m_toolHandState = BaseTool.HandState.SEARCHING;
 	}

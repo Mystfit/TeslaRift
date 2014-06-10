@@ -49,6 +49,10 @@ public abstract class BaseAttachment : MonoBehaviour{
 				if(responder == mode)
 					return true;
 			}
+
+            //Always return true when hovering over an attachment
+            if (mode == BaseTool.ToolMode.IDLE)
+                return true;
 		}
 
 		return false;
@@ -150,7 +154,56 @@ public abstract class BaseAttachment : MonoBehaviour{
 	public bool selected{ get { return m_selected; }}
     public bool m_toggleControls;
 	public virtual void ToggleSelected(){ SetSelected(!m_selected); }
-    public virtual void SetSelected(bool state){m_selected = state;}
+    public virtual void SetSelected(bool state){
+        m_selected = state;
+        if (m_outlineMat != null)
+        {
+            if (selected)
+            {
+                SetOutlineColor(UIFactory.outlineSelectedColor);
+                SetOutlineSize(UIFactory.outlineSelectedSize);
+            }
+            else
+            {
+                SetOutlineColor(UIFactory.outlineDeselectedColor);
+                SetOutlineSize(0.0f);
+            }
+        }
+    }
+    
+
+    /*
+     * Outline and hovering
+     */
+	protected Material m_outlineMat;
+    public void SetOutlineMat(Material mat){ m_outlineMat = mat; }
+	public void SetOutlineSize(float size)
+    {
+        if (m_outlineMat != null)
+		    iTween.ValueTo(gameObject, iTween.Hash("from", m_outlineMat.GetFloat("_Outline"), "to", size, "time", 0.15f, "onupdate", "SetOutlineUpdate", "easetype", iTween.EaseType.easeOutExpo));
+    }
+    public void SetOutlineColor(Color color)
+    {
+        if (m_outlineMat != null)
+            iTween.ValueTo(gameObject, iTween.Hash("from", m_outlineMat.GetColor("_OutlineColor"), "to", color, "time", 0.15f, "onupdate", "SetOutlineColorUpdate", "easetype", iTween.EaseType.easeOutExpo));
+    }
+	private void SetOutlineUpdate(float size){ m_outlineMat.SetFloat("_Outline", size); }
+    private void SetOutlineColorUpdate(Color color){ m_outlineMat.SetColor("_OutlineColor", color); }
+
+    public virtual void StartHover()
+    {
+		if(!selected){
+	        SetOutlineSize(UIFactory.outlineHoverSize);
+	        SetOutlineColor(UIFactory.outlineHoverColor);
+		}
+    }
+    public virtual void StopHover()
+    {
+		if(!selected){
+	        SetOutlineSize(0.0f);
+	        SetOutlineColor(UIFactory.outlineDeselectedColor);
+		}
+    }
 
 
 	/*
@@ -346,7 +399,7 @@ public abstract class BaseAttachment : MonoBehaviour{
      * Child UI controls
      */
     public bool controlsEnabled { get { return m_controlsEnabled; } }
-    protected bool m_controlsEnabled;
+    protected bool m_controlsEnabled = true;
 
     public bool controlsVisible { get { return m_controlsVisible; } }
     protected bool m_controlsVisible;
@@ -375,8 +428,8 @@ public abstract class BaseAttachment : MonoBehaviour{
 	public virtual void Gesture_IdleProximity(){}
 	public virtual void Gesture_IdleExterior(){}
 	public virtual void Gesture_ExitIdleInterior(){}
-	public virtual void Gesture_ExitIdleProximity(){}
-	public virtual void Gesture_ExitIdleExterior(){}
+    public virtual void Gesture_ExitIdleProximity() {}
+    public virtual void Gesture_ExitIdleExterior() {}
 	public virtual void Gesture_PushIn(){}
 	public virtual void Gesture_PullOut(){}
 	public virtual void Gesture_Twist(float amount){}

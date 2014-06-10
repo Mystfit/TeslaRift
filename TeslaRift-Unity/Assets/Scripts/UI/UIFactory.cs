@@ -25,7 +25,24 @@ namespace UI
 
 		//Slider localscale amount
 		public float m_sliderScale = 0.1f;
-		public static Vector3 SliderScale{get {return new Vector3(Instance.m_sliderScale, Instance.m_sliderScale, Instance.m_sliderScale); }}
+		public static Vector3 sliderScale{get {return new Vector3(Instance.m_sliderScale, Instance.m_sliderScale, Instance.m_sliderScale); }}
+
+        [Range(0.0f, 0.03f)]
+        public float m_outlineSelectedSize;
+        public static float outlineSelectedSize { get { return Instance.m_outlineSelectedSize; } }
+
+        [Range(0.0f, 0.03f)]
+        public float m_outlineHoverSize;
+        public static float outlineHoverSize { get { return Instance.m_outlineHoverSize; } }
+
+        public Color m_outlineSelectedColor;
+        public static Color outlineSelectedColor { get { return Instance.m_outlineSelectedColor; } }
+
+        public Color m_outlineHoverColor;
+        public static Color outlineHoverColor { get { return Instance.m_outlineHoverColor; } }
+
+        public Color m_outlineDeselectedColor;
+        public static Color outlineDeselectedColor { get { return Instance.m_outlineDeselectedColor; } }
 
 		void Awake(){
 			m_instance = this;
@@ -204,7 +221,7 @@ namespace UI
 			attach.InitInstrumentControls();
 			
 			//Set listener prefixes
-            instrumentGame.renderer.material.SetColor("_Color", instrument.color);
+            instrumentGame.renderer.materials[1].SetColor("_Color", instrument.color);
 			
 			return attach;
 		}

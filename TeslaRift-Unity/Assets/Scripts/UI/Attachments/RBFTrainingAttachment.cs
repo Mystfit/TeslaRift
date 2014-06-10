@@ -11,12 +11,15 @@ public class RBFTrainingAttachment : BaseAttachment {
 
     public Color m_selectedColor;
     public Color m_defaultColor;
+	protected Renderer m_sphereRender;
 
     public override void Awake()
     {
         base.Awake();
         SetIsDraggable(true);
-        m_outputValues = new Dictionary<RBFPlugAttachment, double>();  
+        m_outputValues = new Dictionary<RBFPlugAttachment, double>();
+        m_sphereRender = GetComponentInChildren<Renderer>();
+        SetOutlineMat(m_sphereRender.material);
     }
 
     public RBFSphereAttachment owner { 
@@ -50,13 +53,14 @@ public class RBFTrainingAttachment : BaseAttachment {
     public override void HideControls()
     {
         base.HideControls();
+        SetSelected(false);
         SetToolmodeResponse(new BaseTool.ToolMode[0]);
     }
 
     public override void SetSelected(bool state)
     {
         base.SetSelected(state);
-        if(selected)
+        if (selected)
             iTween.ColorTo(gameObject, iTween.Hash("color", m_selectedColor, "time", 0.2f));
         else
             iTween.ColorTo(gameObject, iTween.Hash("color", m_defaultColor, "time", 0.2f));

@@ -31,6 +31,7 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
 		SetIsDockable(true);
 		SetIsDraggable(true);
 		SetCloneable(true);
+        SetOutlineMat(renderer.materials[1]);
 	}
 
 
@@ -54,7 +55,7 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
             clipScroller.transform.parent = m_rotator.transform;
             clipScroller.SetOffset(new Vector3(-m_controlsMirrorOffset, m_controlsYOffset + 0.02f, 0.0f));
             //clipScroller.transform.localPosition = new Vector3(-m_controlsMirrorOffset, m_controlsYOffset + 0.02f, 0.0f);
-            clipScroller.SetItemScale(UIFactory.SliderScale.x);
+            clipScroller.SetItemScale(UIFactory.sliderScale.x);
 
             foreach (InstrumentClip clip in musicRef.clipList)
             {
@@ -69,7 +70,7 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
             paramScroller.transform.parent = m_rotator.transform;
             paramScroller.SetOffset(new Vector3(m_controlsMirrorOffset, m_controlsYOffset, 0.0f));
             //paramScroller.transform.localPosition = new Vector3(m_controlsMirrorOffset, m_controlsYOffset, 0.0f);
-            paramScroller.SetItemScale(UIFactory.SliderScale.x);
+            paramScroller.SetItemScale(UIFactory.sliderScale.x);
 
             foreach (BaseInstrumentParam param in musicRef.paramList)
             {
@@ -102,21 +103,22 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
     {
         if (controlsEnabled)
         {
-            //m_clipScroller.SetActive(true);
-            //m_parameterScroller.SetActive(true);
-            m_rotator.SetActive(true);
+			if (m_dockedInto != null)
+			{
+				//Let dock know that our controls are visible
+				if (m_dockedInto.GetType() == typeof(WorkspaceDockAttachment))
+				{
+					WorkspaceDockAttachment dock = m_dockedInto as WorkspaceDockAttachment;
+					dock.InstrumentControlsAreVisible(this);
+				}
+			}
+
+			//m_clipScroller.SetActive(true);
+			//m_parameterScroller.SetActive(true);
+			m_rotator.SetActive(true);
             m_parameterScroller.GetComponent<ScrollerAttachment>().SetDockablesAsTweenable(true);
             m_clipScroller.GetComponent<ScrollerAttachment>().SetDockablesAsTweenable(true);
 
-            if (m_dockedInto != null)
-            {
-                //Let dock know that our controls are visible
-                if (m_dockedInto.GetType() == typeof(WorkspaceDockAttachment))
-                {
-                    WorkspaceDockAttachment dock = m_dockedInto as WorkspaceDockAttachment;
-                    dock.InstrumentControlsAreVisible(this);
-                }
-            }
             base.ShowControls();
         }
     }
@@ -154,7 +156,7 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
             StartDragging(HydraController.Instance.GetHand(m_hand));
 
         if (mode == BaseTool.ToolMode.PRIMARY)
-            ShowControls();
+            ToggleControls();
 	}
 	
 	public override void Gesture_IdleProximity ()

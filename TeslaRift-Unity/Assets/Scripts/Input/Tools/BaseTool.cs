@@ -5,10 +5,6 @@ using MusicIO;
 
 public class BaseTool : MonoBehaviour {
 		
-	protected HydraController m_hydraRef = null;
-	protected InstrumentController m_instrumentControlRef = null;
-	protected ToolController m_toolControlRef = null;
-
 	public GloveController glove{ get { return m_gloveController; }}
 	protected GloveController m_gloveController = null;
 
@@ -26,7 +22,7 @@ public class BaseTool : MonoBehaviour {
 	public ToolHand Hand{get { return m_hand; }}
 	
 	//Tool modes
-	public enum ToolMode{PRIMARY = 0, SECONDARY, TERTIARY, GRABBING, PLAY1, PLAY2, PLAY3, PLAY4};
+	public enum ToolMode{PRIMARY = 0, SECONDARY, TERTIARY, GRABBING, PLAY1, PLAY2, PLAY3, PLAY4, IDLE};
 	protected ToolMode m_mode = ToolMode.PRIMARY;
 	public ToolMode mode{ get { return m_mode; }}
 
@@ -40,14 +36,9 @@ public class BaseTool : MonoBehaviour {
 	}
 	
 	public virtual void Awake(){
-		m_hydraRef = HydraController.Instance;
-		m_instrumentControlRef = InstrumentController.Instance;
-		m_toolControlRef = ToolController.Instance;
 		m_toolHandState = BaseTool.HandState.SEARCHING;
 		m_gloveController = GetComponent<GloveController>();
-
 		m_targets = new List<object>();	
-		
 	}
 	
 	public virtual void Update () {
