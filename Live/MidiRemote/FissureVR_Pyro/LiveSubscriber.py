@@ -23,7 +23,7 @@ class LiveSubscriber(Subscriber):
             PyroDeviceParameter.SET_VALUE,
             PyroSong.GET_SONG_LAYOUT,
             PyroTrack.STOP_TRACK,
-            PyroSendParameter.SET_SEND
+            PyroSendVolume.SET_SEND
         ]
 
         subscribed = [INCOMING_PREFIX + method for method in subscribed] 
@@ -59,7 +59,7 @@ class LiveSubscriber(Subscriber):
         for parametertuple, value in queue.iteritems():
             try:
                 if parametertuple in self.parameters:
-                    self.parameters[parametertuple].get_parameter().value = value
+                    self.parameters[parametertuple].get_reference().value = value
             except RuntimeError, e:
                 self.log_message(e)
 
@@ -100,7 +100,8 @@ class LiveSubscriber(Subscriber):
         key = (
             int(args["trackindex"]),
             int(args["deviceindex"]),
-            int(args["parameterindex"]))
+            int(args["parameterindex"]),
+            int(args["category"]))
 
         # Rather than setting the parameter value immediately,
         # we combine similar value messages so only the most up to date

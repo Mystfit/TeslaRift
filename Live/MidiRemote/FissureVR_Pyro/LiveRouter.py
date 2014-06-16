@@ -25,7 +25,7 @@ class LiveRouter(Subscriber):
             PyroDevice.PARAMETERS_UPDATED,
             PyroDeviceParameter.VALUE_UPDATED,
             PyroSong.GET_SONG_LAYOUT,
-            PyroSendParameter.SEND_UPDATED
+            PyroSendVolume.SEND_UPDATED
         ]
 
         subscribed = [OUTGOING_PREFIX + method for method in subscribed] 
@@ -53,7 +53,7 @@ class LiveRouter(Subscriber):
         self.node.request_register_method(PyroTrack.PLAYING_SLOT_INDEX, ZstMethod.READ)
         self.node.request_register_method(PyroDeviceParameter.VALUE_UPDATED, ZstMethod.READ)
         self.node.request_register_method(PyroDevice.PARAMETERS_UPDATED, ZstMethod.READ)
-        self.node.request_register_method(PyroSendParameter.SEND_UPDATED, ZstMethod.READ)
+        self.node.request_register_method(PyroSendVolume.SEND_UPDATED, ZstMethod.READ)
 
         # Incoming methods
         self.node.request_register_method(
@@ -80,12 +80,13 @@ class LiveRouter(Subscriber):
                 "trackindex": None,
                 "deviceindex": None,
                 "parameterindex": None,
+                "category": None,
                 "value": None
             },
             self.incoming)
 
         self.node.request_register_method(
-            PyroSendParameter.SET_SEND,
+            PyroSendVolume.SET_SEND,
             ZstMethod.WRITE,
             {
                 "trackindex": None,

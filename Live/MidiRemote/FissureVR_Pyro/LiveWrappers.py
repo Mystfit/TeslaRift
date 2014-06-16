@@ -9,15 +9,24 @@ INCOMING_PREFIX = "I_"
 OUTGOING_PREFIX = "O_"
 
 
-class PyroSong():
+class PyroWrapper():
+    def __init__(self, publisher):
+        self.publisher = publisher
+        self.ref_wrapper = None
+
+    def get_reference(self):
+        return self.ref_wrapper()
+
+
+class PyroSong(PyroWrapper):
 
     # Out
     GET_SONG_LAYOUT = "get_song_layout"
 
     def __init__(self, publisher):
-        self.publisher = publisher
+        PyroWrapper.__init__(self, publisher=publisher)
         self.ignoreList = []
-
+        self.ref_wrapper = getSong
 
     def get_song_layout(self, args=None):
         self.publisher.publish_check(
@@ -69,7 +78,6 @@ class PyroSong():
         return parameters
 
     def dump_song_xml(self):
-
         xmlString = "<?xml version='1.0' encoding='UTF-8'?>\n"
         xmlString += "<song tempo = '" + \
             str(getSong().tempo) + "'>\n"
@@ -211,7 +219,7 @@ class PyroSong():
         return xmlString
 
 
-class PyroTrack():
+class PyroTrack(PyroWrapper):
     # Out
     FIRED_SLOT_INDEX = "fired_slot_index"
     PLAYING_SLOT_INDEX = "playing_slot_index"
@@ -221,60 +229,88 @@ class PyroTrack():
     STOP_TRACK = "stop_track"
 
     def __init__(self, trackindex, publisher):
+        PyroWrapper.__init__(self, publisher=publisher)
         self.trackindex = trackindex
-        self.track = getTrack(trackindex)
-        self.publisher = publisher
         self.devices = []
         self.sends = []
+        self.ref_wrapper = self.get_track
 
         # Listeners
-        self.track.add_fired_slot_index_listener(self.fired_slot_index)
-        self.track.add_playing_slot_index_listener(self.playing_slot_index)
+        self.get_reference().add_fired_slot_index_listener(self.fired_slot_index)
+        self.get_reference().add_playing_slot_index_listener(self.playing_slot_index)
+
+    def get_track(self):
+        return getSong().tracks[self.trackindex]
 
     def fired_slot_index(self):
         self.publisher.publish_check(OUTGOING_PREFIX + PyroTrack.FIRED_SLOT_INDEX, {
             "trackindex": self.trackindex,
-            "slotindex": self.track.fired_slot_index})
+            "slotindex": self.get_reference().fired_slot_index})
 
     def playing_slot_index(self):
         self.publisher.publish_check(OUTGOING_PREFIX + PyroTrack.PLAYING_SLOT_INDEX, {
             "trackindex": self.trackindex,
-            "slotindex": self.track.playing_slot_index})
+            "slotindex": self.get_reference().playing_slot_index})
 
 
-class PyroDevice():
+class PyroSend(PyroWrapper):
+    # Out
+    # In
+
+    def __init__(self, sendindex, publisher):
+        PyroWrapper.__init__(self, publisher=publisher)
+        self.sendindex = sendindex
+        self.publisher = publisher
+        self.devices = []
+        self.ref_wrapper = self.get_send
+
+    def get_send(self):
+        return getSong().return_tracks[self.sendindex]
+
+
+class PyroDevice(PyroWrapper):
     # Out
     PARAMETERS_UPDATED = "parameters_updated"
 
-    def __init__(self, trackindex, deviceindex, publisher):
+    def __init__(self, trackindex, deviceindex, publisher, isSendDevice=False):
+        PyroWrapper.__init__(self, publisher=publisher)
         self.trackindex = trackindex
         self.deviceindex = deviceindex
-        self.device = getTrack(trackindex).devices[deviceindex]
-        self.publisher = publisher
         self.parameters = []
+        self.isSendDevice = isSendDevice
+        self.ref_wrapper = self.get_device
+        self.get_reference().add_parameters_listener(self.parameters_updated)
 
-        self.device.add_parameters_listener(self.parameters_updated)
+    def get_device(self):
+        if self.isSendDevice:
+            return getSong().return_tracks[self.trackindex].devices[self.deviceindex]
+        return getTrack(self.trackindex).devices[self.deviceindex]
 
     def parameters_updated(self):
         self.publisher.publish_check(OUTGOING_PREFIX + PyroDevice.PARAMETERS_UPDATED, {
             "track": self.track.name,
-            "device": self.device.name})
+            "device": self.get_reference().name})
 
 
-class PyroDeviceParameter():
+class PyroDeviceParameter(PyroWrapper):
     # Out
     VALUE_UPDATED = "value_updated"
+
+    #In
     SET_VALUE = "set_value"
 
-    def __init__(self, trackindex, deviceindex, parameterindex, publisher):
+    def __init__(self, trackindex, deviceindex, parameterindex, publisher, isSendDeviceParameter=0):
+        PyroWrapper.__init__(self, publisher=publisher)
         self.trackindex = trackindex
         self.deviceindex = deviceindex
         self.parameterindex = parameterindex
-        self.publisher = publisher
-
-        self.get_parameter().add_value_listener(self.value_updated)
+        self.isSendDeviceParameter = isSendDeviceParameter
+        self.ref_wrapper = self.get_parameter
+        self.get_reference().add_value_listener(self.value_updated)
 
     def get_parameter(self):
+        if self.isSendDeviceParameter:
+            return getSong().return_tracks[self.trackindex].devices[self.deviceindex].parameters[self.parameterindex]
         return getTrack(self.trackindex).devices[self.deviceindex].parameters[self.parameterindex]
 
     def value_updated(self):
@@ -282,10 +318,11 @@ class PyroDeviceParameter():
             "trackindex": self.trackindex,
             "deviceindex": self.deviceindex,
             "parameterindex": self.parameterindex,
-            "value": self.get_parameter().value})
+            "value": self.get_reference().value,
+            "category": self.isSendDeviceParameter})
 
 
-class PyroSendParameter():
+class PyroSendVolume(PyroWrapper):
     #Out
     SEND_UPDATED = "send_updated"
 
@@ -293,17 +330,17 @@ class PyroSendParameter():
     SET_SEND = "set_send"
 
     def __init__(self, trackindex, sendindex, publisher):
+        PyroWrapper.__init__(self, publisher=publisher)
         self.trackindex = trackindex
         self.sendindex = sendindex
-        self.publisher = publisher
-
-        self.get_send().add_value_listener(self.send_updated)
+        self.ref_wrapper = self.get_send
+        self.get_reference().add_value_listener(self.send_updated)
 
     def get_send(self):
         return getTrack(self.trackindex).mixer_device.sends[self.sendindex]
 
     def send_updated(self):
-        self.publisher.publish_check(OUTGOING_PREFIX + PyroSendParameter.SEND_UPDATED, {
+        self.publisher.publish_check(OUTGOING_PREFIX + PyroSendVolume.SEND_UPDATED, {
             "trackindex": self.trackindex,
             "sendindex": self.sendindex,
-            "value": self.get_send().value})
+            "value": self.get_reference().value})

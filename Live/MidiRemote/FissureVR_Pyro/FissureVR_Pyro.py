@@ -42,6 +42,7 @@ class FissureVR_Pyro(ControlSurface):
             # Wrappers for Ableton objects
             self.song = None
             self.tracks = []
+            self.sends = []
             self.clock = None
 
             self.initPyroServer()
@@ -107,13 +108,24 @@ class FissureVR_Pyro(ControlSurface):
 
                 for parameterindex in range(len(getTrack(trackindex).devices[deviceindex].parameters)):                    
                     parameterWrapper = PyroDeviceParameter(trackindex, deviceindex, parameterindex, self.publisher)
-                    parameters[(trackindex, deviceindex, parameterindex)] = parameterWrapper
+                    parameters[(trackindex, deviceindex, parameterindex, 0)] = parameterWrapper
 
-            sendlist = trackWrapper.track.mixer_device.sends
+            sendlist = trackWrapper.get_reference().mixer_device.sends
             for send in range(len(sendlist)):
-                sendWrapper = PyroSendParameter(trackindex, send, self.publisher)
-                trackWrapper.sends.append(sendWrapper)
-                self.log_message(sendWrapper.get_send())
+                sendParamWrapper = PyroSendVolume(trackindex, send, self.publisher)
+                trackWrapper.sends.append(sendParamWrapper)
+
+        for sendindex in range(len(getSong().return_tracks)):
+            sendWrapper = PyroSend(sendindex, self.publisher)
+            self.sends.append(sendWrapper)
+
+            for deviceindex in range(len(sendWrapper.get_reference().devices)):
+                deviceWrapper = PyroDevice(sendindex, deviceindex, self.publisher, 1)
+                sendWrapper.devices.append(deviceWrapper)
+
+                for parameterindex in range(len(sendWrapper.get_reference().devices[deviceindex].parameters)):                    
+                    parameterWrapper = PyroDeviceParameter(sendindex, deviceindex, parameterindex, self.publisher, 1)
+                    parameters[(sendindex, deviceindex, parameterindex, 1)] = parameterWrapper
 
         self.subscriber.set_parameter_list(parameters)
         self.refresh_state()
