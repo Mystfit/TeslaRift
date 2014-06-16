@@ -1,6 +1,7 @@
 .DS_Store
 *.swp
 *.Trashes
+*.pyc
 
 TeslaRift-Unity/Library
 TeslaRift-Unity/Temp

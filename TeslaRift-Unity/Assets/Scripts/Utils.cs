@@ -1,4 +1,5 @@
 using UnityEngine;
+using DotNumerics;
 using System;
 using System.Collections.Generic;
 
@@ -39,6 +40,78 @@ public static class Utils
 		output = input.Replace(" ", "_");
 		return output;
 	}
+
+
+    /*
+     * Area of triangle
+     */
+    public static float AreaOfTriangle(Vector3 a, Vector3 b, Vector3 c)
+    {
+        float alen = Vector3.Distance(a, b);
+        float blen = Vector3.Distance(b, c);
+        float clen = Vector3.Distance(c, a);
+
+        return AreaOfTriangle(alen, blen, clen); 
+    }
+
+    public static float AreaOfTriangle(Vector2 a, Vector2 b, Vector2 c)
+    {
+        float alen = Vector2.Distance(a, b);
+        float blen = Vector2.Distance(b, c);
+        float clen = Vector2.Distance(c, a);
+
+        return AreaOfTriangle(alen, blen, clen);
+    }
+
+    public static float AreaOfTriangle(float a, float b, float c)
+    {
+        float p = (a + b + c) * 0.5f;
+        return Mathf.Sqrt( p * (p - a) * (p - b) * (p - c) );
+    }
+
+    public static double VolumeOfTetrahedron(Vector3 a, Vector3 b, Vector3 c, Vector3 d)
+    {
+        double[,] data = new double[,]{
+            {a.x, b.x, c.x, d.x},
+            {a.y, b.y, c.y, d.y},
+            {a.z, b.z, c.z, d.z},
+            {1.0, 1.0, 1.0, 1.0}
+        };
+
+        return Math.Abs(new DotNumerics.LinearAlgebra.Matrix(data).Determinant() * (1.0 / 6.0));
+    }
+
+    /*
+     * Barycentric shape lerping
+     */
+    public static float[] BarycentricLerp(Vector2 a, Vector2 b, Vector2 c, Vector2 position)
+    {
+        float[] ratios = new float[3];
+        float totalArea = AreaOfTriangle(a, b, c);
+
+        ratios[0] = AreaOfTriangle(b, c, position) / totalArea;
+        ratios[1] = AreaOfTriangle(a, c, position) / totalArea;
+        ratios[2] = AreaOfTriangle(a, b, position) / totalArea;
+
+        return ratios;
+    }
+
+
+    /*
+     * Tetrahedron lerping
+     */
+    public static float[] BarycentricTetrahedronLerp(Vector3 a, Vector3 b, Vector3 c, Vector3 d, Vector3 position)
+    {
+        float[] ratios = new float[4];
+        float totalArea = (float)VolumeOfTetrahedron(a, b, c, d);
+
+        ratios[0] = (float)VolumeOfTetrahedron(b, c, d, position) / totalArea;
+        ratios[1] = (float)VolumeOfTetrahedron(a, c, d, position) / totalArea;
+        ratios[2] = (float)VolumeOfTetrahedron(a, b, d, position) / totalArea;
+        ratios[3] = (float)VolumeOfTetrahedron(a, b, c, position) / totalArea;
+
+        return ratios;
+    }
 
 	
 	//Generates points on the surface of a sphere
@@ -127,6 +200,29 @@ public static class Utils
 	
 	public static Color intToColor(int input){
 		return new Color( (float)((input >> 16) & 255) / 255, (float)((input >> 8) & 255) / 255, (float)((input) & 255) / 255 );
+	}
+
+	public static Vector3[] BuildArcPositions(float radius, float arcLength, int numPoints){
+		return BuildArcPositions(radius, arcLength, numPoints, 0.0f, false);
+	}
+
+	public static Vector3[] BuildArcPositions(float radius, float arcLength, int numPoints, float minAngle, bool centered){
+		Vector3[] points = new Vector3[numPoints];
+		float angleInc = arcLength / numPoints;
+
+		if(angleInc < minAngle) angleInc = minAngle;
+        float startAngle = (centered) ? ((numPoints-1) * angleInc) * 0.5f : 0.0f;
+
+		for(int i =0; i < numPoints; i++){
+			//Move this to the carousel
+			points[i] = new Vector3(
+				Mathf.Cos((i * angleInc) - (startAngle)) * radius,
+				Mathf.Sin((i * angleInc) - (startAngle)) * radius,
+				0.0f
+			);
+		}
+
+		return points;
 	}
 }
 

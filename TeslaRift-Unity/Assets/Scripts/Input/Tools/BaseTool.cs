@@ -5,16 +5,14 @@ using MusicIO;
 
 public class BaseTool : MonoBehaviour {
 		
-	protected HydraController m_hydraRef = null;
-	protected InstrumentController m_instrumentControlRef = null;
-	protected ToolController m_toolControlRef = null;
-	
+	public GloveController glove{ get { return m_gloveController; }}
+	protected GloveController m_gloveController = null;
+
 	//For inspector previewing of active states
 	public HandState activeGestureState;
 	public ToolMode toolMode;
 
-
-	
+		
 	//Variables
 	protected List<object> m_targets = null;
 	protected BaseInstrument m_instrumentRef = null;
@@ -24,7 +22,7 @@ public class BaseTool : MonoBehaviour {
 	public ToolHand Hand{get { return m_hand; }}
 	
 	//Tool modes
-	public enum ToolMode{PRIMARY = 0, SECONDARY, TERTIARY};
+	public enum ToolMode{PRIMARY = 0, SECONDARY, TERTIARY, GRABBING, PLAY1, PLAY2, PLAY3, PLAY4, HOVER};
 	protected ToolMode m_mode = ToolMode.PRIMARY;
 	public ToolMode mode{ get { return m_mode; }}
 
@@ -38,12 +36,9 @@ public class BaseTool : MonoBehaviour {
 	}
 	
 	public virtual void Awake(){
-		m_hydraRef = HydraController.Instance;
-		m_instrumentControlRef = InstrumentController.Instance;
-		m_toolControlRef = ToolController.Instance;
 		m_toolHandState = BaseTool.HandState.SEARCHING;
+		m_gloveController = GetComponent<GloveController>();
 		m_targets = new List<object>();	
-		
 	}
 	
 	public virtual void Update () {
@@ -63,6 +58,11 @@ public class BaseTool : MonoBehaviour {
 	public virtual void Init(ToolHand hand, BaseTool.ToolMode mode){
 		m_hand = hand;
 		m_mode = mode;
+
+		//Set collider model for hand based on active gesture
+		glove.SetCollider(glove.activeGesture);
+
+		//Trigger the transition
 		TransitionIn();
 	}
 	
@@ -105,7 +105,7 @@ public class BaseTool : MonoBehaviour {
  */
 public static class InteractableTypes
 {
-    public const string  GENERATOR = "Generator"; 
+    public const string GENERATOR = "Generator"; 
     public const string INSTRUMENT = "Instrument"; 
     public const string RBFPOINT = "RBFPoint";
 	public const string MUSICGROUP = "MusicGroup";

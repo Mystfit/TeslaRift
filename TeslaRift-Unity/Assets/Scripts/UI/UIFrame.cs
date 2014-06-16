@@ -7,24 +7,24 @@ public class UIFrame : MonoBehaviour {
 	/*
 	 * Frame objects
 	 */
-	protected ParameterType m_paramType;
 	protected List<GameObject> m_frameComponents;
 	protected List<GameObject> m_outlineFrameComponents;
 	protected List<GameObject> m_gridColumns;
 	protected List<GameObject> m_gridRows;
 	protected GameObject m_gridParent;
-	protected bool bIsAnimating = false;
 
 	public Object m_guiQuadPrefab;
 	public Transform m_guiPanels;
 	public Transform m_selectGuiPanels;
 	public Transform m_backgroundQuad;
-	public HandProximityTrigger m_interiorTrigger;
-	public HandProximityTrigger m_exteriorTrigger;
+	//public HandProximityTrigger m_interiorTrigger;
+	//public HandProximityTrigger m_exteriorTrigger;
+	protected BaseAttachment m_attach;
 	
 	/*
 	 * Externally set dimensions
 	 */
+    public Vector3 m_frameOffset;
 	public float m_frameThickness = 0.01f;
 	public float m_easeTime = 0.5f;
 	public float m_braceLength = 0.01f;
@@ -70,13 +70,13 @@ public class UIFrame : MonoBehaviour {
 	private float m_currentOutlineOffset;
 	private float m_currentWidth;
 	private float m_currentHeight;
-	private float m_lastWidth;
-	private float m_lastHeight;
+	private float m_lastWidth = 0.0f;
+	private float m_lastHeight = 0.0f;
 	private bool bRotated = false;
 	private bool bIsOutlineVisible = false;
 	
-	
 	void Awake () {
+		m_attach = GetComponent<BaseAttachment>();
 		m_frameComponents = new List<GameObject>();
 		m_outlineFrameComponents = new List<GameObject>();
 		m_gridColumns = new List<GameObject>();
@@ -93,6 +93,11 @@ public class UIFrame : MonoBehaviour {
 						
 		if(m_hasGrid)
 			CreateGrid(m_numGridRows, m_numGridColumns);
+
+        if(m_label != null){
+			SetLabel(m_sliderLabel);
+			m_label.transform.localPosition = m_frameOffset * 2.0f;
+		}
 	}
 	
 	
@@ -161,7 +166,7 @@ public class UIFrame : MonoBehaviour {
 		int i = 0;
 		float colSpacing = targetWidth / (m_gridColumns.Count+1);
 		float rowSpacing = targetHeight / (m_gridRows.Count+1);
-		m_gridParent.transform.localPosition = GetAnchorOffset(m_currentWidth, m_currentHeight, m_anchorPoint);
+        m_gridParent.transform.localPosition = GetAnchorOffset(m_currentWidth, m_currentHeight, m_anchorPoint) + m_frameOffset;
 		
 		for(i = 0; i < m_gridRows.Count; i++){
 			m_gridRows[i].transform.localPosition = new Vector3( -m_currentWidth*0.5f, ((i+1) * rowSpacing) - m_currentHeight*0.5f, 0.0f);
@@ -181,11 +186,11 @@ public class UIFrame : MonoBehaviour {
 	protected void UpdateQuadTransform(GameObject quad, float x, float y, float z, float width, float height, bool mirrored){
 		if(mirrored){
 			quad.transform.localRotation = Quaternion.Euler( new Vector3(0.0f, 0.0f, 180.0f) );
-			quad.transform.localPosition = new Vector3(x, y, z);
+            quad.transform.localPosition = new Vector3(x, y, z) + m_frameOffset;
 			quad.transform.localScale = new Vector3(width, height, 0.0f);
 		} else {
 			quad.transform.localRotation = Quaternion.Euler( new Vector3(0.0f, 0.0f, 0.0f) );
-			quad.transform.localPosition = new Vector3(x - m_frameThickness, y - height, z);
+            quad.transform.localPosition = new Vector3(x - m_frameThickness, y - height, z) + m_frameOffset;
 			quad.transform.localScale = new Vector3(width, height, 0.0f);
 		}
 	}
@@ -195,7 +200,7 @@ public class UIFrame : MonoBehaviour {
 			m_backgroundQuad.localScale = new Vector3(width, height - (m_frameThickness*2));
 			//m_backgroundQuad.localPosition = new Vector3(-(m_frameThickness*0.5f), -(m_frameThickness*0.5f), 0.0f);
 			Vector3 borderOffset = new Vector3(-(m_frameThickness*0.5f), -(m_frameThickness*0.5f), 0.0f);
-			m_backgroundQuad.localPosition = GetAnchorOffset(width, height, m_anchorPoint) + borderOffset;
+            m_backgroundQuad.localPosition = GetAnchorOffset(width, height, m_anchorPoint) + borderOffset + m_frameOffset * 2.0f;
 		}
 	}
 	
@@ -215,8 +220,8 @@ public class UIFrame : MonoBehaviour {
 		if(m_hasGrid)
 			UpdateGridLines();
 
-		m_guiPanels.localPosition = GetAnchorOffset(m_currentWidth, m_currentHeight, m_anchorPoint);
-		m_selectGuiPanels.localPosition = GetAnchorOffset(m_currentWidth, m_currentHeight, m_anchorPoint);
+        m_guiPanels.localPosition = GetAnchorOffset(m_currentWidth, m_currentHeight, m_anchorPoint) + m_frameOffset;
+        m_selectGuiPanels.localPosition = GetAnchorOffset(m_currentWidth, m_currentHeight, m_anchorPoint) + m_frameOffset;
 		
 		UpdateBackground(m_currentWidth, m_currentHeight);
 	}
@@ -327,7 +332,6 @@ public class UIFrame : MonoBehaviour {
 	 * Animates the panel size
 	 */
 	public void AnimateSize(float width, float height){
-		bIsAnimating = true;
 		float targetHeight = (bRotated) ? width : height;
 		float targetWidth = (bRotated) ? height : width;
 
@@ -377,8 +381,7 @@ public class UIFrame : MonoBehaviour {
 		float toVal = 0.0f;
 		
 		bIsOutlineVisible = state;
-		bIsAnimating = true;
-		
+
 		if(state){
 			fromVal = 0.0f;
 			toVal = m_outlineOffset;
@@ -406,7 +409,6 @@ public class UIFrame : MonoBehaviour {
 	private void AnimationComplete(){
 		m_lastWidth = m_currentWidth;
 		m_lastHeight = m_currentHeight;
-		bool bIsAnimating = false;
 	}
 	
 	
@@ -439,8 +441,12 @@ public class UIFrame : MonoBehaviour {
 	 */
 	public void SetWidth(float width){
 		m_currentWidth = width;
-		m_interiorTrigger.UpdateCollider(GetAnchorOffset(width, m_currentHeight, m_anchorPoint), width, m_currentHeight, m_frameCollisionDepth);
-		m_exteriorTrigger.UpdateCollider(GetAnchorOffset(width, m_currentHeight, m_anchorPoint), width, m_currentHeight, m_frameCollisionDepth);
+//		m_attach.UpdateBoxColliders(
+//			GetAnchorOffset(width, m_currentHeight, m_anchorPoint),
+//			width, 
+//			m_currentHeight, 
+//			m_frameCollisionDepth
+//		);
 		UpdatePanel();
 		UpdatePanelOutline();
 	}
@@ -451,8 +457,12 @@ public class UIFrame : MonoBehaviour {
 	 */
 	public void SetHeight(float height){
 		m_currentHeight = height;
-		m_interiorTrigger.UpdateCollider(GetAnchorOffset(m_currentWidth, height, m_anchorPoint), m_currentWidth, height, m_frameCollisionDepth);
-		m_exteriorTrigger.UpdateCollider(GetAnchorOffset(m_currentWidth, height, m_anchorPoint), m_currentWidth, height, m_frameCollisionDepth);
+//		m_attach.UpdateBoxColliders(
+//			GetAnchorOffset(m_currentWidth, height, m_anchorPoint),
+//			m_currentWidth, 
+//			height, 
+//			m_frameCollisionDepth
+//		);
 		UpdatePanel();
 		UpdatePanelOutline();
 	}
@@ -475,61 +485,60 @@ public class UIFrame : MonoBehaviour {
 	}
 
 
+    /*
+     * Text label
+     */
+    public TextMesh label { get { return m_label; } }
+    public TextMesh m_label;
+    public string m_sliderLabel = "";
 
+    public void SetMatchTextWidth(bool state) { m_matchTextWidth = state; }
+    public bool m_matchTextWidth = false;
 
-	/*
-	 * Updates the clips/params loaded into this buffer
-	 */
-	public void SortBufferItems(){
-		/*
-		for(int i = 0; i < GetActiveAttachList().Count; i++){
-			Vector3 local = GetRowLocalCoordinates(i, GetActiveAttachList());
-			BaseAttachment attach = GetActiveAttachList()[i];
-			iTween.MoveTo(attach.gameObject, iTween.Hash(
-				"position", GetRowLocalCoordinates(i, GetActiveAttachList()),
-				"time", 0.2f,
-				"islocal", true
-				));
+    public void SetLabel(string label)
+    {
+        m_sliderLabel = label;
+		if(m_label != null){
+        	m_label.anchor = FrameAnchorToTextAnchor(m_anchorPoint);
+	        m_label.text = label;
+	        if(m_matchTextWidth)
+				AnimateSize(m_label.gameObject.renderer.bounds.size.x, m_frameHeight);
 		}
-		
-		m_frame.AnimateSize(m_frame.width, GetActiveAttachList().Count * (m_clipBufferEdges + m_clipRowSize) - (m_clipBufferEdges + m_clipRowSize) );
-		*/
-	}
+    }
 
-	/*
-	 * Gets the current world coordinates of a row by index
-	 *
-	public Vector3 GetRowWorldCoordinates(int index){
-		return  new Vector3(transform.position.x, transform.position.y + index*m_clipRowSize +m_clipBufferEdges, transform.position.z);
-	}
+    /*
+     * Converts frame anchors to text anchors
+     */
+    public static TextAnchor FrameAnchorToTextAnchor(UIFrame.AnchorLocation anchor)
+    {
+        switch (anchor)
+        {
+            case UIFrame.AnchorLocation.BOTTOM:
+                return TextAnchor.LowerCenter;
+            case UIFrame.AnchorLocation.BOTTOM_LEFT:
+                return TextAnchor.LowerLeft;
+            case UIFrame.AnchorLocation.BOTTOM_RIGHT:
+                return TextAnchor.LowerRight;
+            case UIFrame.AnchorLocation.CENTER:
+                return TextAnchor.MiddleCenter;
+            case UIFrame.AnchorLocation.LEFT:
+                return TextAnchor.MiddleLeft;
+            case UIFrame.AnchorLocation.RIGHT:
+                return TextAnchor.MiddleRight;
+            case UIFrame.AnchorLocation.TOP:
+                return TextAnchor.UpperCenter;
+            case UIFrame.AnchorLocation.TOP_LEFT:
+                return TextAnchor.UpperLeft;
+            case UIFrame.AnchorLocation.TOP_RIGHT:
+                return TextAnchor.UpperRight;
+        }
+        return TextAnchor.MiddleCenter;
+    }
 	
-	/*
-	 * Gets the current world coordinates of a column by index
-	 *
-	public Vector3 GetColumnWorldCoordinates(int index){
-		return  new Vector3(transform.position.x + index*m_clipColumnSize + m_clipBufferEdges, transform.position.y, transform.position.z);
-	}
-	
-	/*
-	 * Gets the current coordinates of a row by index
-	 *
-	public Vector3 GetRowLocalCoordinates(int index, List<BaseAttachment> attachList){
-		return  new Vector3(0.0f, (((m_clipRowSize+m_clipBufferEdges)*attachList.Count)*0.5f) - ((attachList.Count - index)* (m_clipRowSize + m_clipBufferEdges)), 0.0f);
-	}
-	
-	/*
-	 * Gets the current coordinates of a column by index
-	 *
-	public Vector3 GetColumnLocalCoordinates(int index, List<BaseAttachment> attachList){
-		return  new Vector3((index*m_clipColumnSize +m_clipBufferEdges) - ((m_clipColumnSize+m_clipBufferEdges)*attachList.Count)*0.5f, 0.0f, 0.0f);
-	}
-	*/
-	
-	
+
 	//Getters
 	public float width{ get { return m_frameWidth; }}
 	public float height{ get { return m_frameHeight; }}
 	public bool isRotated{ get { return bRotated; }}
 	public Transform background{ get { return m_backgroundQuad; }}
-	public bool isAnimating{ get { return bIsAnimating; }}
 }

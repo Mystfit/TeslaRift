@@ -1,0 +1,210 @@
+fileFormatVersion: 2
+guid: 61a01fe05927946b6a3cd124b88d287e
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: hexBase
+    100004: hexContainer
+    100006: hexInner
+    100008: hexOuter
+    100010: pSolid1
+    100012: polySurface1
+    100014: polySurface2
+    100016: transform1
+    100018: hexInterior
+    100020: hexPanel
+    100022: hexPanel1
+    100024: hexPanel2
+    100026: hexInterior1
+    400000: //RootNode
+    400002: hexBase
+    400004: hexContainer
+    400006: hexInner
+    400008: hexOuter
+    400010: pSolid1
+    400012: polySurface1
+    400014: polySurface2
+    400016: transform1
+    400018: hexInterior
+    400020: hexPanel
+    400022: hexPanel1
+    400024: hexPanel2
+    400026: hexInterior1
+    2300000: //RootNode
+    2300002: hexBase
+    2300004: hexInner
+    2300006: hexOuter
+    2300008: pSolid1
+    2300010: polySurface1
+    2300012: polySurface2
+    2300014: hexInterior
+    2300016: hexPanel
+    2300018: hexPanel1
+    2300020: hexPanel2
+    2300022: hexInterior1
+    3300000: //RootNode
+    3300002: hexBase
+    3300004: hexInner
+    3300006: hexOuter
+    3300008: pSolid1
+    3300010: polySurface1
+    3300012: polySurface2
+    3300014: hexInterior
+    3300016: hexPanel
+    3300018: hexPanel1
+    3300020: hexPanel2
+    3300022: hexInterior1
+    4300000: pPrism1
+    4300002: hexOuter
+    4300004: hexBase
+    4300006: hexInner
+    4300008: pSolid1
+    4300010: polySurface1
+    4300012: polySurface2
+    4300014: hexInterior
+    4300016: hexPanel
+    4300018: hexPanel1
+    4300020: hexPanel2
+    4300022: hexInterior1
+    7400000: drawer_in
+    7400002: drawer_out
+    9500000: //RootNode
+    11100000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 1
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: drawer_in
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 11
+      wrapMode: 1
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 1
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: hexContainer
+        weight: 1
+      - path: hexContainer/hexOuter
+        weight: 1
+      - path: hexInner
+        weight: 1
+      - path: hexInner/polySurface1
+        weight: 1
+      - path: hexInner/polySurface2
+        weight: 1
+      - path: hexInner/transform1
+        weight: 1
+      - path: pSolid1
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: drawer_out
+      takeName: Take 001
+      firstFrame: 14
+      lastFrame: 22
+      wrapMode: 1
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 1
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: hexContainer
+        weight: 1
+      - path: hexContainer/hexOuter
+        weight: 1
+      - path: hexInner
+        weight: 1
+      - path: hexInner/polySurface1
+        weight: 1
+      - path: hexInner/polySurface2
+        weight: 1
+      - path: hexInner/transform1
+        weight: 1
+      - path: pSolid1
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .100000001
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  additionalBone: 1
+  userData: 

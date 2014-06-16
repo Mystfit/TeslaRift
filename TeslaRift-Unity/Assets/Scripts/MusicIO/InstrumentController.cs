@@ -14,53 +14,18 @@ public class InstrumentController : MonoBehaviour {
 	protected BaseInstrument m_selectedInstrument;
 	protected GameObject m_lastSelectedGameInstrument = null;
 	
-	//Buffer references
-	protected List<ClipBufferAttachment> m_buffers;
-	protected MusicControllerAttachment m_selectedMusicController;
-
-	//Controller references
-	protected List<MusicControllerAttachment> m_musicGroups;
-	
-	//Prefix source name in front of OSC messages
-	private string m_sourceName;
-	public void SetSourceName(string sourceName){ m_sourceName = sourceName; }
-
-	//Carousel ref
-	public VRCarousel m_carousel;
-	public VRCarousel Carousel { get { return m_carousel; }}
-
-	//Inspector toggles
-	public bool m_blastAllParameters;
-	
 	
 	// Unity
 	//-------------------------------------
 	void Awake () {
 		m_instruments = new List<BaseInstrument>();
-		m_buffers = new List<ClipBufferAttachment>();
-		m_musicGroups = new List<MusicControllerAttachment>();
 		m_instance = this;
-
-		SetSourceName(GlobalConfig.Instance.ProjectSourceName);
 	}
 	
 	
 	void Update () {
 		foreach(BaseInstrument instrument in m_instruments){
 			instrument.update();
-		}
-		
-		if(m_blastAllParameters){
-			m_blastAllParameters = false;
-			foreach(BaseInstrument instrument in m_instruments){
-				foreach(BaseInstrumentParam param in instrument.paramList){
-					param.setVal(1.0f);
-				}
-				
-				foreach(InstrumentClip clip in instrument.clipList){
-					clip.Play();
-				}
-			}
 		}
 	}
 	
@@ -77,47 +42,8 @@ public class InstrumentController : MonoBehaviour {
 		
 	public void ResetInstrument(BaseInstrument instrument){
 		ResetInstrumentParameters(instrument);
-		foreach(GenericMusicParam param in instrument.paramList){
-			param.removeGenerators();
-		}
-	}
-	
-	
-	
-	// Buffer manipulation
-	//-------------------------------------
-	
-	/*
-	 * Adds a new buffer
-	 */
-	public void AddBuffer(ClipBufferAttachment buffer){
-		m_buffers.Add(buffer);
 	}
 
-
-	/*
-	 * Adds an object to the controller
-	 */
-	public void AddToActivePanel(BaseInstrumentParam param){
-		if(m_selectedMusicController != null){
-			if( param.GetType() == typeof(InstrumentClip)){
-				m_selectedMusicController.clipBuffer.AddClipToBuffer ( (InstrumentClip) param );
-			} else if( param.GetType() == typeof(GenericMusicParam) ){
-				m_selectedMusicController.paramControls.CreateSlider( (GenericMusicParam) param );
-			}
-		}
-	}
-
-
-	/*
-	 * Selects a buffer
-	 */
-	public void SelectMusicController(MusicControllerAttachment musicControl){
-		if(m_selectedMusicController != null)
-			m_selectedMusicController.SetSelected(false);
-		m_selectedMusicController = musicControl;
-		m_selectedMusicController.SetSelected(true);
-	}
 
 	//Instrument selection
 	//--------------------
@@ -143,6 +69,76 @@ public class InstrumentController : MonoBehaviour {
 
 		return null;
 	}
+
+    public BaseInstrument GetInstrumentByTrackindex(int trackindex)
+    {
+        foreach (BaseInstrument instrument in m_instruments)
+        {
+            if (instrument.trackIndex == trackindex)
+                return instrument;
+        }
+
+        return null;
+    }
+
+    /*
+     * Finds a specific parameter by index
+     */
+    public BaseInstrumentParam FindParameter(int trackindex, int deviceindex, int parameterindex){
+        foreach (BaseInstrument instrument in m_instruments)
+        {
+            if (instrument.trackIndex == trackindex)
+            {
+                foreach (BaseInstrumentParam param in instrument.paramList)
+                {
+                    if (param.deviceIndex == deviceindex && param.parameterIndex == parameterindex)
+                    {
+                        return param;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public SendParameter FindSendParameter(int trackindex, int sendindex){
+        foreach (BaseInstrument instrument in m_instruments)
+        {
+            if (instrument.trackIndex == trackindex)
+            {
+                foreach (SendParameter send in instrument.sendsList)
+                {
+                    if (send.sendIndex == sendindex)
+                    {
+                        return send;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+
+    /*
+     * Find a specific clip by index
+     */
+    public InstrumentClip FindClip(int trackindex, int clipindex)
+    {
+        foreach (BaseInstrument instrument in m_instruments)
+        {
+            if (instrument.trackIndex == trackindex)
+            {
+                foreach (InstrumentClip clip in instrument.clipList)
+                {
+                    if (clip.scene == clipindex)
+                    {
+                        return clip;
+                    }
+                }
+            }
+        }
+        return null;
+    }
 	
 	
 	/*
@@ -157,25 +153,5 @@ public class InstrumentController : MonoBehaviour {
 	 * Gets last selected isntrument
 	 */
 	public GameObject LastSelectedGameInstrument{ get { return m_lastSelectedGameInstrument; }}
-
-
-	/*
-	 * Music controller interaction
-	 */
-	public void AddMusicGroup(MusicControllerAttachment mGroup){
-		m_musicGroups.Add(mGroup);
-	}
-
-	public List<MusicControllerAttachment> MusicGroups{ get { return m_musicGroups; }}
-
-
-	/*
-	 * Instrument playing
-	 */
-	 public void TriggerNote(){
-	 	if(m_selectedInstrument != null){
-	 		m_selectedInstrument.TriggerNote();
-	 	}
-	 }
 
 }

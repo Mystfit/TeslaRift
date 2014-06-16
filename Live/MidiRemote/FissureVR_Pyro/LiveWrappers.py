@@ -169,6 +169,7 @@ class PyroSong():
             try:
                 myReturnTrackMixer = myReturnTrack.mixer_device
                 xmlString += "\t<trackReturn returnTrackIndex='" + str(returnTrackIndex) + "' name='" + str(myReturnTrack.name) + "' volume='" + str(myReturnTrackMixer.volume) + "' pan='" + str(
+
                     myReturnTrackMixer.panning) + "' output_meter_level='" + str(myReturnTrack.output_meter_level) + "' mute='" + str(myReturnTrack.mute) + "' solo='" + str(myReturnTrack.solo) + "' color='" + str(myReturnTrack.color) + "'>\n"
 
                 # iterate through the device chain of a track
@@ -218,7 +219,6 @@ class PyroTrack():
     # In
     FIRE_CLIP = "fire_clip"
     STOP_TRACK = "stop_track"
-
 
     def __init__(self, trackindex, publisher):
         self.trackindex = trackindex

@@ -10,18 +10,11 @@ public class ToolController : MonoBehaviour {
 	public static ToolController Instance{ get { return m_instance; }}
 	
 	protected BaseTool m_currentTool = null;
-	protected ChoreographController m_choreoRef = null;
 	protected InstrumentController m_instrumentControlRef = null;
 	protected HydraController m_hydraRef = null;
 	
-	private BaseGenerator m_selectedGenerator;
-	public BaseGenerator SelectedGenerator{ get { return m_selectedGenerator; }}
-	public void SetSelectedGenerator(BaseGenerator gen){ m_selectedGenerator = gen; }
-
-	
 	void Awake () {
 		m_instance = this;
-		m_choreoRef = this.gameObject.GetComponent<ChoreographController>();
 		m_instrumentControlRef = this.gameObject.GetComponent<InstrumentController>();
 		m_hydraRef = GameObject.Find("__HydraController").GetComponent<HydraController>();
 	}

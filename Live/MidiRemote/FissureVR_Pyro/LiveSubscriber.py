@@ -65,8 +65,13 @@ class LiveSubscriber(Subscriber):
 
     def event(self, event):
         self.requestLock = True     # Lock the request loop
+<<<<<<< HEAD
         subject = event.subject[len(INCOMING_PREFIX):]
         self.log_message("Received method " + subject)
+=======
+        self.log_message("Received method " + event.subject)
+        subject = event.subject[len(INCOMING_PREFIX):]
+>>>>>>> 69449585f604ebfe22a3517f8a7108ad48016009
         if hasattr(self, subject):
             getattr(self, subject)(event.msg)
         else:
@@ -87,6 +92,7 @@ class LiveSubscriber(Subscriber):
             self.log_message("Clip not found! " + str(args["trackindex"]) + ", " + str(args["clipindex"]))
 
     def stop_track(self, args):
+<<<<<<< HEAD
         self.log_message("Stopping track " + str(args["trackindex"]))
         stopTrack(int(args["trackindex"]))
         self.log_message("Stopped track")
@@ -94,6 +100,10 @@ class LiveSubscriber(Subscriber):
     def set_send(self, args):
         self.log_message("Setting send value " + str(args["trackindex"]))
         trackSend(int(args["trackindex"]), int(args["sendindex"]), float(args["value"]))
+=======
+        stopTrack(args["trackindex"])
+        self.log_message("Stopping track " + str(args["trackindex"]))
+>>>>>>> 69449585f604ebfe22a3517f8a7108ad48016009
 
     def set_value(self, args):
         key = (

@@ -53,7 +53,10 @@ class LiveRouter(Subscriber):
         self.node.request_register_method(PyroTrack.PLAYING_SLOT_INDEX, ZstMethod.READ)
         self.node.request_register_method(PyroDeviceParameter.VALUE_UPDATED, ZstMethod.READ)
         self.node.request_register_method(PyroDevice.PARAMETERS_UPDATED, ZstMethod.READ)
+<<<<<<< HEAD
         self.node.request_register_method(PyroSendParameter.SEND_UPDATED, ZstMethod.READ)
+=======
+>>>>>>> 69449585f604ebfe22a3517f8a7108ad48016009
 
         # Incoming methods
         self.node.request_register_method(
@@ -85,6 +88,7 @@ class LiveRouter(Subscriber):
             self.incoming)
 
         self.node.request_register_method(
+<<<<<<< HEAD
             PyroSendParameter.SET_SEND,
             ZstMethod.WRITE,
             {
@@ -95,6 +99,8 @@ class LiveRouter(Subscriber):
             self.incoming)
 
         self.node.request_register_method(
+=======
+>>>>>>> 69449585f604ebfe22a3517f8a7108ad48016009
             PyroSong.GET_SONG_LAYOUT,
             ZstMethod.RESPONDER, None,
             self.incoming, None)

@@ -1,0 +1,188 @@
+fileFormatVersion: 2
+guid: eab3dc6069a38564ba502c22a89d9693
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: geosphere3:group
+    100002: geosphere3:pasted__hexaSphere1
+    100004: geosphere_straight:hex2
+    100006: geosphere_straight:hex3
+    100008: geosphere_straight:hex4
+    100010: geosphere_straight:hex5
+    100012: geosphere_straight:hexContainer
+    100014: geosphere_straight:hexContainer 1
+    100016: geosphere_straight:hexContainer 2
+    100018: geosphere_straight:hexInner
+    100020: geosphere_straight:hexInner 1
+    100022: geosphere_straight:hexInner 2
+    100024: geosphere_straight:hexOuter
+    100026: geosphere_straight:hexOuter 1
+    100028: geosphere_straight:hexOuter 2
+    100030: geosphere_straight:polySurface1
+    100032: geosphere_straight:polySurface1 1
+    100034: geosphere_straight:polySurface1 2
+    100036: geosphere_straight:polySurface2
+    100038: geosphere_straight:polySurface2 1
+    100040: geosphere_straight:polySurface2 2
+    100042: geosphere_straight:transform1
+    100044: geosphere_straight:transform1 1
+    100046: geosphere_straight:transform1 2
+    100048: hex
+    100050: hexContainer
+    100052: hexContainer 1
+    100054: hexInner
+    100056: hexInner 1
+    100058: hexOuter
+    100060: hexOuter 1
+    100062: low_sphere:pSolid1
+    100064: polySurface1
+    100066: polySurface1 1
+    100068: polySurface2
+    100070: polySurface2 1
+    100072: //RootNode
+    100074: transform1
+    100076: transform1 1
+    400000: geosphere3:group
+    400002: geosphere3:pasted__hexaSphere1
+    400004: geosphere_straight:hex2
+    400006: geosphere_straight:hex3
+    400008: geosphere_straight:hex4
+    400010: geosphere_straight:hex5
+    400012: geosphere_straight:hexContainer
+    400014: geosphere_straight:hexContainer 1
+    400016: geosphere_straight:hexContainer 2
+    400018: geosphere_straight:hexInner
+    400020: geosphere_straight:hexInner 1
+    400022: geosphere_straight:hexInner 2
+    400024: geosphere_straight:hexOuter
+    400026: geosphere_straight:hexOuter 1
+    400028: geosphere_straight:hexOuter 2
+    400030: geosphere_straight:polySurface1
+    400032: geosphere_straight:polySurface1 1
+    400034: geosphere_straight:polySurface1 2
+    400036: geosphere_straight:polySurface2
+    400038: geosphere_straight:polySurface2 1
+    400040: geosphere_straight:polySurface2 2
+    400042: geosphere_straight:transform1
+    400044: geosphere_straight:transform1 1
+    400046: geosphere_straight:transform1 2
+    400048: hex
+    400050: hexContainer
+    400052: hexContainer 1
+    400054: hexInner
+    400056: hexInner 1
+    400058: hexOuter
+    400060: hexOuter 1
+    400062: low_sphere:pSolid1
+    400064: polySurface1
+    400066: polySurface1 1
+    400068: polySurface2
+    400070: polySurface2 1
+    400072: //RootNode
+    400074: transform1
+    400076: transform1 1
+    2300000: geosphere3:pasted__hexaSphere1
+    2300002: geosphere_straight:hexOuter
+    2300004: geosphere_straight:hexOuter 1
+    2300006: geosphere_straight:hexOuter 2
+    2300008: geosphere_straight:polySurface1
+    2300010: geosphere_straight:polySurface1 1
+    2300012: geosphere_straight:polySurface1 2
+    2300014: geosphere_straight:polySurface2
+    2300016: geosphere_straight:polySurface2 1
+    2300018: geosphere_straight:polySurface2 2
+    2300020: hexOuter
+    2300022: hexOuter 1
+    2300024: low_sphere:pSolid1
+    2300026: polySurface1
+    2300028: polySurface1 1
+    2300030: polySurface2
+    2300032: polySurface2 1
+    3300000: geosphere3:pasted__hexaSphere1
+    3300002: geosphere_straight:hexOuter
+    3300004: geosphere_straight:hexOuter 1
+    3300006: geosphere_straight:hexOuter 2
+    3300008: geosphere_straight:polySurface1
+    3300010: geosphere_straight:polySurface1 1
+    3300012: geosphere_straight:polySurface1 2
+    3300014: geosphere_straight:polySurface2
+    3300016: geosphere_straight:polySurface2 1
+    3300018: geosphere_straight:polySurface2 2
+    3300020: hexOuter
+    3300022: hexOuter 1
+    3300024: low_sphere:pSolid1
+    3300026: polySurface1
+    3300028: polySurface1 1
+    3300030: polySurface2
+    3300032: polySurface2 1
+    4300000: polySurface1
+    4300002: polySurface2
+    4300004: hexOuter
+    4300006: geosphere3:pasted__hexaSphere1
+    4300008: polySurface1
+    4300010: polySurface2
+    4300012: hexOuter
+    4300014: geosphere_straight:polySurface1
+    4300016: geosphere_straight:polySurface2
+    4300018: geosphere_straight:hexOuter
+    4300020: geosphere_straight:polySurface1
+    4300022: geosphere_straight:polySurface2
+    4300024: geosphere_straight:hexOuter
+    4300026: geosphere_straight:polySurface1
+    4300028: geosphere_straight:polySurface2
+    4300030: geosphere_straight:hexOuter
+    4300032: low_sphere:pSolid1
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 

@@ -1,0 +1,750 @@
+fileFormatVersion: 2
+guid: a1acfd693b9b3f84daef92eea9444a51
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: index0
+    100002: index1
+    100004: index2
+    100006: index3
+    100008: middle0
+    100010: middle1
+    100012: middle2
+    100014: middle3
+    100016: pinky0
+    100018: pinky1
+    100020: pinky2
+    100022: pinky3
+    100024: ring0
+    100026: ring1
+    100028: ring2
+    100030: ring3
+    100032: root
+    100034: //RootNode
+    100036: techHand
+    400000: index0
+    400002: index1
+    400004: index2
+    400006: index3
+    400008: middle0
+    400010: middle1
+    400012: middle2
+    400014: middle3
+    400016: pinky0
+    400018: pinky1
+    400020: pinky2
+    400022: pinky3
+    400024: ring0
+    400026: ring1
+    400028: ring2
+    400030: ring3
+    400032: root
+    400034: //RootNode
+    400036: techHand
+    4300000: techHand
+    7400000: IDLE_HAND
+    7400002: PLAY_1
+    7400004: PLAY_2
+    7400006: PLAY_3
+    7400008: PLAY_4
+    7400010: CLOSED_HAND
+    7400012: INDEX_POINT
+    7400014: INDEX_MIDDLE
+    7400016: PINKY
+    7400018: INDEX_PINKY
+    9500000: //RootNode
+    11100000: //RootNode
+    13700000: techHand
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 0
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 2
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: IDLE_HAND
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 5
+      wrapMode: 8
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 1
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/index0
+        weight: 1
+      - path: root/index0/index1
+        weight: 1
+      - path: root/index0/index1/index2
+        weight: 1
+      - path: root/index0/index1/index2/index3
+        weight: 1
+      - path: root/middle0
+        weight: 1
+      - path: root/middle0/middle1
+        weight: 1
+      - path: root/middle0/middle1/middle2
+        weight: 1
+      - path: root/middle0/middle1/middle2/middle3
+        weight: 1
+      - path: root/pinky0
+        weight: 1
+      - path: root/pinky0/pinky1
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2/pinky3
+        weight: 1
+      - path: root/ring0
+        weight: 1
+      - path: root/ring0/ring1
+        weight: 1
+      - path: root/ring0/ring1/ring2
+        weight: 1
+      - path: root/ring0/ring1/ring2/ring3
+        weight: 1
+      - path: techHand
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: PLAY_1
+      takeName: Take 001
+      firstFrame: 10
+      lastFrame: 15
+      wrapMode: 8
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 1
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/index0
+        weight: 1
+      - path: root/index0/index1
+        weight: 1
+      - path: root/index0/index1/index2
+        weight: 1
+      - path: root/index0/index1/index2/index3
+        weight: 1
+      - path: root/middle0
+        weight: 1
+      - path: root/middle0/middle1
+        weight: 1
+      - path: root/middle0/middle1/middle2
+        weight: 1
+      - path: root/middle0/middle1/middle2/middle3
+        weight: 1
+      - path: root/pinky0
+        weight: 1
+      - path: root/pinky0/pinky1
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2/pinky3
+        weight: 1
+      - path: root/ring0
+        weight: 1
+      - path: root/ring0/ring1
+        weight: 1
+      - path: root/ring0/ring1/ring2
+        weight: 1
+      - path: root/ring0/ring1/ring2/ring3
+        weight: 1
+      - path: techHand
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: PLAY_2
+      takeName: Take 001
+      firstFrame: 20
+      lastFrame: 25
+      wrapMode: 8
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 1
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/index0
+        weight: 1
+      - path: root/index0/index1
+        weight: 1
+      - path: root/index0/index1/index2
+        weight: 1
+      - path: root/index0/index1/index2/index3
+        weight: 1
+      - path: root/middle0
+        weight: 1
+      - path: root/middle0/middle1
+        weight: 1
+      - path: root/middle0/middle1/middle2
+        weight: 1
+      - path: root/middle0/middle1/middle2/middle3
+        weight: 1
+      - path: root/pinky0
+        weight: 1
+      - path: root/pinky0/pinky1
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2/pinky3
+        weight: 1
+      - path: root/ring0
+        weight: 1
+      - path: root/ring0/ring1
+        weight: 1
+      - path: root/ring0/ring1/ring2
+        weight: 1
+      - path: root/ring0/ring1/ring2/ring3
+        weight: 1
+      - path: techHand
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: PLAY_3
+      takeName: Take 001
+      firstFrame: 30
+      lastFrame: 35
+      wrapMode: 8
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 1
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/index0
+        weight: 1
+      - path: root/index0/index1
+        weight: 1
+      - path: root/index0/index1/index2
+        weight: 1
+      - path: root/index0/index1/index2/index3
+        weight: 1
+      - path: root/middle0
+        weight: 1
+      - path: root/middle0/middle1
+        weight: 1
+      - path: root/middle0/middle1/middle2
+        weight: 1
+      - path: root/middle0/middle1/middle2/middle3
+        weight: 1
+      - path: root/pinky0
+        weight: 1
+      - path: root/pinky0/pinky1
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2/pinky3
+        weight: 1
+      - path: root/ring0
+        weight: 1
+      - path: root/ring0/ring1
+        weight: 1
+      - path: root/ring0/ring1/ring2
+        weight: 1
+      - path: root/ring0/ring1/ring2/ring3
+        weight: 1
+      - path: techHand
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: PLAY_4
+      takeName: Take 001
+      firstFrame: 40
+      lastFrame: 45
+      wrapMode: 8
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 1
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/index0
+        weight: 1
+      - path: root/index0/index1
+        weight: 1
+      - path: root/index0/index1/index2
+        weight: 1
+      - path: root/index0/index1/index2/index3
+        weight: 1
+      - path: root/middle0
+        weight: 1
+      - path: root/middle0/middle1
+        weight: 1
+      - path: root/middle0/middle1/middle2
+        weight: 1
+      - path: root/middle0/middle1/middle2/middle3
+        weight: 1
+      - path: root/pinky0
+        weight: 1
+      - path: root/pinky0/pinky1
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2/pinky3
+        weight: 1
+      - path: root/ring0
+        weight: 1
+      - path: root/ring0/ring1
+        weight: 1
+      - path: root/ring0/ring1/ring2
+        weight: 1
+      - path: root/ring0/ring1/ring2/ring3
+        weight: 1
+      - path: techHand
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: CLOSED_HAND
+      takeName: Take 001
+      firstFrame: 50
+      lastFrame: 55
+      wrapMode: 8
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 1
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/index0
+        weight: 1
+      - path: root/index0/index1
+        weight: 1
+      - path: root/index0/index1/index2
+        weight: 1
+      - path: root/index0/index1/index2/index3
+        weight: 1
+      - path: root/middle0
+        weight: 1
+      - path: root/middle0/middle1
+        weight: 1
+      - path: root/middle0/middle1/middle2
+        weight: 1
+      - path: root/middle0/middle1/middle2/middle3
+        weight: 1
+      - path: root/pinky0
+        weight: 1
+      - path: root/pinky0/pinky1
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2/pinky3
+        weight: 1
+      - path: root/ring0
+        weight: 1
+      - path: root/ring0/ring1
+        weight: 1
+      - path: root/ring0/ring1/ring2
+        weight: 1
+      - path: root/ring0/ring1/ring2/ring3
+        weight: 1
+      - path: techHand
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: INDEX_POINT
+      takeName: Take 001
+      firstFrame: 60
+      lastFrame: 65
+      wrapMode: 8
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 1
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/index0
+        weight: 1
+      - path: root/index0/index1
+        weight: 1
+      - path: root/index0/index1/index2
+        weight: 1
+      - path: root/index0/index1/index2/index3
+        weight: 1
+      - path: root/middle0
+        weight: 1
+      - path: root/middle0/middle1
+        weight: 1
+      - path: root/middle0/middle1/middle2
+        weight: 1
+      - path: root/middle0/middle1/middle2/middle3
+        weight: 1
+      - path: root/pinky0
+        weight: 1
+      - path: root/pinky0/pinky1
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2/pinky3
+        weight: 1
+      - path: root/ring0
+        weight: 1
+      - path: root/ring0/ring1
+        weight: 1
+      - path: root/ring0/ring1/ring2
+        weight: 1
+      - path: root/ring0/ring1/ring2/ring3
+        weight: 1
+      - path: techHand
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: INDEX_MIDDLE
+      takeName: Take 001
+      firstFrame: 70
+      lastFrame: 75
+      wrapMode: 8
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 1
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/index0
+        weight: 1
+      - path: root/index0/index1
+        weight: 1
+      - path: root/index0/index1/index2
+        weight: 1
+      - path: root/index0/index1/index2/index3
+        weight: 1
+      - path: root/middle0
+        weight: 1
+      - path: root/middle0/middle1
+        weight: 1
+      - path: root/middle0/middle1/middle2
+        weight: 1
+      - path: root/middle0/middle1/middle2/middle3
+        weight: 1
+      - path: root/pinky0
+        weight: 1
+      - path: root/pinky0/pinky1
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2/pinky3
+        weight: 1
+      - path: root/ring0
+        weight: 1
+      - path: root/ring0/ring1
+        weight: 1
+      - path: root/ring0/ring1/ring2
+        weight: 1
+      - path: root/ring0/ring1/ring2/ring3
+        weight: 1
+      - path: techHand
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: PINKY
+      takeName: Take 001
+      firstFrame: 80
+      lastFrame: 85
+      wrapMode: 8
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 1
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/index0
+        weight: 1
+      - path: root/index0/index1
+        weight: 1
+      - path: root/index0/index1/index2
+        weight: 1
+      - path: root/index0/index1/index2/index3
+        weight: 1
+      - path: root/middle0
+        weight: 1
+      - path: root/middle0/middle1
+        weight: 1
+      - path: root/middle0/middle1/middle2
+        weight: 1
+      - path: root/middle0/middle1/middle2/middle3
+        weight: 1
+      - path: root/pinky0
+        weight: 1
+      - path: root/pinky0/pinky1
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2/pinky3
+        weight: 1
+      - path: root/ring0
+        weight: 1
+      - path: root/ring0/ring1
+        weight: 1
+      - path: root/ring0/ring1/ring2
+        weight: 1
+      - path: root/ring0/ring1/ring2/ring3
+        weight: 1
+      - path: techHand
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: INDEX_PINKY
+      takeName: Take 001
+      firstFrame: 90
+      lastFrame: 95
+      wrapMode: 8
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 1
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/index0
+        weight: 1
+      - path: root/index0/index1
+        weight: 1
+      - path: root/index0/index1/index2
+        weight: 1
+      - path: root/index0/index1/index2/index3
+        weight: 1
+      - path: root/middle0
+        weight: 1
+      - path: root/middle0/middle1
+        weight: 1
+      - path: root/middle0/middle1/middle2
+        weight: 1
+      - path: root/middle0/middle1/middle2/middle3
+        weight: 1
+      - path: root/pinky0
+        weight: 1
+      - path: root/pinky0/pinky1
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2/pinky3
+        weight: 1
+      - path: root/ring0
+        weight: 1
+      - path: root/ring0/ring1
+        weight: 1
+      - path: root/ring0/ring1/ring2
+        weight: 1
+      - path: root/ring0/ring1/ring2/ring3
+        weight: 1
+      - path: techHand
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .100000001
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  additionalBone: 0
+  userData: 

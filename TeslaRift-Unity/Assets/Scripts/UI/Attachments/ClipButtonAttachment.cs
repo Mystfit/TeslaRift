@@ -3,26 +3,12 @@ using MusicIO;
 using UI;
 using System.Collections;
 
-public class ClipButtonAttachment : UIAttachment<InstrumentClip> {
+public class ClipButtonAttachment : BaseAttachmentIO<InstrumentClip> {
 
 	protected UIFrame m_frame;
 	public UIFrame frame { get { return m_frame; }}
 
-	public enum ClipState {
-		IS_DISABLED = 0,
-		IS_QUEUED,
-		IS_PLAYING
-	}
-	protected ClipState m_clipState;
-	public ClipState clipState{ get { return m_clipState; }}
-
-	/*
-	 * Owner of this button
-	 */
-	protected ClipBufferAttachment m_owner;
-	public ClipBufferAttachment owner{ get { return m_owner; }}
-	public void SetOwner(ClipBufferAttachment owner){ m_owner = owner; }
-
+	public bool m_toggleClip = false;
 
 	/*
 	 * Queue status
@@ -32,59 +18,64 @@ public class ClipButtonAttachment : UIAttachment<InstrumentClip> {
 	public void SetQueued(bool state){ bIsQueued = state; }
 
 
-	// Use this for initialization
-	public override void Start () {
-		m_frame = GetComponent<UIFrame>();
-		SetPlayState(ClipState.IS_DISABLED);
+    public override void Awake()
+    {
+        base.Awake();
+        SetIsDraggable(true);
+        SetIsDockable(true);
+        m_frame = GetComponent<UIFrame>();
+    }
+
+	public override void Init (InstrumentClip managedReference)
+	{
+		base.Init (managedReference);
+		m_frame.SetLabel(managedReference.name);
+	}
+
+	public override void Update(){
+		if(m_toggleClip){
+			m_toggleClip = false;
+            if(musicRef != null)
+			    musicRef.Play();
+		}
+		base.Update();
 	}
 
 
 	/*
-	 * Sets the state of this clip button
+	 * Sets the animation state of this clip button
 	 */
-	public void SetPlayState (ClipState state)
+	public virtual void UpdatePlayingState()
 	{
-		switch(state){
-		case ClipState.IS_DISABLED:
-			m_frame.AnimateBackgroundColor(Color.gray);
+		switch(musicRef.clipState){
+		case InstrumentClip.ClipState.IS_DISABLED:
+            if(m_frame != null)
+			    m_frame.AnimateBackgroundColor(Color.gray);
 			break;
-		case ClipState.IS_QUEUED:
-			m_frame.AnimateBackgroundColor(Color.blue);
+        case InstrumentClip.ClipState.IS_QUEUED:
+            if (m_frame != null)
+			    m_frame.AnimateBackgroundColor(Color.blue);
 			break;
-		case ClipState.IS_PLAYING:
-			if(m_clipState == ClipState.IS_PLAYING){
-				SetPlayState(ClipState.IS_QUEUED);
-				state = ClipState.IS_QUEUED;
-			} else {
-				m_frame.AnimateBackgroundColor(Color.yellow);
-				musicRef.Play();
-			}
+        case InstrumentClip.ClipState.IS_PLAYING:
+            if (m_frame != null)
+                m_frame.AnimateBackgroundColor(Color.yellow);
 			break;
 		}
-
-		m_clipState = state;
 	}
 
 
+    public override void Gesture_First()
+    {
+        if (mode == BaseTool.ToolMode.GRABBING)
+        {
+            StartDragging(HydraController.Instance.GetHand(m_hand));
+        } 
+        else if (mode == BaseTool.ToolMode.PRIMARY)
+        {
+            if (musicRef != null)
+                musicRef.Play();
+        }
 
-	public override void Gesture_ExitIdleInterior ()
-	{
-		base.Gesture_ExitIdleInterior ();
-		if(mode == BaseTool.ToolMode.PRIMARY){
-			owner.PlayClip(this, true);
-		} else if( mode == BaseTool.ToolMode.TERTIARY){
-			owner.RemoveClipButton(this);
-		}
-	}
-
-	public override void Gesture_PushIn ()
-	{
-		base.Gesture_PushIn ();
-		owner.PlayClip(this, false);
-	}
-
-	public override void Gesture_PullOut ()
-	{
-		base.Gesture_PullOut ();
-	}
+        base.Gesture_First();
+    }
 }

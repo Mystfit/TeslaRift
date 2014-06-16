@@ -9,7 +9,7 @@ public class InstrumentGestureTool : BaseTool {
 	/*
 	 * Object we are interacting with
 	 */
-	protected GameObject m_heldObject;
+	public GameObject m_heldObject;
 	protected BaseAttachment m_attachment;
 	
 	/*
@@ -171,9 +171,7 @@ public class InstrumentGestureTool : BaseTool {
 		if(m_gestureTimer <= 0){
 			m_gestureTimer = 0;
 			m_lastGestureState = m_gestureState;
-		}	
-
-		Debug.Log(m_lastGestureState);
+		}	 
 	}
 	
 	
@@ -193,13 +191,16 @@ public class InstrumentGestureTool : BaseTool {
 					m_toolHandState = BaseTool.HandState.HOLDING;
 					m_attachment.SetToolMode( m_mode);
 					m_attachment.SetActiveHand( m_hand);
+
+                    if (mode == ToolMode.HOVER)
+                        m_attachment.StartHover();
 				}
 			}
-		}
+        }
 	}
 
 
-	public override void LeavingProximity ()
+    public override void LeavingProximity()
 	{
 		base.LeavingProximity ();
 
@@ -246,6 +247,8 @@ public class InstrumentGestureTool : BaseTool {
 				//m_attachment.Gesture_PushIn();
 				break;
 			}
+			m_attachment.StopHover();
+            m_heldObject = null;
 		}
 		m_toolHandState = BaseTool.HandState.SEARCHING;
 	}
@@ -258,8 +261,11 @@ public class InstrumentGestureTool : BaseTool {
 	{		
 		if(m_attachment != null){
 			LeavingProximity();
+			if(HydraController.Instance.IsHandDragging(m_hand))
+				HydraController.Instance.GetHandDragging(m_hand).StopDragging();
 			m_attachment.Gesture_Exit();
 		}
+        
 		m_heldObject = null;
 		m_attachment = null;
 	}
