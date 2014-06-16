@@ -59,6 +59,7 @@ namespace MusicIO
 		public BaseInstrument owner{ get { return m_owner; } }
 		public float val { get { return m_fValue; }	}
 		public float scaledVal{ get { return Utils.Remap(m_fValue, 0.0f, 1.0f, m_valMin, m_valMax); }}
+        public int category { get { return (m_owner.isEffect) ? 1 : 0;  } }
 
         public void setScaledVal(float value) { setScaledVal(value, false); }
         public void setScaledVal(float value, bool silent) { setVal(Utils.Remap(value, m_valMin, m_valMax, 0.0f, 1.0f), silent); }

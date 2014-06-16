@@ -119,7 +119,7 @@ public class RBFSphereAttachment : BaseAttachment {
     public override void HideControls()
     {
         base.HideControls();
-        SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.PRIMARY });
+        SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.SECONDARY });
         ResetRBF();
         foreach (RBFTrainingAttachment attach in m_childDockables)
             attach.HideControls();
@@ -176,7 +176,7 @@ public class RBFSphereAttachment : BaseAttachment {
 
     public override void Gesture_IdleInterior()
     {
-        if (m_mode == BaseTool.ToolMode.PRIMARY)
+        if (m_mode == BaseTool.ToolMode.SECONDARY)
         {
             //Set rbf value from hand position inside sphere
             Vector3 handPosition = transform.InverseTransformPoint(HydraController.Instance.GetHand(m_hand).transform.position);

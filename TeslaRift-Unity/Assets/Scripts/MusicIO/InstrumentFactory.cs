@@ -93,7 +93,7 @@ public class InstrumentFactory : MonoBehaviour {
             if (returnInstrument != null)
             {
                 returnInstrument.DockInto(m_returnHolder);
-                InstrumentController.Instance.AddInstrument(returnInstrument.musicRef);
+                InstrumentController.Instance.AddReturn(returnInstrument.musicRef);
             }
         }
 	}
@@ -125,9 +125,9 @@ public class InstrumentFactory : MonoBehaviour {
 		if(!isReturn) {
 			isMidi = bool.Parse(track.Attributes["midi"].Value);
 			armed = bool.Parse( track.Attributes["armed"].Value );
-		}
+        }
 
-        BaseInstrument instrumentDef = new BaseInstrument(m_client, m_source, track.Attributes["name"].Value, color, armed, trackIndex, isMidi);
+        BaseInstrument instrumentDef = new BaseInstrument(m_client, m_source, track.Attributes["name"].Value, color, armed, trackIndex, isMidi, isReturn);
 
         //Get devices present in track
 		XmlNodeList deviceList = track.SelectNodes("device"); //device array	

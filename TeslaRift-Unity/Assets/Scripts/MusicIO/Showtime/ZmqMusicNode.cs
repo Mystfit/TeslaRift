@@ -37,6 +37,7 @@ public class ZmqMusicNode : MonoBehaviour {
 
         //Subscribe to value updates
         m_node.subscribeToMethod(m_livePeer.methods["value_updated"], instrumentValueUpdated);
+		m_node.subscribeToMethod(m_livePeer.methods["send_updated"], sendValueUpdated);
 		m_node.subscribeToMethod(m_livePeer.methods["fired_slot_index"], clipFired);
         m_node.subscribeToMethod(m_livePeer.methods["playing_slot_index"], clipPlaying);
 
@@ -53,9 +54,11 @@ public class ZmqMusicNode : MonoBehaviour {
         int trackindex = Convert.ToInt32(output["trackindex"]);
         int deviceindex = Convert.ToInt32(output["deviceindex"]);
         int parameterindex = Convert.ToInt32(output["parameterindex"]);
+        int category = Convert.ToInt32(output["category"]);
         float sendvalue = Convert.ToSingle(output["value"]);
 
-        BaseInstrumentParam param = InstrumentController.Instance.FindParameter(trackindex, deviceindex, parameterindex);
+        BaseInstrumentParam param = InstrumentController.Instance.FindParameter(trackindex, deviceindex, parameterindex, category);
+
         if (param != null)
             param.setScaledVal(sendvalue, true);
         return null;
@@ -123,14 +126,15 @@ public class ZmqMusicNode : MonoBehaviour {
     /* 
     * Outgoing methods
     */
-	public void updateInstrumentValue(int trackIndex, int deviceIndex, int parameterIndex, int value){
+	public void updateInstrumentValue(int trackIndex, int deviceIndex, int parameterIndex, float value, int category){
 		m_node.updateRemoteMethod(
 			m_livePeer.methods["set_value"], 
 			new Dictionary<string, object>(){
 				{"deviceindex", deviceIndex},
 				{"trackindex", trackIndex},
 				{"parameterindex", parameterIndex},
-				{"value", value}
+				{"value", value},
+                {"category", category}
 		});
 	}
 
