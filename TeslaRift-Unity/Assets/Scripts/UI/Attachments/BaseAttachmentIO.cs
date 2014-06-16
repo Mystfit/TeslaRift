@@ -31,6 +31,18 @@ public abstract class BaseAttachment : MonoBehaviour{
         }
     }
 
+    /*
+     * Saving / loading of this attachments configuration
+     */
+    public void SetIsSaveable(bool state) { m_isSaveable = state; }
+    public bool isSaveable { get { return m_isSaveable; } }
+    protected bool m_isSaveable;
+    public virtual void SaveLayout() { }
+    protected virtual void SaveAttachments(List<BaseAttachment> attachments)
+    {
+
+    }
+
 	/*
 	 * Unity status setters
 	 */
@@ -49,10 +61,6 @@ public abstract class BaseAttachment : MonoBehaviour{
 				if(responder == mode)
 					return true;
 			}
-
-            //Always return true when hovering over an attachment
-            if (mode == BaseTool.ToolMode.IDLE)
-                return true;
 		}
 
 		return false;
@@ -155,20 +163,20 @@ public abstract class BaseAttachment : MonoBehaviour{
     public bool m_toggleControls;
 	public virtual void ToggleSelected(){ SetSelected(!m_selected); }
     public virtual void SetSelected(bool state){
-        m_selected = state;
         if (m_outlineMat != null)
         {
-            if (selected)
+            if (!selected && state)
             {
                 SetOutlineColor(UIFactory.outlineSelectedColor);
                 SetOutlineSize(UIFactory.outlineSelectedSize);
             }
-            else
+            else if(selected && !state)
             {
                 SetOutlineColor(UIFactory.outlineDeselectedColor);
                 SetOutlineSize(0.0f);
             }
         }
+        m_selected = state;
     }
     
 
@@ -180,12 +188,12 @@ public abstract class BaseAttachment : MonoBehaviour{
 	public void SetOutlineSize(float size)
     {
         if (m_outlineMat != null)
-		    iTween.ValueTo(gameObject, iTween.Hash("from", m_outlineMat.GetFloat("_Outline"), "to", size, "time", 0.15f, "onupdate", "SetOutlineUpdate", "easetype", iTween.EaseType.easeOutExpo));
+		    iTween.ValueTo(gameObject, iTween.Hash("from", m_outlineMat.GetFloat("_Outline"), "to", size, "time", 0.1f, "onupdate", "SetOutlineUpdate", "easetype", iTween.EaseType.easeOutExpo));
     }
     public void SetOutlineColor(Color color)
     {
         if (m_outlineMat != null)
-            iTween.ValueTo(gameObject, iTween.Hash("from", m_outlineMat.GetColor("_OutlineColor"), "to", color, "time", 0.15f, "onupdate", "SetOutlineColorUpdate", "easetype", iTween.EaseType.easeOutExpo));
+            iTween.ValueTo(gameObject, iTween.Hash("from", m_outlineMat.GetColor("_OutlineColor"), "to", color, "time", 0.1f, "onupdate", "SetOutlineColorUpdate", "easetype", iTween.EaseType.easeOutExpo));
     }
 	private void SetOutlineUpdate(float size){ m_outlineMat.SetFloat("_Outline", size); }
     private void SetOutlineColorUpdate(Color color){ m_outlineMat.SetColor("_OutlineColor", color); }

@@ -49,11 +49,28 @@ public class ZmqMusicNode : MonoBehaviour {
      */
     public object instrumentValueUpdated(ZstMethod methodData)
     {
-        Debug.Log(methodData.output);
         Dictionary<string, object> output = JsonConvert.DeserializeObject<Dictionary<string, object>>(methodData.output.ToString());
-        BaseInstrumentParam param = InstrumentController.Instance.FindParameter(Convert.ToInt32(output["trackindex"]), Convert.ToInt32(output["deviceindex"]), Convert.ToInt32(output["parameterindex"]));
+        int trackindex = Convert.ToInt32(output["trackindex"]);
+        int deviceindex = Convert.ToInt32(output["deviceindex"]);
+        int parameterindex = Convert.ToInt32(output["parameterindex"]);
+        float sendvalue = Convert.ToSingle(output["value"]);
+
+        BaseInstrumentParam param = InstrumentController.Instance.FindParameter(trackindex, deviceindex, parameterindex);
         if (param != null)
-            param.setScaledVal(Convert.ToSingle(output["value"]), true);
+            param.setScaledVal(sendvalue, true);
+        return null;
+    }
+
+    public object sendValueUpdated(ZstMethod methodData)
+    {
+        Dictionary<string, object> output = JsonConvert.DeserializeObject<Dictionary<string, object>>(methodData.output.ToString());
+        int trackindex = Convert.ToInt32(output["trackindex"]);
+        int sendindex = Convert.ToInt32(output["sendindex"]);
+        float sendvalue = Convert.ToSingle(output["value"]);
+
+        SendParameter send = InstrumentController.Instance.FindSendParameter(trackindex, sendindex);
+        if (send != null)
+            send.setScaledVal(sendvalue, true);
         return null;
     }
 
@@ -77,18 +94,24 @@ public class ZmqMusicNode : MonoBehaviour {
         Dictionary<string, object> output = JsonConvert.DeserializeObject<Dictionary<string, object>>(methodData.output.ToString());
         int trackIndex = Convert.ToInt32(output["trackindex"]);
         int slotIndex = Convert.ToInt32(output["slotindex"]);
-		InstrumentClip playingClip = InstrumentController.Instance.GetInstrumentByTrackindex(trackIndex).playingClip;
+		BaseInstrument playingInstrument = InstrumentController.Instance.GetInstrumentByTrackindex(trackIndex);
 
         if (slotIndex < 0)
         {
             //Stopping
-			if(playingClip != null)
-				playingClip.SetClipState(InstrumentClip.ClipState.IS_DISABLED);
+            if (playingInstrument != null)
+            {
+                if (playingInstrument.playingClip != null)
+                {
+                    playingInstrument.playingClip.SetClipState(InstrumentClip.ClipState.IS_DISABLED);
+                    playingInstrument.SetPlayingClip(null);
+                }
+            }
 		}
         else
         {
-			if(playingClip != null)
-				playingClip.SetClipState(InstrumentClip.ClipState.IS_DISABLED);
+			if(playingInstrument.playingClip != null)
+				playingInstrument.playingClip.SetClipState(InstrumentClip.ClipState.IS_DISABLED);
 
             InstrumentClip clip = InstrumentController.Instance.FindClip(trackIndex, slotIndex);
             clip.SetClipState(InstrumentClip.ClipState.IS_PLAYING);
@@ -111,6 +134,17 @@ public class ZmqMusicNode : MonoBehaviour {
 		});
 	}
 
+    public void updateSendValue(int trackIndex, int sendIndex, float value)
+    {
+        m_node.updateRemoteMethod(
+            m_livePeer.methods["set_send"],
+            new Dictionary<string, object>(){
+				{"trackindex", trackIndex},
+                {"sendindex", sendIndex},
+				{"value", value}
+		});
+    }
+
     public void playNote(int trackIndex, int note, int velocity, int trigger)
     {
         m_node.updateRemoteMethod(
@@ -131,6 +165,16 @@ public class ZmqMusicNode : MonoBehaviour {
 			{"clipindex", clipIndex}
 		});
 	}
+
+
+    public void stopTrack(int trackIndex)
+    {
+        m_node.updateRemoteMethod(
+            m_livePeer.methods["stop_track"],
+            new Dictionary<string, object>(){
+			{"trackindex", trackIndex}
+		});
+    }
 
     /*
      * Exit and cleanup

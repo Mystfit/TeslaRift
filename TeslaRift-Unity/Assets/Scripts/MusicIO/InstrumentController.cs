@@ -101,6 +101,24 @@ public class InstrumentController : MonoBehaviour {
         return null;
     }
 
+    public SendParameter FindSendParameter(int trackindex, int sendindex){
+        foreach (BaseInstrument instrument in m_instruments)
+        {
+            if (instrument.trackIndex == trackindex)
+            {
+                foreach (SendParameter send in instrument.sendsList)
+                {
+                    if (send.sendIndex == sendindex)
+                    {
+                        return send;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+
     /*
      * Find a specific clip by index
      */

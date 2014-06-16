@@ -122,9 +122,7 @@ public class RBFSphereAttachment : BaseAttachment {
         SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.PRIMARY });
         ResetRBF();
         foreach (RBFTrainingAttachment attach in m_childDockables)
-        {
             attach.HideControls();
-        }
         foreach (RBFPlugAttachment plug in m_plugs)
             plug.HideControls();
         
@@ -195,7 +193,7 @@ public class RBFSphereAttachment : BaseAttachment {
 
             int index = 0;
             foreach (RBFPlugAttachment plug in m_plugs)
-                plug.SetSliderVals((float)output[index++]);
+                plug.SetVal((float)output[index++]);
         }
         base.Gesture_IdleInterior();
     }

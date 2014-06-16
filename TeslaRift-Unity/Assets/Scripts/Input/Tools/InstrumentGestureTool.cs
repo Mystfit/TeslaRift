@@ -9,7 +9,7 @@ public class InstrumentGestureTool : BaseTool {
 	/*
 	 * Object we are interacting with
 	 */
-	protected GameObject m_heldObject;
+	public GameObject m_heldObject;
 	protected BaseAttachment m_attachment;
 	
 	/*
@@ -192,11 +192,11 @@ public class InstrumentGestureTool : BaseTool {
 					m_attachment.SetToolMode( m_mode);
 					m_attachment.SetActiveHand( m_hand);
 
-                    if (mode == ToolMode.IDLE)
+                    if (mode == ToolMode.HOVER)
                         m_attachment.StartHover();
 				}
 			}
-		}
+        }
 	}
 
 
@@ -248,6 +248,7 @@ public class InstrumentGestureTool : BaseTool {
 				break;
 			}
 			m_attachment.StopHover();
+            m_heldObject = null;
 		}
 		m_toolHandState = BaseTool.HandState.SEARCHING;
 	}

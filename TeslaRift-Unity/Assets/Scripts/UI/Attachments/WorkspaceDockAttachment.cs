@@ -33,7 +33,9 @@ public class WorkspaceDockAttachment : BaseAttachment {
             InstrumentAttachment instrument = attach as InstrumentAttachment;
 			attach.SetToolmodeResponse(new BaseTool.ToolMode[]{
 				BaseTool.ToolMode.PRIMARY, 
-				BaseTool.ToolMode.GRABBING
+				BaseTool.ToolMode.GRABBING,
+                BaseTool.ToolMode.HOVER,
+                BaseTool.ToolMode.SECONDARY
 			});
             instrument.EnableControls();
 			instrument.SetCloneable(false);

@@ -22,6 +22,7 @@ namespace UI
 		public GameObject instrumentPrefab;
         public GameObject guiQuadPrefab;
         public GameObject volumetricCylinderPrefab;
+        public Texture2D whiteTexturePrefab;
 
 		//Slider localscale amount
 		public float m_sliderScale = 0.1f;
@@ -46,6 +47,7 @@ namespace UI
 
 		void Awake(){
 			m_instance = this;
+            whiteTexturePrefab = (Texture2D)Resources.Load("whiteTex.png");
 		}
 
 
@@ -78,12 +80,20 @@ namespace UI
                 
             ghostAttach.transform.parent = attach.transform;
             ghostAttach.transform.position = attach.transform.position;
-            ghostAttach.transform.localScale = attach.transform.localScale;
+            //ghostAttach.transform.localScale = attach.transform.localScale;
             ghostAttach.transform.parent = null;
             ghostAttach.SetTransient(true);
             ghostAttach.SetCloneable(false);
 
             return ghostAttach;
+        }
+
+        /*
+         * Creates a flat white texture
+         */
+        public static Texture2D CreateWhiteTexture()
+        {
+            return Instance.whiteTexturePrefab;
         }
 
 
@@ -158,7 +168,7 @@ namespace UI
         public static ClipCubeAttachment CreateClipCube(InstrumentClip clip, bool autoResize)
         {
             GameObject cube = Instantiate(Instance.clipCubePrefab) as GameObject;
-
+            cube.transform.localScale = UIFactory.sliderScale;
             ClipCubeAttachment attach = cube.GetComponent<ClipCubeAttachment>();
 			attach.frame.SetMatchTextWidth(autoResize);
 

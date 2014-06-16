@@ -17,6 +17,7 @@ namespace MusicIO
 		
 		protected List<BaseInstrumentParam> m_clips;
 		protected List<BaseInstrumentParam> m_params;
+        protected List<BaseInstrumentParam> m_sends;
 
 		string m_client = "";
 		string m_name = "";
@@ -37,6 +38,7 @@ namespace MusicIO
 			
 			m_clips = new List<BaseInstrumentParam>();
 			m_params = new List<BaseInstrumentParam>();
+            m_sends = new List<BaseInstrumentParam>();
 
             m_isMidi = isMidi;
             if (isMidi)
@@ -76,16 +78,21 @@ namespace MusicIO
 
 		// Parameter functions
 		//-----------------
-		public void AddParam(string name, string valueType, float min, float max){
-			AddParam(name, valueType, min, max, "", -1, -1);
+		public void AddParam(string name, float min, float max){
+			AddParam(name, min, max, "", -1, -1);
 		}
 
-		public void AddParam(string name, string valueType, float min, float max, string deviceName, int deviceIndex, int parameterIndex){
+		public void AddParam(string name, float min, float max, string deviceName, int deviceIndex, int parameterIndex){
 			GenericMusicParam param = new GenericMusicParam(name, this, min, max, deviceIndex, parameterIndex);
 			param.setDeviceName(deviceName);
 			m_params.Add(param); 
 		}
-	
+
+        public void AddSend(string name, int sendIndex)
+        {
+            SendParameter send = new SendParameter(name, this, sendIndex);
+            m_sends.Add(send);
+        }
 		
 		public BaseInstrumentParam getParamByName(string name){
 			foreach(BaseInstrumentParam param in m_params){
@@ -102,6 +109,8 @@ namespace MusicIO
 		 */
 		public List<BaseInstrumentParam> paramList{ get { return m_params; } }
 		public List<BaseInstrumentParam> clipList{ get { return m_clips; } }
+        public List<BaseInstrumentParam> sendsList { get { return m_sends; } }
+
 	
 		// Update functions
 		//-----------------
@@ -126,15 +135,25 @@ namespace MusicIO
 								m_lastPlayedNote = (int)note.scaledVal;
                             }    
                         //}
-					} else {
-
+                    }
+                    else if (param.GetType() == typeof(GenericMusicParam))
+                    {
                         if (GlobalConfig.Instance.ShowtimeEnabled)
                             ZmqMusicNode.Instance.updateInstrumentValue(m_trackIndex, param.deviceIndex, param.parameterIndex, Convert.ToInt32(param.scaledVal));
 					}
-						
 					param.setClean();
 				}
 			}
+
+            foreach (SendParameter send in m_sends)
+            {
+                if (send.isDirty)
+                {
+                    if (GlobalConfig.Instance.ShowtimeEnabled)
+                        ZmqMusicNode.Instance.updateSendValue(m_trackIndex, send.sendIndex, send.scaledVal);
+					send.setClean();
+				}
+            }
 		}
 	}
 }

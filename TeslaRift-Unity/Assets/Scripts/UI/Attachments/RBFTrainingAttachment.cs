@@ -47,7 +47,7 @@ public class RBFTrainingAttachment : BaseAttachment {
     public override void ShowControls()
     {
         base.ShowControls();
-        SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.PRIMARY, BaseTool.ToolMode.GRABBING });
+        SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.PRIMARY, BaseTool.ToolMode.GRABBING, BaseTool.ToolMode.HOVER });
     }
 
     public override void HideControls()

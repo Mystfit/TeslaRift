@@ -10,7 +10,7 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
     protected GameObject m_dividingQuad;
     protected GameObject m_rotator;
 
-    public float m_dividerWidth = 0.01f;
+    public float m_dividerWidth = 0.005f;
     public float m_controlsMirrorOffset = 0.05f;
     public float m_controlsYOffset = 0.05f;
     public float m_clipCubeSpacing = 0.03f;
@@ -22,7 +22,6 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
 
 		//Since instrument attachments are created at runtime, we need to set the filter here
 		m_respondsToToolMode = new BaseTool.ToolMode[]{
-			BaseTool.ToolMode.PRIMARY, 
 			BaseTool.ToolMode.GRABBING
 		};
 
@@ -75,6 +74,13 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
             foreach (BaseInstrumentParam param in musicRef.paramList)
             {
                 SliderAttachment slider = UIFactory.CreateSlider(param, UIFrame.AnchorLocation.BOTTOM_LEFT);
+                slider.SetCloneable(true);
+                slider.DockInto(paramScroller);
+            }
+
+            foreach (BaseInstrumentParam send in musicRef.sendsList)
+            {
+                SliderAttachment slider = UIFactory.CreateSlider(send, UIFrame.AnchorLocation.BOTTOM_LEFT);
                 slider.SetCloneable(true);
                 slider.DockInto(paramScroller);
             }
@@ -143,6 +149,15 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
         }
     }
 
+    public override void Update()
+    {
+        base.Update();
+        if (musicRef.playingClip != null)
+            SetSelected(true);
+        else
+            SetSelected(false);
+    }
+
 
 	/*
 	 *  Gesture handlers
@@ -179,6 +194,10 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
 	public override void Gesture_PullOut ()
 	{
 		base.Gesture_PullOut ();
+        if (mode == BaseTool.ToolMode.SECONDARY)
+        {
+            ZmqMusicNode.Instance.stopTrack(musicRef.trackIndex);
+        }
 	}
 }
 

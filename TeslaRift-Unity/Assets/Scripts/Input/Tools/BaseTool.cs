@@ -22,7 +22,7 @@ public class BaseTool : MonoBehaviour {
 	public ToolHand Hand{get { return m_hand; }}
 	
 	//Tool modes
-	public enum ToolMode{PRIMARY = 0, SECONDARY, TERTIARY, GRABBING, PLAY1, PLAY2, PLAY3, PLAY4, IDLE};
+	public enum ToolMode{PRIMARY = 0, SECONDARY, TERTIARY, GRABBING, PLAY1, PLAY2, PLAY3, PLAY4, HOVER};
 	protected ToolMode m_mode = ToolMode.PRIMARY;
 	public ToolMode mode{ get { return m_mode; }}
 

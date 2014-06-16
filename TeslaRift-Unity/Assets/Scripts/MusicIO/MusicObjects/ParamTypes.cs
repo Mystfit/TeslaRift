@@ -162,6 +162,23 @@ namespace MusicIO
                 ZmqMusicNode.Instance.fireClip(m_owner.trackIndex, this.scene);
 		}
 	}
+
+
+    /*
+	 *	SendParameter
+	 *  Send effect track volume
+	 */
+    public class SendParameter: BaseInstrumentParam
+    {
+        public int sendIndex { get { return m_sendIndex; } }
+        protected int m_sendIndex;
+
+        public SendParameter(string name, BaseInstrument paramOwner, int sendIndex) 
+			: base(name, paramOwner, 0.0f, 1.0f)
+		{
+            m_sendIndex = sendIndex;
+		}
+    }
 	
 	
 	/*

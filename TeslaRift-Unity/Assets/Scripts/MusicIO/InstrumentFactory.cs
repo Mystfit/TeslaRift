@@ -25,6 +25,7 @@ public class InstrumentFactory : MonoBehaviour {
 	public TextAsset m_liveSessionFile;
 
 	public ScrollerAttachment m_instrumentHolder;
+    public ScrollerAttachment m_returnHolder;
 
 	void Start () {
 		m_instance = this;
@@ -76,93 +77,108 @@ public class InstrumentFactory : MonoBehaviour {
 		XmlNodeList trackList = sessionXml.GetElementsByTagName("track"); //instrument array	
 		XmlNodeList returnList = sessionXml.GetElementsByTagName("trackReturn"); //instrument array	
 		
-		CreateInstrumentFromXmlList( trackList);
-		CreateInstrumentFromXmlList( returnList);
+        foreach(XmlNode track in trackList){
+            
+            InstrumentAttachment instrument = CreateInstrumentFromXmlList(track);
+            if (instrument != null)
+            {
+                instrument.DockInto(m_instrumentHolder);
+                InstrumentController.Instance.AddInstrument(instrument.musicRef);
+            }
+        }
+
+        foreach (XmlNode returnTrack in returnList)
+        {
+            InstrumentAttachment returnInstrument = CreateInstrumentFromXmlList(returnTrack);
+            if (returnInstrument != null)
+            {
+                returnInstrument.DockInto(m_returnHolder);
+                InstrumentController.Instance.AddInstrument(returnInstrument.musicRef);
+            }
+        }
 	}
 	
 	
 	/*
 	 * Creates instruments from xml lists
 	 */
-	private void CreateInstrumentFromXmlList(XmlNodeList xmlList){
-		foreach(XmlNode track in xmlList){	
-			//Get track definition
-			Color color = Utils.intToColor( int.Parse(track.Attributes["color"].Value) );
-			int trackIndex = -1;
-			bool isReturn = false;
+    private InstrumentAttachment CreateInstrumentFromXmlList(XmlNode track)
+    {
+		//Get track definition
+		Color color = Utils.intToColor( int.Parse(track.Attributes["color"].Value) );
+		int trackIndex = -1;
+		bool isReturn = false;
 
-			if(track.Attributes["index"] != null){
-				trackIndex = int.Parse(track.Attributes["index"].Value);
-				isReturn = false;
-			} else if(track.Attributes["returnTrackIndex"] != null){
-				trackIndex = int.Parse(track.Attributes["returnTrackIndex"].Value);
-				isReturn = true;
-			} else {
-				continue;
-			}
+		if(track.Attributes["index"] != null){
+			trackIndex = int.Parse(track.Attributes["index"].Value);
+			isReturn = false;
+		} else if(track.Attributes["returnTrackIndex"] != null){
+			trackIndex = int.Parse(track.Attributes["returnTrackIndex"].Value);
+			isReturn = true;
+		} else {
+			return null;
+		}
 
-			bool isMidi = false;
-			bool armed = false;
+		bool isMidi = false;
+		bool armed = false;
 
-			if(!isReturn) {
-				isMidi = bool.Parse(track.Attributes["midi"].Value);
-				armed = bool.Parse( track.Attributes["armed"].Value );
-			}
+		if(!isReturn) {
+			isMidi = bool.Parse(track.Attributes["midi"].Value);
+			armed = bool.Parse( track.Attributes["armed"].Value );
+		}
 
-            BaseInstrument instrumentDef = new BaseInstrument(m_client, m_source, track.Attributes["name"].Value, color, armed, trackIndex, isMidi);
+        BaseInstrument instrumentDef = new BaseInstrument(m_client, m_source, track.Attributes["name"].Value, color, armed, trackIndex, isMidi);
 
-            //Get devices present in track
-			XmlNodeList deviceList = track.SelectNodes("device"); //device array	
-			foreach(XmlNode device in deviceList){
-
-				if((String)device.Attributes["name"].Value != "Looper" &&
-				   (String)device.Attributes["name"].Value != "Scale"){
-					//Get params in device
-					XmlNodeList paramList = device.SelectNodes("parameter"); //parameter array	
-					int deviceIndex = int.Parse(device.Attributes["index"].Value);
+        //Get devices present in track
+		XmlNodeList deviceList = track.SelectNodes("device"); //device array	
+		foreach(XmlNode device in deviceList){
+			//Get params in device
+			XmlNodeList paramList = device.SelectNodes("parameter"); //parameter array	
+			int deviceIndex = int.Parse(device.Attributes["index"].Value);
 					
-					foreach(XmlNode parameter in paramList){
-						string name = parameter.Attributes["name"].Value as String;
-						name = name.Replace("/", "-");
-						name = name.Replace(" ", "_");
-						string deviceName = device.Attributes["name"].Value as String;
-						deviceName = deviceName.Replace("/", "-");
-						deviceName = deviceName.Replace(" ", "_");
-						int parameterIndex =int.Parse(parameter.Attributes["index"].Value);
-
-						float min = Convert.ToSingle(parameter.Attributes["min"].Value);
-						float max = Convert.ToSingle(parameter.Attributes["max"].Value);
-						instrumentDef.AddParam(name, "float", min, max, deviceName, deviceIndex, parameterIndex);
-					}
-				}
-			}
-			
-			//Get clips in track
-			XmlNodeList clipList = track.SelectNodes("clip");
-			foreach(XmlNode clip in clipList){
-				string name = clip.Attributes["name"].Value as String;
-				int index = int.Parse( clip.Attributes["index"].Value );
-				bool looping = Convert.ToBoolean( clip.Attributes["looping"].Value );
-				instrumentDef.AddClip(name, looping, index);
-			}
-			
-			//Get sends in track
-			XmlNodeList sendsList = track.SelectNodes("sends");
-			foreach(XmlNode send in sendsList){
-				string name = send.Attributes["name"].Value as String;
+			foreach(XmlNode parameter in paramList){
+				string name = parameter.Attributes["name"].Value as String;
 				name = name.Replace("/", "-");
 				name = name.Replace(" ", "_");
-				name = "Send-" + name;
-				float min = Convert.ToSingle(send.Attributes["min"].Value);
-				float max = Convert.ToSingle(send.Attributes["max"].Value);
-				instrumentDef.AddParam(name, "float", min, max);
-			}
-			
-			InstrumentController.Instance.AddInstrument(instrumentDef);
-            InstrumentAttachment instrument = UIFactory.CreateInstrument(instrumentDef);
+				string deviceName = device.Attributes["name"].Value as String;
+				deviceName = deviceName.Replace("/", "-");
+				deviceName = deviceName.Replace(" ", "_");
+				int parameterIndex =int.Parse(parameter.Attributes["index"].Value);
 
-			instrument.DockInto(m_instrumentHolder);
+				float min = Convert.ToSingle(parameter.Attributes["min"].Value);
+				float max = Convert.ToSingle(parameter.Attributes["max"].Value);
+				instrumentDef.AddParam(name, min, max, deviceName, deviceIndex, parameterIndex);
+			}
+				
 		}
-        //m_instrumentHolder.HideControls();
+			
+		//Get clips in track
+		XmlNodeList clipList = track.SelectNodes("clip");
+		foreach(XmlNode clip in clipList){
+			string name = clip.Attributes["name"].Value as String;
+			int index = int.Parse( clip.Attributes["index"].Value );
+			bool looping = Convert.ToBoolean( clip.Attributes["looping"].Value );
+			instrumentDef.AddClip(name, looping, index);
+		}
+			
+		//Get sends in track
+		XmlNodeList sendsList = track.SelectNodes("sends");
+		foreach(XmlNode send in sendsList){
+			string name = send.Attributes["name"].Value as String;
+            int sendIndex = int.Parse( send.Attributes["index"].Value );
+			name = name.Replace("/", "-");
+			name = name.Replace(" ", "_");
+			//name = "Send-" + name;
+			float min = Convert.ToSingle(send.Attributes["min"].Value);
+			float max = Convert.ToSingle(send.Attributes["max"].Value);
+            instrumentDef.AddSend(name, sendIndex);
+		}
+
+        InstrumentAttachment instrument = UIFactory.CreateInstrument(instrumentDef);
+			
+		//InstrumentController.Instance.AddInstrument(instrumentDef);
+		//instrument.DockInto(m_instrumentHolder);
+
+        return instrument;
 	}
 }

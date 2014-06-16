@@ -14,6 +14,16 @@ public class GlobalConfig : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		m_instance = this;
+
+        Debug.Log(
+            Utils.BarycentricTetrahedronLerp(
+               new Vector3(0.0f, 0.0f, 0.0f),
+               new Vector3(1.0f, 0.0f, 0.0f),
+               new Vector3(0.5f, 0.0f, 0.5f),
+               new Vector3(0.0f, 1.0f, 0.0f),
+               new Vector3(0.5f, 0.5f, 0.5f)
+           )
+        );
 	}
 
 	public static GlobalConfig Instance{ get { return m_instance; }}
