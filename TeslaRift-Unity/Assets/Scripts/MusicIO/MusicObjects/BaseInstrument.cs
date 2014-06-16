@@ -24,17 +24,19 @@ namespace MusicIO
 		string m_owner = "";
         bool m_isMidi = false;
 		bool m_playable = false;
+        bool m_isEffect = false;
 		Color m_color;
 		int m_trackIndex;
 		int m_lastPlayedNote;
 
-		public BaseInstrument(string instrumentClient, string instrumentOwner, string instrumentName, Color color, bool playable, int trackIndex, bool isMidi){
+		public BaseInstrument(string instrumentClient, string instrumentOwner, string instrumentName, Color color, bool playable, int trackIndex, bool isMidi, bool isReturn){
 			m_name = instrumentName;
 			m_owner = instrumentOwner;
 			m_client = instrumentClient;
 			m_color = color;
 			m_playable = playable;
 			m_trackIndex = trackIndex;
+            m_isEffect = isReturn;
 			
 			m_clips = new List<BaseInstrumentParam>();
 			m_params = new List<BaseInstrumentParam>();
@@ -51,6 +53,7 @@ namespace MusicIO
 		public Color color{ get { return m_color; }}
 		public bool playable{ get { return m_playable; }}
         public bool isMidi { get { return m_isMidi; } }
+        public bool isEffect { get { return m_isEffect; } }
 		public int trackIndex{ get{ return m_trackIndex; }}
 		
 		
@@ -139,7 +142,7 @@ namespace MusicIO
                     else if (param.GetType() == typeof(GenericMusicParam))
                     {
                         if (GlobalConfig.Instance.ShowtimeEnabled)
-                            ZmqMusicNode.Instance.updateInstrumentValue(m_trackIndex, param.deviceIndex, param.parameterIndex, Convert.ToInt32(param.scaledVal));
+                            ZmqMusicNode.Instance.updateInstrumentValue(m_trackIndex, param.deviceIndex, param.parameterIndex, param.scaledVal, param.category);
 					}
 					param.setClean();
 				}

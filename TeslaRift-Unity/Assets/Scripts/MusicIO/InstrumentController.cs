@@ -11,6 +11,7 @@ public class InstrumentController : MonoBehaviour {
 	
 	//Instrument references
 	protected List<BaseInstrument> m_instruments;
+    protected List<BaseInstrument> m_returns;
 	protected BaseInstrument m_selectedInstrument;
 	protected GameObject m_lastSelectedGameInstrument = null;
 	
@@ -19,6 +20,7 @@ public class InstrumentController : MonoBehaviour {
 	//-------------------------------------
 	void Awake () {
 		m_instruments = new List<BaseInstrument>();
+        m_returns = new List<BaseInstrument>();
 		m_instance = this;
 	}
 	
@@ -27,6 +29,11 @@ public class InstrumentController : MonoBehaviour {
 		foreach(BaseInstrument instrument in m_instruments){
 			instrument.update();
 		}
+
+        foreach (BaseInstrument instrument in m_returns)
+        {
+            instrument.update();
+        }
 	}
 	
 	
@@ -56,6 +63,11 @@ public class InstrumentController : MonoBehaviour {
 	public void AddInstrument(BaseInstrument instrument){
 		m_instruments.Add(instrument);
 	}
+
+    public void AddReturn(BaseInstrument instrument)
+    {
+        m_returns.Add(instrument);
+    }
 	
 	
 	/*
@@ -84,8 +96,16 @@ public class InstrumentController : MonoBehaviour {
     /*
      * Finds a specific parameter by index
      */
-    public BaseInstrumentParam FindParameter(int trackindex, int deviceindex, int parameterindex){
-        foreach (BaseInstrument instrument in m_instruments)
+    public BaseInstrumentParam FindParameter(int trackindex, int deviceindex, int parameterindex, int category){
+
+        List<BaseInstrument> instrumentList;
+
+        if (category == 0)
+            instrumentList = m_instruments;
+        else
+            instrumentList = m_returns;
+
+        foreach (BaseInstrument instrument in instrumentList)
         {
             if (instrument.trackIndex == trackindex)
             {
