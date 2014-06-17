@@ -105,6 +105,15 @@ namespace MusicIO
 			}
 			return null;
 		}
+
+		public BaseInstrumentParam getSendByName(string name){
+			foreach(BaseInstrumentParam param in m_sends){
+				if(param.name == name){
+					return param;
+				} 
+			}
+			return null;
+		}
 		
 		
 		/*

@@ -337,13 +337,13 @@ public abstract class BaseAttachment : MonoBehaviour{
 			if (IsInDockingRange(closestValidDock, closestValidDock.dockingRange))
             	DockInto(closestValidDock);
 			else 
-				Floating();
+				SetFloating();
 		} else {
-            Floating();
+            SetFloating();
 		}
 	}
 
-    public virtual void Floating()
+    public virtual void SetFloating()
     {
 		if (IsTransient)
 		{

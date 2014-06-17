@@ -65,6 +65,7 @@ public static class GeometryUtils {
     /*
      * Tetrahedron lerping
      */
+
     public static float[] BarycentricTetrahedronLerp(Vector3 a, Vector3 b, Vector3 c, Vector3 d, Vector3 position)
     {
         float[] ratios = new float[4];

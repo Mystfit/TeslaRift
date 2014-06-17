@@ -15,15 +15,14 @@ public class GlobalConfig : MonoBehaviour {
 	void Awake () {
 		m_instance = this;
 
-        Debug.Log(
-            Utils.BarycentricTetrahedronLerp(
-               new Vector3(0.0f, 0.0f, 0.0f),
-               new Vector3(1.0f, 0.0f, 0.0f),
-               new Vector3(0.5f, 0.0f, 0.5f),
-               new Vector3(0.0f, 1.0f, 0.0f),
-               new Vector3(0.5f, 0.5f, 0.5f)
-           )
-        );
+		float[] result = GeometryUtils.BarycentricTetrahedronLerp(
+			new Vector3(0.0f, 0.0f, 0.0f),
+			new Vector3(1.0f, 0.0f, 0.0f),
+			new Vector3(0.5f, 0.0f, 0.5f),
+			new Vector3(0.0f, 1.0f, 0.0f),
+			new Vector3(0.5f, 0.5f, 0.5f)
+		);
+        Debug.Log(result);
 	}
 
 	public static GlobalConfig Instance{ get { return m_instance; }}

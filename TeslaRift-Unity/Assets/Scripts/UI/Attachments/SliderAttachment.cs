@@ -59,17 +59,6 @@ public class SliderAttachment : BaseAttachmentIO<BaseInstrumentParam> {
 
 		base.Gesture_Exit ();
 	}
-
-	public override void Floating ()
-	{
-		if (IsTransient)
-		{
-			if (DockedInto == null)
-			{
-				GameObject.Destroy(gameObject);
-			}
-		}
-	}
 	
 	
 	/*
