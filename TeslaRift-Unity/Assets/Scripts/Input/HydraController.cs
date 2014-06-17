@@ -413,7 +413,7 @@ public class HydraController : MonoBehaviour {
 		{
 			//ToolController.Instance.PopTool(hand);
             ToolController.Instance.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.HOVER);
-            m_glove.SetCollider(m_glove.activeGesture);
+            m_glove.SetCollider(m_glove.activeGestureIndex);
 		}
 	}
 	

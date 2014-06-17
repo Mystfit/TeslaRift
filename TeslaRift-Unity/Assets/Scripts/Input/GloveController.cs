@@ -36,6 +36,9 @@ public class GloveController : MonoBehaviour {
 	private string m_activeGestureDown;
 	private bool m_isDirty = true;
 
+    public int gestureIndex(string gestureName){ return m_gestureIndexLookup[gestureName]; }
+    protected Dictionary<string, int> m_gestureIndexLookup;
+
 	//Gesture change speeds
 	private double[] m_lastGestureOutput;
 	private double[] m_gestureVelocity;
@@ -48,6 +51,9 @@ public class GloveController : MonoBehaviour {
 	public bool m_toggleNextGestureCalibration = false;
 	public double m_sigma = 0.5;
 	public int m_gestureSwitchDelay = 0;
+    
+    //Collision positions
+    public Transform[] m_joints;
 		
     void Awake( )
     {	
@@ -62,6 +68,10 @@ public class GloveController : MonoBehaviour {
 		m_gestureVelocity = new double[m_gestures.Length];
 		m_lastGestureOutput = new double[m_gestures.Length];
 		m_currentCalibrationSamples = new List<double[]>();
+        m_gestureIndexLookup = new Dictionary<string, int>();
+        
+        for(int i = 0; i < m_gestures.Length; i++)
+            m_gestureIndexLookup[m_gestures[i]] = i;
     }
 	
 	
@@ -225,49 +235,65 @@ public class GloveController : MonoBehaviour {
 	 * Collider center/size for different gestures
 	 */
 	public void SetCollider(int gestureIndex){
-		SetCollider(m_gestures[gestureIndex]);
+		string gestureName = m_gestures[gestureIndex];
+
+        BoxCollider col = collider as BoxCollider;
+        switch (gestureName)
+        {
+            case "IDLE_HAND":
+                col.center =  transform.InverseTransformPoint(m_joints[gestureIndex].transform.position); //new Vector3(0.0f, 0.01f, 0.06f);
+                col.size = new Vector3(0.11f, -0.03f, 0.11f);
+                break;
+            case "CLOSED_HAND":
+                col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position); //new Vector3(0.0f, -0.02f, 0.0f);
+                col.size = new Vector3(0.11f, 0.05f, 0.08f);
+                break;
+            case "INDEX_POINT":
+                col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position); //new Vector3(0.03f, -0.01f, 0.03f);
+                col.size = new Vector3(0.025f, 0.07f, 0.15f);
+                break;
+            case "INDEX_MIDDLE":
+                col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position); //new Vector3(0.02f, 0.0f, 0.07f);
+                col.size = new Vector3(0.05f, 0.05f, 0.15f);
+                break;
+            case "THREE_SWIPE":
+                col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position); //new Vector3(0.01f, 0.0f, 0.07f);
+                col.size = new Vector3(0.075f, 0.05f, 0.15f);
+                break;
+            case "PINKY":
+                col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position); //new Vector3(-0.035f, 0.0f, 0.07f);
+                col.size = new Vector3(0.025f, 0.05f, 0.15f);
+                break;
+            case "ROCK_ON":
+                col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position); //new Vector3(0.0f, 0.01f, 0.06f);
+                col.size = new Vector3(0.11f, -0.03f, 0.11f);
+                break;
+            case "PLAY_1":
+                col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position); 
+                col.size = new Vector3(0.025f, 0.07f, 0.15f);
+                break;
+            case "PLAY_2":
+                col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position); 
+                col.size = new Vector3(0.025f, 0.07f, 0.15f);
+                break;
+            case "PLAY_3":
+                col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position); 
+                col.size = new Vector3(0.025f, 0.07f, 0.15f);
+                break;
+            case "PLAY_4":
+                col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position);
+                col.size = new Vector3(0.025f, 0.07f, 0.15f);
+                break;
+        }
+
 	}
 
-	public void SetCollider(string gesture){
-		BoxCollider col = collider as BoxCollider;
-		switch(gesture){
-		case "IDLE_HAND":
-			col.center  = new Vector3(0.0f, 0.01f, 0.06f);
-			col.size = new Vector3(0.11f, -0.03f, 0.11f);
-			break;
-		case "CLOSED_HAND":
-			col.center = new Vector3(0.0f, -0.02f, 0.0f);
-			col.size = new Vector3(0.11f, 0.05f, 0.08f);
-			break;
-		case "INDEX_POINT":
-			col.center = new Vector3(0.03f, -0.01f, 0.03f);
-			col.size = new Vector3(0.025f, 0.07f, 0.15f);
-			break;
-		case "INDEX_MIDDLE":
-			col.center = new Vector3(0.02f, 0.0f, 0.07f);
-			col.size = new Vector3(0.05f, 0.05f, 0.15f);
-			break;
-		case "THREE_SWIPE":
-			col.center = new Vector3(0.01f, 0.0f, 0.07f);
-			col.size = new Vector3(0.075f, 0.05f, 0.15f);
-			break;
-		case "PINKY":
-			col.center = new Vector3(-0.035f, 0.0f, 0.07f);
-			col.size = new Vector3(0.025f, 0.05f, 0.15f);
-			break;
-		case "ROCK_ON":
-			col.center = new Vector3(0.0f, 0.01f, 0.06f);
-			col.size = new Vector3(0.11f, -0.03f, 0.11f);
-			break;
-		}
-	}
-	
-	
 		
 	/*
 	 * Getters
 	 */
 	public string activeGesture{ get { return m_activeGesture; }}
+    public int activeGestureIndex { get { return m_gestureIndexLookup[m_activeGesture];  } }
 	public string[] gestureTypes{ get { return m_gestures; }}
 	public bool GetGestureDown(string gesture){ 
 		if(m_activeGestureDown == gesture && m_activeGestureDown != "")

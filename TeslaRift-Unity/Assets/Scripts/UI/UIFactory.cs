@@ -96,7 +96,6 @@ namespace UI
             return Instance.whiteTexturePrefab;
         }
 
-
 		/*
 		 * Slider
 		 * A controllable parameter slider

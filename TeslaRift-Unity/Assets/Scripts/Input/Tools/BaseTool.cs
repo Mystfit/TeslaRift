@@ -60,7 +60,7 @@ public class BaseTool : MonoBehaviour {
 		m_mode = mode;
 
 		//Set collider model for hand based on active gesture
-		glove.SetCollider(glove.activeGesture);
+        glove.SetCollider(glove.activeGestureIndex);
 
 		//Trigger the transition
 		TransitionIn();
