@@ -1,4 +1,7 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using MusicIO;
 
@@ -13,7 +16,6 @@ namespace UI
 		//Prefab objects
 		public GameObject sliderPrefab;
 		public GameObject framePrefab;
-        public GameObject rbfSphereTrainingPrefab;
 		public GameObject clipButtonPrefab;
         public GameObject clipCubePrefab;
 		public GameObject clipPlaceholderPrefab;
@@ -23,6 +25,20 @@ namespace UI
         public GameObject guiQuadPrefab;
         public GameObject volumetricCylinderPrefab;
         public Texture2D whiteTexturePrefab;
+
+        public Dictionary<Type, GameObject> prefabs { get { return m_prefabLookup; } }
+        private Dictionary<Type, GameObject> m_prefabLookup;
+
+        public Dictionary<Type, Type> musicTypes { get { return m_musicTypeLookup; } }
+        private Dictionary<Type, Type> m_musicTypeLookup;
+
+
+        //Fissure control prefabs
+        public GameObject rbfSpherePrefab;
+        public GameObject rbfSphereTrainingPrefab;
+        public GameObject clipMatrixPrefab;
+        public GameObject tetrahedronBlenderPrefab;
+
 
 		//Slider localscale amount
 		public float m_sliderScale = 0.1f;
@@ -45,48 +61,29 @@ namespace UI
         public Color m_outlineDeselectedColor;
         public static Color outlineDeselectedColor { get { return Instance.m_outlineDeselectedColor; } }
 
+        public Color m_textLabelSelectedColor;
+        public static Color textLabelSelectedColor { get { return Instance.m_textLabelSelectedColor; } }
+
+        public Color m_textLabelDeselectedColor;
+        public static Color textLabelDeselectedColor { get { return Instance.m_textLabelDeselectedColor; } }
+
 		void Awake(){
 			m_instance = this;
             whiteTexturePrefab = (Texture2D)Resources.Load("whiteTex.png");
+
+            m_prefabLookup = new Dictionary<Type, GameObject>();
+            m_prefabLookup[typeof(RBFSphereAttachment)]  = Instance.rbfSpherePrefab;
+            m_prefabLookup[typeof(ClipMatrixAttachment)] = Instance.rbfSpherePrefab;
+            m_prefabLookup[typeof(ClipCubeAttachment)] = Instance.clipCubePrefab;
+            m_prefabLookup[typeof(ClipButtonAttachment)] = Instance.clipButtonPrefab;
+            m_prefabLookup[typeof(TetrahedronBlenderAttachment)] = Instance.tetrahedronBlenderPrefab;
+            m_prefabLookup[typeof(RBFTrainingAttachment)] = Instance.rbfSphereTrainingPrefab;
+            m_prefabLookup[typeof(ScrollerAttachment)] = Instance.paramScrollerPrefab;
+            m_prefabLookup[typeof(InstrumentAttachment)] = Instance.instrumentPrefab;
+            m_prefabLookup[typeof(SliderAttachment)] = Instance.sliderPrefab;
+            m_prefabLookup[typeof(RotaryAttachment)] = Instance.rotaryPrefab;
 		}
 
-
-        public static BaseAttachment CreateGhostDragger(BaseAttachment attach)
-        {
-            BaseAttachment ghostAttach = null;
-            if(attach.GetType() == typeof(SliderAttachment)){
-                SliderAttachment slider = attach as SliderAttachment;
-                ghostAttach = UIFactory.CreateSlider(slider.musicRef, UIFrame.AnchorLocation.BOTTOM_LEFT);
-            }
-            else if (attach.GetType() == typeof(ClipButtonAttachment))
-            {
-                ClipButtonAttachment clipButton = attach as ClipButtonAttachment;
-                ghostAttach = UIFactory.CreateClipButton(clipButton.musicRef, UIFrame.AnchorLocation.BOTTOM_LEFT);
-            }
-            else if (attach.GetType() == typeof(ClipCubeAttachment))
-            {
-                ClipCubeAttachment cubeButton = attach as ClipCubeAttachment;
-                ghostAttach = UIFactory.CreateClipCube(cubeButton.musicRef);
-            }
-			else if (attach.GetType() == typeof(InstrumentAttachment))
-            {
-                InstrumentAttachment instrument = attach as InstrumentAttachment;
-                ghostAttach = UIFactory.CreateInstrument(instrument.musicRef);
-            }
-            else if (attach.GetType() == typeof(RBFTrainingSpawnerAttachment))
-            {
-                ghostAttach = UIFactory.CreateRBFSphereTraining();
-            }
-                
-            ghostAttach.transform.parent = attach.transform;
-            ghostAttach.transform.position = attach.transform.position;
-            //ghostAttach.transform.localScale = attach.transform.localScale;
-            ghostAttach.transform.parent = null;
-            ghostAttach.SetTransient(true);
-            ghostAttach.SetCloneable(false);
-
-            return ghostAttach;
-        }
 
         /*
          * Creates a flat white texture
@@ -95,23 +92,6 @@ namespace UI
         {
             return Instance.whiteTexturePrefab;
         }
-
-		/*
-		 * Slider
-		 * A controllable parameter slider
-		 */
-		public static SliderAttachment CreateSlider(BaseInstrumentParam param, UIFrame.AnchorLocation anchor){
-			GameObject slider = Instantiate(Instance.sliderPrefab) as GameObject;
-			
-			UIFrame frame = slider.GetComponent<UIFrame>();
-			//frame.SetAnchor(UIFrame.AnchorLocation.TOP_LEFT);
-			frame.SetAnchor(anchor);
-			
-			SliderAttachment attach = slider.GetComponent<SliderAttachment>();
-			attach.Init(param);
-			
-			return attach;
-		}
 
 
 		/*
@@ -126,58 +106,6 @@ namespace UI
 		}
 
 
-        /*
-		 * RBF Training point
-		 * A draggable RBF training point for the sphere RBF ccontroller
-		 */
-        public static RBFTrainingAttachment CreateRBFSphereTraining()
-        {
-            GameObject training = Instantiate(Instance.rbfSphereTrainingPrefab) as GameObject;
-            RBFTrainingAttachment attach = training.GetComponent<RBFTrainingAttachment>();
-
-            return attach;
-        }
-
-
-		/*
-		 * Button
-		 * Pressable clip button
-		 */
-		public static ClipButtonAttachment CreateClipButton(InstrumentClip clip, UIFrame.AnchorLocation anchor){
-			GameObject button = Instantiate(Instance.clipButtonPrefab) as GameObject;
-			
-			ClipButtonAttachment attach = button.GetComponent<ClipButtonAttachment>();
-			attach.Init(clip);
-
-			UIFrame frame = button.GetComponent<UIFrame>();
-			frame.SetAnchor(anchor);
-
-			return attach;
-		}
-
-
-        /*
-         * ClipCube
-         * Draggable clip cube
-         */
-		public static ClipCubeAttachment CreateClipCube(InstrumentClip clip){
-			return CreateClipCube(clip, false);
-		}
-
-        public static ClipCubeAttachment CreateClipCube(InstrumentClip clip, bool autoResize)
-        {
-            GameObject cube = Instantiate(Instance.clipCubePrefab) as GameObject;
-            cube.transform.localScale = UIFactory.sliderScale;
-            ClipCubeAttachment attach = cube.GetComponent<ClipCubeAttachment>();
-			attach.frame.SetMatchTextWidth(autoResize);
-
-            if(clip != null)
-                attach.Init(clip);
-
-            return attach;
-        }
-
-
 		/*
          * ClipPlaceholder
          * Draggable clip cube
@@ -188,52 +116,6 @@ namespace UI
 			return cubePlaceholder;
 		}
 		
-		
-		/*
-		 * Rotary Control
-		 * Creates a rotary param controller that uses twists to set values
-		 */
-		public static RotaryAttachment CreateRotary(BaseInstrumentParam param){
-			GameObject rotary = Instantiate(Instance.rotaryPrefab) as GameObject;
-			RotaryAttachment attach = rotary.GetComponent<RotaryAttachment>();
-			attach.Init(param);
-			return attach;
-		}
-
-
-		/*
-		 * Parameter scroller
-		 * Creates a holder for parameter sliders that uses kinetic scrolling.
-		 */
-		public static ScrollerAttachment CreateParamScroller(){
-			GameObject paramScroller = Instantiate(Instance.paramScrollerPrefab) as GameObject;
-			ScrollerAttachment attach = paramScroller.GetComponent<ScrollerAttachment>();
-
-			return attach;
-		}
-
-
-		/*
-		 * Main instrument prefab
-		 * Grabbable instrument with clips and parameter buttons/sliders
-		 */
-		public static InstrumentAttachment CreateInstrument(BaseInstrument instrument){
-			//Create an instrument prefab
-			GameObject instrumentGame = Instantiate(Instance.instrumentPrefab) as GameObject;
-			instrumentGame.name = instrument.Name;
-
-			//Create instrument attachment
-			InstrumentAttachment attach = instrumentGame.AddComponent<InstrumentAttachment>();	//Instrument attachment needs to be manually added
-			
-			//Init instrumentRef and GUI controls
-			attach.Init(instrument);
-			attach.InitInstrumentControls();
-			
-			//Set listener prefixes
-            instrumentGame.renderer.materials[1].SetColor("_Color", instrument.color);
-			
-			return attach;
-		}
 
         /*
          * Qui quad prefab
@@ -254,6 +136,74 @@ namespace UI
         {
             GameObject cylinder = Instantiate(Instance.volumetricCylinderPrefab) as GameObject;
             return cylinder;
+        }
+
+
+        public static BaseAttachment CreatePrefabAttachment(Type attachType)
+        {
+            return CreatePrefabAttachment(attachType, null, null);
+        }
+
+        public static BaseAttachment CreatePrefabAttachment(BaseAttachment clone)
+        {
+            return CreatePrefabAttachment(clone.GetType(), null, clone);
+        }
+
+        public static BaseAttachment CreatePrefabAttachment<T>(Type attachType, BaseMusicObject musicRef)
+        {
+            return CreatePrefabAttachment(attachType, musicRef, null);
+        }
+
+        public static BaseAttachment CreatePrefabAttachment(Type attachType, BaseMusicObject musicRef, BaseAttachment clone)
+        {
+            GameObject prefab = null;
+
+            if (Instance.m_prefabLookup.Keys.Contains(attachType))
+                prefab = Instance.prefabs[attachType];
+
+            if (prefab != null)
+            {
+                GameObject copy = Instantiate(prefab) as GameObject;
+                var attach = copy.GetComponent<BaseAttachment>();
+                if (attach != null)
+                {
+                    if (clone != null && musicRef == null)
+                    {
+                        //Check to see if clone object has a musicRef we need to copy
+                        if (clone.HasMusicRef)
+                        {
+                            Type cloneType = clone.GetType();
+                            if (cloneType == typeof(BaseAttachmentIO<InstrumentClip>))
+                                musicRef = ((BaseAttachmentIO<InstrumentClip>)clone).musicRef;
+                            else if (cloneType == typeof(BaseAttachmentIO<BaseInstrument>))
+                                musicRef = ((BaseAttachmentIO<InstrumentClip>)clone).musicRef;
+                            else if (cloneType == typeof(BaseAttachmentIO<BaseInstrumentParam>))
+                                musicRef = ((BaseAttachmentIO<InstrumentClip>)clone).musicRef;
+                        }
+                    }
+
+                    //Initialize musicref objects
+                    if (musicRef != null)
+                    {
+                        Type musicType = musicRef.GetType();
+                        if(musicType == typeof(BaseInstrument))
+                            ((BaseAttachmentIO<BaseInstrument>)attach).Init((BaseInstrument)musicRef);
+                        else if (musicType == typeof(BaseInstrumentParam))
+                            ((BaseAttachmentIO<BaseInstrumentParam>)attach).Init((BaseInstrumentParam)musicRef);
+                    }
+                }
+
+                if (clone != null)
+                {
+                    attach.transform.parent = clone.transform;
+                    attach.transform.position = clone.transform.position;
+                    attach.transform.parent = null;
+                    attach.SetTransient(true);
+                    attach.SetCloneable(false);
+                }
+                return attach;
+            }
+            return null;
         }
 	}
 }
