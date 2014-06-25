@@ -22,7 +22,8 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
 
 		//Since instrument attachments are created at runtime, we need to set the filter here
 		m_respondsToToolMode = new BaseTool.ToolMode[]{
-			BaseTool.ToolMode.GRABBING
+			BaseTool.ToolMode.GRABBING,
+            BaseTool.ToolMode.HOVER
 		};
 
 		//Set the collision state
@@ -35,52 +36,70 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
 
 
     /*
-     * Controls
+     * Initialization
      */
-    
+    public override void Init(BaseInstrument managedReference)
+    {
+        base.Init(managedReference);
+        InitInstrumentControls();
+    }
 
     public void InitInstrumentControls()
     {
         if (musicRef != null)
         {
+            //Set name
+            gameObject.name = musicRef.Name;
+
+            //Set color
+            renderer.materials[1].SetColor("_Color", musicRef.color);
+
             m_rotator = new GameObject("rotator");
             m_rotator.transform.parent = transform;
             m_rotator.transform.localPosition = Vector3.zero;
 
-            //Create clipbuttons
-            ScrollerAttachment clipScroller = UIFactory.CreateParamScroller();
+            //Create clip scroller
+            ScrollerAttachment clipScroller = UIFactory.CreatePrefabAttachment(typeof(ScrollerAttachment)) as ScrollerAttachment;
             clipScroller.SetItemSpacing(m_clipCubeSpacing);
             clipScroller.AddAcceptedDocktype(typeof(ClipCubeAttachment));
             clipScroller.transform.parent = m_rotator.transform;
             clipScroller.SetOffset(new Vector3(-m_controlsMirrorOffset, m_controlsYOffset + 0.02f, 0.0f));
-            //clipScroller.transform.localPosition = new Vector3(-m_controlsMirrorOffset, m_controlsYOffset + 0.02f, 0.0f);
             clipScroller.SetItemScale(UIFactory.sliderScale.x);
 
+            //Create clips
             foreach (InstrumentClip clip in musicRef.clipList)
             {
-                ClipCubeAttachment cube = UIFactory.CreateClipCube(clip, true);
+                ClipCubeAttachment cube = UIFactory.CreatePrefabAttachment(typeof(ClipCubeAttachment), clip) as ClipCubeAttachment;
                 cube.SetCloneable(true);
                 cube.SetColour(musicRef.color);
                 cube.DockInto(clipScroller);
             }
 
-            //Create param sliders
-            ScrollerAttachment paramScroller = UIFactory.CreateParamScroller();
+            //Create parameter scroller
+            ScrollerAttachment paramScroller = UIFactory.CreatePrefabAttachment(typeof(ScrollerAttachment)) as ScrollerAttachment;
             paramScroller.transform.parent = m_rotator.transform;
             paramScroller.SetOffset(new Vector3(m_controlsMirrorOffset, m_controlsYOffset, 0.0f));
-            //paramScroller.transform.localPosition = new Vector3(m_controlsMirrorOffset, m_controlsYOffset, 0.0f);
             paramScroller.SetItemScale(UIFactory.sliderScale.x);
 
+            //Create note slider
+			if(musicRef.isMidi){
+	            SliderAttachment noteSlider = UIFactory.CreatePrefabAttachment(typeof(SliderAttachment), musicRef.noteChannel) as SliderAttachment;
+	            noteSlider.SetCloneable(true);
+	            noteSlider.DockInto(paramScroller);
+			}
+
+            //Create parameters
             foreach (BaseInstrumentParam param in musicRef.paramList)
             {
-                SliderAttachment slider = UIFactory.CreateSlider(param, UIFrame.AnchorLocation.BOTTOM_LEFT);
+                SliderAttachment slider = UIFactory.CreatePrefabAttachment(typeof(SliderAttachment), param) as SliderAttachment;
                 slider.SetCloneable(true);
                 slider.DockInto(paramScroller);
             }
 
+            //Create send sliders
             foreach (BaseInstrumentParam send in musicRef.sendsList)
             {
-                SliderAttachment slider = UIFactory.CreateSlider(send, UIFrame.AnchorLocation.BOTTOM_LEFT);
+                SliderAttachment slider = UIFactory.CreatePrefabAttachment(typeof(SliderAttachment), send) as SliderAttachment;
                 slider.SetCloneable(true);
                 slider.DockInto(paramScroller);
             }
@@ -109,18 +128,6 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
     {
         if (controlsEnabled)
         {
-			if (m_dockedInto != null)
-			{
-				//Let dock know that our controls are visible
-				if (m_dockedInto.GetType() == typeof(WorkspaceDockAttachment))
-				{
-					WorkspaceDockAttachment dock = m_dockedInto as WorkspaceDockAttachment;
-					dock.InstrumentControlsAreVisible(this);
-				}
-			}
-
-			//m_clipScroller.SetActive(true);
-			//m_parameterScroller.SetActive(true);
 			m_rotator.SetActive(true);
             m_parameterScroller.GetComponent<ScrollerAttachment>().SetDockablesAsTweenable(true);
             m_clipScroller.GetComponent<ScrollerAttachment>().SetDockablesAsTweenable(true);
@@ -131,10 +138,7 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
 
     public override void HideControls()
     {
-        //m_clipScroller.SetActive(false);
-        //m_parameterScroller.SetActive(false);
         m_rotator.SetActive(false);
-
         base.HideControls();
     }
 

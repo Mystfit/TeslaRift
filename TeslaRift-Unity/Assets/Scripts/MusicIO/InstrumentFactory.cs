@@ -175,7 +175,7 @@ public class InstrumentFactory : MonoBehaviour {
             instrumentDef.AddSend(name, sendIndex);
 		}
 
-        InstrumentAttachment instrument = UIFactory.CreateInstrument(instrumentDef);
+        InstrumentAttachment instrument = UIFactory.CreatePrefabAttachment(typeof(InstrumentAttachment), instrumentDef) as InstrumentAttachment;
 			
 		//InstrumentController.Instance.AddInstrument(instrumentDef);
 		//instrument.DockInto(m_instrumentHolder);

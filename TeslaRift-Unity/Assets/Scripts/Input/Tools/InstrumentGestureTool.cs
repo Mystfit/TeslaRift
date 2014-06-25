@@ -32,7 +32,7 @@ public class InstrumentGestureTool : BaseTool {
 	 */
 	public float m_betweenGestureDelay = 0.5f;
 	protected float m_gestureTimer;
-	protected GestureState m_gestureState;
+	public GestureState m_gestureState;
 	protected GestureState m_lastGestureState;
 	public GestureState GetGestureState{ get { return m_gestureState; }}
 	
@@ -124,6 +124,7 @@ public class InstrumentGestureTool : BaseTool {
 			m_gestureTimer = m_betweenGestureDelay;
 			m_gestureState = GestureState.PROXIMITY;
 			m_lastGestureState = GestureState.INTERIOR_TO_PROXIMITY;
+            m_attachment.StopHover();
 			break;
 
 		case GestureState.INTERIOR_TO_EXTERIOR:
@@ -141,6 +142,7 @@ public class InstrumentGestureTool : BaseTool {
 			m_gestureTimer = m_betweenGestureDelay;
 			m_gestureState = GestureState.INTERIOR;
 			m_lastGestureState = GestureState.PROXIMITY_TO_INTERIOR;
+            m_attachment.StartHover();
 			break;
 			
 		case GestureState.PROXIMITY_TO_EXTERIOR:
@@ -152,6 +154,7 @@ public class InstrumentGestureTool : BaseTool {
 			
 		case GestureState.EXTERIOR:
 			m_attachment.Gesture_IdleExterior();
+            LeavingProximity();
 			break;
 			
 		case GestureState.EXTERIOR_TO_PROXIMITY:
@@ -164,6 +167,7 @@ public class InstrumentGestureTool : BaseTool {
 			m_gestureTimer = m_betweenGestureDelay;
 			m_gestureState = GestureState.INTERIOR;
 			m_lastGestureState = GestureState.EXTERIOR;
+            m_attachment.StartHover();
 			break;
 		}
 			
@@ -191,9 +195,8 @@ public class InstrumentGestureTool : BaseTool {
 					m_toolHandState = BaseTool.HandState.HOLDING;
 					m_attachment.SetToolMode( m_mode);
 					m_attachment.SetActiveHand( m_hand);
-
-                    if (mode == ToolMode.HOVER)
-                        m_attachment.StartHover();
+                    m_attachment.StartHover();
+                    m_gloveController.StartHover();
 				}
 			}
         }
@@ -221,8 +224,8 @@ public class InstrumentGestureTool : BaseTool {
 				break;
 			case GestureState.INTERIOR_TO_EXTERIOR:
 				//Check if we're pulling towards or away from the performer
-				if(m_heldObject != null){
-					if( HydraController.Instance.IsHandCloserThanObject(m_heldObject.transform, m_hand) )
+				if(m_attachment != null){
+                    if (HydraController.Instance.IsHandCloserThanObject(m_attachment.transform, m_hand))
 						m_attachment.Gesture_PullOut();
 					else
 						m_attachment.Gesture_PushIn();
@@ -234,7 +237,7 @@ public class InstrumentGestureTool : BaseTool {
 				break;
 			case GestureState.PROXIMITY_TO_EXTERIOR:
 				if(m_heldObject != null){
-					if( HydraController.Instance.IsHandCloserThanObject(m_heldObject.transform, m_hand) )
+                    if (HydraController.Instance.IsHandCloserThanObject(m_attachment.transform, m_hand))
 						m_attachment.Gesture_PullOut();
 					else
 						m_attachment.Gesture_PushIn();
@@ -248,6 +251,7 @@ public class InstrumentGestureTool : BaseTool {
 				break;
 			}
 			m_attachment.StopHover();
+            m_gloveController.StopHover();
             m_heldObject = null;
 		}
 		m_toolHandState = BaseTool.HandState.SEARCHING;

@@ -36,6 +36,7 @@ public class ZmqMusicNode : MonoBehaviour {
         m_instrumentSpawner.LoadLiveSessionXml(output);
 
         //Subscribe to value updates
+
         m_node.subscribeToMethod(m_livePeer.methods["value_updated"], instrumentValueUpdated);
 		m_node.subscribeToMethod(m_livePeer.methods["send_updated"], sendValueUpdated);
 		m_node.subscribeToMethod(m_livePeer.methods["fired_slot_index"], clipFired);

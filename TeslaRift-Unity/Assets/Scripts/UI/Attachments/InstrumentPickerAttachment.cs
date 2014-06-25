@@ -32,7 +32,7 @@ public class InstrumentPickerAttachment : BaseAttachment {
     {
         base.ShowControls();
         m_instrumentScroller.ShowControls();
-        m_sphere.renderer.materials[1].SetColor("_Color", m_activeColor);
+        m_sphere.renderer.material.SetColor("_Color", m_activeColor);
         //iTween.ColorTo(m_sphere, iTween.Hash("color", m_activeColor, "time", 0.2f));
     }
 
@@ -40,7 +40,7 @@ public class InstrumentPickerAttachment : BaseAttachment {
     {
         base.HideControls();
         m_instrumentScroller.HideControls();
-        m_sphere.renderer.materials[1].SetColor("_Color", m_defaultColor);
+        m_sphere.renderer.material.SetColor("_Color", m_defaultColor);
         //iTween.ColorTo(m_sphere, iTween.Hash("color", m_defaultColor, "time", 0.2f));
     }
 }

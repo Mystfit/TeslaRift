@@ -1,4 +1,5 @@
 using UnityEngine;
+using UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -96,7 +97,8 @@ public class UIFrame : MonoBehaviour {
 
         if(m_label != null){
 			SetLabel(m_sliderLabel);
-			m_label.transform.localPosition = m_frameOffset * 2.0f;
+			m_label.transform.localPosition = m_frameOffset * 2.0f + new Vector3(0.0f, 0.0f, -0.002f);
+            SetTextAsDeselected();
 		}
 	}
 	
@@ -420,6 +422,19 @@ public class UIFrame : MonoBehaviour {
 			m_selectGuiPanels.gameObject.SetActive(bIsOutlineVisible);
 		}
 	}
+
+    /*
+     * Set text color
+     */
+    public void SetTextAsSelected()
+    {
+        iTween.ColorTo(m_label.gameObject, iTween.Hash("color",  UIFactory.textLabelSelectedColor, "time", 0.15f, "easetype", "easeOutCubic"));
+    }
+
+    public void SetTextAsDeselected()
+    {
+        iTween.ColorTo(m_label.gameObject, iTween.Hash("color",  UIFactory.textLabelDeselectedColor, "time", 0.15f, "easetype", "easeOutCubic"));
+    }
 	
 	
 	

@@ -54,6 +54,20 @@ public class GloveController : MonoBehaviour {
     
     //Collision positions
     public Transform[] m_joints;
+
+    //Meshes
+    public GameObject m_fingerBase;
+    public GameObject m_fingerIndex;
+    public GameObject m_fingerMiddle;
+    public GameObject m_fingerRing;
+    public GameObject m_fingerPinky;
+
+    //Finger colors
+    public Color m_fingerActiveColor;
+    public Color m_fingerInactiveColor;
+    public Color m_handHoverColor;
+    public float m_handHoverOutlineSize;
+    public float m_handOutlineSize;
 		
     void Awake( )
     {	
@@ -242,51 +256,79 @@ public class GloveController : MonoBehaviour {
         {
             case "IDLE_HAND":
                 col.center =  transform.InverseTransformPoint(m_joints[gestureIndex].transform.position); //new Vector3(0.0f, 0.01f, 0.06f);
-                col.size = new Vector3(0.11f, -0.03f, 0.11f);
+                col.size = new Vector3(0.11f, -0.03f, 0.23f);
+                SetFingerLight(new float[]{0.0f, 0.0f, 0.0f, 0.0f});
                 break;
             case "CLOSED_HAND":
                 col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position); //new Vector3(0.0f, -0.02f, 0.0f);
-                col.size = new Vector3(0.11f, 0.05f, 0.08f);
+                col.size = new Vector3(0.13f, 0.05f, 0.1f);
                 break;
             case "INDEX_POINT":
                 col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position); //new Vector3(0.03f, -0.01f, 0.03f);
-                col.size = new Vector3(0.025f, 0.07f, 0.15f);
+                col.size = new Vector3(0.025f, 0.035f, 0.15f);
+                SetFingerLight(new float[]{1.0f, 0.0f, 0.0f, 0.0f});
                 break;
             case "INDEX_MIDDLE":
                 col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position); //new Vector3(0.02f, 0.0f, 0.07f);
-                col.size = new Vector3(0.05f, 0.05f, 0.15f);
+                col.size = new Vector3(0.05f, 0.04f, 0.15f);
+                SetFingerLight(new float[]{1.0f, 1.0f, 0.0f, 0.0f});
                 break;
             case "THREE_SWIPE":
                 col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position); //new Vector3(0.01f, 0.0f, 0.07f);
                 col.size = new Vector3(0.075f, 0.05f, 0.15f);
+                SetFingerLight(new float[] { 1.0f, 1.0f, 1.0f, 0.0f });
                 break;
             case "PINKY":
                 col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position); //new Vector3(-0.035f, 0.0f, 0.07f);
                 col.size = new Vector3(0.025f, 0.05f, 0.15f);
+                SetFingerLight(new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
                 break;
             case "ROCK_ON":
                 col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position); //new Vector3(0.0f, 0.01f, 0.06f);
                 col.size = new Vector3(0.11f, -0.03f, 0.11f);
+                SetFingerLight(new float[] { 1.0f, 0.0f, 0.0f, 1.0f });
                 break;
             case "PLAY_1":
                 col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position); 
                 col.size = new Vector3(0.025f, 0.07f, 0.15f);
+                SetFingerLight(new float[]{0.8f, 0.0f, 0.0f, 0.0f});
                 break;
             case "PLAY_2":
                 col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position); 
                 col.size = new Vector3(0.025f, 0.07f, 0.15f);
+                SetFingerLight(new float[] { 0.0f, 0.8f, 0.0f, 0.0f });
                 break;
             case "PLAY_3":
                 col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position); 
                 col.size = new Vector3(0.025f, 0.07f, 0.15f);
+                SetFingerLight(new float[] { 0.0f, 0.0f, 0.8f, 0.0f });
                 break;
             case "PLAY_4":
                 col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position);
                 col.size = new Vector3(0.025f, 0.07f, 0.15f);
+                SetFingerLight(new float[] { 0.8f, 0.0f, 0.0f, 0.8f });
                 break;
         }
-
 	}
+
+     public void SetFingerLight(float[] strength)
+    {
+        iTween.ColorTo(m_fingerIndex, iTween.Hash("color", Color.Lerp(m_fingerInactiveColor, m_fingerActiveColor, strength[0]), "time", 0.1f, "easetype", "easeOutCubic"));
+        iTween.ColorTo(m_fingerMiddle, iTween.Hash("color", Color.Lerp(m_fingerInactiveColor, m_fingerActiveColor, strength[1]), "time", 0.1f, "easetype", "easeOutCubic"));
+        iTween.ColorTo(m_fingerRing, iTween.Hash("color", Color.Lerp(m_fingerInactiveColor, m_fingerActiveColor, strength[2]), "time", 0.1f, "easetype", "easeOutCubic"));
+        iTween.ColorTo(m_fingerPinky, iTween.Hash("color", Color.Lerp(m_fingerInactiveColor, m_fingerActiveColor, strength[3]), "time", 0.1f, "easetype", "easeOutCubic"));
+    }
+
+     public void StartHover()
+     {
+         iTween.ColorTo(m_fingerBase, iTween.Hash("color", m_handHoverColor, "time", 0.1f,"easetype", iTween.EaseType.easeOutExpo));
+     }
+
+     public void StopHover()
+     {
+         iTween.ColorTo(m_fingerBase, iTween.Hash("color", m_fingerInactiveColor, "time", 0.1f, "easetype", iTween.EaseType.easeOutExpo));
+     }
+    
 
 		
 	/*

@@ -27,8 +27,8 @@ public class BaseTool : MonoBehaviour {
 	public ToolMode mode{ get { return m_mode; }}
 
 	//Hand states
-	public enum HandState{ IDLE = 0, SEARCHING, HOLDING, RELEASING};
-	protected HandState m_toolHandState = HandState.IDLE;
+	public enum HandState{ HOLDING = 0, SEARCHING, RELEASING};
+	protected HandState m_toolHandState = HandState.SEARCHING;
 	public HandState handState{ get { return m_toolHandState; }}
 	
 	//Constructor

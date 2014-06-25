@@ -22,31 +22,12 @@ public class RBFSphereAttachment : BaseAttachment {
 		m_rbf = new RBFCore(1,1);
 		m_rbf.setSigma(m_sigma);
 
-		//m_plugs = GetComponentsInChildren<RBFPlugAttachment>();
-
+        SetIsDraggable(true);
 		SetAsDock(true);
         AddAcceptedDocktype(typeof(RBFTrainingAttachment));
         EnableControls();
         ShowControls();
 	}
-
-	/*
-	 * Creates a training point at a position or transform location
-	 */
-    //public RBFTrainingAttachment CreateTrainingPoint(){
-    //    RBFTrainingAttachment training = UI.UIFactory.CreateRBFSphereTraining();
-    //    training.owner = this;
-    //    training.transform.position = transform.position;
-    //    training.transform.localScale = transform.localScale;
-    //    training.transform.parent = transform;
-
-    //    foreach(RBFPlugAttachment plug in m_plugs)
-    //        training.StorePlugValue(plug);
-
-    //    m_trainingPoints.Add(training);
-    //    ResetRBF();
-    //    return training;
-    //}
 
     public override bool AddDockableAttachment(BaseAttachment attach)
     {
@@ -113,13 +94,13 @@ public class RBFSphereAttachment : BaseAttachment {
         foreach (RBFPlugAttachment plug in m_plugs)
             plug.ShowControls();
 
-        SetToolmodeResponse(new BaseTool.ToolMode[0]);
+        SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.GRABBING });
     }
 
     public override void HideControls()
     {
         base.HideControls();
-        SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.SECONDARY });
+        SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.SECONDARY});
         ResetRBF();
         foreach (RBFTrainingAttachment attach in m_childDockables)
             attach.HideControls();
@@ -172,6 +153,13 @@ public class RBFSphereAttachment : BaseAttachment {
         {
             m_selectedTraining.StorePlugValue(plug);
         }
+    }
+
+    public override void Gesture_First()
+    {
+        base.Gesture_First();
+        if (mode == BaseTool.ToolMode.GRABBING)
+            StartDragging(HydraController.Instance.GetHand(m_hand));
     }
 
     public override void Gesture_IdleInterior()

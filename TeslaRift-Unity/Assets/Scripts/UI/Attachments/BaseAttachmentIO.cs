@@ -24,6 +24,7 @@ public abstract class BaseAttachment : MonoBehaviour{
 	public virtual void Start(){}
 	public virtual void Update()
     {
+        //Editor boolean toggles
         if (m_toggleControls)
         {
             m_toggleControls = false;
@@ -92,7 +93,31 @@ public abstract class BaseAttachment : MonoBehaviour{
     public HandProximityTrigger interiorTrigger { get { return m_interiorTrigger; } }
     public HandProximityTrigger proximityTrigger { get { return m_proximityTrigger; } }
 	public virtual Collider interiorCollider{ get {return m_interiorTrigger.collider; }}
-	public virtual Collider proximityCollider{ get {return m_proximityTrigger.collider; }}
+    public virtual Collider proximityCollider { get { return m_proximityTrigger.collider; } }
+    
+    public virtual void DisableChildColliders()
+    {
+        foreach (BaseAttachment attach in m_childDockables)
+            attach.DisableColliders();
+    }
+
+    public virtual void EnableChildColliders()
+    {
+        foreach (BaseAttachment attach in m_childDockables)
+            attach.EnableColliders();
+    }
+
+    public void DisableColliders()
+    {
+        interiorCollider.gameObject.SetActive(false);
+        proximityCollider.gameObject.SetActive(false);
+    }
+
+    public void EnableColliders()
+    {
+        interiorCollider.gameObject.SetActive(true);
+        proximityCollider.gameObject.SetActive(true);
+    }
 
 
 	/*
@@ -240,7 +265,7 @@ public abstract class BaseAttachment : MonoBehaviour{
                 //Clone instrument here
                 if (IsCloneable)
                 {
-					BaseAttachment attach = UIFactory.CreateGhostDragger(this);
+                    BaseAttachment attach = UI.UIFactory.CreatePrefabAttachment(this);
                     attach.StartDragging(HydraController.Instance.GetHand(m_hand));
                 }
                 else
@@ -418,7 +443,12 @@ public abstract class BaseAttachment : MonoBehaviour{
         m_controlsEnabled = false;
         HideControls();
     }
-    public virtual void ShowControls() { m_controlsVisible = true; }
+    public virtual void ShowControls() { 
+        m_controlsVisible = true; 
+        
+        if (m_dockedInto != null)
+            m_dockedInto.ChildAttachmentOpeningControls(this);
+    }
     public virtual void HideControls() { m_controlsVisible = false; }
     public void ToggleControls() {
         if(controlsVisible)
@@ -426,6 +456,21 @@ public abstract class BaseAttachment : MonoBehaviour{
         else
             ShowControls(); 
     }
+
+    public virtual void ChildAttachmentOpeningControls(BaseAttachment attach)
+    {
+        if (SoloChildControlsVisible) {
+            if (m_visibleAttachmentControls != null && attach != m_visibleAttachmentControls)
+                m_visibleAttachmentControls.HideControls();
+            m_visibleAttachmentControls = attach;
+        }
+    }
+    private BaseAttachment m_visibleAttachmentControls;
+
+    public void SetSoloChildControlsVisible(bool state) { m_soloChildControlsVisible = state;  }
+    public bool SoloChildControlsVisible { get { return m_soloChildControlsVisible; } }
+    private bool m_soloChildControlsVisible;
+
 
 	/*
 	 * Gesture implementations
@@ -460,5 +505,3 @@ public class BaseAttachmentIO<T> : BaseAttachment {
 	}
 	public T musicRef{ get { return m_musicRef; }}
 }
-
-

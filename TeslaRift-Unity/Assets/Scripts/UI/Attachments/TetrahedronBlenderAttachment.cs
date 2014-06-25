@@ -3,31 +3,43 @@ using UI;
 using System.Collections;
 using System.Collections.Generic;
 
-public class TetrahedronBlenderAttachment : BaseAttachment {
-
+public class TetrahedronBlenderAttachment : BaseAttachment
+{
     public InstrumentAttachment[] m_returns = new InstrumentAttachment[4];
     public float m_radius = 1.0f;
+    protected float m_closestRadius;
 
     protected Mesh m_mesh;
+    protected GeometryUtils.BaryCentricDistance m_distanceCalculator;
     protected InstrumentAttachment m_currentInstrument;
     protected InstrumentAttachment m_lastInstrument;
     protected Vector3 m_lastPosition;
 
-	// Use this for initialization
+    //Get specified corner vertex
+    public Vector3 GetCorner(int index) { return m_mesh.vertices[index]; }
+
+
+    // Use this for initialization
     public override void Awake()
     {
-		base.Awake();
+        base.Awake();
         SetAsDock(true);
-	    AddAcceptedDocktype(typeof(InstrumentAttachment));
+        SetSoloChildControlsVisible(true);
+        SetIsDraggable(true);
+
+        AddAcceptedDocktype(typeof(InstrumentAttachment));
+
+        //Mesh building
         m_mesh = BuildTetrahedronMesh(m_radius);
-        GetComponent<MeshFilter>().mesh = m_mesh;
-	}
+        MeshFilter filter = GetComponent<MeshFilter>();
+        filter.mesh = m_mesh;
+        MeshCollider col = GetComponent<MeshCollider>();
+        col.sharedMesh = m_mesh;
+        col.isTrigger = true;
 
-    public Vector3 GetCorner(int index)
-    {
-        return m_mesh.vertices[index];
+        m_distanceCalculator = new GeometryUtils.BaryCentricDistance(filter);
+        m_closestRadius = GeometryUtils.GetClosestTetrahedronDist(m_radius);
     }
-
 
 
     public Mesh BuildTetrahedronMesh(float radius)
@@ -44,8 +56,8 @@ public class TetrahedronBlenderAttachment : BaseAttachment {
     {
         if (index <= m_returns.Length)
         {
-			returnInstrument.EnableControls();
-			returnInstrument.SetToolmodeResponse(new BaseTool.ToolMode[1]{BaseTool.ToolMode.PRIMARY});
+            returnInstrument.EnableControls();
+            returnInstrument.SetToolmodeResponse(new BaseTool.ToolMode[1] { BaseTool.ToolMode.PRIMARY });
             returnInstrument.transform.parent = transform;
             returnInstrument.transform.localPosition = GetCorner(index);
             m_returns[index] = returnInstrument;
@@ -77,6 +89,7 @@ public class TetrahedronBlenderAttachment : BaseAttachment {
 
             ShowControls();
             m_currentInstrument = attach as InstrumentAttachment;
+            m_currentInstrument.SetToolmodeResponse(new BaseTool.ToolMode[0]);
             return true;
         }
         return false;
@@ -92,41 +105,96 @@ public class TetrahedronBlenderAttachment : BaseAttachment {
         base.RemoveDockableAttachment(attach);
     }
 
-    public override void Gesture_IdleInterior()
+    public override void Gesture_First()
     {
-        if(mode == BaseTool.ToolMode.PRIMARY){
-            float[] sendVals = GeometryUtils.BarycentricTetrahedronLerp(
-                GetCorner(0), 
-                GetCorner(1), 
-                GetCorner(2), 
-                GetCorner(3), 
-                transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(m_hand)) );
-
-			if(m_currentInstrument){
-				for(int i = 0; i < 4; i++){
-					m_currentInstrument.musicRef.getSendByName(m_returns[i].musicRef.Name).setVal(sendVals[i]);
-				}
-			}
-        }
-
-        base.Gesture_IdleInterior();
+        base.Gesture_First();
+        if (mode == BaseTool.ToolMode.GRABBING)
+            StartDragging(HydraController.Instance.GetHand(m_hand));
+        else if (mode == BaseTool.ToolMode.SECONDARY)
+            DisableChildColliders();
+        else
+            EnableChildColliders();
     }
 
     public override void Gesture_Exit()
     {
-        HideControls();
+        if (mode == BaseTool.ToolMode.SECONDARY)
+            EnableChildColliders();
+
         base.Gesture_Exit();
     }
 
-    public override void ShowControls()
+    public override void DisableChildColliders()
     {
-        //SetActive();
-        base.ShowControls();
+        base.DisableChildColliders();
+        foreach (BaseAttachment attach in m_returns)
+            attach.DisableColliders();
     }
 
-    public override void HideControls()
+    public override void EnableChildColliders()
     {
-        //SetInactive();
-        base.HideControls();
+        base.EnableChildColliders();
+        foreach (BaseAttachment attach in m_returns)
+            attach.EnableColliders();
+    }
+
+    public override void Gesture_IdleInterior()
+    {
+        if (mode == BaseTool.ToolMode.SECONDARY)
+            BlendValues();
+
+        base.Gesture_IdleInterior();
+    }
+
+    protected void BlendValues()
+    {
+        RaycastHit hit = new RaycastHit();
+        Vector3 origin = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(m_hand));
+        Vector3 dir = (origin * -1.0f).normalized;
+        Vector3 hitPos = origin;
+
+        float dist = Vector3.Distance(HydraController.Instance.GetHandColliderPosition(m_hand), transform.position);
+        Debug.Log(dist);
+
+        //GeometryUtils.BaryCentricDistance.Result result = m_distanceCalculator.GetClosestTriangleAndPoint(origin);
+
+        if (dist > m_closestRadius)
+        {
+            if (collider.Raycast(new Ray(transform.position + origin, dir), out hit, dist))
+            {
+                Debug.DrawLine(transform.position + origin, hit.point, Color.red);
+
+                if (hit.collider == collider)
+                {
+                    hitPos = transform.InverseTransformPoint(hit.point);
+                    float distanceRatio = Vector3.Distance(origin, Vector3.zero) / m_radius;
+                    Vector3 closestVertex = GeometryUtils.GetClosestVertex(m_mesh, origin);
+                    hitPos = Vector3.Lerp(hitPos, closestVertex, distanceRatio);
+                }
+            }
+            //hitPos = result.closestPoint;
+        }
+        else
+        {
+            Debug.DrawLine(transform.position + origin, transform.position, Color.blue);
+        }
+
+        m_currentInstrument.transform.localPosition = hitPos;
+
+        //Get coordinated inside blender
+        float[] sendVals = GeometryUtils.BarycentricTetrahedronLerp(
+            GetCorner(0),
+            GetCorner(1),
+            GetCorner(2),
+            GetCorner(3),
+            hitPos);
+
+        if (m_currentInstrument)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                m_currentInstrument.musicRef.getSendByName(m_returns[i].musicRef.Name).setVal(sendVals[i]);
+            }
+        }
     }
 }

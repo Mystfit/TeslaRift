@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using MusicIO;
+using UI;
 
 public class ClipCubeAttachment : ClipButtonAttachment {
 
@@ -11,6 +12,8 @@ public class ClipCubeAttachment : ClipButtonAttachment {
     {
         base.Awake();
         m_barSlider = GetComponent<BarSlider>();
+        transform.localScale = UIFactory.sliderScale;
+        frame.SetMatchTextWidth(true);
     }
 
 	public override void Update ()

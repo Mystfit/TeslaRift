@@ -19,6 +19,8 @@ namespace MusicIO
 		protected List<BaseInstrumentParam> m_params;
         protected List<BaseInstrumentParam> m_sends;
 
+        protected Note m_noteChannel;
+
 		string m_client = "";
 		string m_name = "";
 		string m_owner = "";
@@ -44,17 +46,18 @@ namespace MusicIO
 
             m_isMidi = isMidi;
             if (isMidi)
-                m_params.Add(new Note("note", this));
+                m_noteChannel = new Note("note", this);
 		}
 		
 		public string Name{ get {return m_name; } }
 		public string Owner{ get {return m_owner; } } 
 		public string Client{ get {return m_client; } }
-		public Color color{ get { return m_color; }}
-		public bool playable{ get { return m_playable; }}
+		public Color color{ get { return m_color; } }
+		public bool playable{ get { return m_playable; } }
         public bool isMidi { get { return m_isMidi; } }
         public bool isEffect { get { return m_isEffect; } }
-		public int trackIndex{ get{ return m_trackIndex; }}
+		public int trackIndex{ get{ return m_trackIndex; } }
+        public Note noteChannel { get { return m_noteChannel;  } }
 		
 		
 		//Reset instrument to default

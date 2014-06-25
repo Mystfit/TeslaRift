@@ -78,6 +78,7 @@ namespace UI
             m_prefabLookup[typeof(ClipButtonAttachment)] = Instance.clipButtonPrefab;
             m_prefabLookup[typeof(TetrahedronBlenderAttachment)] = Instance.tetrahedronBlenderPrefab;
             m_prefabLookup[typeof(RBFTrainingAttachment)] = Instance.rbfSphereTrainingPrefab;
+            m_prefabLookup[typeof(RBFTrainingSpawnerAttachment)] = Instance.rbfSphereTrainingPrefab;
             m_prefabLookup[typeof(ScrollerAttachment)] = Instance.paramScrollerPrefab;
             m_prefabLookup[typeof(InstrumentAttachment)] = Instance.instrumentPrefab;
             m_prefabLookup[typeof(SliderAttachment)] = Instance.sliderPrefab;
@@ -149,7 +150,7 @@ namespace UI
             return CreatePrefabAttachment(clone.GetType(), null, clone);
         }
 
-        public static BaseAttachment CreatePrefabAttachment<T>(Type attachType, BaseMusicObject musicRef)
+        public static BaseAttachment CreatePrefabAttachment(Type attachType, BaseMusicObject musicRef)
         {
             return CreatePrefabAttachment(attachType, musicRef, null);
         }
@@ -172,24 +173,43 @@ namespace UI
                         //Check to see if clone object has a musicRef we need to copy
                         if (clone.HasMusicRef)
                         {
-                            Type cloneType = clone.GetType();
-                            if (cloneType == typeof(BaseAttachmentIO<InstrumentClip>))
-                                musicRef = ((BaseAttachmentIO<InstrumentClip>)clone).musicRef;
-                            else if (cloneType == typeof(BaseAttachmentIO<BaseInstrument>))
-                                musicRef = ((BaseAttachmentIO<InstrumentClip>)clone).musicRef;
-                            else if (cloneType == typeof(BaseAttachmentIO<BaseInstrumentParam>))
-                                musicRef = ((BaseAttachmentIO<InstrumentClip>)clone).musicRef;
+                            if(clone is BaseAttachmentIO<BaseInstrument>)
+                                musicRef = ((InstrumentAttachment)clone).musicRef;
+                            if (clone is InstrumentAttachment)
+                                musicRef = ((InstrumentAttachment)clone).musicRef;
+                            else if (clone is SliderAttachment)
+								musicRef = ((SliderAttachment)clone).musicRef;
+                            else if (clone is ClipCubeAttachment)
+                                musicRef = ((ClipCubeAttachment)clone).musicRef;
+                            else if (clone is ClipButtonAttachment)
+                                musicRef = ((ClipButtonAttachment)clone).musicRef;
+                            else if (clone is RotaryAttachment)
+                                musicRef = ((RotaryAttachment)clone).musicRef;
                         }
                     }
 
                     //Initialize musicref objects
                     if (musicRef != null)
                     {
-                        Type musicType = musicRef.GetType();
-                        if(musicType == typeof(BaseInstrument))
-                            ((BaseAttachmentIO<BaseInstrument>)attach).Init((BaseInstrument)musicRef);
-                        else if (musicType == typeof(BaseInstrumentParam))
-                            ((BaseAttachmentIO<BaseInstrumentParam>)attach).Init((BaseInstrumentParam)musicRef);
+
+						if (musicRef is BaseInstrument){
+                            BaseAttachmentIO<BaseInstrument> cast = attach as BaseAttachmentIO<BaseInstrument>;
+							cast.Init((BaseInstrument)musicRef);
+						} 
+						else if (musicRef is InstrumentClip){
+							BaseAttachmentIO<InstrumentClip> cast = (BaseAttachmentIO<InstrumentClip>)attach;
+							cast.Init((InstrumentClip)musicRef);
+						} 
+						else if (musicRef is Note){
+							BaseAttachmentIO<BaseInstrumentParam> cast = (BaseAttachmentIO<BaseInstrumentParam>)attach;
+							cast.Init((BaseInstrumentParam)musicRef);
+						} 
+						else if (musicRef is BaseInstrumentParam){
+							BaseAttachmentIO<BaseInstrumentParam> cast = (BaseAttachmentIO<BaseInstrumentParam>)attach;
+							cast.Init((BaseInstrumentParam)musicRef);
+						} else {
+							throw new Exception("MusicRef type not recognised");
+						}
                     }
                 }
 

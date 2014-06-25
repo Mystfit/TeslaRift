@@ -24,6 +24,7 @@ public class ClipButtonAttachment : BaseAttachmentIO<InstrumentClip> {
         SetIsDraggable(true);
         SetIsDockable(true);
         m_frame = GetComponent<UIFrame>();
+        m_frame.SetAnchor(UIFrame.AnchorLocation.BOTTOM_LEFT);
     }
 
 	public override void Init (InstrumentClip managedReference)

@@ -22,6 +22,19 @@ ModelImporter:
     100032: root
     100034: //RootNode
     100036: techHand
+    100038: polySurface12
+    100040: polySurface16
+    100042: polySurface17
+    100044: polySurface18
+    100046: polySurface19
+    100048: polySurface20
+    100050: polySurface4
+    100052: polySurface8
+    100054: finger_index
+    100056: finger_middle
+    100058: finger_pinky
+    100060: finger_ring
+    100062: hand_base
     400000: index0
     400002: index1
     400004: index2
@@ -41,7 +54,30 @@ ModelImporter:
     400032: root
     400034: //RootNode
     400036: techHand
+    400038: polySurface12
+    400040: polySurface16
+    400042: polySurface17
+    400044: polySurface18
+    400046: polySurface19
+    400048: polySurface20
+    400050: polySurface4
+    400052: polySurface8
+    400054: finger_index
+    400056: finger_middle
+    400058: finger_pinky
+    400060: finger_ring
+    400062: hand_base
     4300000: techHand
+    4300002: polySurface16
+    4300004: polySurface17
+    4300006: polySurface18
+    4300008: polySurface19
+    4300010: polySurface20
+    4300012: hand_base
+    4300014: finger_index
+    4300016: finger_middle
+    4300018: finger_ring
+    4300020: finger_pinky
     7400000: IDLE_HAND
     7400002: PLAY_1
     7400004: PLAY_2
@@ -55,6 +91,16 @@ ModelImporter:
     9500000: //RootNode
     11100000: //RootNode
     13700000: techHand
+    13700002: polySurface16
+    13700004: polySurface17
+    13700006: polySurface18
+    13700008: polySurface19
+    13700010: polySurface20
+    13700012: finger_index
+    13700014: finger_middle
+    13700016: finger_pinky
+    13700018: finger_ring
+    13700020: hand_base
   materials:
     importMaterials: 0
     materialName: 0
@@ -729,7 +775,7 @@ ModelImporter:
   tangentSpace:
     normalSmoothAngle: 60
     splitTangentsAcrossUV: 1
-    normalImportMode: 0
+    normalImportMode: 1
     tangentImportMode: 1
   importAnimation: 1
   copyAvatar: 0
