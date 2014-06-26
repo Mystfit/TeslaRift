@@ -3,7 +3,7 @@ using System.Collections;
 using MusicIO;
 using UI;
 
-public class SliderAttachment : BaseAttachmentIO<BaseInstrumentParam> {
+public class SliderAttachment : BaseAttachmentIO<InstrumentParameter> {
 
 	public bool m_useHorizontalInput = true;
 	protected BarSlider m_slider;
@@ -19,7 +19,7 @@ public class SliderAttachment : BaseAttachmentIO<BaseInstrumentParam> {
 		m_frame = GetComponent<UIFrame>();
 	}
 
-	public override void Init (BaseInstrumentParam managedReference)
+	public override void Init (InstrumentParameter managedReference)
 	{
 		base.Init (managedReference);
 		m_frame.SetLabel(managedReference.name);

@@ -3,7 +3,7 @@ using UI;
 using System.Collections;
 using MusicIO;
 	
-public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
+public class InstrumentAttachment : BaseAttachmentIO<Instrument> {
 
 	protected GameObject m_parameterScroller;
     protected GameObject m_clipScroller;
@@ -38,7 +38,7 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
     /*
      * Initialization
      */
-    public override void Init(BaseInstrument managedReference)
+    public override void Init(Instrument managedReference)
     {
         base.Init(managedReference);
         InitInstrumentControls();
@@ -49,7 +49,7 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
         if (musicRef != null)
         {
             //Set name
-            gameObject.name = musicRef.Name;
+            gameObject.name = musicRef.name;
 
             //Set color
             renderer.materials[1].SetColor("_Color", musicRef.color);
@@ -67,7 +67,7 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
             clipScroller.SetItemScale(UIFactory.sliderScale.x);
 
             //Create clips
-            foreach (InstrumentClip clip in musicRef.clipList)
+            foreach (ClipParameter clip in musicRef.clipList)
             {
                 ClipCubeAttachment cube = UIFactory.CreatePrefabAttachment(typeof(ClipCubeAttachment), clip) as ClipCubeAttachment;
                 cube.SetCloneable(true);
@@ -89,7 +89,7 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
 			}
 
             //Create parameters
-            foreach (BaseInstrumentParam param in musicRef.paramList)
+            foreach (InstrumentParameter param in musicRef.paramList)
             {
                 SliderAttachment slider = UIFactory.CreatePrefabAttachment(typeof(SliderAttachment), param) as SliderAttachment;
                 slider.SetCloneable(true);
@@ -97,7 +97,7 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
             }
 
             //Create send sliders
-            foreach (BaseInstrumentParam send in musicRef.sendsList)
+            foreach (InstrumentParameter send in musicRef.sendsList)
             {
                 SliderAttachment slider = UIFactory.CreatePrefabAttachment(typeof(SliderAttachment), send) as SliderAttachment;
                 slider.SetCloneable(true);
@@ -198,10 +198,10 @@ public class InstrumentAttachment : BaseAttachmentIO<BaseInstrument> {
 	public override void Gesture_PullOut ()
 	{
 		base.Gesture_PullOut ();
-        if (mode == BaseTool.ToolMode.SECONDARY)
-        {
-            ZmqMusicNode.Instance.stopTrack(musicRef.trackIndex);
-        }
+        //if (mode == BaseTool.ToolMode.SECONDARY)
+        //{
+        //    ZmqMusicNode.Instance.stopTrack(musicRef.trackIndex);
+        //}
 	}
 }
 

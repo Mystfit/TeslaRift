@@ -173,7 +173,7 @@ namespace UI
                         //Check to see if clone object has a musicRef we need to copy
                         if (clone.HasMusicRef)
                         {
-                            if(clone is BaseAttachmentIO<BaseInstrument>)
+                            if(clone is BaseAttachmentIO<Instrument>)
                                 musicRef = ((InstrumentAttachment)clone).musicRef;
                             if (clone is InstrumentAttachment)
                                 musicRef = ((InstrumentAttachment)clone).musicRef;
@@ -192,21 +192,21 @@ namespace UI
                     if (musicRef != null)
                     {
 
-						if (musicRef is BaseInstrument){
-                            BaseAttachmentIO<BaseInstrument> cast = attach as BaseAttachmentIO<BaseInstrument>;
-							cast.Init((BaseInstrument)musicRef);
+						if (musicRef is Instrument){
+                            BaseAttachmentIO<Instrument> cast = attach as BaseAttachmentIO<Instrument>;
+							cast.Init((Instrument)musicRef);
 						} 
-						else if (musicRef is InstrumentClip){
-							BaseAttachmentIO<InstrumentClip> cast = (BaseAttachmentIO<InstrumentClip>)attach;
-							cast.Init((InstrumentClip)musicRef);
+						else if (musicRef is ClipParameter){
+							BaseAttachmentIO<ClipParameter> cast = (BaseAttachmentIO<ClipParameter>)attach;
+							cast.Init((ClipParameter)musicRef);
 						} 
-						else if (musicRef is Note){
-							BaseAttachmentIO<BaseInstrumentParam> cast = (BaseAttachmentIO<BaseInstrumentParam>)attach;
-							cast.Init((BaseInstrumentParam)musicRef);
+						else if (musicRef is NoteParameter){
+							BaseAttachmentIO<InstrumentParameter> cast = (BaseAttachmentIO<InstrumentParameter>)attach;
+							cast.Init((InstrumentParameter)musicRef);
 						} 
-						else if (musicRef is BaseInstrumentParam){
-							BaseAttachmentIO<BaseInstrumentParam> cast = (BaseAttachmentIO<BaseInstrumentParam>)attach;
-							cast.Init((BaseInstrumentParam)musicRef);
+						else if (musicRef is InstrumentParameter){
+							BaseAttachmentIO<InstrumentParameter> cast = (BaseAttachmentIO<InstrumentParameter>)attach;
+							cast.Init((InstrumentParameter)musicRef);
 						} else {
 							throw new Exception("MusicRef type not recognised");
 						}

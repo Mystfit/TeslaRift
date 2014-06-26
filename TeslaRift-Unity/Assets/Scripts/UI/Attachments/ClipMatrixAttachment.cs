@@ -130,7 +130,7 @@ public class ClipMatrixAttachment : BaseAttachment {
         if (holder.attach != null)
         {
             ClipCubeAttachment clip = holder.attach as ClipCubeAttachment;
-            clip.musicRef.Play();
+            clip.musicRef.Send();
         }    
     }
 

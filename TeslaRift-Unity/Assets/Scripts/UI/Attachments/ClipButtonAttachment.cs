@@ -3,7 +3,7 @@ using MusicIO;
 using UI;
 using System.Collections;
 
-public class ClipButtonAttachment : BaseAttachmentIO<InstrumentClip> {
+public class ClipButtonAttachment : BaseAttachmentIO<ClipParameter> {
 
 	protected UIFrame m_frame;
 	public UIFrame frame { get { return m_frame; }}
@@ -27,7 +27,7 @@ public class ClipButtonAttachment : BaseAttachmentIO<InstrumentClip> {
         m_frame.SetAnchor(UIFrame.AnchorLocation.BOTTOM_LEFT);
     }
 
-	public override void Init (InstrumentClip managedReference)
+	public override void Init (ClipParameter managedReference)
 	{
 		base.Init (managedReference);
 		m_frame.SetLabel(managedReference.name);
@@ -37,7 +37,7 @@ public class ClipButtonAttachment : BaseAttachmentIO<InstrumentClip> {
 		if(m_toggleClip){
 			m_toggleClip = false;
             if(musicRef != null)
-			    musicRef.Play();
+			    musicRef.Send(true);
 		}
 		base.Update();
 	}
@@ -49,15 +49,15 @@ public class ClipButtonAttachment : BaseAttachmentIO<InstrumentClip> {
 	public virtual void UpdatePlayingState()
 	{
 		switch(musicRef.clipState){
-		case InstrumentClip.ClipState.IS_DISABLED:
+		case ClipParameter.ClipState.IS_DISABLED:
             if(m_frame != null)
 			    m_frame.AnimateBackgroundColor(Color.gray);
 			break;
-        case InstrumentClip.ClipState.IS_QUEUED:
+        case ClipParameter.ClipState.IS_QUEUED:
             if (m_frame != null)
 			    m_frame.AnimateBackgroundColor(Color.blue);
 			break;
-        case InstrumentClip.ClipState.IS_PLAYING:
+        case ClipParameter.ClipState.IS_PLAYING:
             if (m_frame != null)
                 m_frame.AnimateBackgroundColor(Color.yellow);
 			break;
@@ -74,7 +74,7 @@ public class ClipButtonAttachment : BaseAttachmentIO<InstrumentClip> {
         else if (mode == BaseTool.ToolMode.PRIMARY)
         {
             if (musicRef != null)
-                musicRef.Play();
+                musicRef.Send(true);
         }
 
         base.Gesture_First();

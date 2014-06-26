@@ -153,7 +153,7 @@ public class OVRDevice : MonoBehaviour
    
 	/// <summary>
 	/// Start this instance.
-	/// (Note: make sure to always have a Start function for classes that have
+	/// (NoteParameter: make sure to always have a Start function for classes that have
 	/// editors attached to them)
 	/// </summary>
 	void Start()

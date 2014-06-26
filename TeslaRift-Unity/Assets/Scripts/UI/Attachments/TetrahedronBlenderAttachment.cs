@@ -193,7 +193,7 @@ public class TetrahedronBlenderAttachment : BaseAttachment
         {
             for (int i = 0; i < 4; i++)
             {
-                m_currentInstrument.musicRef.getSendByName(m_returns[i].musicRef.Name).setVal(sendVals[i]);
+                m_currentInstrument.musicRef.getSendByName(m_returns[i].musicRef.name).setVal(sendVals[i]);
             }
         }
     }

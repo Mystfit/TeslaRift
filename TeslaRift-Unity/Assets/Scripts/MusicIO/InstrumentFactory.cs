@@ -5,6 +5,7 @@ using System.Xml;
 using System;
 using MusicIO;
 using UI;
+using ZST;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -64,7 +65,10 @@ public class InstrumentFactory : MonoBehaviour {
 	/*
 	 * Creates instruments from Live's dumped session xml
 	 */
-	public void LoadLiveSessionXml(string xmlString){
+	public void LoadLiveSessionXml(ZstPeerLink peer){
+
+        ZstMethod response = ZmqMusicNode.Instance.node.updateRemoteMethod(peer.methods["get_song_layout"]);
+        string xmlString = response.output.ToString();
 
 		XmlDocument sessionXml = new XmlDocument ();
 
@@ -79,7 +83,7 @@ public class InstrumentFactory : MonoBehaviour {
 		
         foreach(XmlNode track in trackList){
             
-            InstrumentAttachment instrument = CreateInstrumentFromXmlList(track);
+            InstrumentAttachment instrument = CreateInstrumentFromXmlList(track, peer);
             if (instrument != null)
             {
                 instrument.DockInto(m_instrumentHolder);
@@ -90,7 +94,7 @@ public class InstrumentFactory : MonoBehaviour {
 		int returnIndex = 0;
         foreach (XmlNode returnTrack in returnList)
         {
-            InstrumentAttachment returnInstrument = CreateInstrumentFromXmlList(returnTrack);
+            InstrumentAttachment returnInstrument = CreateInstrumentFromXmlList(returnTrack, peer);
             if (returnInstrument != null)
             {
                 InstrumentController.Instance.AddReturn(returnInstrument.musicRef);
@@ -103,7 +107,7 @@ public class InstrumentFactory : MonoBehaviour {
 	/*
 	 * Creates instruments from xml lists
 	 */
-    private InstrumentAttachment CreateInstrumentFromXmlList(XmlNode track)
+    private InstrumentAttachment CreateInstrumentFromXmlList(XmlNode track, ZstPeerLink peer)
     {
 		//Get track definition
 		Color color = Utils.intToColor( int.Parse(track.Attributes["color"].Value) );
@@ -128,7 +132,7 @@ public class InstrumentFactory : MonoBehaviour {
 			armed = bool.Parse( track.Attributes["armed"].Value );
         }
 
-        BaseInstrument instrumentDef = new BaseInstrument(m_client, m_source, track.Attributes["name"].Value, color, armed, trackIndex, isMidi, isReturn);
+        Instrument instrumentDef = new Instrument(m_client, peer, track.Attributes["name"].Value, color, armed, trackIndex, isMidi, isReturn);
 
         //Get devices present in track
 		XmlNodeList deviceList = track.SelectNodes("device"); //device array	
@@ -176,9 +180,6 @@ public class InstrumentFactory : MonoBehaviour {
 		}
 
         InstrumentAttachment instrument = UIFactory.CreatePrefabAttachment(typeof(InstrumentAttachment), instrumentDef) as InstrumentAttachment;
-			
-		//InstrumentController.Instance.AddInstrument(instrumentDef);
-		//instrument.DockInto(m_instrumentHolder);
 
         return instrument;
 	}

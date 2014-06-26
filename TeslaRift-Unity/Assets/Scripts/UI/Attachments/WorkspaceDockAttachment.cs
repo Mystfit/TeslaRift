@@ -57,7 +57,7 @@ public class WorkspaceDockAttachment : BaseAttachment {
         return false;
 	}
 
-    public bool DockContainsInstrument(BaseInstrument musicRef)
+    public bool DockContainsInstrument(Instrument musicRef)
     {
         if (m_childDockables != null)
         {

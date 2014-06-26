@@ -10,27 +10,27 @@ public class InstrumentController : MonoBehaviour {
 	public static InstrumentController Instance{ get { return m_instance; }}
 	
 	//Instrument references
-	protected List<BaseInstrument> m_instruments;
-    protected List<BaseInstrument> m_returns;
-	protected BaseInstrument m_selectedInstrument;
+	protected List<Instrument> m_instruments;
+    protected List<Instrument> m_returns;
+	protected Instrument m_selectedInstrument;
 	protected GameObject m_lastSelectedGameInstrument = null;
 	
 	
 	// Unity
 	//-------------------------------------
 	void Awake () {
-		m_instruments = new List<BaseInstrument>();
-        m_returns = new List<BaseInstrument>();
+		m_instruments = new List<Instrument>();
+        m_returns = new List<Instrument>();
 		m_instance = this;
 	}
 	
 	
 	void Update () {
-		foreach(BaseInstrument instrument in m_instruments){
+		foreach(Instrument instrument in m_instruments){
 			instrument.update();
 		}
 
-        foreach (BaseInstrument instrument in m_returns)
+        foreach (Instrument instrument in m_returns)
         {
             instrument.update();
         }
@@ -40,31 +40,31 @@ public class InstrumentController : MonoBehaviour {
 	/*
 	 * Instrument reset
 	 */
-	public void ResetInstrumentParameters(BaseInstrument instrument){
+	public void ResetInstrumentParameters(Instrument instrument){
 		instrument.Reset();
-		foreach(GenericMusicParam param in instrument.paramList){
+		foreach(InstrumentParameter param in instrument.paramList){
 			param.setEnabled(false);
 		}
 	}
 		
-	public void ResetInstrument(BaseInstrument instrument){
+	public void ResetInstrument(Instrument instrument){
 		ResetInstrumentParameters(instrument);
 	}
 
 
 	//Instrument selection
 	//--------------------
-	public BaseInstrument SelectedInstrument{ get { return m_selectedInstrument; } }
+	public Instrument SelectedInstrument{ get { return m_selectedInstrument; } }
 	
 	
 	/*
 	 * Adds an instrument
 	 */
-	public void AddInstrument(BaseInstrument instrument){
+	public void AddInstrument(Instrument instrument){
 		m_instruments.Add(instrument);
 	}
 
-    public void AddReturn(BaseInstrument instrument)
+    public void AddReturn(Instrument instrument)
     {
         m_returns.Add(instrument);
     }
@@ -73,18 +73,18 @@ public class InstrumentController : MonoBehaviour {
 	/*
 	 * Gets instrument by name
 	 */
-	public BaseInstrument GetInstrumentByName(string targetInstrument){
-		foreach(BaseInstrument instrument in m_instruments){
-			if(instrument.Name == targetInstrument)
+	public Instrument GetInstrumentByName(string targetInstrument){
+		foreach(Instrument instrument in m_instruments){
+			if(instrument.name == targetInstrument)
 				return instrument;
 		}
 
 		return null;
 	}
 
-    public BaseInstrument GetInstrumentByTrackindex(int trackindex)
+    public Instrument GetInstrumentByTrackindex(int trackindex)
     {
-        foreach (BaseInstrument instrument in m_instruments)
+        foreach (Instrument instrument in m_instruments)
         {
             if (instrument.trackIndex == trackindex)
                 return instrument;
@@ -96,20 +96,20 @@ public class InstrumentController : MonoBehaviour {
     /*
      * Finds a specific parameter by index
      */
-    public BaseInstrumentParam FindParameter(int trackindex, int deviceindex, int parameterindex, int category){
+    public DeviceParameter FindParameter(int trackindex, int deviceindex, int parameterindex, int category){
 
-        List<BaseInstrument> instrumentList;
+        List<Instrument> instrumentList;
 
         if (category == 0)
             instrumentList = m_instruments;
         else
             instrumentList = m_returns;
 
-        foreach (BaseInstrument instrument in instrumentList)
+        foreach (Instrument instrument in instrumentList)
         {
             if (instrument.trackIndex == trackindex)
             {
-                foreach (BaseInstrumentParam param in instrument.paramList)
+                foreach (DeviceParameter param in instrument.paramList)
                 {
                     if (param.deviceIndex == deviceindex && param.parameterIndex == parameterindex)
                     {
@@ -122,7 +122,7 @@ public class InstrumentController : MonoBehaviour {
     }
 
     public SendParameter FindSendParameter(int trackindex, int sendindex){
-        foreach (BaseInstrument instrument in m_instruments)
+        foreach (Instrument instrument in m_instruments)
         {
             if (instrument.trackIndex == trackindex)
             {
@@ -142,13 +142,13 @@ public class InstrumentController : MonoBehaviour {
     /*
      * Find a specific clip by index
      */
-    public InstrumentClip FindClip(int trackindex, int clipindex)
+    public ClipParameter FindClip(int trackindex, int clipindex)
     {
-        foreach (BaseInstrument instrument in m_instruments)
+        foreach (Instrument instrument in m_instruments)
         {
             if (instrument.trackIndex == trackindex)
             {
-                foreach (InstrumentClip clip in instrument.clipList)
+                foreach (ClipParameter clip in instrument.clipList)
                 {
                     if (clip.scene == clipindex)
                     {

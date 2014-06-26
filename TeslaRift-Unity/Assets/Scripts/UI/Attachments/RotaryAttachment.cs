@@ -3,7 +3,7 @@ using System.Collections;
 using MusicIO;
 using UI;
 
-public class RotaryAttachment : BaseAttachmentIO<BaseInstrumentParam> {
+public class RotaryAttachment : BaseAttachmentIO<InstrumentParameter> {
 
 	public GameObject m_rotaryFill;
 
@@ -11,7 +11,7 @@ public class RotaryAttachment : BaseAttachmentIO<BaseInstrumentParam> {
     protected float m_value;
 
 	
-	public override void Init (BaseInstrumentParam managedReference)
+	public override void Init (InstrumentParameter managedReference)
 	{
 		base.Init (managedReference);
 	}

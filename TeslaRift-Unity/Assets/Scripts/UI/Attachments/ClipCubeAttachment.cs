@@ -27,16 +27,16 @@ public class ClipCubeAttachment : ClipButtonAttachment {
 		if(musicRef != null){
 		    switch (musicRef.clipState)
 		    {
-		        case InstrumentClip.ClipState.IS_DISABLED:
+		        case ClipParameter.ClipState.IS_DISABLED:
 		            renderer.materials[1].SetColor("_Color", Color.grey);
 		            break;
-		        case InstrumentClip.ClipState.IS_QUEUED:
+		        case ClipParameter.ClipState.IS_QUEUED:
                     Color trans = musicRef.owner.color;
                     trans.a = 0.5f;
                     renderer.materials[1].SetColor("_Color", trans);
 
 		            break;
-		        case InstrumentClip.ClipState.IS_PLAYING:
+		        case ClipParameter.ClipState.IS_PLAYING:
                     renderer.materials[1].SetColor("_Color", musicRef.owner.color);
 
 		            break;
