@@ -7,7 +7,7 @@ namespace MusicIO
 {
 
    /*
-    *	SendParameter
+    *  SendParameter
     *  Send effect track volume
     */
     public class SendParameter : InstrumentParameter

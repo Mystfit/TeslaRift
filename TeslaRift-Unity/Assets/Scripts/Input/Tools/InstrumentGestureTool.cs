@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using VRControls;
 using MusicIO;
 
 public class InstrumentGestureTool : BaseTool {
@@ -10,7 +10,7 @@ public class InstrumentGestureTool : BaseTool {
 	 * Object we are interacting with
 	 */
 	public GameObject m_heldObject;
-	protected BaseAttachment m_attachment;
+	protected BaseVRControl m_attachment;
 	
 	/*
 	 * Current position of tool relative to held object
@@ -186,7 +186,7 @@ public class InstrumentGestureTool : BaseTool {
 		m_heldObject = HydraController.Instance.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR, m_mode);
 		
 		if(m_heldObject != null){
-			BaseAttachment attach = m_heldObject.GetComponent<BaseAttachment>();
+			BaseVRControl attach = m_heldObject.GetComponent<BaseVRControl>();
 			
 			if(attach != null){
 				if( attach.respondsToToolMode( m_mode ) ){

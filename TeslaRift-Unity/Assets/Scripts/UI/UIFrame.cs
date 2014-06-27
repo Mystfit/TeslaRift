@@ -18,9 +18,6 @@ public class UIFrame : MonoBehaviour {
 	public Transform m_guiPanels;
 	public Transform m_selectGuiPanels;
 	public Transform m_backgroundQuad;
-	//public HandProximityTrigger m_interiorTrigger;
-	//public HandProximityTrigger m_exteriorTrigger;
-	protected BaseAttachment m_attach;
 	
 	/*
 	 * Externally set dimensions
@@ -77,7 +74,6 @@ public class UIFrame : MonoBehaviour {
 	private bool bIsOutlineVisible = false;
 	
 	void Awake () {
-		m_attach = GetComponent<BaseAttachment>();
 		m_frameComponents = new List<GameObject>();
 		m_outlineFrameComponents = new List<GameObject>();
 		m_gridColumns = new List<GameObject>();
@@ -456,12 +452,6 @@ public class UIFrame : MonoBehaviour {
 	 */
 	public void SetWidth(float width){
 		m_currentWidth = width;
-//		m_attach.UpdateBoxColliders(
-//			GetAnchorOffset(width, m_currentHeight, m_anchorPoint),
-//			width, 
-//			m_currentHeight, 
-//			m_frameCollisionDepth
-//		);
 		UpdatePanel();
 		UpdatePanelOutline();
 	}
@@ -472,12 +462,6 @@ public class UIFrame : MonoBehaviour {
 	 */
 	public void SetHeight(float height){
 		m_currentHeight = height;
-//		m_attach.UpdateBoxColliders(
-//			GetAnchorOffset(m_currentWidth, height, m_anchorPoint),
-//			m_currentWidth, 
-//			height, 
-//			m_frameCollisionDepth
-//		);
 		UpdatePanel();
 		UpdatePanelOutline();
 	}

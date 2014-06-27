@@ -136,26 +136,6 @@ namespace MusicIO
 		public virtual void processParameters(){
 			foreach(InstrumentParameter param in m_params){
                 param.Send();
-                //if(param.isDirty){
-                //    if(param.GetType() == typeof(NoteParameter)){
-                //        NoteParameter note = param as NoteParameter;
-						
-                //        if (GlobalConfig.Instance.ShowtimeEnabled)
-                //        {
-                //            if (m_lastPlayedNote >= 0)
-                //                ZmqMusicNode.Instance.playNote(m_trackIndex, m_lastPlayedNote, 0, 0);
-                                
-                //            ZmqMusicNode.Instance.playNote(m_trackIndex, (int)note.scaledVal, note.velocity, 1);
-                //            m_lastPlayedNote = (int)note.scaledVal;
-                //        }    
-                //    }
-                //    else if (param.GetType() == typeof(InstrumentParameter))
-                //    {
-                //        if (GlobalConfig.Instance.ShowtimeEnabled)
-                //            ZmqMusicNode.Instance.updateInstrumentValue(m_trackIndex, param.deviceIndex, param.parameterIndex, param.scaledVal, param.category);
-                //    }
-                //    param.setClean();
-                //}
 			}
 
             foreach (SendParameter sendVol in m_sends)

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using MusicIO;
+using VRControls;
 
 namespace UI
 {
@@ -72,17 +73,16 @@ namespace UI
             whiteTexturePrefab = (Texture2D)Resources.Load("whiteTex.png");
 
             m_prefabLookup = new Dictionary<Type, GameObject>();
-            m_prefabLookup[typeof(RBFSphereAttachment)]  = Instance.rbfSpherePrefab;
-            m_prefabLookup[typeof(ClipMatrixAttachment)] = Instance.rbfSpherePrefab;
-            m_prefabLookup[typeof(ClipCubeAttachment)] = Instance.clipCubePrefab;
-            m_prefabLookup[typeof(ClipButtonAttachment)] = Instance.clipButtonPrefab;
-            m_prefabLookup[typeof(TetrahedronBlenderAttachment)] = Instance.tetrahedronBlenderPrefab;
-            m_prefabLookup[typeof(RBFTrainingAttachment)] = Instance.rbfSphereTrainingPrefab;
-            m_prefabLookup[typeof(RBFTrainingSpawnerAttachment)] = Instance.rbfSphereTrainingPrefab;
-            m_prefabLookup[typeof(ScrollerAttachment)] = Instance.paramScrollerPrefab;
-            m_prefabLookup[typeof(InstrumentAttachment)] = Instance.instrumentPrefab;
-            m_prefabLookup[typeof(SliderAttachment)] = Instance.sliderPrefab;
-            m_prefabLookup[typeof(RotaryAttachment)] = Instance.rotaryPrefab;
+            m_prefabLookup[typeof(RBFSphereVRControl)]  = Instance.rbfSpherePrefab;
+            m_prefabLookup[typeof(ControlMatrix)] = Instance.rbfSpherePrefab;
+            m_prefabLookup[typeof(ClipCube)] = Instance.clipCubePrefab;
+            m_prefabLookup[typeof(TetrahedronBlenderVRControl)] = Instance.tetrahedronBlenderPrefab;
+            m_prefabLookup[typeof(ValueTriggerVRControl)] = Instance.rbfSphereTrainingPrefab;
+            m_prefabLookup[typeof(RBFTrainingSpawnerVRControl)] = Instance.rbfSphereTrainingPrefab;
+            m_prefabLookup[typeof(ScrollerVRControl)] = Instance.paramScrollerPrefab;
+            m_prefabLookup[typeof(InstrumentVRControl)] = Instance.instrumentPrefab;
+            m_prefabLookup[typeof(SliderVRControl)] = Instance.sliderPrefab;
+            m_prefabLookup[typeof(RotaryVRControl)] = Instance.rotaryPrefab;
 		}
 
 
@@ -140,22 +140,22 @@ namespace UI
         }
 
 
-        public static BaseAttachment CreatePrefabAttachment(Type attachType)
+        public static BaseVRControl CreatePrefabAttachment(Type attachType)
         {
             return CreatePrefabAttachment(attachType, null, null);
         }
 
-        public static BaseAttachment CreatePrefabAttachment(BaseAttachment clone)
+        public static BaseVRControl CreatePrefabAttachment(BaseVRControl clone)
         {
             return CreatePrefabAttachment(clone.GetType(), null, clone);
         }
 
-        public static BaseAttachment CreatePrefabAttachment(Type attachType, BaseMusicObject musicRef)
+        public static BaseVRControl CreatePrefabAttachment(Type attachType, BaseMusicObject musicRef)
         {
             return CreatePrefabAttachment(attachType, musicRef, null);
         }
 
-        public static BaseAttachment CreatePrefabAttachment(Type attachType, BaseMusicObject musicRef, BaseAttachment clone)
+        public static BaseVRControl CreatePrefabAttachment(Type attachType, BaseMusicObject musicRef, BaseVRControl clone)
         {
             GameObject prefab = null;
 
@@ -165,7 +165,7 @@ namespace UI
             if (prefab != null)
             {
                 GameObject copy = Instantiate(prefab) as GameObject;
-                var attach = copy.GetComponent<BaseAttachment>();
+                var attach = copy.GetComponent<BaseVRControl>();
                 if (attach != null)
                 {
                     if (clone != null && musicRef == null)
@@ -173,18 +173,16 @@ namespace UI
                         //Check to see if clone object has a musicRef we need to copy
                         if (clone.HasMusicRef)
                         {
-                            if(clone is BaseAttachmentIO<Instrument>)
-                                musicRef = ((InstrumentAttachment)clone).musicRef;
-                            if (clone is InstrumentAttachment)
-                                musicRef = ((InstrumentAttachment)clone).musicRef;
-                            else if (clone is SliderAttachment)
-								musicRef = ((SliderAttachment)clone).musicRef;
-                            else if (clone is ClipCubeAttachment)
-                                musicRef = ((ClipCubeAttachment)clone).musicRef;
-                            else if (clone is ClipButtonAttachment)
-                                musicRef = ((ClipButtonAttachment)clone).musicRef;
-                            else if (clone is RotaryAttachment)
-                                musicRef = ((RotaryAttachment)clone).musicRef;
+                            if(clone is MusicVRControl<Instrument>)
+                                musicRef = ((InstrumentVRControl)clone).musicRef;
+                            if (clone is InstrumentVRControl)
+                                musicRef = ((InstrumentVRControl)clone).musicRef;
+                            else if (clone is SliderVRControl)
+								musicRef = ((SliderVRControl)clone).musicRef;
+                            else if (clone is ClipCube)
+                                musicRef = ((ClipCube)clone).musicRef;
+                            else if (clone is RotaryVRControl)
+                                musicRef = ((RotaryVRControl)clone).musicRef;
                         }
                     }
 
@@ -193,19 +191,19 @@ namespace UI
                     {
 
 						if (musicRef is Instrument){
-                            BaseAttachmentIO<Instrument> cast = attach as BaseAttachmentIO<Instrument>;
+                            MusicVRControl<Instrument> cast = attach as MusicVRControl<Instrument>;
 							cast.Init((Instrument)musicRef);
 						} 
 						else if (musicRef is ClipParameter){
-							BaseAttachmentIO<ClipParameter> cast = (BaseAttachmentIO<ClipParameter>)attach;
+							MusicVRControl<ClipParameter> cast = (MusicVRControl<ClipParameter>)attach;
 							cast.Init((ClipParameter)musicRef);
 						} 
 						else if (musicRef is NoteParameter){
-							BaseAttachmentIO<InstrumentParameter> cast = (BaseAttachmentIO<InstrumentParameter>)attach;
+							MusicVRControl<InstrumentParameter> cast = (MusicVRControl<InstrumentParameter>)attach;
 							cast.Init((InstrumentParameter)musicRef);
 						} 
 						else if (musicRef is InstrumentParameter){
-							BaseAttachmentIO<InstrumentParameter> cast = (BaseAttachmentIO<InstrumentParameter>)attach;
+							MusicVRControl<InstrumentParameter> cast = (MusicVRControl<InstrumentParameter>)attach;
 							cast.Init((InstrumentParameter)musicRef);
 						} else {
 							throw new Exception("MusicRef type not recognised");

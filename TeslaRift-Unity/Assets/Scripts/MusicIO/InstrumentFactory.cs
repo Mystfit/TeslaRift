@@ -6,6 +6,7 @@ using System;
 using MusicIO;
 using UI;
 using ZST;
+using VRControls;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -25,8 +26,8 @@ public class InstrumentFactory : MonoBehaviour {
 	public float m_panelOrbitDistance = 0.2f;
 	public TextAsset m_liveSessionFile;
 
-	public ScrollerAttachment m_instrumentHolder;
-    public TetrahedronBlenderAttachment m_returnHolder;
+	public ScrollerVRControl m_instrumentHolder;
+    public TetrahedronBlenderVRControl m_returnHolder;
 
 	void Start () {
 		m_instance = this;
@@ -83,7 +84,7 @@ public class InstrumentFactory : MonoBehaviour {
 		
         foreach(XmlNode track in trackList){
             
-            InstrumentAttachment instrument = CreateInstrumentFromXmlList(track, peer);
+            InstrumentVRControl instrument = CreateInstrumentFromXmlList(track, peer);
             if (instrument != null)
             {
                 instrument.DockInto(m_instrumentHolder);
@@ -94,7 +95,7 @@ public class InstrumentFactory : MonoBehaviour {
 		int returnIndex = 0;
         foreach (XmlNode returnTrack in returnList)
         {
-            InstrumentAttachment returnInstrument = CreateInstrumentFromXmlList(returnTrack, peer);
+            InstrumentVRControl returnInstrument = CreateInstrumentFromXmlList(returnTrack, peer);
             if (returnInstrument != null)
             {
                 InstrumentController.Instance.AddReturn(returnInstrument.musicRef);
@@ -107,7 +108,7 @@ public class InstrumentFactory : MonoBehaviour {
 	/*
 	 * Creates instruments from xml lists
 	 */
-    private InstrumentAttachment CreateInstrumentFromXmlList(XmlNode track, ZstPeerLink peer)
+    private InstrumentVRControl CreateInstrumentFromXmlList(XmlNode track, ZstPeerLink peer)
     {
 		//Get track definition
 		Color color = Utils.intToColor( int.Parse(track.Attributes["color"].Value) );
@@ -179,7 +180,7 @@ public class InstrumentFactory : MonoBehaviour {
             instrumentDef.AddSend(name, sendIndex);
 		}
 
-        InstrumentAttachment instrument = UIFactory.CreatePrefabAttachment(typeof(InstrumentAttachment), instrumentDef) as InstrumentAttachment;
+        InstrumentVRControl instrument = UIFactory.CreatePrefabAttachment(typeof(InstrumentVRControl), instrumentDef) as InstrumentVRControl;
 
         return instrument;
 	}

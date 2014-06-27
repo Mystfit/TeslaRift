@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections;
 using System;
 using System.Collections.Generic;
+using VRControls;
 
 public enum HydraStates
 {
@@ -36,8 +37,8 @@ public class HydraController : MonoBehaviour {
 	protected Vector3 m_rightHandVelocity;
 	private Vector3 m_lastLeftHandPos;
 	private Vector3 m_lastRightHandPos;
-	protected BaseAttachment m_leftHandDragTarget;
-	protected BaseAttachment m_rightHandDragTarget;
+	protected BaseVRControl m_leftHandDragTarget;
+	protected BaseVRControl m_rightHandDragTarget;
 
 	public Transform m_leftHandTip;
 	public Transform m_rightHandTip;
@@ -114,21 +115,21 @@ public class HydraController : MonoBehaviour {
     /*
      * Gets sets hand dragging state
      */
-    public BaseAttachment IsHandDragging(BaseTool.ToolHand hand)
+    public BaseVRControl IsHandDragging(BaseTool.ToolHand hand)
     {
         if (hand == BaseTool.ToolHand.LEFT)
 			return m_leftHandDragTarget;
 		return m_rightHandDragTarget;
     }
 
-    public void SetHandDragging(BaseTool.ToolHand hand, BaseAttachment target)
+    public void SetHandDragging(BaseTool.ToolHand hand, BaseVRControl target)
     {
         if (hand == BaseTool.ToolHand.LEFT)
 			m_leftHandDragTarget = target;
 		m_rightHandDragTarget = target;
     }
 
-	public BaseAttachment GetHandDragging(BaseTool.ToolHand hand)
+	public BaseVRControl GetHandDragging(BaseTool.ToolHand hand)
 	{
 		if (hand == BaseTool.ToolHand.LEFT)
 			return m_leftHandDragTarget;
@@ -211,7 +212,7 @@ public class HydraController : MonoBehaviour {
 				if(obj != null){
 					float dist = Vector3.Distance(obj.transform.position, target.transform.position);
 					if(dist < closestDistance || closestDistance < 0){
-						BaseAttachment attach = obj.GetComponent<BaseAttachment>();
+						BaseVRControl attach = obj.GetComponent<BaseVRControl>();
 
 						if(attach != null){
 							if(attach.respondsToToolMode(mode)){
