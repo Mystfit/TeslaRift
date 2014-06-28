@@ -6,9 +6,9 @@ using System.Collections.Generic;
 namespace MusicIO
 {
     /*
-	 *	ClipParameter
-	 *  A clip on this instrument channel
-	 */
+     *  ClipParameter
+     *  A clip on this instrument channel
+     */
     public class ClipParameter : InstrumentParameter
     {
         protected int m_scene;

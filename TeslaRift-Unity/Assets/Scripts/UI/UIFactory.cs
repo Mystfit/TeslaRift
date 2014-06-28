@@ -8,21 +8,21 @@ using VRControls;
 
 namespace UI
 {
-	public class UIFactory : MonoBehaviour
-	{
-		//Singletons
-		private static UIFactory m_instance;
-		public static UIFactory Instance{ get { return m_instance; }}
+    public class UIFactory : MonoBehaviour
+    {
+        //Singletons
+        private static UIFactory m_instance;
+        public static UIFactory Instance{ get { return m_instance; }}
 
-		//Prefab objects
-		public GameObject sliderPrefab;
-		public GameObject framePrefab;
-		public GameObject clipButtonPrefab;
+        //Prefab objects
+        public GameObject sliderPrefab;
+        public GameObject framePrefab;
+        public GameObject clipButtonPrefab;
         public GameObject clipCubePrefab;
-		public GameObject clipPlaceholderPrefab;
-		public GameObject rotaryPrefab;
-		public GameObject paramScrollerPrefab;
-		public GameObject instrumentPrefab;
+        public GameObject clipPlaceholderPrefab;
+        public GameObject rotaryPrefab;
+        public GameObject paramScrollerPrefab;
+        public GameObject instrumentPrefab;
         public GameObject guiQuadPrefab;
         public GameObject volumetricCylinderPrefab;
         public Texture2D whiteTexturePrefab;
@@ -41,9 +41,9 @@ namespace UI
         public GameObject tetrahedronBlenderPrefab;
 
 
-		//Slider localscale amount
-		public float m_sliderScale = 0.1f;
-		public static Vector3 sliderScale{get {return new Vector3(Instance.m_sliderScale, Instance.m_sliderScale, Instance.m_sliderScale); }}
+        //Slider localscale amount
+        public float m_sliderScale = 0.1f;
+        public static Vector3 sliderScale{get {return new Vector3(Instance.m_sliderScale, Instance.m_sliderScale, Instance.m_sliderScale); }}
 
         [Range(0.0f, 0.03f)]
         public float m_outlineSelectedSize;
@@ -68,8 +68,8 @@ namespace UI
         public Color m_textLabelDeselectedColor;
         public static Color textLabelDeselectedColor { get { return Instance.m_textLabelDeselectedColor; } }
 
-		void Awake(){
-			m_instance = this;
+        void Awake(){
+            m_instance = this;
             whiteTexturePrefab = (Texture2D)Resources.Load("whiteTex.png");
 
             m_prefabLookup = new Dictionary<Type, GameObject>();
@@ -83,7 +83,7 @@ namespace UI
             m_prefabLookup[typeof(InstrumentVRControl)] = Instance.instrumentPrefab;
             m_prefabLookup[typeof(SliderVRControl)] = Instance.sliderPrefab;
             m_prefabLookup[typeof(RotaryVRControl)] = Instance.rotaryPrefab;
-		}
+        }
 
 
         /*
@@ -95,28 +95,28 @@ namespace UI
         }
 
 
-		/*
-		 * UIFrame
-		 * A generic UI frame
-		 */
-		public static UIFrame CreateFrame(){
-			GameObject frame = Instantiate(Instance.framePrefab) as GameObject;
-			UIFrame attach = frame.GetComponent<UIFrame>();
+        /*
+         * UIFrame
+         * A generic UI frame
+         */
+        public static UIFrame CreateFrame(){
+            GameObject frame = Instantiate(Instance.framePrefab) as GameObject;
+            UIFrame attach = frame.GetComponent<UIFrame>();
 
-			return attach;
-		}
+            return attach;
+        }
 
 
-		/*
+        /*
          * ClipPlaceholder
          * Draggable clip cube
          */
-		public static GameObject CreateClipPlaceholder()
-		{
-			GameObject cubePlaceholder = Instantiate(Instance.clipPlaceholderPrefab) as GameObject;
-			return cubePlaceholder;
-		}
-		
+        public static GameObject CreateClipPlaceholder()
+        {
+            GameObject cubePlaceholder = Instantiate(Instance.clipPlaceholderPrefab) as GameObject;
+            return cubePlaceholder;
+        }
+        
 
         /*
          * Qui quad prefab
@@ -178,7 +178,7 @@ namespace UI
                             if (clone is InstrumentVRControl)
                                 musicRef = ((InstrumentVRControl)clone).musicRef;
                             else if (clone is SliderVRControl)
-								musicRef = ((SliderVRControl)clone).musicRef;
+                                musicRef = ((SliderVRControl)clone).musicRef;
                             else if (clone is ClipCube)
                                 musicRef = ((ClipCube)clone).musicRef;
                             else if (clone is RotaryVRControl)
@@ -190,24 +190,24 @@ namespace UI
                     if (musicRef != null)
                     {
 
-						if (musicRef is Instrument){
+                        if (musicRef is Instrument){
                             MusicVRControl<Instrument> cast = attach as MusicVRControl<Instrument>;
-							cast.Init((Instrument)musicRef);
-						} 
-						else if (musicRef is ClipParameter){
-							MusicVRControl<ClipParameter> cast = (MusicVRControl<ClipParameter>)attach;
-							cast.Init((ClipParameter)musicRef);
-						} 
-						else if (musicRef is NoteParameter){
-							MusicVRControl<InstrumentParameter> cast = (MusicVRControl<InstrumentParameter>)attach;
-							cast.Init((InstrumentParameter)musicRef);
-						} 
-						else if (musicRef is InstrumentParameter){
-							MusicVRControl<InstrumentParameter> cast = (MusicVRControl<InstrumentParameter>)attach;
-							cast.Init((InstrumentParameter)musicRef);
-						} else {
-							throw new Exception("MusicRef type not recognised");
-						}
+                            cast.Init((Instrument)musicRef);
+                        } 
+                        else if (musicRef is ClipParameter){
+                            MusicVRControl<ClipParameter> cast = (MusicVRControl<ClipParameter>)attach;
+                            cast.Init((ClipParameter)musicRef);
+                        } 
+                        else if (musicRef is NoteParameter){
+                            MusicVRControl<InstrumentParameter> cast = (MusicVRControl<InstrumentParameter>)attach;
+                            cast.Init((InstrumentParameter)musicRef);
+                        } 
+                        else if (musicRef is InstrumentParameter){
+                            MusicVRControl<InstrumentParameter> cast = (MusicVRControl<InstrumentParameter>)attach;
+                            cast.Init((InstrumentParameter)musicRef);
+                        } else {
+                            throw new Exception("MusicRef type not recognised");
+                        }
                     }
                 }
 
@@ -223,6 +223,6 @@ namespace UI
             }
             return null;
         }
-	}
+    }
 }
 

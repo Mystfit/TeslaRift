@@ -8,24 +8,24 @@ using MusicIO;
 
 public class ZmqMusicNode : MonoBehaviour {
 
-	public InstrumentFactory m_instrumentSpawner;
+    public InstrumentFactory m_instrumentSpawner;
 
-	public string m_stageAddress = "127.0.0.1";
-	public string m_port = "6000";
+    public string m_stageAddress = "127.0.0.1";
+    public string m_port = "6000";
 
-	public ZstNode node { get { return m_node; }}
-	protected ZstNode m_node;
-	protected Dictionary<string, ZstPeerLink> m_peers;
+    public ZstNode node { get { return m_node; }}
+    protected ZstNode m_node;
+    protected Dictionary<string, ZstPeerLink> m_peers;
 
-	private static ZmqMusicNode m_instance;	
-	public static ZmqMusicNode Instance { get { return m_instance; }}
+    private static ZmqMusicNode m_instance; 
+    public static ZmqMusicNode Instance { get { return m_instance; }}
 
-	// Use this for initialization
-	void Start () {
-		m_instance = this;
-		m_node = new ZstNode("UnityNode", "tcp://" + m_stageAddress + ":" + m_port);
-		m_node.requestRegisterNode();
-		m_peers = m_node.requestNodePeerlinks();
+    // Use this for initialization
+    void Start () {
+        m_instance = this;
+        m_node = new ZstNode("UnityNode", "tcp://" + m_stageAddress + ":" + m_port);
+        m_node.requestRegisterNode();
+        m_peers = m_node.requestNodePeerlinks();
 
         ZstPeerLink liveNode = m_peers["LiveNode"];
 
@@ -36,10 +36,10 @@ public class ZmqMusicNode : MonoBehaviour {
 
         //Subscribe to value updates
         m_node.subscribeToMethod(liveNode.methods["value_updated"], instrumentValueUpdated);
-		m_node.subscribeToMethod(liveNode.methods["send_updated"], sendValueUpdated);
-		m_node.subscribeToMethod(liveNode.methods["fired_slot_index"], clipFired);
+        m_node.subscribeToMethod(liveNode.methods["send_updated"], sendValueUpdated);
+        m_node.subscribeToMethod(liveNode.methods["fired_slot_index"], clipFired);
         m_node.subscribeToMethod(liveNode.methods["playing_slot_index"], clipPlaying);
-	}
+    }
 
     /* 
      * Incoming methods
@@ -93,7 +93,7 @@ public class ZmqMusicNode : MonoBehaviour {
         Dictionary<string, object> output = JsonConvert.DeserializeObject<Dictionary<string, object>>(methodData.output.ToString());
         int trackIndex = Convert.ToInt32(output["trackindex"]);
         int slotIndex = Convert.ToInt32(output["slotindex"]);
-		Instrument playingInstrument = InstrumentController.Instance.GetInstrumentByTrackindex(trackIndex);
+        Instrument playingInstrument = InstrumentController.Instance.GetInstrumentByTrackindex(trackIndex);
 
         if (slotIndex < 0)
         {
@@ -106,11 +106,11 @@ public class ZmqMusicNode : MonoBehaviour {
                     playingInstrument.SetPlayingClip(null);
                 }
             }
-		}
+        }
         else
         {
-			if(playingInstrument.playingClip != null)
-				playingInstrument.playingClip.SetClipState(ClipParameter.ClipState.IS_DISABLED);
+            if(playingInstrument.playingClip != null)
+                playingInstrument.playingClip.SetClipState(ClipParameter.ClipState.IS_DISABLED);
 
             ClipParameter clip = InstrumentController.Instance.FindClip(trackIndex, slotIndex);
             clip.SetClipState(ClipParameter.ClipState.IS_PLAYING);
@@ -122,8 +122,8 @@ public class ZmqMusicNode : MonoBehaviour {
     /*
      * Exit and cleanup
      */
-	public void OnApplicationQuit(){
-		bool result = m_node.close();
-		Debug.Log("Network cleanup: " + result);
-	}
+    public void OnApplicationQuit(){
+        bool result = m_node.close();
+        Debug.Log("Network cleanup: " + result);
+    }
 }

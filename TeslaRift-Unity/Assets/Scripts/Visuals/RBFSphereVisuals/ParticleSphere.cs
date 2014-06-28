@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class ParticleSphere : MonoBehaviour {
 
     public GameObject m_particlePrefab;
-	public float m_radius = 20.0f;
+    public float m_radius = 20.0f;
     public int m_gridResolution = 10;
     public float m_randomOffset = 0.1f;
     public float m_maxScale = 0.3f;
@@ -18,11 +18,11 @@ public class ParticleSphere : MonoBehaviour {
     protected List<GameObject> m_particles;
     protected List<Transform> m_lightTargets;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         m_particles = new List<GameObject>();
         m_lightTargets = new List<Transform>();
-	}
+    }
 
     public void AddLightTarget(Transform target)
     {
@@ -86,9 +86,9 @@ public class ParticleSphere : MonoBehaviour {
         }
         return points;
     }
-	
-	// Update is called once per frame
-	void Update () {
+    
+    // Update is called once per frame
+    void Update () {
         if (m_toggleUpdate)
         {
             m_toggleUpdate = false;
@@ -101,5 +101,5 @@ public class ParticleSphere : MonoBehaviour {
         }
 
         UpdateLightParticles();
-	}
+    }
 }

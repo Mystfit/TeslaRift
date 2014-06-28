@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace MusicIO
 {
     /*
-     *	NoteParameter
+     *  NoteParameter
      *  Single note in a chord
      */
     public class NoteParameter : InstrumentParameter

@@ -7,7 +7,7 @@ using ZST;
 
 namespace MusicIO
 {
-	public class BaseMusicObject {
+    public class BaseMusicObject {
         protected ZstMethod m_remoteMethod;
         public ZstMethod remoteMethod { get { return m_remoteMethod; } }
 
@@ -39,6 +39,6 @@ namespace MusicIO
             }
             setClean();
         }
-	}
-	
+    }
+    
 }

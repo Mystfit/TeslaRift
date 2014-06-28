@@ -205,10 +205,10 @@ public static class GeometryUtils {
         };
     }
 
-	public static float GetClosestTetrahedronDist(float radius)
-	{
-		return Mathf.Sin((Mathf.PI * 2.0f / 3.0f) - Mathf.PI * 0.5f) * radius;
-	}
+    public static float GetClosestTetrahedronDist(float radius)
+    {
+        return Mathf.Sin((Mathf.PI * 2.0f / 3.0f) - Mathf.PI * 0.5f) * radius;
+    }
 
     public static int[] tetrahedronindices = new int[12] { 0, 1, 2, 1, 0, 3, 2, 1, 3, 0, 2, 3 };
 

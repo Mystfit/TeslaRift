@@ -37,11 +37,11 @@ namespace VRControls
                     //attach.rigidbody.velocity = Vector3.zero;
                     instrument.rigidbody.isKinematic = true;
                     instrument.SetToolmodeResponse(new BaseTool.ToolMode[]{
-					        BaseTool.ToolMode.PRIMARY, 
-					        BaseTool.ToolMode.GRABBING,
-	                        BaseTool.ToolMode.HOVER,
-	                        BaseTool.ToolMode.SECONDARY
-				        });
+                            BaseTool.ToolMode.PRIMARY, 
+                            BaseTool.ToolMode.GRABBING,
+                            BaseTool.ToolMode.HOVER,
+                            BaseTool.ToolMode.SECONDARY
+                        });
                     instrument.EnableControls();
                     instrument.SetCloneable(false);
 
@@ -81,8 +81,8 @@ namespace VRControls
         {
             base.RemoveDockableAttachment(attach);
             attach.SetToolmodeResponse(new BaseTool.ToolMode[]{
-			    BaseTool.ToolMode.GRABBING
-		    });
+                BaseTool.ToolMode.GRABBING
+            });
 
             Destroy(m_volumetrics[attach]);
 

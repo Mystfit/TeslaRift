@@ -8,40 +8,31 @@ using UI;
 
 namespace VRControls
 {
-    public class ValueTriggerVRControl : BaseVRControl
+    public class ValueTriggerVRControl : MusicVRControl<InstrumentParameter>
     {
-
         public Color m_selectedColor;
         public Color m_defaultColor;
-        protected Renderer m_sphereRender;
+
+        protected Dictionary<InstrumentParameter, float> m_storedValues;
+        public Dictionary<InstrumentParameter, float> storedValues { get { return m_storedValues; } }
+
 
         public override void Awake()
         {
             base.Awake();
             SetIsDraggable(true);
-            m_outputValues = new Dictionary<RBFPlugVRControl, double>();
-            m_sphereRender = GetComponentInChildren<Renderer>();
-            SetOutlineMat(m_sphereRender.material);
+            m_storedValues = new Dictionary<InstrumentParameter, float>();
+            SetOutlineMat(renderer.material);
         }
 
-        public RBFSphereVRControl owner
+        /*
+         * Saves a value in this control to be fired later
+         */
+        public void StoreParameterValue(InstrumentParameter param) { StoreParameterValue(param, param.val); }
+        public void StoreParameterValue(InstrumentParameter param, float val)
         {
-            get { return m_owner; }
-            set { m_owner = value; }
-        }
-        protected RBFSphereVRControl m_owner;
-
-        public Dictionary<RBFPlugVRControl, double> plugValues { get { return m_outputValues; } }
-        protected Dictionary<RBFPlugVRControl, double> m_outputValues;
-
-        public void StorePlugValue(RBFPlugVRControl plug)
-        {
-            m_outputValues[plug] = plug.val;
-        }
-
-        public void RemovePlugValue(RBFPlugVRControl plug)
-        {
-            m_outputValues.Remove(plug);
+            if (m_storedValues.Keys.Contains(param))
+                storedValues[param] = val;
         }
 
         public override void ShowControls()
@@ -68,16 +59,26 @@ namespace VRControls
 
 
         /*
-            * Gesture overrides
-            */
+         * Fires stored values through attached parameters
+         */
+        public void FireValues()
+        {
+            foreach (KeyValuePair<InstrumentParameter, float> pair in m_storedValues)
+                pair.Key.setVal(pair.Value);
+        }
+
+
+        /*
+         * Gesture overrides
+         */
         public override void Gesture_First()
         {
             if (m_mode == BaseTool.ToolMode.GRABBING)
                 StartDragging(HydraController.Instance.GetHand(m_hand));
             if (m_mode == BaseTool.ToolMode.PRIMARY)
             {
-                if (m_owner != null)
-                    m_owner.SetSelectedtraining(this);
+                SetSelected(true);
+                FireValues();
             }
             base.Gesture_First();
         }

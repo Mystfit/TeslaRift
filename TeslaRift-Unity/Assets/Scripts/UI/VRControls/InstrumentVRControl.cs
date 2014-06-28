@@ -25,9 +25,9 @@ namespace VRControls
 
             //Since instrument attachments are created at runtime, we need to set the filter here
             m_respondsToToolMode = new BaseTool.ToolMode[]{
-			    BaseTool.ToolMode.GRABBING,
+                BaseTool.ToolMode.GRABBING,
                 BaseTool.ToolMode.HOVER
-		    };
+            };
 
             //Set the collision state
             SetCollideable(true);

@@ -212,8 +212,13 @@ namespace VRControls
                     SetOutlineSize(0.0f);
                 }
             }
+
+            if (state)
+                m_dockedInto.ChildAttachmentSelected(this);
+
             m_selected = state;
         }
+        public virtual void ChildAttachmentSelected(BaseVRControl attach) { }
 
 
         /*

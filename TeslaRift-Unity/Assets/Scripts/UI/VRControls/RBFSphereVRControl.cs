@@ -39,17 +39,16 @@ namespace VRControls
                 attach.rigidbody.isKinematic = true;
 
                 ValueTriggerVRControl rbfAttach = attach as ValueTriggerVRControl;
-                rbfAttach.owner = this;
                 rbfAttach.SetToolmodeResponse(new BaseTool.ToolMode[]{
-				    BaseTool.ToolMode.PRIMARY, 
-				    BaseTool.ToolMode.GRABBING
-			    });
+                    BaseTool.ToolMode.PRIMARY, 
+                    BaseTool.ToolMode.GRABBING
+                });
                 rbfAttach.SetCloneable(false);
                 rbfAttach.SetIsDraggable(true);
                 rbfAttach.SetIsDockable(true);
 
                 foreach (RBFPlugVRControl plug in m_plugs)
-                    rbfAttach.StorePlugValue(plug);
+                    rbfAttach.StoreParameterValue(plug.musicRef);
 
                 SetSelectedtraining(rbfAttach);
                 return true;
@@ -63,11 +62,8 @@ namespace VRControls
 
             ValueTriggerVRControl rbfAttach = attach as ValueTriggerVRControl;
             rbfAttach.SetToolmodeResponse(new BaseTool.ToolMode[]{
-			    BaseTool.ToolMode.GRABBING
-		    });
-
-            foreach (RBFPlugVRControl plug in m_plugs)
-                rbfAttach.RemovePlugValue(plug);
+                BaseTool.ToolMode.GRABBING
+            });
 
             attach.rigidbody.isKinematic = false;
         }
@@ -111,7 +107,12 @@ namespace VRControls
                 attach.HideControls();
             foreach (RBFPlugVRControl plug in m_plugs)
                 plug.HideControls();
+        }
 
+        public override void ChildAttachmentSelected(BaseVRControl attach)
+        {
+            base.ChildAttachmentSelected(attach);
+            m_selectedTraining = attach as ValueTriggerVRControl;
         }
 
         /*
