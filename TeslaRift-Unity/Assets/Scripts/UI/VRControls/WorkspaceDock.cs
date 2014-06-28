@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace VRControls
 {
-    public class WorkspaceDockVRControl : BaseVRControl
+    public class WorkspaceDock : BaseVRControl
     {
 
         public float m_carouselRadius = 1.0f;
@@ -22,15 +22,15 @@ namespace VRControls
 
             SetAsDock(true);
             SetSoloChildControlsVisible(true);
-            AddAcceptedDocktype(typeof(InstrumentVRControl));
+            AddAcceptedDocktype(typeof(InstrumentOrb));
 
             m_volumetrics = new Dictionary<BaseVRControl, GameObject>();
         }
 
         public override bool AddDockableAttachment(BaseVRControl attach)
         {
-            InstrumentVRControl instrument = attach as InstrumentVRControl;
-            if (!DockContainsInstrument(instrument.musicRef))
+            InstrumentOrb instrument = attach as InstrumentOrb;
+            if (!DockContainsInstrument(instrument.instrumentRef))
             {
                 if (base.AddDockableAttachment(instrument))
                 {
@@ -61,15 +61,15 @@ namespace VRControls
             return false;
         }
 
-        public bool DockContainsInstrument(Instrument musicRef)
+        public bool DockContainsInstrument(InstrumentHandle musicRef)
         {
             if (m_childDockables != null)
             {
-                foreach (InstrumentVRControl attach in m_childDockables)
+                foreach (InstrumentOrb attach in m_childDockables)
                 {
-                    if (attach.musicRef != null)
+                    if (attach.instrumentRef != null)
                     {
-                        if (attach.musicRef == musicRef)
+                        if (attach.instrumentRef == musicRef)
                             return true;
                     }
                 }

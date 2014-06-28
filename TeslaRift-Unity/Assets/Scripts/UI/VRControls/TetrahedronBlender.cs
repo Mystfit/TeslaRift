@@ -5,16 +5,16 @@ using System.Collections.Generic;
 
 namespace VRControls
 {
-    public class TetrahedronBlenderVRControl : BaseVRControl
+    public class TetrahedronBlender : BaseVRControl
     {
-        public InstrumentVRControl[] m_returns = new InstrumentVRControl[4];
+        public InstrumentOrb[] m_returns = new InstrumentOrb[4];
         public float m_radius = 1.0f;
         protected float m_closestRadius;
 
         protected Mesh m_mesh;
         protected GeometryUtils.BaryCentricDistance m_distanceCalculator;
-        protected InstrumentVRControl m_currentInstrument;
-        protected InstrumentVRControl m_lastInstrument;
+        protected InstrumentOrb m_currentInstrument;
+        protected InstrumentOrb m_lastInstrument;
         protected Vector3 m_lastPosition;
 
         //Get specified corner vertex
@@ -29,7 +29,7 @@ namespace VRControls
             SetSoloChildControlsVisible(true);
             SetIsDraggable(true);
 
-            AddAcceptedDocktype(typeof(InstrumentVRControl));
+            AddAcceptedDocktype(typeof(InstrumentOrb));
 
             //Mesh building
             m_mesh = BuildTetrahedronMesh(m_radius);
@@ -54,7 +54,7 @@ namespace VRControls
             return mesh;
         }
 
-        public void AddReturnInstrument(InstrumentVRControl returnInstrument, int index)
+        public void AddReturnInstrument(InstrumentOrb returnInstrument, int index)
         {
             if (index <= m_returns.Length)
             {
@@ -90,7 +90,7 @@ namespace VRControls
                 }
 
                 ShowControls();
-                m_currentInstrument = attach as InstrumentVRControl;
+                m_currentInstrument = attach as InstrumentOrb;
                 m_currentInstrument.SetToolmodeResponse(new BaseTool.ToolMode[0]);
                 return true;
             }
@@ -150,54 +150,52 @@ namespace VRControls
 
         protected void BlendValues()
         {
-            RaycastHit hit = new RaycastHit();
-            Vector3 origin = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(m_hand));
-            Vector3 dir = (origin * -1.0f).normalized;
-            Vector3 hitPos = origin;
+			if(m_currentInstrument)
+			{
+	            RaycastHit hit = new RaycastHit();
+	            Vector3 origin = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(m_hand));
+	            Vector3 dir = (origin * -1.0f).normalized;
+	            Vector3 hitPos = origin;
 
-            float dist = Vector3.Distance(HydraController.Instance.GetHandColliderPosition(m_hand), transform.position);
-            Debug.Log(dist);
+	            float dist = Vector3.Distance(HydraController.Instance.GetHandColliderPosition(m_hand), transform.position);
+	            Debug.Log(dist);
 
-            //GeometryUtils.BaryCentricDistance.Result result = m_distanceCalculator.GetClosestTriangleAndPoint(origin);
+	            //GeometryUtils.BaryCentricDistance.Result result = m_distanceCalculator.GetClosestTriangleAndPoint(origin);
 
-            if (dist > m_closestRadius)
-            {
-                if (collider.Raycast(new Ray(transform.position + origin, dir), out hit, dist))
-                {
-                    Debug.DrawLine(transform.position + origin, hit.point, Color.red);
+	            if (dist > m_closestRadius)
+	            {
+	                if (collider.Raycast(new Ray(transform.position + origin, dir), out hit, dist))
+	                {
+	                    Debug.DrawLine(transform.position + origin, hit.point, Color.red);
 
-                    if (hit.collider == collider)
-                    {
-                        hitPos = transform.InverseTransformPoint(hit.point);
-                        float distanceRatio = Vector3.Distance(origin, Vector3.zero) / m_radius;
-                        Vector3 closestVertex = GeometryUtils.GetClosestVertex(m_mesh, origin);
-                        hitPos = Vector3.Lerp(hitPos, closestVertex, distanceRatio);
-                    }
-                }
-                //hitPos = result.closestPoint;
-            }
-            else
-            {
-                Debug.DrawLine(transform.position + origin, transform.position, Color.blue);
-            }
+	                    if (hit.collider == collider)
+	                    {
+	                        hitPos = transform.InverseTransformPoint(hit.point);
+	                        float distanceRatio = Vector3.Distance(origin, Vector3.zero) / m_radius;
+	                        Vector3 closestVertex = GeometryUtils.GetClosestVertex(m_mesh, origin);
+	                        hitPos = Vector3.Lerp(hitPos, closestVertex, distanceRatio);
+	                    }
+	                }
+	                //hitPos = result.closestPoint;
+	            }
+	            else
+	            {
+	                Debug.DrawLine(transform.position + origin, transform.position, Color.blue);
+	            }
 
-            m_currentInstrument.transform.localPosition = hitPos;
+	            m_currentInstrument.transform.localPosition = hitPos;
 
-            //Get coordinated inside blender
-            float[] sendVals = GeometryUtils.BarycentricTetrahedronLerp(
-                GetCorner(0),
-                GetCorner(1),
-                GetCorner(2),
-                GetCorner(3),
-                hitPos);
+	            //Get coordinated inside blender
+	            float[] sendVals = GeometryUtils.BarycentricTetrahedronLerp(
+	                GetCorner(0),
+	                GetCorner(1),
+	                GetCorner(2),
+	                GetCorner(3),
+	                hitPos);
 
-            if (m_currentInstrument)
-            {
                 for (int i = 0; i < 4; i++)
-                {
-                    m_currentInstrument.musicRef.getSendByName(m_returns[i].musicRef.name).setVal(sendVals[i]);
-                }
-            }
+                    m_currentInstrument.instrumentRef.getSendByName(m_returns[i].instrumentRef.name).setVal(sendVals[i]);	            
+			}
         }
     }
 }

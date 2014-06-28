@@ -8,7 +8,7 @@ using UI;
 
 namespace VRControls
 {
-    public class ValueTriggerVRControl : MusicVRControl<InstrumentParameter>
+    public class ValueTrigger : BaseVRControl
     {
         public Color m_selectedColor;
         public Color m_defaultColor;
@@ -22,7 +22,26 @@ namespace VRControls
             base.Awake();
             SetIsDraggable(true);
             m_storedValues = new Dictionary<InstrumentParameter, float>();
-            SetOutlineMat(renderer.material);
+            SetOutlineMat(GetComponentInChildren<MeshRenderer>().material);
+
+            AddAcceptedDocktype(typeof(Slider));
+            AddAcceptedDocktype(typeof(ValueTrigger));
+        }
+
+        public override bool AddDockableAttachment(BaseVRControl attach)
+        {
+            if (base.AddDockableAttachment(attach))
+            {
+                m_storedValues[attach.musicRef] = attach.musicRef.val;
+                return true;
+            }
+            return false;
+        }
+
+        public override void RemoveDockableAttachment(BaseVRControl attach)
+        {
+            base.RemoveDockableAttachment(attach);
+            m_storedValues.Remove(attach.musicRef);
         }
 
         /*
@@ -31,8 +50,7 @@ namespace VRControls
         public void StoreParameterValue(InstrumentParameter param) { StoreParameterValue(param, param.val); }
         public void StoreParameterValue(InstrumentParameter param, float val)
         {
-            if (m_storedValues.Keys.Contains(param))
-                storedValues[param] = val;
+            m_storedValues[param] = val;
         }
 
         public override void ShowControls()

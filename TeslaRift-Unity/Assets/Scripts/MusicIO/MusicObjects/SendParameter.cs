@@ -15,9 +15,10 @@ namespace MusicIO
         public int sendIndex { get { return m_sendIndex; } }
         protected int m_sendIndex;
 
-        public SendParameter(string name, Instrument paramOwner, int sendIndex)
-            : base(name, paramOwner, paramOwner.owner.methods["set_send"], 0.0f, 1.0f)
+        public SendParameter(string name, InstrumentHandle paramOwner, int sendIndex)
+            : base(name, paramOwner, 0.0f, 1.0f)
         {
+            SetRemoteMethod(paramOwner.owner.methods["set_send"]);
             m_sendIndex = sendIndex;
         }
 

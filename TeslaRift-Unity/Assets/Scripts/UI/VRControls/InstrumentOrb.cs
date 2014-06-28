@@ -5,7 +5,7 @@ using MusicIO;
 
 namespace VRControls
 {
-    public class InstrumentVRControl : MusicVRControl<Instrument>
+    public class InstrumentOrb : BaseVRControl
     {
 
         protected GameObject m_parameterScroller;
@@ -18,6 +18,9 @@ namespace VRControls
         public float m_controlsYOffset = 0.05f;
         public float m_clipCubeSpacing = 0.03f;
         public bool m_facePerformer = true;
+
+		public InstrumentHandle instrumentRef { get { return m_instrumentRef; } }
+        protected InstrumentHandle m_instrumentRef;
 
         public override void Awake()
         {
@@ -41,28 +44,35 @@ namespace VRControls
         /*
          * Initialization
          */
-        public override void Init(Instrument managedReference)
+        public void Init(InstrumentHandle managedReference)
         {
-            base.Init(managedReference);
-            InitInstrumentControls();
+            if (managedReference != null)
+            {
+                m_instrumentRef = managedReference;
+                InitInstrumentControls();
+            }
+            else
+            {
+                throw new UnassignedReferenceException();
+            }
         }
 
         public void InitInstrumentControls()
         {
-            if (musicRef != null)
+            if (m_instrumentRef != null)
             {
                 //Set name
-                gameObject.name = musicRef.name;
+                gameObject.name = instrumentRef.name;
 
                 //Set color
-                renderer.materials[1].SetColor("_Color", musicRef.color);
+                renderer.materials[1].SetColor("_Color", m_instrumentRef.color);
 
                 m_rotator = new GameObject("rotator");
                 m_rotator.transform.parent = transform;
                 m_rotator.transform.localPosition = Vector3.zero;
 
                 //Create clip scroller
-                ScrollerVRControl clipScroller = UIFactory.CreatePrefabAttachment(typeof(ScrollerVRControl)) as ScrollerVRControl;
+                Scroller clipScroller = UIFactory.CreateMusicRefAttachment(typeof(Scroller)) as Scroller;
                 clipScroller.SetItemSpacing(m_clipCubeSpacing);
                 clipScroller.AddAcceptedDocktype(typeof(ClipCube));
                 clipScroller.transform.parent = m_rotator.transform;
@@ -70,49 +80,49 @@ namespace VRControls
                 clipScroller.SetItemScale(UIFactory.sliderScale.x);
 
                 //Create clips
-                foreach (ClipParameter clip in musicRef.clipList)
+                foreach (ClipParameter clip in m_instrumentRef.clipList)
                 {
-                    ClipCube cube = UIFactory.CreatePrefabAttachment(typeof(ClipCube), clip) as ClipCube;
+                    ClipCube cube = UIFactory.CreateMusicRefAttachment(typeof(ClipCube), clip) as ClipCube;
                     cube.SetCloneable(true);
-                    cube.SetColour(musicRef.color);
+                    cube.SetColour(m_instrumentRef.color);
                     cube.DockInto(clipScroller);
                 }
 
                 //Create parameter scroller
-                ScrollerVRControl paramScroller = UIFactory.CreatePrefabAttachment(typeof(ScrollerVRControl)) as ScrollerVRControl;
+                Scroller paramScroller = UIFactory.CreateMusicRefAttachment(typeof(Scroller)) as Scroller;
                 paramScroller.transform.parent = m_rotator.transform;
                 paramScroller.SetOffset(new Vector3(m_controlsMirrorOffset, m_controlsYOffset, 0.0f));
                 paramScroller.SetItemScale(UIFactory.sliderScale.x);
 
                 //Create note slider
-                if (musicRef.isMidi)
+                if (m_instrumentRef.isMidi)
                 {
-                    SliderVRControl noteSlider = UIFactory.CreatePrefabAttachment(typeof(SliderVRControl), musicRef.noteChannel) as SliderVRControl;
+                    Slider noteSlider = UIFactory.CreateMusicRefAttachment(typeof(Slider), m_instrumentRef.noteChannel) as Slider;
                     noteSlider.SetCloneable(true);
                     noteSlider.DockInto(paramScroller);
                 }
 
                 //Create parameters
-                foreach (InstrumentParameter param in musicRef.paramList)
+                foreach (InstrumentParameter param in m_instrumentRef.paramList)
                 {
-                    SliderVRControl slider = UIFactory.CreatePrefabAttachment(typeof(SliderVRControl), param) as SliderVRControl;
+                    Slider slider = UIFactory.CreateMusicRefAttachment(typeof(Slider), param) as Slider;
                     slider.SetCloneable(true);
                     slider.DockInto(paramScroller);
                 }
 
                 //Create send sliders
-                foreach (InstrumentParameter send in musicRef.sendsList)
+                foreach (InstrumentParameter send in m_instrumentRef.sendsList)
                 {
-                    SliderVRControl slider = UIFactory.CreatePrefabAttachment(typeof(SliderVRControl), send) as SliderVRControl;
+                    Slider slider = UIFactory.CreateMusicRefAttachment(typeof(Slider), send) as Slider;
                     slider.SetCloneable(true);
                     slider.DockInto(paramScroller);
                 }
 
-                if (musicRef.clipList.Count < clipScroller.numDisplayedAttachments)
-                    clipScroller.SetNumDisplayedAttachments(musicRef.clipList.Count);
+                if (m_instrumentRef.clipList.Count < clipScroller.numDisplayedAttachments)
+                    clipScroller.SetNumDisplayedAttachments(m_instrumentRef.clipList.Count);
 
-                if (musicRef.paramList.Count < paramScroller.numDisplayedAttachments)
-                    paramScroller.SetNumDisplayedAttachments(musicRef.paramList.Count);
+                if (m_instrumentRef.paramList.Count < paramScroller.numDisplayedAttachments)
+                    paramScroller.SetNumDisplayedAttachments(m_instrumentRef.paramList.Count);
 
                 m_parameterScroller = paramScroller.gameObject;
                 m_clipScroller = clipScroller.gameObject;
@@ -133,8 +143,8 @@ namespace VRControls
             if (controlsEnabled)
             {
                 m_rotator.SetActive(true);
-                m_parameterScroller.GetComponent<ScrollerVRControl>().SetDockablesAsTweenable(true);
-                m_clipScroller.GetComponent<ScrollerVRControl>().SetDockablesAsTweenable(true);
+                m_parameterScroller.GetComponent<Scroller>().SetDockablesAsTweenable(true);
+                m_clipScroller.GetComponent<Scroller>().SetDockablesAsTweenable(true);
 
                 base.ShowControls();
             }
@@ -160,7 +170,7 @@ namespace VRControls
         public override void Update()
         {
             base.Update();
-            if (musicRef.playingClip != null)
+            if (m_instrumentRef.playingClip != null)
                 SetSelected(true);
             else
                 SetSelected(false);

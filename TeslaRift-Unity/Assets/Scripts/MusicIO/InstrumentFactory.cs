@@ -26,8 +26,8 @@ public class InstrumentFactory : MonoBehaviour {
     public float m_panelOrbitDistance = 0.2f;
     public TextAsset m_liveSessionFile;
 
-    public ScrollerVRControl m_instrumentHolder;
-    public TetrahedronBlenderVRControl m_returnHolder;
+    public Scroller m_instrumentHolder;
+    public TetrahedronBlender m_returnHolder;
 
     void Start () {
         m_instance = this;
@@ -84,21 +84,21 @@ public class InstrumentFactory : MonoBehaviour {
         
         foreach(XmlNode track in trackList){
             
-            InstrumentVRControl instrument = CreateInstrumentFromXmlList(track, peer);
+            InstrumentOrb instrument = CreateInstrumentFromXmlList(track, peer);
             if (instrument != null)
             {
                 instrument.DockInto(m_instrumentHolder);
-                InstrumentController.Instance.AddInstrument(instrument.musicRef);
+                InstrumentController.Instance.AddInstrument(instrument.instrumentRef);
             }
         }
 
         int returnIndex = 0;
         foreach (XmlNode returnTrack in returnList)
         {
-            InstrumentVRControl returnInstrument = CreateInstrumentFromXmlList(returnTrack, peer);
+            InstrumentOrb returnInstrument = CreateInstrumentFromXmlList(returnTrack, peer);
             if (returnInstrument != null)
             {
-                InstrumentController.Instance.AddReturn(returnInstrument.musicRef);
+                InstrumentController.Instance.AddReturn(returnInstrument.instrumentRef);
                 m_returnHolder.AddReturnInstrument(returnInstrument, returnIndex++); 
             }
         }
@@ -108,7 +108,7 @@ public class InstrumentFactory : MonoBehaviour {
     /*
      * Creates instruments from xml lists
      */
-    private InstrumentVRControl CreateInstrumentFromXmlList(XmlNode track, ZstPeerLink peer)
+    private InstrumentOrb CreateInstrumentFromXmlList(XmlNode track, ZstPeerLink peer)
     {
         //Get track definition
         Color color = Utils.intToColor( int.Parse(track.Attributes["color"].Value) );
@@ -133,7 +133,7 @@ public class InstrumentFactory : MonoBehaviour {
             armed = bool.Parse( track.Attributes["armed"].Value );
         }
 
-        Instrument instrumentDef = new Instrument(m_client, peer, track.Attributes["name"].Value, color, armed, trackIndex, isMidi, isReturn);
+        InstrumentHandle instrumentDef = new InstrumentHandle(m_client, peer, track.Attributes["name"].Value, color, armed, trackIndex, isMidi, isReturn);
 
         //Get devices present in track
         XmlNodeList deviceList = track.SelectNodes("device"); //device array    
@@ -180,7 +180,7 @@ public class InstrumentFactory : MonoBehaviour {
             instrumentDef.AddSend(name, sendIndex);
         }
 
-        InstrumentVRControl instrument = UIFactory.CreatePrefabAttachment(typeof(InstrumentVRControl), instrumentDef) as InstrumentVRControl;
+        InstrumentOrb instrument = UIFactory.CreateInstrumentRefAttachment(instrumentDef) as InstrumentOrb;
 
         return instrument;
     }

@@ -6,7 +6,7 @@ using MusicIO;
 
 namespace VRControls
 {
-    public class ScrollerVRControl : BaseVRControl
+    public class Scroller : BaseVRControl
     {
         //Accepted dockable objects for this ui control
         public enum ScrollerDockTypes { INSTRUMENT, SLIDER, CLIP };
@@ -68,10 +68,10 @@ namespace VRControls
             for (int i = 0; i < m_acceptedDockTypes.Length; i++)
             {
                 if (m_acceptedDockTypes[i] == ScrollerDockTypes.INSTRUMENT)
-                    AddAcceptedDocktype(typeof(InstrumentVRControl));
+                    AddAcceptedDocktype(typeof(InstrumentOrb));
 
                 if (m_acceptedDockTypes[i] == ScrollerDockTypes.SLIDER)
-                    AddAcceptedDocktype(typeof(SliderVRControl));
+                    AddAcceptedDocktype(typeof(Slider));
             }
 
             UpdateColliders(Vector3.zero, new Vector3(m_collisionWidth, m_upperVisibleBounds - m_lowerVisibleBounds, m_collisionDepth));

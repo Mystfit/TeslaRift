@@ -5,7 +5,7 @@ using UI;
 
 namespace VRControls
 {
-    public class RotaryVRControl : MusicVRControl<InstrumentParameter>
+    public class Rotary : BaseVRControl
     {
 
         public GameObject m_rotaryFill;

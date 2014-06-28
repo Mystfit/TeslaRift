@@ -5,10 +5,10 @@ using System.Collections;
 
 namespace VRControls
 {
-    public class InstrumentPickerVRControl : BaseVRControl
+    public class InstrumentPicker : BaseVRControl
     {
 
-        public ScrollerVRControl m_instrumentScroller;
+        public Scroller m_instrumentScroller;
         public GameObject m_sphere;
         public Vector3 m_scrollerOffset;
         public Color m_defaultColor;
@@ -19,7 +19,7 @@ namespace VRControls
             //m_instrumentScroller.SetActive(false);
             base.Awake();
             m_instrumentScroller.SetOffset(m_scrollerOffset);
-            m_instrumentScroller.AddAcceptedDocktype(typeof(InstrumentVRControl));
+            m_instrumentScroller.AddAcceptedDocktype(typeof(InstrumentOrb));
             //HideControls();
         }
 

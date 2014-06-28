@@ -93,7 +93,7 @@ public class ZmqMusicNode : MonoBehaviour {
         Dictionary<string, object> output = JsonConvert.DeserializeObject<Dictionary<string, object>>(methodData.output.ToString());
         int trackIndex = Convert.ToInt32(output["trackindex"]);
         int slotIndex = Convert.ToInt32(output["slotindex"]);
-        Instrument playingInstrument = InstrumentController.Instance.GetInstrumentByTrackindex(trackIndex);
+        InstrumentHandle playingInstrument = InstrumentController.Instance.GetInstrumentByTrackindex(trackIndex);
 
         if (slotIndex < 0)
         {

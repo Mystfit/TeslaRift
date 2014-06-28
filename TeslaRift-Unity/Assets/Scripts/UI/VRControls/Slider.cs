@@ -5,7 +5,7 @@ using UI;
 
 namespace VRControls
 {
-    public class SliderVRControl : MusicVRControl<InstrumentParameter>
+    public class Slider : BaseVRControl
     {
 
         public bool m_useHorizontalInput = true;

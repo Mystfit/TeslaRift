@@ -29,9 +29,10 @@ namespace MusicIO
             m_isDirty = true;
         }
 
-        public NoteParameter(string name, Instrument paramOwner)
-            : base(name, paramOwner, paramOwner.owner.methods["play_note"], 0.0f, 127.0f)
+        public NoteParameter(string name, InstrumentHandle paramOwner)
+            : base(name, paramOwner, 0.0f, 127.0f)
         {
+            SetRemoteMethod(paramOwner.owner.methods["play_note"]);
         }
 
         public override void Send(bool force)

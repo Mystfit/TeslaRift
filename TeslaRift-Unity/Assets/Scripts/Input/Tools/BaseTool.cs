@@ -15,7 +15,7 @@ public class BaseTool : MonoBehaviour {
         
     //Variables
     protected List<object> m_targets = null;
-    protected Instrument m_instrumentRef = null;
+    protected InstrumentHandle m_instrumentRef = null;
     
     public enum ToolHand {BOTH = 0, LEFT, RIGHT };
     protected ToolHand m_hand;
@@ -66,8 +66,8 @@ public class BaseTool : MonoBehaviour {
         TransitionIn();
     }
     
-    //Instrument tools
-    public void setInstrument(Instrument instrument){
+    //InstrumentOrb tools
+    public void setInstrument(InstrumentHandle instrument){
         m_instrumentRef = instrument;
     }
     

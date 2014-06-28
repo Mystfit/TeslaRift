@@ -5,12 +5,12 @@ using UI;
 
 namespace VRControls
 {
-    public class ClipCube : MusicVRControl<ClipParameter>
+    public class ClipCube : BaseVRControl
     {
         public bool m_toggleClip = false;
 
         protected BarSlider m_barSlider;
-        protected SliderVRControl m_sliderAttach;
+        protected Slider m_sliderAttach;
         protected UIFrame m_frame;
 
         public override void Awake()
@@ -26,7 +26,7 @@ namespace VRControls
             m_frame.SetMatchTextWidth(true);
         }
 
-        public override void Init(ClipParameter managedReference)
+        public override void Init(InstrumentParameter managedReference)
         {
             base.Init(managedReference);
             m_frame.SetLabel(managedReference.name);
@@ -50,7 +50,7 @@ namespace VRControls
         {
             if (musicRef != null)
             {
-                switch (musicRef.clipState)
+                switch (((ClipParameter)musicRef).clipState)
                 {
                     case ClipParameter.ClipState.IS_DISABLED:
                         renderer.materials[1].SetColor("_Color", Color.grey);

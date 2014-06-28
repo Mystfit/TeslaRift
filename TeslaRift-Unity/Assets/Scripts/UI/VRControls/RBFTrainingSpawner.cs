@@ -3,11 +3,11 @@ using System.Collections;
 
 namespace VRControls
 {
-    public class RBFTrainingSpawnerVRControl : BaseVRControl
+    public class RBFTrainingSpawner : BaseVRControl
     {
 
-        public RBFSphereVRControl m_rbfSphere1;
-        public RBFSphereVRControl m_rbfSphere2;
+        public RBFSphere m_rbfSphere1;
+        public RBFSphere m_rbfSphere2;
         public Color m_editingColor;
         public Color m_performingColor;
         public GameObject m_centerLight;

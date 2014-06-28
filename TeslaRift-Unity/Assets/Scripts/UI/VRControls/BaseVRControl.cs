@@ -286,7 +286,7 @@ namespace VRControls
                     //Clone instrument here
                     if (IsCloneable)
                     {
-                        BaseVRControl attach = UI.UIFactory.CreatePrefabAttachment(this);
+                        BaseVRControl attach = UI.UIFactory.CreateMusicRefAttachment(this);
                         attach.StartDragging(HydraController.Instance.GetHand(m_hand));
                     }
                     else
@@ -350,8 +350,8 @@ namespace VRControls
          */
         public virtual void DockInto(BaseVRControl attach)
         {
+			m_dockedInto = attach;
             attach.AddDockableAttachment(this);
-            m_dockedInto = attach;
             m_dockedIntoLast = attach;
             if (IsDraggable) SetIsDragging(false);
         }
@@ -531,17 +531,13 @@ namespace VRControls
         public virtual void Gesture_PushIn() { }
         public virtual void Gesture_PullOut() { }
         public virtual void Gesture_Twist(float amount) { }
-    }
 
 
-    /*
-     * Derived classes from BaseVRControl can specify what type of music specific object they are meant to represent
-     */
-    public class MusicVRControl<T> : BaseVRControl
-    {
-
-        private T m_musicRef;
-        public virtual void Init(T managedReference)
+        /*
+         * MusicIO references
+         */
+        private InstrumentParameter m_musicRef;
+        public virtual void Init(InstrumentParameter managedReference)
         {
             m_musicRef = managedReference;
             bHasMusicRef = true;
@@ -550,6 +546,6 @@ namespace VRControls
             if (m_respondsToToolMode == null)
                 m_respondsToToolMode = new BaseTool.ToolMode[] { BaseTool.ToolMode.PRIMARY, BaseTool.ToolMode.SECONDARY };
         }
-        public T musicRef { get { return m_musicRef; } }
+        public InstrumentParameter musicRef { get { return m_musicRef; } }
     }
 }

@@ -5,37 +5,34 @@ using System.Collections;
 
 namespace VRControls
 {
-    public class RBFPlugVRControl : BaseVRControl
+    public class RBFPlug : BaseVRControl
     {
-
-        public RBFSphereVRControl m_rbfSphere;
-        public RotaryVRControl m_rotary;
-        public ScrollerVRControl m_paramscroller;
+        public RBFSphere m_rbfSphere;
+        public Rotary m_rotary;
+        public Scroller m_paramscroller;
         public Color m_performColor;
         public Color m_editColor;
 
         //Plug values
-        public void SetVal(float val)
+        public void SetPlugVal(float val)
         {
-            SetVal(val, false);
+            SetPlugVal(val, false);
         }
-        public void SetVal(float val, bool silent)
+        public void SetPlugVal(float val, bool silent)
         {
-            m_val = Mathf.Clamp(val, 0.0f, 1.0f);
-            m_rotary.setVal(m_val);
+            musicRef.setVal(Mathf.Clamp(val, 0.0f, 1.0f));
+            m_rotary.setVal(musicRef.val);
             if (!silent)
                 m_rbfSphere.UpdatePlugValues(this);
             if (m_plugTop != null)
-                m_plugTop.localPosition = new Vector3(0.0f, 0.0f, m_val * m_maxPlugDragDistance);
+                m_plugTop.localPosition = new Vector3(0.0f, 0.0f, musicRef.val * m_maxPlugDragDistance);
             if (m_plugInner != null)
-                m_plugInner.localScale = new Vector3(m_innerPlugScale.x, m_innerPlugScale.y, m_val * m_innerPlugScale.z);
+                m_plugInner.localScale = new Vector3(m_innerPlugScale.x, m_innerPlugScale.y, musicRef.val * m_innerPlugScale.z);
             if (m_plugExterior != null)
-                m_plugExterior.localScale = new Vector3(m_exteriorPlugScale.x, m_exteriorPlugScale.y, m_val * m_exteriorPlugScale.z);
+                m_plugExterior.localScale = new Vector3(m_exteriorPlugScale.x, m_exteriorPlugScale.y, musicRef.val * m_exteriorPlugScale.z);
 
-            SetSliderVals(m_val);
+            SetSliderVals(musicRef.val);
         }
-        public float val { get { return m_val; } }
-        protected float m_val;
 
         //Plug drag/rotate values
         protected float m_lastAngle;
@@ -60,9 +57,11 @@ namespace VRControls
         public override void Awake()
         {
             base.Awake();
-            AddAcceptedDocktype(typeof(SliderVRControl));
+            AddAcceptedDocktype(typeof(Slider));
             SetAsDock(true);
             m_paramscroller.SetItemScale(UIFactory.sliderScale.x);
+
+            Init(new InstrumentParameter("plug"));
 
             m_innerPlugScale = m_plugInner.localScale;
             m_exteriorPlugScale = m_plugExterior.localScale;
@@ -71,7 +70,7 @@ namespace VRControls
 
         public override bool AddDockableAttachment(BaseVRControl attach)
         {
-            SliderVRControl slider = attach as SliderVRControl;
+            Slider slider = attach as Slider;
             slider.SetCloneable(false);
             slider.SetIsDraggable(true);
             slider.SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.GRABBING });
@@ -131,8 +130,8 @@ namespace VRControls
                     Vector3 pos = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(m_hand));
                     float delta = m_lastPlugDragPos - pos.z;
 
-                    float newVal = m_val - (delta / m_maxPlugDragDistance);
-                    SetVal(Utils.Clamp(newVal, 0.0f, 1.0f));
+                    float newVal = musicRef.val - (delta / m_maxPlugDragDistance);
+                    SetPlugVal(Utils.Clamp(newVal, 0.0f, 1.0f));
                     m_lastPlugDragPos = pos.z;
                 }
             }
@@ -144,7 +143,7 @@ namespace VRControls
         {
             if (m_paramscroller.DockedChildren != null)
             {
-                foreach (SliderVRControl attach in m_paramscroller.DockedChildren)
+                foreach (Slider attach in m_paramscroller.DockedChildren)
                 {
                     if (attach.HasMusicRef)
                     {

@@ -30,9 +30,10 @@ namespace MusicIO
             m_clipState = state;
         }
 
-        public ClipParameter(string name, Instrument paramOwner, int clipScene)
-            : base(name, paramOwner, paramOwner.owner.methods["fire_clip"], 0, 127)
+        public ClipParameter(string name, InstrumentHandle paramOwner, int clipScene)
+            : base(name, paramOwner, 0, 127)
         {
+            SetRemoteMethod(paramOwner.owner.methods["fire_clip"]);
             m_scene = clipScene;
         }
 

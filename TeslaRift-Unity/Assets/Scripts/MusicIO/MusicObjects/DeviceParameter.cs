@@ -19,9 +19,10 @@ namespace MusicIO
         protected int m_parameterIndex;
         public int parameterIndex { get { return m_parameterIndex; } }
 
-        public DeviceParameter(string name, Instrument paramOwner, int deviceindex, int paramindex, float min, float max)
-            : base(name, paramOwner, paramOwner.owner.methods["set_value"], min, max)
+        public DeviceParameter(string name, InstrumentHandle paramOwner, int deviceindex, int paramindex, float min, float max)
+            : base(name, paramOwner, min, max)
         {
+            SetRemoteMethod(paramOwner.owner.methods["set_value"]);
             m_deviceIndex = deviceindex;
             m_parameterIndex = paramindex;
         }
