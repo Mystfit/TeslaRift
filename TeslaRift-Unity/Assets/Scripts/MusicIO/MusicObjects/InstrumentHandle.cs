@@ -16,28 +16,39 @@ namespace MusicIO
     //**
     public class InstrumentHandle
     {
-
+        //MusicObjects belonging to this instrument
         protected List<InstrumentParameter> m_clips;
         protected List<InstrumentParameter> m_params;
         protected List<InstrumentParameter> m_sends;
 
+        //Dedicated note parameter for outgoing midi notes
         protected NoteParameter m_noteChannel;
+        public NoteParameter noteChannel { get { return m_noteChannel; } }
 
+        public string name { get { return m_name; } }
         string m_name;
-        ZstPeerLink m_owner;
-        bool m_isMidi = false;
-        bool m_playable = false;
-        bool m_isEffect = false;
-        Color m_color;
-        int m_trackIndex;
-        int m_lastPlayedNote;
 
-        public InstrumentHandle(string instrumentClient, ZstPeerLink instrumentOwner, string instrumentName, Color color, bool playable, int trackIndex, bool isMidi, bool isReturn)
+        public ZstPeerLink owner { get { return m_owner; } }
+        ZstPeerLink m_owner;
+
+        public Color color { get { return m_color; } }
+        Color m_color;
+
+        public bool isMidi { get { return m_isMidi; } }
+        bool m_isMidi = false;
+
+        public bool isEffect { get { return m_isEffect; } }
+        bool m_isEffect = false;
+
+        public int trackIndex { get { return m_trackIndex; } }
+        int m_trackIndex;
+
+
+        public InstrumentHandle(ZstPeerLink instrumentOwner, string instrumentName, Color color, int trackIndex, bool isMidi, bool isReturn)
         {
             m_owner = instrumentOwner;
 			m_name = instrumentName;
             m_color = color;
-            m_playable = playable;
             m_trackIndex = trackIndex;
             m_isEffect = isReturn;
 
@@ -50,14 +61,7 @@ namespace MusicIO
                 m_noteChannel = new NoteParameter("note", this);
         }
 
-        public string name { get { return m_name; } }
-        public ZstPeerLink owner { get { return m_owner; } }
-        public Color color { get { return m_color; } }
-        public bool playable { get { return m_playable; } }
-        public bool isMidi { get { return m_isMidi; } }
-        public bool isEffect { get { return m_isEffect; } }
-        public int trackIndex { get { return m_trackIndex; } }
-        public NoteParameter noteChannel { get { return m_noteChannel; } }
+       
 
 
         // Clip functions

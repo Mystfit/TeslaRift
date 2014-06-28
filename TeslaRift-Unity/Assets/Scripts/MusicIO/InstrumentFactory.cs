@@ -15,9 +15,6 @@ public class InstrumentFactory : MonoBehaviour {
     public static InstrumentFactory Instance{ get { return m_instance; }}
     private static InstrumentFactory m_instance;
     
-    public string m_client;     //Target OSC for instruments
-    protected string m_source;      //Source we are sending messages from (first adress prefix in outgoing OSC)
-
     public string[] m_instrumentFilter;
     public GameObject instrumentPrefab = null;
     public GameObject paramPanelPrefab;
@@ -31,7 +28,6 @@ public class InstrumentFactory : MonoBehaviour {
 
     void Start () {
         m_instance = this;
-        m_source = GlobalConfig.Instance.ProjectSourceName;
     }
 
     /*
@@ -133,7 +129,7 @@ public class InstrumentFactory : MonoBehaviour {
             armed = bool.Parse( track.Attributes["armed"].Value );
         }
 
-        InstrumentHandle instrumentDef = new InstrumentHandle(m_client, peer, track.Attributes["name"].Value, color, armed, trackIndex, isMidi, isReturn);
+        InstrumentHandle instrumentDef = new InstrumentHandle(peer, track.Attributes["name"].Value, color, trackIndex, isMidi, isReturn);
 
         //Get devices present in track
         XmlNodeList deviceList = track.SelectNodes("device"); //device array    

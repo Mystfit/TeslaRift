@@ -71,7 +71,6 @@ public class HydraController : MonoBehaviour {
         m_rightInstrumentInterior = new List<GameObject>();
         m_leftHandHydra = m_leftHand.GetComponent<HydraHand>();
         m_rightHandHydra = m_rightHand.GetComponent<HydraHand>();
-
         m_leftGlove = m_leftHand.GetComponent<GloveController>();
         m_rightGlove = m_rightHand.GetComponent<GloveController>();
     }
@@ -305,8 +304,14 @@ public class HydraController : MonoBehaviour {
         
         SetCommonTools(BaseTool.ToolHand.LEFT);
         SetCommonTools(BaseTool.ToolHand.RIGHT);
-        SetIndividualToolsRight(BaseTool.ToolHand.LEFT);
-        //SetRhythmTools(m_rhythmGlove);
+        
+        //Keyboard inputs
+        if (Input.GetKeyDown(KeyCode.Space))
+            FreezeHands();
+        if (Input.GetKeyUp(KeyCode.Space)){
+            if (!m_gloveCalibrator.isCalibrated)
+                m_gloveCalibrator.StartCalibration();
+        } 
     }
 
     public void FreezeHands(){
@@ -320,96 +325,35 @@ public class HydraController : MonoBehaviour {
     }
 
     
-    
-    /*
-     * Sets tools for specifically th right controler (currently the only one being used. Will be changed)
-     */
-    public void SetIndividualToolsRight(BaseTool.ToolHand hand){
-        //if(m_rightHandController != null)
-        //{ 
-            //Hand calibration
-            //----------------
-            if(Input.GetKeyDown(KeyCode.Space)){
-            //if(m_rightHandController.GetButton( SixenseButtons.START ) || Input.GetKeyDown(KeyCode.P)){
-                //GetComponent<SixenseInput>().RebindHands();
-                FreezeHands();
-            }
-            
-            if(Input.GetKeyUp(KeyCode.Space)){
-            //if ( m_rightHandController.GetButtonUp( SixenseButtons.START ) || Input.GetKeyUp(KeyCode.P)){
-                
-                if(!m_gloveCalibrator.isCalibrated){
-                    m_gloveCalibrator.StartCalibration();
-                }
-            } 
-            
-            /*else if(m_rightHandController.GetButton(SixenseButtons.START) && m_rightHandController.GetButtonUp(SixenseButtons.BUMPER)){
-                gameObject.GetComponent<SixenseInput>().RebindHands();
-            } */
-        //}
-    }
-    
-    
-    
     /*
      * Common tools for each hand
      */
     public void SetCommonTools(BaseTool.ToolHand hand){
         
         GloveController m_glove = GetGloveController(hand);
-                    
-        //Physics selector
-        //------------
-        if(m_glove.GetGestureDown("CLOSED_HAND") || Input.GetKeyDown(KeyCode.LeftControl)){
+
+        if(m_glove.GetGestureDown("CLOSED_HAND") || Input.GetKeyDown(KeyCode.LeftControl))
             ToolController.Instance.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.GRABBING);
-        } 
-        
-        //Physics pull
-        //------------
-        if(m_glove.GetGestureDown("PINKY") || Input.GetKeyDown(KeyCode.LeftShift)){
+        else if(m_glove.GetGestureDown("PINKY") || Input.GetKeyDown(KeyCode.LeftShift))
             ToolController.Instance.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.TERTIARY);
-        }
-
-//      else if(m_glove.GetGestureDown("THREE_SWIPE") || Input.GetKeyDown(KeyCode.LeftShift)){
-//          ToolController.Instance.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.TERTIARY);
-//      }
-        
-        //Gesture Selector Primary
-        //--------------------
-        else if(m_glove.GetGestureDown("INDEX_POINT") || Input.GetKeyDown(KeyCode.W)){
+        else if(m_glove.GetGestureDown("INDEX_POINT") || Input.GetKeyDown(KeyCode.W))
             ToolController.Instance.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.PRIMARY);
-        }
-        
-                    //Gesture selector secondary
-        //--------------------
-        else if(m_glove.GetGestureDown("INDEX_MIDDLE") || Input.GetKeyDown(KeyCode.E)){
+        else if(m_glove.GetGestureDown("INDEX_MIDDLE") || Input.GetKeyDown(KeyCode.E))
             ToolController.Instance.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.SECONDARY); 
-        }
-
         else if (m_glove.GetGestureDown("ROCK_ON") || Input.GetKeyDown(KeyCode.S))
-        {
             ToolController.Instance.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.TERTIARY);
-        }
 
-        //Fingerplay gestures
+        //FingerPlaying gestures
         if(m_glove.GetGestureDown("PLAY_1"))
-        {
             ToolController.Instance.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.PLAY1);
-        } else if(m_glove.GetGestureDown("PLAY_2"))
-        {
+        else if(m_glove.GetGestureDown("PLAY_2"))
             ToolController.Instance.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.PLAY2);
-        }
         else if (m_glove.GetGestureDown("PLAY_3"))
-        {
             ToolController.Instance.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.PLAY3);
-        }
         else if (m_glove.GetGestureDown("PLAY_4"))
-        {
             ToolController.Instance.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.PLAY4);
-        }
 
         //Return to idle
-        //--------------
         if(m_glove.GetGestureDown("IDLE_HAND"))
         {
             //ToolController.Instance.PopTool(hand);
