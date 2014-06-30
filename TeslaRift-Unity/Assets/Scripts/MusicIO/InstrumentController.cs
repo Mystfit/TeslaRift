@@ -4,87 +4,73 @@ using System.Collections.Generic;
 using MusicIO;
 
 public class InstrumentController : MonoBehaviour {
-	
-	//Singleton references
-	private static InstrumentController m_instance;
-	public static InstrumentController Instance{ get { return m_instance; }}
-	
-	//Instrument references
-	protected List<BaseInstrument> m_instruments;
-    protected List<BaseInstrument> m_returns;
-	protected BaseInstrument m_selectedInstrument;
-	protected GameObject m_lastSelectedGameInstrument = null;
-	
-	
-	// Unity
-	//-------------------------------------
-	void Awake () {
-		m_instruments = new List<BaseInstrument>();
-        m_returns = new List<BaseInstrument>();
-		m_instance = this;
-	}
-	
-	
-	void Update () {
-		foreach(BaseInstrument instrument in m_instruments){
-			instrument.update();
-		}
+    
+    //Singleton references
+    private static InstrumentController m_instance;
+    public static InstrumentController Instance{ get { return m_instance; }}
+    
+    //InstrumentOrb references
+    protected List<InstrumentHandle> m_instruments;
+    protected List<InstrumentHandle> m_returns;
+    protected InstrumentHandle m_selectedInstrument;
+    protected GameObject m_lastSelectedGameInstrument = null;
+    
+    
+    // Unity
+    //-------------------------------------
+    void Awake () {
+        m_instruments = new List<InstrumentHandle>();
+        m_returns = new List<InstrumentHandle>();
+        m_instance = this;
+    }
+    
+    
+    void Update () {
+        foreach(InstrumentHandle instrument in m_instruments){
+            instrument.update();
+        }
 
-        foreach (BaseInstrument instrument in m_returns)
+        foreach (InstrumentHandle instrument in m_returns)
         {
             instrument.update();
         }
-	}
-	
-	
-	/*
-	 * Instrument reset
-	 */
-	public void ResetInstrumentParameters(BaseInstrument instrument){
-		instrument.Reset();
-		foreach(GenericMusicParam param in instrument.paramList){
-			param.setEnabled(false);
-		}
-	}
-		
-	public void ResetInstrument(BaseInstrument instrument){
-		ResetInstrumentParameters(instrument);
-	}
+    }
+    
 
 
-	//Instrument selection
-	//--------------------
-	public BaseInstrument SelectedInstrument{ get { return m_selectedInstrument; } }
-	
-	
-	/*
-	 * Adds an instrument
-	 */
-	public void AddInstrument(BaseInstrument instrument){
-		m_instruments.Add(instrument);
-	}
+    //InstrumentOrb selection
+    //--------------------
+    public InstrumentHandle SelectedInstrument{ get { return m_selectedInstrument; } }
+    
+    
+    /*
+     * Adds an instrument
+     */
+    public void AddInstrument(InstrumentHandle instrument){
+        m_instruments.Add(instrument);
+    }
 
-    public void AddReturn(BaseInstrument instrument)
+    public void AddReturn(InstrumentHandle instrument)
     {
         m_returns.Add(instrument);
     }
-	
-	
-	/*
-	 * Gets instrument by name
-	 */
-	public BaseInstrument GetInstrumentByName(string targetInstrument){
-		foreach(BaseInstrument instrument in m_instruments){
-			if(instrument.Name == targetInstrument)
-				return instrument;
-		}
+    
+    
+    /*
+     * Gets instrument by name
+     */
+    public InstrumentHandle GetInstrumentByName(string targetInstrument){
+        foreach(InstrumentHandle instrument in m_instruments){
+            if(instrument.name == targetInstrument)
+                return instrument;
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-    public BaseInstrument GetInstrumentByTrackindex(int trackindex)
+    public InstrumentHandle GetInstrumentByTrackindex(int trackindex)
     {
-        foreach (BaseInstrument instrument in m_instruments)
+        foreach (InstrumentHandle instrument in m_instruments)
         {
             if (instrument.trackIndex == trackindex)
                 return instrument;
@@ -96,20 +82,20 @@ public class InstrumentController : MonoBehaviour {
     /*
      * Finds a specific parameter by index
      */
-    public BaseInstrumentParam FindParameter(int trackindex, int deviceindex, int parameterindex, int category){
+    public DeviceParameter FindParameter(int trackindex, int deviceindex, int parameterindex, int category){
 
-        List<BaseInstrument> instrumentList;
+        List<InstrumentHandle> instrumentList;
 
         if (category == 0)
             instrumentList = m_instruments;
         else
             instrumentList = m_returns;
 
-        foreach (BaseInstrument instrument in instrumentList)
+        foreach (InstrumentHandle instrument in instrumentList)
         {
             if (instrument.trackIndex == trackindex)
             {
-                foreach (BaseInstrumentParam param in instrument.paramList)
+                foreach (DeviceParameter param in instrument.paramList)
                 {
                     if (param.deviceIndex == deviceindex && param.parameterIndex == parameterindex)
                     {
@@ -122,7 +108,7 @@ public class InstrumentController : MonoBehaviour {
     }
 
     public SendParameter FindSendParameter(int trackindex, int sendindex){
-        foreach (BaseInstrument instrument in m_instruments)
+        foreach (InstrumentHandle instrument in m_instruments)
         {
             if (instrument.trackIndex == trackindex)
             {
@@ -142,13 +128,13 @@ public class InstrumentController : MonoBehaviour {
     /*
      * Find a specific clip by index
      */
-    public InstrumentClip FindClip(int trackindex, int clipindex)
+    public ClipParameter FindClip(int trackindex, int clipindex)
     {
-        foreach (BaseInstrument instrument in m_instruments)
+        foreach (InstrumentHandle instrument in m_instruments)
         {
             if (instrument.trackIndex == trackindex)
             {
-                foreach (InstrumentClip clip in instrument.clipList)
+                foreach (ClipParameter clip in instrument.clipList)
                 {
                     if (clip.scene == clipindex)
                     {
@@ -159,19 +145,19 @@ public class InstrumentController : MonoBehaviour {
         }
         return null;
     }
-	
-	
-	/*
-	 * Remembers last selected isntrument
-	 */
-	public void SetLastSelectedGameInstrument(GameObject gameInstrument){
-		m_lastSelectedGameInstrument = gameInstrument;
-	}
-	
-	
-	/*
-	 * Gets last selected isntrument
-	 */
-	public GameObject LastSelectedGameInstrument{ get { return m_lastSelectedGameInstrument; }}
+    
+    
+    /*
+     * Remembers last selected isntrument
+     */
+    public void SetLastSelectedGameInstrument(GameObject gameInstrument){
+        m_lastSelectedGameInstrument = gameInstrument;
+    }
+    
+    
+    /*
+     * Gets last selected isntrument
+     */
+    public GameObject LastSelectedGameInstrument{ get { return m_lastSelectedGameInstrument; }}
 
 }

@@ -4,37 +4,27 @@ using System.Collections.Generic;
 using DotNumerics.LinearAlgebra;
 
 public class GlobalConfig : MonoBehaviour {
-	
-	public bool IsClient = false;
-	public bool ShowtimeEnabled = true;
-	public string ProjectSourceName;
+    
+    public bool IsClient = false;
+    public bool ShowtimeEnabled = true;
+    public string ProjectSourceName;
 
-	public static GlobalConfig m_instance;
+    public static GlobalConfig m_instance;
 
-	// Use this for initialization
-	void Awake () {
-		m_instance = this;
+    // Use this for initialization
+    void Awake () {
+        m_instance = this;
+    }
 
-        Debug.Log(
-            Utils.BarycentricTetrahedronLerp(
-               new Vector3(0.0f, 0.0f, 0.0f),
-               new Vector3(1.0f, 0.0f, 0.0f),
-               new Vector3(0.5f, 0.0f, 0.5f),
-               new Vector3(0.0f, 1.0f, 0.0f),
-               new Vector3(0.5f, 0.5f, 0.5f)
-           )
-        );
-	}
-
-	public static GlobalConfig Instance{ get { return m_instance; }}
-	
-	// Update is called once per frame
-	void Update () {
-		if(Input.GetKeyDown(KeyCode.Escape))
-			Application.Quit();
-		
-		if(Input.GetKeyDown(KeyCode.R)){
-			Application.LoadLevel(Application.loadedLevel);
-		}
-	}
+    public static GlobalConfig Instance{ get { return m_instance; }}
+    
+    // Update is called once per frame
+    void Update () {
+        if(Input.GetKeyDown(KeyCode.Escape))
+            Application.Quit();
+        
+        if(Input.GetKeyDown(KeyCode.R)){
+            Application.LoadLevel(Application.loadedLevel);
+        }
+    }
 }
