@@ -42,14 +42,6 @@ public class SixenseObjectController : MonoBehaviour {
 	}
 	
 	
-	void OnGUI()
-	{
-		if ( !m_enabled )
-		{
-			GUI.Box( new Rect( Screen.width / 2 - 100, Screen.height - 40, 200, 30 ),  "Press Start To Move/Rotate" );
-		}
-	}
-	
 	public void Calibrate(SixenseInput.Controller controller){
 		if (!this.m_bCalibrated){
 			this.m_handOffset = Vector3.zero;

@@ -22,6 +22,8 @@ namespace VRControls
             SetAsDock(true);
             SetCollideable(true);
             AddAcceptedDocktype(typeof(ClipCube));
+            AddAcceptedDocktype(typeof(ValueTrigger));
+
             m_cubeHolders = new ClipCubeHolder[m_cubeDepth, m_cubeHeight, m_cubeWidth];
 
             for (int x = 0; x < m_cubeDepth; x++)
@@ -134,10 +136,7 @@ namespace VRControls
         {
             ClipCubeHolder holder = GetCubeHolder(trigger, coords[1], coords[2]);
             if (holder.attach != null)
-            {
-                ClipCube clip = holder.attach as ClipCube;
-                clip.musicRef.Send();
-            }
+				holder.attach.musicRef.Send();
         }
 
 

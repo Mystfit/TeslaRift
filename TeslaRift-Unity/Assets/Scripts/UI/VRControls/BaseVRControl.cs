@@ -213,8 +213,10 @@ namespace VRControls
                 }
             }
 
-            if (state)
-                m_dockedInto.ChildAttachmentSelected(this);
+            if (state){
+				if(m_dockedInto != null)
+                	m_dockedInto.ChildAttachmentSelected(this);
+			}
 
             m_selected = state;
         }
@@ -413,8 +415,8 @@ namespace VRControls
                 }
             }
 
-            if (m_dockedIntoLast != null)
-                DockInto(m_dockedIntoLast);
+            //if (m_dockedIntoLast != null)
+            //    DockInto(m_dockedIntoLast);
         }
 
 
@@ -537,9 +539,11 @@ namespace VRControls
          * MusicIO references
          */
         private InstrumentParameter m_musicRef;
+        private InstrumentParameter m_frozenMusicRef;
         public virtual void Init(InstrumentParameter managedReference)
         {
             m_musicRef = managedReference;
+            m_frozenMusicRef = new InstrumentParameter(m_musicRef.name, m_musicRef.owner, m_musicRef.min, m_musicRef.max);
             bHasMusicRef = true;
 
             //Set default tool filter if not set
@@ -547,5 +551,9 @@ namespace VRControls
                 m_respondsToToolMode = new BaseTool.ToolMode[] { BaseTool.ToolMode.PRIMARY, BaseTool.ToolMode.SECONDARY };
         }
         public InstrumentParameter musicRef { get { return m_musicRef; } }
+
+        protected bool bIsFrozen;
+        public void Freeze() { bIsFrozen = true; }
+        public void Unfreeze() { bIsFrozen = false; }
     }
 }

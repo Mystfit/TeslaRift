@@ -23,6 +23,9 @@ namespace MusicIO
         protected float m_valMin = 0.0f;
         protected float m_valMax = 1.0f;
 
+        public float min { get { return m_valMin; } }
+        public float max { get { return m_valMax; } }
+
         /*
          * Owning instrument
          */
@@ -34,13 +37,14 @@ namespace MusicIO
          */
         protected ZstMethod m_remoteMethod;
         protected void SetRemoteMethod(ZstMethod method) { m_remoteMethod = method; }
-		public ZstMethod remoteMethod { get { return m_remoteMethod; } }
+        public ZstMethod remoteMethod { get { return m_remoteMethod; } }
 
         /*
          * Arguments for remote method
          */
         protected Dictionary<string, object> m_remoteMethodArgs;
-        public void SetRemoteArg(string key, object val) {
+        public void SetRemoteArg(string key, object val)
+        {
             if (m_remoteMethod != null)
             {
                 if (m_remoteMethod.args.ContainsKey(key))
@@ -52,7 +56,7 @@ namespace MusicIO
             {
                 throw new UnassignedReferenceException();
             }
-		}
+        }
 
         /*
          * Name
@@ -84,7 +88,12 @@ namespace MusicIO
          * Value getters
          */
         public float val { get { return m_fValue; } }
-        public float scaledVal { get { return Utils.Remap(m_fValue, 0.0f, 1.0f, m_valMin, m_valMax); } }
+        public float scaledVal { 
+            get { 
+                float mappedVal = Utils.Remap(m_fValue, 0.0f, 1.0f, m_valMin, m_valMax); 
+                return (isValueRounded) ? Mathf.Round(mappedVal) : mappedVal; 
+            } 
+        }
         public int category { get { return (m_owner.isEffect) ? 1 : 0; } }
 
         /*
@@ -98,8 +107,16 @@ namespace MusicIO
         {
             if (!silent)
                 m_isDirty = true;
+
             m_fValue = value;
         }
+
+        /*
+         * Clamped attribute state
+         */
+        public bool isValueRounded { get { return m_valueIsRounded; } }
+        public void SetValueRounded(bool state) { m_valueIsRounded = state; }
+        protected bool m_valueIsRounded;
 
 
         /*
@@ -118,7 +135,7 @@ namespace MusicIO
         {
             if (isDirty || force)
             {
-                if(m_remoteMethod != null)
+                if (m_remoteMethod != null)
                     ZmqMusicNode.Instance.node.updateRemoteMethod(m_remoteMethod, m_remoteMethod.args);
             }
             setClean();

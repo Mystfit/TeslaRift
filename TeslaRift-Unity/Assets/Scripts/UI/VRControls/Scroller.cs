@@ -9,7 +9,7 @@ namespace VRControls
     public class Scroller : BaseVRControl
     {
         //Accepted dockable objects for this ui control
-        public enum ScrollerDockTypes { INSTRUMENT, SLIDER, CLIP };
+        public enum ScrollerDockTypes { INSTRUMENT, SLIDER, CLIP, VALUETRIGGER };
         public ScrollerDockTypes[] m_acceptedDockTypes;
 
         //Colliders
@@ -72,6 +72,9 @@ namespace VRControls
 
                 if (m_acceptedDockTypes[i] == ScrollerDockTypes.SLIDER)
                     AddAcceptedDocktype(typeof(Slider));
+
+                if (m_acceptedDockTypes[i] == ScrollerDockTypes.VALUETRIGGER)
+                    AddAcceptedDocktype(typeof(ValueTrigger));
             }
 
             UpdateColliders(Vector3.zero, new Vector3(m_collisionWidth, m_upperVisibleBounds - m_lowerVisibleBounds, m_collisionDepth));

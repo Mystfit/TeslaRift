@@ -58,7 +58,10 @@ namespace MusicIO
 
             m_isMidi = isMidi;
             if (isMidi)
+            {
                 m_noteChannel = new NoteParameter("note", this);
+                m_noteChannel.SetValueRounded(true);
+            }
         }
 
        
@@ -148,6 +151,9 @@ namespace MusicIO
 
             foreach (SendParameter sendVol in m_sends)
                 sendVol.Send();
+
+			if(m_noteChannel != null)
+				m_noteChannel.Send();
         }
     }
 }

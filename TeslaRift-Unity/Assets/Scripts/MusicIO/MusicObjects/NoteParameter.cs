@@ -12,8 +12,8 @@ namespace MusicIO
     public class NoteParameter : InstrumentParameter
     {
         public int velocity = 127;
-        public int noteTrigger;
-        public int noteIndex;
+        public int noteTrigger = 1;
+        public int noteIndex = 0;
 
         public void setNote(int notePitch, int noteVelocity, int index, int trigger)
         {

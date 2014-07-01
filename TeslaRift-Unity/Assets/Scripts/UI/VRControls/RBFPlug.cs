@@ -152,11 +152,5 @@ namespace VRControls
                 }
             }
         }
-
-        public override void Update()
-        {
-        }
-
-
     }
 }

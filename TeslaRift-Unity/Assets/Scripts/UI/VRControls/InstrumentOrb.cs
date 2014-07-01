@@ -92,6 +92,8 @@ namespace VRControls
                 Scroller paramScroller = UIFactory.CreateMusicRefAttachment(typeof(Scroller)) as Scroller;
                 paramScroller.transform.parent = m_rotator.transform;
                 paramScroller.SetOffset(new Vector3(m_controlsMirrorOffset, m_controlsYOffset, 0.0f));
+
+                paramScroller.SetItemSpacing(m_clipCubeSpacing);
                 paramScroller.SetItemScale(UIFactory.sliderScale.x);
 
                 //Create note slider

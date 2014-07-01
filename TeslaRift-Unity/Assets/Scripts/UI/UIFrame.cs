@@ -66,10 +66,14 @@ public class UIFrame : MonoBehaviour {
      * Active dimensions
      */
     private float m_currentOutlineOffset;
+    public float currentWidth { get { return m_currentWidth; } }
     private float m_currentWidth;
+    public float currentHeight { get { return m_currentHeight; } }
     private float m_currentHeight;
     private float m_lastWidth = 0.0f;
     private float m_lastHeight = 0.0f;
+    public bool isAnimating { get { return bIsAnimating; } }
+    private bool bIsAnimating;
     private bool bRotated = false;
     private bool bIsOutlineVisible = false;
     
@@ -85,8 +89,10 @@ public class UIFrame : MonoBehaviour {
         for(int i = 0; i < m_selectGuiPanels.childCount; i++)
             m_outlineFrameComponents.Add(m_selectGuiPanels.GetChild(i).gameObject);
         
-        m_lastWidth = m_frameWidth;
+		m_lastWidth = m_frameWidth;		
+		m_currentWidth = m_frameWidth;
         m_lastHeight = m_frameHeight;
+		m_currentHeight = m_frameHeight;
                         
         if(m_hasGrid)
             CreateGrid(m_numGridRows, m_numGridColumns);
@@ -332,12 +338,12 @@ public class UIFrame : MonoBehaviour {
     public void AnimateSize(float width, float height){
         float targetHeight = (bRotated) ? width : height;
         float targetWidth = (bRotated) ? height : width;
+        bIsAnimating = true;
 
-        SetWidth(targetWidth);
-        SetHeight(targetHeight);
-        AnimationComplete();
+        //SetWidth(targetWidth);
+        //SetHeight(targetHeight);
+        //AnimationComplete();
 
-        /*
         iTween.ValueTo(gameObject, iTween.Hash(
             "from", m_lastWidth, 
             "to", targetWidth, 
@@ -356,7 +362,6 @@ public class UIFrame : MonoBehaviour {
             "oncomplete", "AnimationComplete",
             "easetype", "easeInOutSine"
         ));
-        */
     }
     
     public void AnimateBackgroundColor(Color color){
@@ -407,6 +412,7 @@ public class UIFrame : MonoBehaviour {
     private void AnimationComplete(){
         m_lastWidth = m_currentWidth;
         m_lastHeight = m_currentHeight;
+        bIsAnimating = false;
     }
     
     
@@ -454,6 +460,9 @@ public class UIFrame : MonoBehaviour {
         m_currentWidth = width;
         UpdatePanel();
         UpdatePanelOutline();
+
+		if(m_valueLabel != null)
+        	m_valueLabel.transform.localPosition = new Vector3(m_currentWidth, 0.0f, -0.02f);
     }
     
     
@@ -489,7 +498,9 @@ public class UIFrame : MonoBehaviour {
      */
     public TextMesh label { get { return m_label; } }
     public TextMesh m_label;
+    public TextMesh m_valueLabel;
     public string m_sliderLabel = "";
+	public int m_maxChars = 10;
 
     public void SetMatchTextWidth(bool state) { m_matchTextWidth = state; }
     public bool m_matchTextWidth = false;
@@ -499,10 +510,26 @@ public class UIFrame : MonoBehaviour {
         m_sliderLabel = label;
         if(m_label != null){
             m_label.anchor = FrameAnchorToTextAnchor(m_anchorPoint);
-            m_label.text = label;
+
+			if(label.Length > m_maxChars){
+				string shortLabel = "";
+				for(int i = 0; i < m_maxChars; i++)
+					shortLabel += label[i];
+				shortLabel += "...";
+				m_label.text = shortLabel;
+			} else {
+				m_label.text = label;
+			}
+
             if(m_matchTextWidth)
-                AnimateSize(m_label.gameObject.renderer.bounds.size.x, m_frameHeight);
+                AnimateSize(m_label.renderer.bounds.size.x, m_frameHeight);
+            toggleUpdate = true;
         }
+    }
+
+    public void SetValueLabel(string value)
+    {
+        m_valueLabel.text = value;
     }
 
     /*

@@ -11,7 +11,11 @@ namespace VRControls
         public bool m_useHorizontalInput = true;
         protected BarSlider m_slider;
         protected UIFrame m_frame;
+        public float m_collisionDepth;
         public UIFrame frame { get { return m_frame; } }
+
+        [Range(0.0f, 1.0f)]
+        public float m_sliderVal;
 
         // Use this for initialization
         public override void Awake()
@@ -131,16 +135,31 @@ namespace VRControls
         public void SetSliderValue(float val)
         {
             if (musicRef != null)
+            {
                 musicRef.setVal(val);
-            else
+                m_sliderVal = val;
+            } else
                 m_slider.SetSliderVal(val);
+            
         }
 
 
         public override void Update()
         {
             if (musicRef != null)
-                m_slider.SetSliderVal(musicRef.val);
+            {
+                //if (musicRef.val != m_sliderVal)
+                //    SetSliderValue(m_sliderVal);
+
+                if (!bIsFrozen)
+                {
+                    m_slider.SetSliderVal(musicRef.val);
+                    frame.SetValueLabel(musicRef.scaledVal.ToString());
+                }
+            }
+
+            if(frame.isAnimating)
+				UpdateColliders(new Vector3(frame.currentWidth*0.5f, frame.currentHeight*0.5f, 0.0f), new Vector3(frame.currentWidth, frame.currentHeight, m_collisionDepth));
 
             base.Update();
         }

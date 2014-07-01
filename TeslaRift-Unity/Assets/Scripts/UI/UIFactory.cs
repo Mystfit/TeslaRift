@@ -15,6 +15,7 @@ namespace UI
         public static UIFactory Instance { get { return m_instance; } }
 
         //Prefab objects
+		public GameObject valueTriggerPrefab;
         public GameObject sliderPrefab;
         public GameObject framePrefab;
         public GameObject clipButtonPrefab;
@@ -70,8 +71,9 @@ namespace UI
             whiteTexturePrefab = (Texture2D)Resources.Load("whiteTex.png");
 
             m_prefabLookup = new Dictionary<Type, GameObject>();
-            m_prefabLookup[typeof(RBFSphere)] = Instance.rbfSpherePrefab;
-            m_prefabLookup[typeof(ControlMatrix)] = Instance.rbfSpherePrefab;
+			m_prefabLookup[typeof(RBFSphere)] = Instance.rbfSpherePrefab;
+			m_prefabLookup[typeof(ValueTrigger)] = Instance.valueTriggerPrefab;
+			m_prefabLookup[typeof(ControlMatrix)] = Instance.rbfSpherePrefab;
             m_prefabLookup[typeof(ClipCube)] = Instance.clipCubePrefab;
             m_prefabLookup[typeof(TetrahedronBlender)] = Instance.tetrahedronBlenderPrefab;
             m_prefabLookup[typeof(ValueTrigger)] = Instance.rbfSphereTrainingPrefab;

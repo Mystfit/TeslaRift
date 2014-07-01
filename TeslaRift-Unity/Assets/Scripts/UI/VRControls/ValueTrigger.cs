@@ -16,6 +16,10 @@ namespace VRControls
         protected Dictionary<InstrumentParameter, float> m_storedValues;
         public Dictionary<InstrumentParameter, float> storedValues { get { return m_storedValues; } }
 
+        //Gui objects
+        public TextMesh m_valueLabel;
+        public Rotary m_rotary;
+        public Scroller m_scroller;
 
         public override void Awake()
         {
@@ -24,17 +28,35 @@ namespace VRControls
             m_storedValues = new Dictionary<InstrumentParameter, float>();
             SetOutlineMat(GetComponentInChildren<MeshRenderer>().material);
 
+            //m_scroller = UIFactory.CreateMusicRefAttachment(typeof(Scroller)) as Scroller;
+            //m_scroller.transform.position = transform.position;
+            //m_scroller.transform.parent = transform;
+
+            //m_scroller.AddAcceptedDocktype(typeof(Slider));
+            //m_scroller.AddAcceptedDocktype(typeof(ValueTrigger));
+            m_scroller.SetItemScale(UIFactory.sliderScale.x);
+
             AddAcceptedDocktype(typeof(Slider));
             AddAcceptedDocktype(typeof(ValueTrigger));
+
+            Init(new InstrumentParameter("valuetrigger"));
+
+            HideControls();
         }
 
         public override bool AddDockableAttachment(BaseVRControl attach)
         {
-            if (base.AddDockableAttachment(attach))
-            {
-                m_storedValues[attach.musicRef] = attach.musicRef.val;
+            if (attach.musicRef != musicRef) {
+                attach.SetCloneable(false);
+                attach.SetIsDraggable(true);
+                attach.SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.GRABBING });
+				attach.Freeze();
+                attach.DockInto(m_scroller);
+                if(m_scroller.DockedChildren.Contains(attach))
+                    m_storedValues[attach.musicRef] = attach.musicRef.val;
                 return true;
             }
+            attach.SetFloating();
             return false;
         }
 
@@ -56,23 +78,29 @@ namespace VRControls
         public override void ShowControls()
         {
             base.ShowControls();
-            SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.PRIMARY, BaseTool.ToolMode.GRABBING, BaseTool.ToolMode.HOVER });
+            //SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.PRIMARY, BaseTool.ToolMode.GRABBING, BaseTool.ToolMode.HOVER });
+            m_scroller.ShowControls();
+            m_valueLabel.gameObject.SetActive(true);
+            m_rotary.SetActive();
         }
 
         public override void HideControls()
         {
             base.HideControls();
             SetSelected(false);
-            SetToolmodeResponse(new BaseTool.ToolMode[0]);
+            //SetToolmodeResponse(new BaseTool.ToolMode[0]);
+            m_scroller.HideControls();
+            m_valueLabel.gameObject.SetActive(false);
+            m_rotary.SetInactive();
         }
 
         public override void SetSelected(bool state)
         {
             base.SetSelected(state);
-            if (selected)
-                iTween.ColorTo(gameObject, iTween.Hash("color", m_selectedColor, "time", 0.2f));
-            else
-                iTween.ColorTo(gameObject, iTween.Hash("color", m_defaultColor, "time", 0.2f));
+            //if (selected)
+            //    iTween.ColorTo(gameObject, iTween.Hash("color", m_selectedColor, "time", 0.2f));
+            //else
+            //    iTween.ColorTo(gameObject, iTween.Hash("color", m_defaultColor, "time", 0.2f));
         }
 
 
@@ -107,6 +135,16 @@ namespace VRControls
             if (m_mode == BaseTool.ToolMode.GRABBING)
             {
                 StopDragging();
+            }
+        }
+
+        public override void Update()
+        {
+            base.Update();
+            if (musicRef.isDirty)
+            {
+                FireValues();
+                musicRef.setClean();
             }
         }
     }

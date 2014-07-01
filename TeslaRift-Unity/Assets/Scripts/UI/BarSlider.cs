@@ -10,6 +10,12 @@ public class BarSlider : MonoBehaviour {
 
     [Range(0.0f, 1.0f)]
     public float m_sliderVal;
+    public float sliderVal { get { return m_sliderVal; } }
+    public void SetSliderVal(float val)
+    {
+        float clamped = Mathf.Clamp(val, 0.0f, 1.0f);
+        m_sliderVal = clamped;
+    }
 
     void Start () {
         m_fill = transform.FindChild("sliderFill").gameObject;
@@ -25,12 +31,4 @@ public class BarSlider : MonoBehaviour {
         m_fill.transform.localPosition = m_frame.background.localPosition - new Vector3(0.0f, 0.0f, 0.001f);
         //m_label.transform.localPosition = m_frame.GetAnchorOffset(m_frame.width, m_frame.height, m_frame.m_anchorPoint);
     }
-
-
-    public void SetSliderVal(float val){
-        float clamped = Mathf.Clamp(val, 0.0f, 1.0f);
-        m_sliderVal = clamped;
-    }
-
-    public float sliderVal{ get { return m_sliderVal; }}
 }
