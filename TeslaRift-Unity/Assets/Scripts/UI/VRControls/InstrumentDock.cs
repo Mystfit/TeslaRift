@@ -17,7 +17,7 @@ namespace VRControls
         // Use this for initialization
         public override void Awake()
         {
-            m_id = (int)VRControls.StaticIds.INSTRUMENT_DOCK;
+            m_id = VRControls.StaticIds.INSTRUMENT_DOCK;
 
             base.Awake();
 

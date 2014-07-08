@@ -13,17 +13,17 @@ namespace UI
         public static UIController Instance { get { return m_instance; } }
         private static UIController m_instance;
 
-        private Dictionary<int, BaseVRControl> m_controls;
+        private Dictionary<string, BaseVRControl> m_controls;
 
         public void Awake()
         {
             m_instance = this;
-            m_controls = new Dictionary<int, BaseVRControl>();
+            m_controls = new Dictionary<string, BaseVRControl>();
         }
 
-        public void DestroyControl(int index)
+        public void DestroyControl(string id)
         {
-            DestroyControl(GetControl(index));
+            DestroyControl(GetControl(id));
         }
 
         public void DestroyControl(BaseVRControl control)
@@ -40,10 +40,10 @@ namespace UI
             m_controls[control.id] = control;
         }
 
-        public BaseVRControl GetControl(int index)
+        public BaseVRControl GetControl(string id)
         {
-            if (m_controls.Keys.Contains(index))
-                return m_controls[index];
+            if (m_controls.Keys.Contains(id))
+                return m_controls[id];
             return null;
         }
     }

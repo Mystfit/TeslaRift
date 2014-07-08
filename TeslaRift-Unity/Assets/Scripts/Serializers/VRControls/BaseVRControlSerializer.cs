@@ -26,7 +26,8 @@ public class BaseVRControlSerializer : JsonConverter
             writer.WriteStartObject();
             writeEnd = true;
         }
-
+		writer.WritePropertyName("id");
+		writer.WriteValue(attach.id);
         writer.WritePropertyName("worldPos");
         serializer.Serialize(writer, pos);
         writer.WritePropertyName("worldRot");
@@ -49,29 +50,11 @@ public class BaseVRControlSerializer : JsonConverter
             writer.WriteNull();
         }
 
-        //Docked controls
-        //writer.WritePropertyName("dockedControls");
-        //writer.WriteStartArray();
-        
-        //foreach(BaseVRControl docked in attach.DockedChildren)
-        //    serializer.Serialize(writer, docked);
-
-        //writer.WriteEndArray();
-
         writer.WritePropertyName("dockedInto");
         if (attach.DockedInto != null)
             writer.WriteValue(attach.DockedInto.id);
         else
             writer.WriteNull();
-
-        //writer.WritePropertyName("childControls");
-        //writer.WriteStartArray();
-
-        ////Child controls
-        //foreach (BaseVRControl child in attach.ChildControls)
-        //    serializer.Serialize(writer, JsonConvert.SerializeObject(child));
-
-        //writer.WriteEndArray();
 
 		if(writeEnd)
 			writer.WriteEndObject();
@@ -127,8 +110,11 @@ public class BaseVRControlSerializer : JsonConverter
             {
                 ValueTriggerSerializer.CreateFromJson(jsonObject, (ValueTrigger)attach);
             }
-           
+
+            attach.jsonParentId = jsonObject["dockedInto"].Value<string>();
         }
+
+
 
         return attach;
     }

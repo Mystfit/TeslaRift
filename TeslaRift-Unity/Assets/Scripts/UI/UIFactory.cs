@@ -14,9 +14,6 @@ namespace UI
         private static UIFactory m_instance;
         public static UIFactory Instance { get { return m_instance; } }
 
-        //ID counter
-        protected int m_idCounter;
-
         //Prefab objects
         public GameObject sliderPrefab;
         public GameObject framePrefab;
@@ -74,7 +71,6 @@ namespace UI
         void Awake()
         {
             m_instance = this;
-            m_idCounter = (int)VRControls.StaticIds.START_ID;
             whiteTexturePrefab = (Texture2D)Resources.Load("whiteTex.png");
 
             m_prefabLookup = new Dictionary<Type, GameObject>();
@@ -98,7 +94,13 @@ namespace UI
             return Instance.whiteTexturePrefab;
         }
 
-        public static int GetNewId { get { return Instance.m_idCounter++; } }
+        public static string GetNewId
+        {
+            get
+            {
+                return Guid.NewGuid().ToString();
+            }
+        }
 
 
         /*

@@ -16,7 +16,6 @@ C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\Mono.Cecil.dll
 C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\nunit.framework.dll
 C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\Unity.DataContract.dll
 C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\ICSharpCode.NRefactory.dll
-C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\Assembly-CSharp.pdb
 C:\Code\TeslaRift\TeslaRift-Unity\obj\Debug\Assembly-CSharp-Editor.csprojResolveAssemblyReference.cache
 C:\Code\TeslaRift\TeslaRift-Unity\obj\Debug\Assembly-CSharp-Editor.dll
 C:\Code\TeslaRift\TeslaRift-Unity\obj\Debug\Assembly-CSharp-Editor.pdb
@@ -24,3 +23,4 @@ C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\NetMQA.pdb
 C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\Newtonsoft.Json.pdb
 C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\Newtonsoft.Json.xml
 C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\ZstShowtime.pdb
+C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\Assembly-CSharp.pdb

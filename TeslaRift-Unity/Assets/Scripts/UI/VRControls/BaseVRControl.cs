@@ -11,7 +11,10 @@ using UI;
 namespace VRControls
 {
 
-    public enum StaticIds { INSTRUMENT_DOCK = 0, EDITOR_DOCK = 1, START_ID = 2}
+    public static class StaticIds{
+        public static string INSTRUMENT_DOCK = "instrumentDock";
+        public static string EDITOR_DOCK = "editorDock";
+    }
 
     //[JsonObject(MemberSerialization.OptIn)]
     [JsonConverter(typeof(BaseVRControlSerializer))]
@@ -26,7 +29,7 @@ namespace VRControls
 
         public virtual void Awake()
         {
-            if(m_id < 0)
+            if(m_id == string.Empty)
                 m_id = UIFactory.GetNewId;
             m_maximizedScale = (transform.localScale.x + transform.localScale.y + transform.localScale.z) / 3.0f;
             SetIsDraggable(isDraggable);
@@ -74,8 +77,11 @@ namespace VRControls
         public bool IsSerializeable { get { return m_isSerializeable; } }
         protected bool m_isSerializeable;
         
-        protected int m_id = -1;
-        public int id { get { return m_id; } }
+        protected string m_id = "";
+        public string id { get { return m_id; } }
+
+        //Id of the json parent this object should be docked into. Only reliable at creation time
+        public string jsonParentId;
 
 
         /*
@@ -649,11 +655,11 @@ namespace VRControls
             set { transform.rotation = value; }
         }
 
-        protected string BuildJsonHierarchy(){
+        public string BuildJsonHierarchy(){
             return BuildJsonHierarchy(null);
         }
 
-        protected string BuildJsonHierarchy(List<BaseVRControl> attachments)
+        public string BuildJsonHierarchy(List<BaseVRControl> attachments)
         {
             if (!IsSaveable)
                 return string.Empty;

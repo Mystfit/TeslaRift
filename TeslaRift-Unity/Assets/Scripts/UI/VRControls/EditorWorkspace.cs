@@ -1,15 +1,21 @@
 ﻿using UnityEngine;
 using UI;
+using System.IO;
 using MusicIO;
 using System.Collections;
+using System.Collections.Generic;
+
 
 namespace VRControls
 {
     public class EditorWorkspace : BaseVRControl
     {
+		public string m_layoutsPath = "Assets/Resources/savedLayouts/";
+        protected List<ControlLayout> m_layouts;
+
         public override void Awake()
         {
-            m_id = (int)VRControls.StaticIds.EDITOR_DOCK;
+            m_id = VRControls.StaticIds.EDITOR_DOCK;
 
             base.Awake();
 
@@ -32,6 +38,8 @@ namespace VRControls
                     attach.DockInto(this);
             }
 
+            m_layouts = new List<ControlLayout>();
+
         }
 
         public override bool AddDockableAttachment(BaseVRControl attach)
@@ -43,13 +51,38 @@ namespace VRControls
             }
             return false;
         }
+        
         public override void Update()
         {
             base.Update();
             if (Input.GetKeyDown(KeyCode.S))
             {
-                Debug.Log(BuildJsonHierarchy());
+				SaveWorkspace();
             }
+			if (Input.GetKeyDown(KeyCode.L))
+			{
+				OpenWorkspaceFiles();
+			}
+        }
+
+
+        public void OpenWorkspaceFiles()
+        {
+			string[] files = Directory.GetFiles(m_layoutsPath);
+            foreach (string i in files)
+            {
+				if(i.EndsWith(".json")){
+					ControlLayout layout = new ControlLayout(i);
+					layout.ReadLayout();
+					m_layouts.Add(layout);
+				}
+            }
+        }
+
+        public void SaveWorkspace()
+        {
+			ControlLayout layout = new ControlLayout(m_layoutsPath + "test.json");
+            layout.WriteLayout(this);
         }
     }
 }

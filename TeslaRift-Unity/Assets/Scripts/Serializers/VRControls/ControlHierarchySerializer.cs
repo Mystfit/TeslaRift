@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using VRControls;
 
 
@@ -15,19 +16,20 @@ public class ControlHierarchySerializer : JsonConverter
 
         writer.WriteStartArray();
         foreach(BaseVRControl attach in controlHierarchy){
-            writer.WriteStartObject();
-            writer.WritePropertyName("id");
-            writer.WriteValue(attach.id);
-            writer.WritePropertyName("control");
-            serializer.Serialize(writer, attach);
-            writer.WriteEndObject();
+			serializer.Serialize(writer, attach);
         }
         writer.WriteEndArray();
     }
 
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
     {
-        return null;
+		var jsonObjects = JArray.Load(reader);
+		List<BaseVRControl> controls = new List<BaseVRControl>();
+      
+        foreach (JObject o in jsonObjects)
+			controls.Add(JsonConvert.DeserializeObject<BaseVRControl>(o.ToString(), new BaseVRControlSerializer()));
+
+		return controls;
     }
 
     public override bool CanConvert(Type objectType)
