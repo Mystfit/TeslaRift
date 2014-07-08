@@ -3,30 +3,34 @@ using System.Collections;
 using System.Collections.Generic;
 using MusicIO;
 
-public class InstrumentController : MonoBehaviour {
-    
+public class InstrumentController : MonoBehaviour
+{
+
     //Singleton references
     private static InstrumentController m_instance;
-    public static InstrumentController Instance{ get { return m_instance; }}
-    
+    public static InstrumentController Instance { get { return m_instance; } }
+
     //InstrumentOrb references
     protected List<InstrumentHandle> m_instruments;
     protected List<InstrumentHandle> m_returns;
     protected InstrumentHandle m_selectedInstrument;
     protected GameObject m_lastSelectedGameInstrument = null;
-    
-    
+
+
     // Unity
     //-------------------------------------
-    void Awake () {
+    void Awake()
+    {
         m_instruments = new List<InstrumentHandle>();
         m_returns = new List<InstrumentHandle>();
         m_instance = this;
     }
-    
-    
-    void Update () {
-        foreach(InstrumentHandle instrument in m_instruments){
+
+
+    void Update()
+    {
+        foreach (InstrumentHandle instrument in m_instruments)
+        {
             instrument.update();
         }
 
@@ -35,18 +39,19 @@ public class InstrumentController : MonoBehaviour {
             instrument.update();
         }
     }
-    
+
 
 
     //InstrumentOrb selection
     //--------------------
-    public InstrumentHandle SelectedInstrument{ get { return m_selectedInstrument; } }
-    
-    
+    public InstrumentHandle SelectedInstrument { get { return m_selectedInstrument; } }
+
+
     /*
      * Adds an instrument
      */
-    public void AddInstrument(InstrumentHandle instrument){
+    public void AddInstrument(InstrumentHandle instrument)
+    {
         m_instruments.Add(instrument);
     }
 
@@ -54,14 +59,16 @@ public class InstrumentController : MonoBehaviour {
     {
         m_returns.Add(instrument);
     }
-    
-    
+
+
     /*
      * Gets instrument by name
      */
-    public InstrumentHandle GetInstrumentByName(string targetInstrument){
-        foreach(InstrumentHandle instrument in m_instruments){
-            if(instrument.name == targetInstrument)
+    public InstrumentHandle GetInstrumentByName(string targetInstrument)
+    {
+        foreach (InstrumentHandle instrument in m_instruments)
+        {
+            if (instrument.name == targetInstrument)
                 return instrument;
         }
 
@@ -82,7 +89,8 @@ public class InstrumentController : MonoBehaviour {
     /*
      * Finds a specific parameter by index
      */
-    public DeviceParameter FindParameter(int trackindex, int deviceindex, int parameterindex, int category){
+    public DeviceParameter FindParameter(int trackindex, int deviceindex, int parameterindex, int category)
+    {
 
         List<InstrumentHandle> instrumentList;
 
@@ -107,7 +115,8 @@ public class InstrumentController : MonoBehaviour {
         return null;
     }
 
-    public SendParameter FindSendParameter(int trackindex, int sendindex){
+    public SendParameter FindSendParameter(int trackindex, int sendindex)
+    {
         foreach (InstrumentHandle instrument in m_instruments)
         {
             if (instrument.trackIndex == trackindex)
@@ -123,7 +132,6 @@ public class InstrumentController : MonoBehaviour {
         }
         return null;
     }
-
 
     /*
      * Find a specific clip by index
@@ -145,19 +153,20 @@ public class InstrumentController : MonoBehaviour {
         }
         return null;
     }
-    
-    
+
+
     /*
      * Remembers last selected isntrument
      */
-    public void SetLastSelectedGameInstrument(GameObject gameInstrument){
+    public void SetLastSelectedGameInstrument(GameObject gameInstrument)
+    {
         m_lastSelectedGameInstrument = gameInstrument;
     }
-    
-    
+
+
     /*
      * Gets last selected isntrument
      */
-    public GameObject LastSelectedGameInstrument{ get { return m_lastSelectedGameInstrument; }}
+    public GameObject LastSelectedGameInstrument { get { return m_lastSelectedGameInstrument; } }
 
 }

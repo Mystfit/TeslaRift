@@ -3,28 +3,45 @@
 using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using MusicIO;
 using VRControls;
 using UI;
 
 namespace VRControls
 {
+
+    public enum StaticIds { INSTRUMENT_DOCK = 0, EDITOR_DOCK = 1, START_ID = 2}
+
+    //[JsonObject(MemberSerialization.OptIn)]
+    [JsonConverter(typeof(BaseVRControlSerializer))]
     public abstract class BaseVRControl : MonoBehaviour
     {
-
         public bool isCloneable;
         public bool isDraggable;
         public bool isDockable;
+        public bool isDock;
+        public bool isSaveable;
+        public bool isSerializeable = true;
 
         public virtual void Awake()
         {
-            m_isCloneable = isCloneable;
-            m_isDockable = isDockable;
-            m_isDockable = isDockable;
+            if(m_id < 0)
+                m_id = UIFactory.GetNewId;
+            m_maximizedScale = (transform.localScale.x + transform.localScale.y + transform.localScale.z) / 3.0f;
+            SetIsDraggable(isDraggable);
+            SetCloneable(isCloneable);
+            SetIsDockable(isDockable);
+            SetAsDock(isDock);
+            SetIsSaveable(isSaveable);
+            SetIsSerializeable(isSerializeable);
 
             m_acceptedTypes = new List<System.Type>();
             m_childDockables = new List<BaseVRControl>();
+            m_childControls = new List<BaseVRControl>();
             SetCollideable(m_doesCollide);
+
+            UIController.Instance.AddControl(this);
         }
         public virtual void Start() { }
         public virtual void Update()
@@ -35,19 +52,31 @@ namespace VRControls
                 m_toggleControls = false;
                 ToggleControls();
             }
+
+            //Exposing states to inspector
+            isCloneable = m_isCloneable;
+            isDockable = m_isDockable;
+            isDock = m_acceptsDockables;
+            isDraggable = m_isDraggable;
+            isSaveable = m_isSaveable;
+            isSerializeable = m_isSerializeable;
         }
+
 
         /*
-         * Saving / loading of this attachments configuration
+         * Serialization
          */
         public void SetIsSaveable(bool state) { m_isSaveable = state; }
-        public bool isSaveable { get { return m_isSaveable; } }
-        protected bool m_isSaveable;
-        public virtual void SaveLayout() { }
-        protected virtual void SaveAttachments(List<BaseVRControl> attachments)
-        {
+        public bool IsSaveable { get { return m_isSaveable; } }
+        protected bool m_isSaveable = false;
 
-        }
+        public void SetIsSerializeable(bool state) { m_isSerializeable = state; }
+        public bool IsSerializeable { get { return m_isSerializeable; } }
+        protected bool m_isSerializeable;
+        
+        protected int m_id = -1;
+        public int id { get { return m_id; } }
+
 
         /*
          * Unity status setters
@@ -213,10 +242,11 @@ namespace VRControls
                 }
             }
 
-            if (state){
-				if(m_dockedInto != null)
-                	m_dockedInto.ChildAttachmentSelected(this);
-			}
+            if (state)
+            {
+                if (m_dockedInto != null)
+                    m_dockedInto.ChildAttachmentSelected(this);
+            }
 
             m_selected = state;
         }
@@ -290,6 +320,7 @@ namespace VRControls
                     {
                         BaseVRControl attach = UI.UIFactory.CreateMusicRefAttachment(this);
                         attach.StartDragging(HydraController.Instance.GetHand(m_hand));
+                        attach.SetIsSaveable(true);
                     }
                     else
                     {
@@ -304,7 +335,6 @@ namespace VRControls
                 }
             }
         }
-
 
         public virtual void StopDragging()
         {
@@ -336,6 +366,28 @@ namespace VRControls
         public bool IsDock { get { return m_acceptsDockables; } }
         public bool IsDockable { get { isDockable = true; return m_isDockable; } }
 
+        public float m_minimizedScale = 0.1f;
+        public float m_maximizedScale = 1.0f;
+        public float minimizedScale { get { return m_minimizedScale; } }
+        public float maximizedScale { get { return m_maximizedScale; } }
+
+        public virtual void Minimize()
+        {
+            transform.localScale = new Vector3(minimizedScale, minimizedScale, minimizedScale);
+            //iTween.ScaleTo(gameObject, iTween.Hash("scale", new Vector3(minimizedScale, minimizedScale, minimizedScale), "time", 0.15f, "easetype", "easeOutCubic"));
+        }
+
+        public virtual void Maximize()
+        {
+            transform.localScale = new Vector3(maximizedScale, maximizedScale, maximizedScale);
+            //iTween.ScaleTo(gameObject, iTween.Hash("scale", new Vector3(maximizedScale, maximizedScale, maximizedScale), "time", 0.15f, "easetype", "easeOutCubic"));
+        }
+
+        public virtual void ScaleFinished()
+        {
+
+        }
+
 
         /*
          * Docked children / owner accessors
@@ -352,11 +404,15 @@ namespace VRControls
          */
         public virtual void DockInto(BaseVRControl attach)
         {
-			m_dockedInto = attach;
-            attach.AddDockableAttachment(this);
-            m_dockedIntoLast = attach;
+            if (attach.IsDock)
+            {
+                m_dockedInto = attach;
+                attach.AddDockableAttachment(this);
+                m_dockedIntoLast = attach;
+            }
             if (IsDraggable) SetIsDragging(false);
         }
+
         public virtual void Undock()
         {
             if (m_dockedInto != null)
@@ -365,6 +421,7 @@ namespace VRControls
                 m_dockedInto = null;
             }
         }
+
         public virtual void DockIntoClosest()
         {
             GameObject[] docks = GameObject.FindGameObjectsWithTag("ParentIsADock");
@@ -375,18 +432,24 @@ namespace VRControls
             {
                 BaseVRControl dockAttach = dockTag.transform.parent.GetComponent<BaseVRControl>();
 
-                if (dockAttach.DockAcceptsType(this.GetType()))
+                if (dockAttach != null)
                 {
-                    if (closestValidDock == null)
+                    if (dockAttach != this)
                     {
-                        closestDist = Vector3.Distance(dockAttach.transform.position, transform.position);
-                        closestValidDock = dockAttach;
-                    }
-                    float dist = Vector3.Distance(dockAttach.transform.position, transform.position);
-                    if (dist < closestDist)
-                    {
-                        closestValidDock = dockAttach;
-                        closestDist = dist;
+                        if (dockAttach.DockAcceptsType(this.GetType()) && dockAttach.IsDock)
+                        {
+                            if (closestValidDock == null)
+                            {
+                                closestDist = Vector3.Distance(dockAttach.transform.position, transform.position);
+                                closestValidDock = dockAttach;
+                            }
+                            float dist = Vector3.Distance(dockAttach.transform.position, transform.position);
+                            if (dist < closestDist)
+                            {
+                                closestValidDock = dockAttach;
+                                closestDist = dist;
+                            }
+                        }
                     }
                 }
             }
@@ -410,7 +473,7 @@ namespace VRControls
             {
                 if (DockedInto == null)
                 {
-                    GameObject.Destroy(gameObject);
+                    UIController.Instance.DestroyControl(this);
                     return;
                 }
             }
@@ -433,6 +496,9 @@ namespace VRControls
                 m_childDockables.Add(attach);
                 attach.transform.parent = transform;
 
+                if(attach.rigidbody != null)
+                    attach.rigidbody.isKinematic = true;
+
                 return true;
             }
             else
@@ -446,6 +512,9 @@ namespace VRControls
             while (m_childDockables.Contains(attach))
                 m_childDockables.Remove(attach);
             attach.transform.parent = null;
+           
+            if(attach.rigidbody != null)
+                attach.rigidbody.isKinematic = false;
         }
 
 
@@ -475,6 +544,11 @@ namespace VRControls
         /*
          * Child UI controls
          */
+        //Child controls are any controls that aren't added by docking, usually permanent
+        protected List<BaseVRControl> m_childControls;
+        public List<BaseVRControl> ChildControls { get { return m_childControls; } }
+        public void AddChildControl(BaseVRControl control) { m_childControls.Add(control); }
+
         public bool controlsEnabled { get { return m_controlsEnabled; } }
         protected bool m_controlsEnabled = true;
 
@@ -555,5 +629,48 @@ namespace VRControls
         protected bool bIsFrozen;
         public void Freeze() { bIsFrozen = true; }
         public void Unfreeze() { bIsFrozen = false; }
-    }
+
+        /*
+         * Transformation references for serialization
+         */
+        [JsonProperty]
+        [JsonConverter(typeof(Vector3Serializer))]
+        Vector3 worldPos
+        {
+            get { return transform.position; }
+            set { transform.position = value; }
+        }
+
+        [JsonProperty]
+        [JsonConverter(typeof(QuaternionSerializer))]
+        Quaternion worldRot
+        {
+            get { return transform.rotation; }
+            set { transform.rotation = value; }
+        }
+
+        protected string BuildJsonHierarchy(){
+            return BuildJsonHierarchy(null);
+        }
+
+        protected string BuildJsonHierarchy(List<BaseVRControl> attachments)
+        {
+            if (!IsSaveable)
+                return string.Empty;
+
+            if (attachments == null)
+                attachments = new List<BaseVRControl>();
+            
+            if(this.IsSerializeable)
+                attachments.Add(this);
+
+            foreach (BaseVRControl attach in DockedChildren)
+                attach.BuildJsonHierarchy(attachments);
+
+            string jsonHierarchy = JsonConvert.SerializeObject(attachments, new Formatting(), new ControlHierarchySerializer());
+            //JsonConvert.DeserializeObject(outStr, typeof(BaseVRControl), new JsonConverter[] { new ValueTriggerSerializer(), new BaseVRControlSerializer() }) as BaseVRControl;
+
+			return jsonHierarchy;
+		}
+	}
 }

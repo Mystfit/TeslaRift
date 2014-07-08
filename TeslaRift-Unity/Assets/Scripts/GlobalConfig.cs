@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using VRControls;
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using DotNumerics.LinearAlgebra;
@@ -26,5 +28,7 @@ public class GlobalConfig : MonoBehaviour {
         if(Input.GetKeyDown(KeyCode.R)){
             Application.LoadLevel(Application.loadedLevel);
         }
+
+        
     }
 }

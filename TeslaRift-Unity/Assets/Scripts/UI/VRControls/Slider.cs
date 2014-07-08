@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using Newtonsoft.Json;
 using MusicIO;
 using UI;
 
@@ -7,7 +8,6 @@ namespace VRControls
 {
     public class Slider : BaseVRControl
     {
-
         public bool m_useHorizontalInput = true;
         protected BarSlider m_slider;
         protected UIFrame m_frame;
@@ -25,6 +25,7 @@ namespace VRControls
             SetIsDockable(true);
             m_slider = GetComponent<BarSlider>();
             m_frame = GetComponent<UIFrame>();
+            Maximize();
         }
 
         public override void Init(InstrumentParameter managedReference)

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UI;
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -7,7 +8,7 @@ namespace VRControls
 {
     public class TetrahedronBlender : BaseVRControl
     {
-        public InstrumentOrb[] m_returns = new InstrumentOrb[4];
+        private int m_maxReturns = 4;
         public float m_radius = 1.0f;
         protected float m_closestRadius;
 
@@ -56,13 +57,13 @@ namespace VRControls
 
         public void AddReturnInstrument(InstrumentOrb returnInstrument, int index)
         {
-            if (index <= m_returns.Length)
+            if (index <= m_maxReturns)
             {
                 returnInstrument.EnableControls();
                 returnInstrument.SetToolmodeResponse(new BaseTool.ToolMode[1] { BaseTool.ToolMode.PRIMARY });
                 returnInstrument.transform.parent = transform;
                 returnInstrument.transform.localPosition = GetCorner(index);
-                m_returns[index] = returnInstrument;
+                AddChildControl(returnInstrument);
             }
         }
 
@@ -107,6 +108,13 @@ namespace VRControls
             base.RemoveDockableAttachment(attach);
         }
 
+        public override void Undock()
+        {
+            base.Undock();
+            SetAsDock(true);
+            SetTransient(false);
+        }
+
         public override void Gesture_First()
         {
             base.Gesture_First();
@@ -129,14 +137,14 @@ namespace VRControls
         public override void DisableChildColliders()
         {
             base.DisableChildColliders();
-            foreach (BaseVRControl attach in m_returns)
+            foreach (BaseVRControl attach in ChildControls)
                 attach.DisableColliders();
         }
 
         public override void EnableChildColliders()
         {
             base.EnableChildColliders();
-            foreach (BaseVRControl attach in m_returns)
+            foreach (BaseVRControl attach in ChildControls)
                 attach.EnableColliders();
         }
 
@@ -194,7 +202,7 @@ namespace VRControls
 	                hitPos);
 
                 for (int i = 0; i < 4; i++)
-                    m_currentInstrument.instrumentRef.getSendByName(m_returns[i].instrumentRef.name).setVal(sendVals[i]);	            
+                    m_currentInstrument.instrumentRef.getSendByName(((InstrumentOrb)ChildControls[i]).instrumentRef.name).setVal(sendVals[i]);	            
 			}
         }
     }

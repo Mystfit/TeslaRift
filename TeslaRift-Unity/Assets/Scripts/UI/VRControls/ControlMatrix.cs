@@ -14,6 +14,11 @@ namespace VRControls
         public float m_cubeSpacingMultiplier = 1.0f;
         protected ClipCubeHolder[, ,] m_cubeHolders;
 
+        public GameObject m_vertLine;
+        public GameObject m_horizLine;
+        public GameObject m_depthLine;
+        public int[] m_lastMatrixPosition;
+
         // Use this for initialization
         public override void Awake()
         {
@@ -26,6 +31,7 @@ namespace VRControls
 
             m_cubeHolders = new ClipCubeHolder[m_cubeDepth, m_cubeHeight, m_cubeWidth];
 
+            //Build anchors
             for (int x = 0; x < m_cubeDepth; x++)
             {
                 for (int y = 0; y < m_cubeHeight; y++)
@@ -100,6 +106,13 @@ namespace VRControls
             return false;
         }
 
+        public override void Undock()
+        {
+            base.Undock();
+            SetAsDock(true);
+            SetTransient(false);
+        }
+
         public override void RemoveDockableAttachment(BaseVRControl attach)
         {
             base.RemoveDockableAttachment(attach);
@@ -109,27 +122,70 @@ namespace VRControls
                 holder.attach = null;
         }
 
+        public override void Maximize()
+        {
+            base.Maximize();
+            SetAsDock(true);
+            SetToolmodeResponse(new BaseTool.ToolMode[]{
+                BaseTool.ToolMode.PLAY1,
+                BaseTool.ToolMode.PLAY2,
+                BaseTool.ToolMode.PLAY3,
+                BaseTool.ToolMode.PLAY4,
+                BaseTool.ToolMode.GRABBING,
+                BaseTool.ToolMode.HOVER
+            });
+        }
+
+        public override void Minimize()
+        {
+            base.Minimize();
+            SetAsDock(false);   
+            SetToolmodeResponse(new BaseTool.ToolMode[]{
+                BaseTool.ToolMode.GRABBING,
+                BaseTool.ToolMode.HOVER
+            });
+        }
+
         public override void Gesture_First()
         {
             base.Gesture_First();
-            int[] matrixPosition = GetPositionInMatrix(HydraController.Instance.GetHandColliderPosition(m_hand));
+            if (mode == BaseTool.ToolMode.GRABBING)
+                StartDragging(HydraController.Instance.GetHand(m_hand));
+            
+            UpdateMatrixPosition();
 
             if (mode == BaseTool.ToolMode.PLAY1)
-            {
-                TriggerClip(matrixPosition, 0);
-            }
+                TriggerClip(m_lastMatrixPosition, 0);
             else if (mode == BaseTool.ToolMode.PLAY2)
-            {
-                TriggerClip(matrixPosition, 1);
-            }
+                TriggerClip(m_lastMatrixPosition, 1);
             else if (mode == BaseTool.ToolMode.PLAY3)
-            {
-                TriggerClip(matrixPosition, 2);
-            }
+                TriggerClip(m_lastMatrixPosition, 2);
             else if (mode == BaseTool.ToolMode.PLAY4)
-            {
-                TriggerClip(matrixPosition, 3);
-            }
+                TriggerClip(m_lastMatrixPosition, 3);
+            
+        }
+
+
+        public override void Gesture_IdleInterior()
+        {
+            base.Gesture_IdleInterior();
+            UpdateMatrixPosition();
+        }
+
+        public void UpdateMatrixPosition()
+        {
+            m_lastMatrixPosition = GetPositionInMatrix(HydraController.Instance.GetHandColliderPosition(m_hand));
+
+            Vector3 horizPos = new Vector3(0.5f, ((float)m_lastMatrixPosition[1] + 1.0f) / (float)m_cubeHeight - 0.5f, ((float)m_lastMatrixPosition[2] + 1.0f) / (float)m_cubeDepth - 0.5f);
+            Vector3 vertPos = new Vector3(((float)m_lastMatrixPosition[0] + 1.0f) / (float)m_cubeWidth - 0.5f, 0.5f, ((float)m_lastMatrixPosition[2] + 1.0f) / (float)m_cubeDepth - 0.5f);
+            Vector3 depthPos = new Vector3(0.5f, 0.5f, ((float)m_lastMatrixPosition[2] + 1.0f) / (float)m_cubeDepth - 0.5f);
+            m_horizLine.transform.localPosition = horizPos;
+            m_vertLine.transform.localPosition = vertPos;
+            m_depthLine.transform.localPosition = depthPos;
+
+            //iTween.MoveTo(m_horizLine, iTween.Hash("position", horizPos, "time", 0.2f, "easetype", "easeOutCubic", "islocal", true));
+            //iTween.MoveTo(m_vertLine, iTween.Hash("position", horizPos, "time", 0.2f, "easetype", "easeOutCubic", "islocal", true));
+            //iTween.MoveTo(m_depthLine, iTween.Hash("position", horizPos, "time", 0.2f, "easetype", "easeOutCubic", "islocal", true));
         }
 
         public void TriggerClip(int[] coords, int trigger)
@@ -137,12 +193,6 @@ namespace VRControls
             ClipCubeHolder holder = GetCubeHolder(trigger, coords[1], coords[2]);
             if (holder.attach != null)
 				holder.attach.musicRef.Send();
-        }
-
-
-        public override void Gesture_IdleInterior()
-        {
-            base.Gesture_IdleInterior();
         }
 
         protected int[] GetPositionInMatrix(Vector3 hand)

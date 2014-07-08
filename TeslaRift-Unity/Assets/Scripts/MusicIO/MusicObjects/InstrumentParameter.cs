@@ -2,6 +2,7 @@
 using ZST;
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 
 namespace MusicIO
@@ -13,7 +14,8 @@ namespace MusicIO
     // - Definition of one parameter for an external instrument
     //
     //**
-    public class InstrumentParameter
+	[JsonConverter(typeof(InstrumentParameterSerializer))]
+	public class InstrumentParameter
     {
 
         /*
@@ -88,13 +90,23 @@ namespace MusicIO
          * Value getters
          */
         public float val { get { return m_fValue; } }
-        public float scaledVal { 
-            get { 
-                float mappedVal = Utils.Remap(m_fValue, 0.0f, 1.0f, m_valMin, m_valMax); 
-                return (isValueRounded) ? Mathf.Round(mappedVal) : mappedVal; 
-            } 
+        public float scaledVal
+        {
+            get
+            {
+                float mappedVal = Utils.Remap(m_fValue, 0.0f, 1.0f, m_valMin, m_valMax);
+                return (isValueRounded) ? Mathf.Round(mappedVal) : mappedVal;
+            }
         }
-        public int category { get { return (m_owner.isEffect) ? 1 : 0; } }
+        public int category
+        {
+            get
+            {
+                if (m_owner != null)
+                    return (m_owner.isEffect) ? 1 : 0;
+                return 0;
+            }
+        }
 
         /*
          * Value setters

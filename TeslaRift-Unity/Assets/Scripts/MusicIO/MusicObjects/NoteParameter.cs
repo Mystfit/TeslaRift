@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using Newtonsoft.Json;
 
 namespace MusicIO
 {
@@ -9,6 +9,7 @@ namespace MusicIO
      *  NoteParameter
      *  Single note in a chord
      */
+    [JsonConverter(typeof(NoteSerializer))]
     public class NoteParameter : InstrumentParameter
     {
         public int velocity = 127;

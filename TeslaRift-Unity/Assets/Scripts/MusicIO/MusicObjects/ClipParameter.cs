@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+
 
 
 namespace MusicIO
@@ -9,6 +11,7 @@ namespace MusicIO
      *  ClipParameter
      *  A clip on this instrument channel
      */
+    [JsonConverter(typeof(ClipSerializer))]
     public class ClipParameter : InstrumentParameter
     {
         protected int m_scene;

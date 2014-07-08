@@ -30,6 +30,9 @@ namespace VRControls
             SetSoloChildControlsVisible(true);
             AddAcceptedDocktype(typeof(ValueTrigger));
 
+            foreach (RBFPlug plug in ChildControls)
+                AddChildControl(plug);
+
             EnableControls();
             ShowControls();
         }
@@ -49,7 +52,7 @@ namespace VRControls
                 rbfAttach.SetIsDraggable(true);
                 rbfAttach.SetIsDockable(true);
 
-                foreach (RBFPlug plug in m_plugs)
+                foreach (RBFPlug plug in ChildControls)
                     rbfAttach.StoreParameterValue(plug.musicRef);
 
                 rbfAttach.SetSelected(true);
@@ -70,6 +73,12 @@ namespace VRControls
             attach.rigidbody.isKinematic = false;
         }
 
+        public override void Undock()
+        {
+            base.Undock();
+            SetAsDock(true);
+            SetTransient(false);
+        }
 
         public override void ShowControls()
         {
@@ -77,9 +86,9 @@ namespace VRControls
             if (m_selectedTraining != null)
                 m_selectedTraining.SetSelected(true);
 
-            foreach (ValueTrigger attach in m_childDockables)
+            foreach (ValueTrigger attach in DockedChildren)
                 attach.ShowControls();
-            foreach (RBFPlug plug in m_plugs)
+            foreach (RBFPlug plug in ChildControls)
                 plug.ShowControls();
 
             SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.GRABBING });
@@ -92,7 +101,7 @@ namespace VRControls
             ResetRBF();
             foreach (ValueTrigger attach in m_childDockables)
                 attach.HideControls();
-            foreach (RBFPlug plug in m_plugs)
+            foreach (RBFPlug plug in ChildControls)
                 plug.HideControls();
         }
 
@@ -105,7 +114,7 @@ namespace VRControls
 
             m_selectedTraining = attach as ValueTrigger;
 
-            foreach (RBFPlug plug in m_plugs)
+            foreach (RBFPlug plug in ChildControls)
                 plug.SetPlugVal(m_selectedTraining.storedValues[plug.musicRef], true);
         }
 
@@ -114,7 +123,7 @@ namespace VRControls
          */
         public void ResetRBF()
         {
-            m_rbf.reset(m_numInputs, m_plugs.Length);
+            m_rbf.reset(m_numInputs, ChildControls.Count);
             m_rbf.setSigma(m_sigma);
             foreach (ValueTrigger point in m_childDockables)
             {
@@ -182,7 +191,7 @@ namespace VRControls
                 Debug.Log(outStr);
 
                 int index = 0;
-                foreach (RBFPlug plug in m_plugs)
+                foreach (RBFPlug plug in ChildControls)
                     plug.SetPlugVal((float)output[index++]);
             }
             base.Gesture_IdleInterior();

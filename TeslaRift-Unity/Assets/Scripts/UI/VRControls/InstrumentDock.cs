@@ -6,9 +6,8 @@ using System.Collections.Generic;
 
 namespace VRControls
 {
-    public class WorkspaceDock : BaseVRControl
+    public class InstrumentDock : BaseVRControl
     {
-
         public float m_carouselRadius = 1.0f;
         public float m_arcSize = Mathf.PI / 2;
         public float m_minAngle = Mathf.PI * 0.1f;
@@ -18,8 +17,12 @@ namespace VRControls
         // Use this for initialization
         public override void Awake()
         {
+            m_id = (int)VRControls.StaticIds.INSTRUMENT_DOCK;
+
             base.Awake();
 
+            SetIsSerializeable(false);
+            SetIsDockable(true);
             SetAsDock(true);
             SetSoloChildControlsVisible(true);
             AddAcceptedDocktype(typeof(InstrumentOrb));
@@ -103,7 +106,9 @@ namespace VRControls
             for (int i = 0; i < m_childDockables.Count; i++)
             {
                 iTween.MoveTo(m_childDockables[i].gameObject, iTween.Hash("position", points[i], "time", 0.5f, "islocal", true));
-                iTween.MoveTo(m_volumetrics[m_childDockables[i]], iTween.Hash("position", points[i] + new Vector3(0.0f, m_volumetricYOffset, 0.0f), "time", 0.5f, "islocal", true));
+				iTween.ScaleTo(m_volumetrics[m_childDockables[i]], iTween.Hash("scale", UIFactory.VolumetricCylinderScale , "time", 0.5f));
+				m_volumetrics[m_childDockables[i]].transform.localPosition = points[i] + new Vector3(0.0f, m_volumetricYOffset, 0.0f);
+                //iTween.MoveTo(m_volumetrics[m_childDockables[i]], iTween.Hash("position", points[i] + new Vector3(0.0f, m_volumetricYOffset, 0.0f), "time", 0.5f, "islocal", true));
             }
         }
     }

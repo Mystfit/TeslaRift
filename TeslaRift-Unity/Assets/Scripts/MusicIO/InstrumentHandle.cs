@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using ZST;
+using Newtonsoft.Json;
 
 namespace MusicIO
 {
@@ -14,6 +15,7 @@ namespace MusicIO
     // - All instruments derive from this for common instrument properties
     //
     //**
+    [JsonConverter(typeof(InstrumentHandleSerializer))]
     public class InstrumentHandle
     {
         //MusicObjects belonging to this instrument

@@ -2,9 +2,11 @@ using UnityEngine;
 using UI;
 using System.Collections;
 using MusicIO;
+using Newtonsoft.Json;
 
 namespace VRControls
 {
+    [JsonConverter(typeof(BaseVRControlSerializer))]
     public class InstrumentOrb : BaseVRControl
     {
 
@@ -77,7 +79,7 @@ namespace VRControls
                 clipScroller.AddAcceptedDocktype(typeof(ClipCube));
                 clipScroller.transform.parent = m_rotator.transform;
                 clipScroller.SetOffset(new Vector3(-m_controlsMirrorOffset, m_controlsYOffset + 0.02f, 0.0f));
-                clipScroller.SetItemScale(UIFactory.sliderScale.x);
+                //clipScroller.SetItemScale(UIFactory.sliderScale.x);
 
                 //Create clips
                 foreach (ClipParameter clip in m_instrumentRef.clipList)
@@ -94,7 +96,7 @@ namespace VRControls
                 paramScroller.SetOffset(new Vector3(m_controlsMirrorOffset, m_controlsYOffset, 0.0f));
 
                 paramScroller.SetItemSpacing(m_clipCubeSpacing);
-                paramScroller.SetItemScale(UIFactory.sliderScale.x);
+                //paramScroller.SetItemScale(UIFactory.sliderScale.x);
 
                 //Create note slider
                 if (m_instrumentRef.isMidi)

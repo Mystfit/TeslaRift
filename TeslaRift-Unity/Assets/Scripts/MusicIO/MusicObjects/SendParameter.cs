@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Newtonsoft.Json;
 using System.Collections.Generic;
-
 
 namespace MusicIO
 {
-
    /*
     *  SendParameter
     *  Send effect track volume
     */
+    [JsonConverter(typeof(SendSerializer))]
     public class SendParameter : InstrumentParameter
     {
         public int sendIndex { get { return m_sendIndex; } }

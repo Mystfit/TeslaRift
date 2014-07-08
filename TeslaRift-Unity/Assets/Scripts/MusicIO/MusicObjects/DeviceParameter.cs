@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using Newtonsoft.Json;
 
 namespace MusicIO
 {   
@@ -9,6 +9,7 @@ namespace MusicIO
      *  DeviceParameter
      *  Any parameter on an instrument device
      */
+    [JsonConverter(typeof(DeviceParameterSerializer))]
     public class DeviceParameter : InstrumentParameter
     {
         public string deviceName;

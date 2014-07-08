@@ -85,11 +85,11 @@ namespace VRControls
             if (base.AddDockableAttachment(attach))
             {
                 CalculateDisplayedItems();
-
+                attach.SetAsDock(false);
+				attach.Minimize();
                 attach.transform.parent = m_controlHolder.transform;
-                //attach.transform.localPosition = new Vector3(0.0f, m_childDockables.Count * attach.interiorTrigger.GetSize().y, 0.0f);
                 attach.transform.localRotation = Quaternion.identity;
-                attach.transform.localScale = new Vector3(m_itemScale, m_itemScale, m_itemScale);
+                //attach.transform.localScale = new Vector3(m_itemScale, m_itemScale, m_itemScale);
                 m_lastAttachHeight = attach.interiorTrigger.GetSize().y + m_itemSpacing;
                 m_lastAttachWidth = attach.interiorTrigger.GetSize().x;
                 PlaceObjects();
@@ -102,6 +102,7 @@ namespace VRControls
         public override void RemoveDockableAttachment(BaseVRControl attach)
         {
             base.RemoveDockableAttachment(attach);
+            attach.Maximize();
             attach.rigidbody.isKinematic = false;
             CalculateDisplayedItems();
             PlaceObjects();
@@ -217,7 +218,7 @@ namespace VRControls
                     if (!attach.gameObject.activeSelf)
                     {
                         attach.SetActive();
-                        iTween.ScaleTo(attach.gameObject, iTween.Hash("x", m_itemScale, "time", 0.15f, "easetype", iTween.EaseType.easeInQuad));
+                        iTween.ScaleTo(attach.gameObject, iTween.Hash("x", attach.minimizedScale, "time", 0.15f, "easetype", iTween.EaseType.easeInQuad));
                     }
                 }
             }

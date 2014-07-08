@@ -14,11 +14,12 @@ namespace UI
         private static UIFactory m_instance;
         public static UIFactory Instance { get { return m_instance; } }
 
+        //ID counter
+        protected int m_idCounter;
+
         //Prefab objects
-		public GameObject valueTriggerPrefab;
         public GameObject sliderPrefab;
         public GameObject framePrefab;
-        public GameObject clipButtonPrefab;
         public GameObject clipCubePrefab;
         public GameObject clipPlaceholderPrefab;
         public GameObject rotaryPrefab;
@@ -28,19 +29,24 @@ namespace UI
         public GameObject volumetricCylinderPrefab;
         public Texture2D whiteTexturePrefab;
 
-        public Dictionary<Type, GameObject> prefabs { get { return m_prefabLookup; } }
-        private Dictionary<Type, GameObject> m_prefabLookup;
-
         //Fissure control prefabs
         public GameObject rbfSpherePrefab;
-        public GameObject rbfSphereTrainingPrefab;
-        public GameObject clipMatrixPrefab;
+        public GameObject valueTriggerPrefab;
+        public GameObject controlMatrixPrefab;
         public GameObject tetrahedronBlenderPrefab;
+
+        //Lookups
+        public Dictionary<Type, GameObject> prefabs { get { return m_prefabLookup; } }
+        private Dictionary<Type, GameObject> m_prefabLookup;
 
 
         //Slider localscale amount
         public float m_sliderScale = 0.1f;
         public static Vector3 sliderScale { get { return new Vector3(Instance.m_sliderScale, Instance.m_sliderScale, Instance.m_sliderScale); } }
+
+        //Volumetric cylinder default scale
+        public Vector3 m_volumetricScale;
+        public static Vector3 VolumetricCylinderScale { get { return Instance.m_volumetricScale; } }
 
         [Range(0.0f, 0.03f)]
         public float m_outlineSelectedSize;
@@ -68,16 +74,15 @@ namespace UI
         void Awake()
         {
             m_instance = this;
+            m_idCounter = (int)VRControls.StaticIds.START_ID;
             whiteTexturePrefab = (Texture2D)Resources.Load("whiteTex.png");
 
             m_prefabLookup = new Dictionary<Type, GameObject>();
-			m_prefabLookup[typeof(RBFSphere)] = Instance.rbfSpherePrefab;
-			m_prefabLookup[typeof(ValueTrigger)] = Instance.valueTriggerPrefab;
-			m_prefabLookup[typeof(ControlMatrix)] = Instance.rbfSpherePrefab;
+            m_prefabLookup[typeof(RBFSphere)] = Instance.rbfSpherePrefab;
+            m_prefabLookup[typeof(ValueTrigger)] = Instance.valueTriggerPrefab;
+            m_prefabLookup[typeof(ControlMatrix)] = Instance.controlMatrixPrefab;
             m_prefabLookup[typeof(ClipCube)] = Instance.clipCubePrefab;
             m_prefabLookup[typeof(TetrahedronBlender)] = Instance.tetrahedronBlenderPrefab;
-            m_prefabLookup[typeof(ValueTrigger)] = Instance.rbfSphereTrainingPrefab;
-            m_prefabLookup[typeof(RBFTrainingSpawner)] = Instance.rbfSphereTrainingPrefab;
             m_prefabLookup[typeof(Scroller)] = Instance.paramScrollerPrefab;
             m_prefabLookup[typeof(InstrumentOrb)] = Instance.instrumentPrefab;
             m_prefabLookup[typeof(Slider)] = Instance.sliderPrefab;
@@ -92,6 +97,8 @@ namespace UI
         {
             return Instance.whiteTexturePrefab;
         }
+
+        public static int GetNewId { get { return Instance.m_idCounter++; } }
 
 
         /*
@@ -160,17 +167,17 @@ namespace UI
                     {
                         //InstrumentHandle specific clone initialization
                         if (clone is InstrumentOrb)
-                     		musicRef = ((InstrumentOrb)clone).instrumentRef;
-						else if (clone.HasMusicRef)
+                            musicRef = ((InstrumentOrb)clone).instrumentRef;
+                        else if (clone.HasMusicRef)
                             musicRef = clone.musicRef;
                     }
 
-					//Initialize musicref objects
-					if (attach is InstrumentOrb)
-						((InstrumentOrb)attach).Init((InstrumentHandle)musicRef);
-					else
-	                    if (musicRef != null)
-	                        attach.Init((InstrumentParameter)musicRef);
+                    //Initialize musicref objects
+                    if (attach is InstrumentOrb)
+                        ((InstrumentOrb)attach).Init((InstrumentHandle)musicRef);
+                    else
+                        if (musicRef != null)
+                            attach.Init((InstrumentParameter)musicRef);
                 }
 
                 if (clone != null)
