@@ -104,13 +104,13 @@ public class BaseVRControlSerializer : JsonConverter
             attach.transform.position = position;
             attach.transform.rotation = rotation;
 
-
             //Switch for incoming object types
             if (controlType == typeof(ValueTrigger).ToString())
             {
                 ValueTriggerSerializer.CreateFromJson(jsonObject, (ValueTrigger)attach);
             }
 
+            attach.SetId(jsonObject["id"].Value<string>());
             attach.jsonParentId = jsonObject["dockedInto"].Value<string>();
         }
 

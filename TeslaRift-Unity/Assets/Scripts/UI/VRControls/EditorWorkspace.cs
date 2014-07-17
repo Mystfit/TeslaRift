@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UI;
+using System;
 using System.IO;
 using MusicIO;
 using System.Collections;
@@ -10,11 +11,21 @@ namespace VRControls
 {
     public class EditorWorkspace : BaseVRControl
     {
+        public static Type[] EditorTypes = new Type[] { 
+            typeof(InstrumentDock),
+            typeof(ValueTrigger),
+            typeof(RBFSphere),
+            typeof(TetrahedronBlender),
+            typeof(ControlMatrix)
+        };
+
 		public string m_layoutsPath = "Assets/Resources/savedLayouts/";
-        protected List<ControlLayout> m_layouts;
+        protected ControlLayout m_activeLayout;
+        public Picker m_controlStateMenu;
 
         public override void Awake()
         {
+            //Set the ID before the superclass to override it
             m_id = VRControls.StaticIds.EDITOR_DOCK;
 
             base.Awake();
@@ -24,11 +35,8 @@ namespace VRControls
             SetIsDraggable(false);
             SetIsDockable(false);
             SetIsSaveable(true);
-            AddAcceptedDocktype(typeof(ValueTrigger));
-            AddAcceptedDocktype(typeof(RBFSphere));
-            AddAcceptedDocktype(typeof(TetrahedronBlender));
-            AddAcceptedDocktype(typeof(ControlMatrix));
-            AddAcceptedDocktype(typeof(InstrumentDock));
+
+            AddGroupDocktype(VRControls.EditorWorkspace.EditorTypes);
 
             //Dock existing children in at runtime
             for(int i = 0; i < transform.childCount; i++)
@@ -37,9 +45,24 @@ namespace VRControls
                 if(attach != null)
                     attach.DockInto(this);
             }
+           
+            //GameObject pageObj = new GameObject("controlLayout");
+            //m_activeLayout = pageObj.AddComponent<ControlLayout>();
+            //m_activeLayout.SetJsonPath(m_layoutsPath + "layout_0.json");
+            //m_activeLayout.DockInto(m_controlStateMenu);
 
-            m_layouts = new List<ControlLayout>();
+			m_activeLayout = CreateControlLayout(m_layoutsPath + "layout_0.json");
 
+            //Add existing controls to default layout
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                GameObject child = transform.GetChild(i).gameObject;
+                if (child.name != "AreaTrigger" && child.name != "dockTag")
+                {
+                    BaseVRControl attach = child.GetComponent<BaseVRControl>();
+                    m_activeLayout.AddControl(attach);
+                }
+            }
         }
 
         public override bool AddDockableAttachment(BaseVRControl attach)
@@ -62,27 +85,83 @@ namespace VRControls
 			if (Input.GetKeyDown(KeyCode.L))
 			{
 				OpenWorkspaceFiles();
+                if (m_controlStateMenu.DockedChildren.Count > 0)
+					m_controlStateMenu.DockedChildren[m_controlStateMenu.DockedChildren.Count - 1].Fire();
 			}
+            
+            if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                if (m_controlStateMenu.DockedChildren.Count > 0)
+					m_controlStateMenu.DockedChildren[0].Fire();
+            }
+            
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                if (m_controlStateMenu.DockedChildren.Count > 1)
+					m_controlStateMenu.DockedChildren[1].Fire();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                if (m_controlStateMenu.DockedChildren.Count > 2)
+					m_controlStateMenu.DockedChildren[2].Fire();
+            }
         }
 
 
         public void OpenWorkspaceFiles()
         {
 			string[] files = Directory.GetFiles(m_layoutsPath);
-            foreach (string i in files)
+            foreach (string path in files)
             {
-				if(i.EndsWith(".json")){
-					ControlLayout layout = new ControlLayout(i);
-					layout.ReadLayout();
-					m_layouts.Add(layout);
+                if (path.EndsWith(".json"))
+                {
+					ControlLayout page = CreateControlLayout(path);
+                    page.ReadLayout();
+                    page.SetInactive();
 				}
             }
         }
 
+		public ControlLayout CreateControlLayout(string path){
+			GameObject controlPage = new GameObject("controlPage");
+			ControlLayout page = controlPage.AddComponent<ControlLayout>();
+			page.Init(this);
+			page.SetJsonPath(path);
+
+			CubeButton button = UIFactory.CreateMusicRefAttachment(typeof(CubeButton)) as CubeButton;
+			button.AddAcceptedDocktype(typeof(ControlLayout));
+			page.DockInto(button);
+            button.DockInto(m_controlStateMenu);
+
+			return page;
+		}
+
         public void SaveWorkspace()
         {
-			ControlLayout layout = new ControlLayout(m_layoutsPath + "test.json");
-            layout.WriteLayout(this);
+            string path = m_layoutsPath + "layout_" + (Directory.GetFiles(m_layoutsPath).Length + 1) + ".json";
+            ControlLayout.WriteLayout(this, path);
+        }
+
+        public void SetActiveWorkspace(ControlLayout layout)
+        {
+            if (m_activeLayout != null)
+            {
+                foreach (BaseVRControl attach in m_activeLayout.LoadedControls)
+                {
+                    attach.Undock();
+                    attach.DockInto(m_activeLayout);
+                }
+                m_activeLayout.SetInactive();
+            }
+
+            //Dock layout controls
+            foreach (BaseVRControl attach in layout.DockedChildren)
+            {
+                attach.DockInto(this);
+            }
+
+            m_activeLayout = layout;
         }
     }
 }
