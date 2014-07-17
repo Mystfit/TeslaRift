@@ -154,7 +154,7 @@ public class InstrumentGestureTool : BaseTool {
             
         case GestureState.EXTERIOR:
             m_attachment.Gesture_IdleExterior();
-            LeavingProximity();
+            //LeavingProximity();
             break;
             
         case GestureState.EXTERIOR_TO_PROXIMITY:
@@ -268,6 +268,9 @@ public class InstrumentGestureTool : BaseTool {
             if(HydraController.Instance.IsHandDragging(m_hand))
                 HydraController.Instance.GetHandDragging(m_hand).StopDragging();
             m_attachment.Gesture_Exit();
+
+			//Force removal of attachment from collision lists, it'll add itself back in later if needed
+			//HydraController.Instance.RemoveFromAllCollisionLists(m_attachment.gameObject);
         }
         
         m_heldObject = null;

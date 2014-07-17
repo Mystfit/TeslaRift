@@ -17,11 +17,7 @@ namespace VRControls
         // Use this for initialization
         public override void Awake()
         {
-            m_id = VRControls.StaticIds.INSTRUMENT_DOCK;
-
             base.Awake();
-
-            SetIsSerializeable(false);
             SetIsDockable(true);
             SetAsDock(true);
             SetSoloChildControlsVisible(true);

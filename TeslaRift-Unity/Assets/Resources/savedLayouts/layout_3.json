@@ -1,0 +1,85 @@
+[
+  {
+    "id": "607b3175-d3e8-4776-a5ef-ab9f4a4b32cc",
+    "worldPos": "{\"x\":0.0,\"y\":1.19012165,\"z\":0.0}",
+    "worldRot": "{\"x\":0.0,\"y\":-0.7071068,\"z\":0.0,\"w\":0.7071068}",
+    "controlType": "VRControls.InstrumentDock",
+    "musicRefType": null,
+    "dockedInto": "editorDock"
+  },
+  {
+    "id": "66dd9fb4-f214-4c3b-b57e-acdac5251f3b",
+    "worldPos": "{\"x\":0.19656451,\"y\":1.19012165,\"z\":0.359808981}",
+    "worldRot": "{\"x\":0.2191412,\"y\":-0.138571173,\"z\":0.101876445,\"w\":0.9604147}",
+    "controlType": "VRControls.InstrumentOrb",
+    "musicRefType": "MusicIO.InstrumentHandle",
+    "musicRefProperties": {
+      "trackindex": 0
+    },
+    "dockedInto": "607b3175-d3e8-4776-a5ef-ab9f4a4b32cc"
+  },
+  {
+    "id": "468d7d13-9da0-4d9a-a898-27d7abcb1b4f",
+    "worldPos": "{\"x\":-0.196564585,\"y\":1.19012165,\"z\":0.359808952}",
+    "worldRot": "{\"x\":0.2257078,\"y\":-0.174456432,\"z\":-0.0110415583,\"w\":0.95838356}",
+    "controlType": "VRControls.InstrumentOrb",
+    "musicRefType": "MusicIO.InstrumentHandle",
+    "musicRefProperties": {
+      "trackindex": 4
+    },
+    "dockedInto": "607b3175-d3e8-4776-a5ef-ab9f4a4b32cc"
+  },
+  {
+    "id": "3e3d109c-1376-45c5-9c56-f93162eb38a9",
+    "worldPos": "{\"x\":-0.08768501,\"y\":1.46325684,\"z\":0.471039146}",
+    "worldRot": "{\"x\":0.149533525,\"y\":0.00552838854,\"z\":0.0501755476,\"w\":0.9874673}",
+    "controlType": "VRControls.ValueTrigger",
+    "musicRefType": "MusicIO.InstrumentParameter",
+    "musicRefProperties": {
+      "name": "valuetrigger"
+    },
+    "dockedInto": "editorDock",
+    "savedValues": [
+      {
+        "musicRefType": "MusicIO.NoteParameter",
+        "musicRefProperties": {
+          "trackindex": 0
+        },
+        "value": 0.3667398
+      },
+      {
+        "musicRefType": "MusicIO.DeviceParameter",
+        "musicRefProperties": {
+          "trackindex": 0,
+          "deviceindex": 0,
+          "parameterindex": 1,
+          "category": 0
+        },
+        "value": 0.765771151
+      }
+    ]
+  },
+  {
+    "id": "a2b3c95b-c92d-4d76-996f-1263c10a904a",
+    "worldPos": "{\"x\":-0.3833777,\"y\":1.37923682,\"z\":0.471059352}",
+    "worldRot": "{\"x\":0.0577535033,\"y\":-0.217221752,\"z\":0.1150082,\"w\":0.9676014}",
+    "controlType": "VRControls.ValueTrigger",
+    "musicRefType": "MusicIO.InstrumentParameter",
+    "musicRefProperties": {
+      "name": "valuetrigger"
+    },
+    "dockedInto": "editorDock",
+    "savedValues": [
+      {
+        "musicRefType": "MusicIO.DeviceParameter",
+        "musicRefProperties": {
+          "trackindex": 4,
+          "deviceindex": 0,
+          "parameterindex": 3,
+          "category": 0
+        },
+        "value": 0.61184895
+      }
+    ]
+  }
+]

@@ -2,6 +2,7 @@
 //using UnityEditor;
 using System.Collections;
 using System.Linq;
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using MusicIO;
@@ -76,7 +77,8 @@ namespace VRControls
         public void SetIsSerializeable(bool state) { m_isSerializeable = state; }
         public bool IsSerializeable { get { return m_isSerializeable; } }
         protected bool m_isSerializeable;
-        
+
+        public void SetId(string id) { m_id = id; }
         protected string m_id = "";
         public string id { get { return m_id; } }
 
@@ -315,7 +317,6 @@ namespace VRControls
 
         public virtual void StartDragging(GameObject target)
         {
-
             if (IsDraggable)
             {
                 //StartDragging(HydraController.Instance.GetHand(m_hand));
@@ -484,6 +485,8 @@ namespace VRControls
                 }
             }
 
+            HydraController.Instance.RemoveFromAllCollisionLists(gameObject);
+
             //if (m_dockedIntoLast != null)
             //    DockInto(m_dockedIntoLast);
         }
@@ -528,7 +531,7 @@ namespace VRControls
          * Dock type / distance checking
          */
         protected List<System.Type> m_acceptedTypes;
-        public void AddAcceptedDocktype(System.Type type) { m_acceptedTypes.Add(type); }
+        public virtual void AddAcceptedDocktype(System.Type type) { m_acceptedTypes.Add(type); }
         public bool DockAcceptsType(System.Type type)
         {
             foreach (System.Type acceptedType in m_acceptedTypes)
@@ -537,6 +540,12 @@ namespace VRControls
                     return true;
             }
             return false;
+        }
+        public void AddGroupDocktype(Type[] types)
+        {
+            foreach(Type t in types){
+                AddAcceptedDocktype(t);
+            }
         }
 
         public float dockingRange = 1.5f;
@@ -582,6 +591,9 @@ namespace VRControls
             else
                 ShowControls();
         }
+
+        // Needs to be implememented if this control has a generic fire command, like a button
+        public virtual void Fire() {}
 
         public virtual void ChildAttachmentOpeningControls(BaseVRControl attach)
         {
@@ -673,10 +685,7 @@ namespace VRControls
             foreach (BaseVRControl attach in DockedChildren)
                 attach.BuildJsonHierarchy(attachments);
 
-            string jsonHierarchy = JsonConvert.SerializeObject(attachments, new Formatting(), new ControlHierarchySerializer());
-            //JsonConvert.DeserializeObject(outStr, typeof(BaseVRControl), new JsonConverter[] { new ValueTriggerSerializer(), new BaseVRControlSerializer() }) as BaseVRControl;
-
-			return jsonHierarchy;
+			return JsonConvert.SerializeObject(attachments, new Formatting(), new ControlHierarchySerializer());
 		}
 	}
 }

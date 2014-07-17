@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UI;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -7,6 +8,8 @@ namespace VRControls
 {
     public class ControlMatrix : BaseVRControl
     {
+        public bool m_generateGrid = false;
+
         public Transform m_cubeParent;
         public int m_cubeWidth = 4;
         public int m_cubeHeight = 4;
@@ -15,7 +18,6 @@ namespace VRControls
         protected ClipCubeHolder[, ,] m_cubeHolders;
 
         public GameObject m_vertLine;
-        public GameObject m_horizLine;
         public GameObject m_depthLine;
         public int[] m_lastMatrixPosition;
 
@@ -38,11 +40,19 @@ namespace VRControls
                 {
                     for (int z = 0; z < m_cubeWidth; z++)
                     {
-                        Transform cubePlaceholder = UIFactory.CreateClipPlaceholder().transform;
-                        cubePlaceholder.position = m_cubeParent.position;
-                        cubePlaceholder.parent = m_cubeParent;
-                        cubePlaceholder.localPosition = new Vector3(x * m_cubeSpacingMultiplier, y * m_cubeSpacingMultiplier, z * m_cubeSpacingMultiplier);
+                        Transform cubePlaceholder;
+                        if (m_generateGrid)
+                        {
+                            cubePlaceholder = UIFactory.CreateClipPlaceholder().transform;
+                            cubePlaceholder.position = m_cubeParent.position;
+                            cubePlaceholder.parent = m_cubeParent;
+                            cubePlaceholder.localPosition = new Vector3(x * m_cubeSpacingMultiplier, y * m_cubeSpacingMultiplier, z * m_cubeSpacingMultiplier);
 
+                        }
+                        else
+                        {
+                            cubePlaceholder = m_cubeParent.GetChild((x * m_cubeDepth * m_cubeHeight) + (y * m_cubeHeight) + z);
+                        }
                         ClipCubeHolder holder = new ClipCubeHolder();
                         holder.placeholder = cubePlaceholder;
                         holder.x = x;
@@ -174,25 +184,47 @@ namespace VRControls
 
         public void UpdateMatrixPosition()
         {
-            m_lastMatrixPosition = GetPositionInMatrix(HydraController.Instance.GetHandColliderPosition(m_hand));
+            int[] matrixPos = GetPositionInMatrix(HydraController.Instance.GetHandColliderPosition(m_hand));
+            
+			if (!Enumerable.SequenceEqual(matrixPos, m_lastMatrixPosition))
+			{
+				Vector3 vertPos = new Vector3(-0.15f, ((float)matrixPos[0]) / (float)(m_cubeSpacingMultiplier * m_cubeWidth), 0.1f);
+				Vector3 depthPos = new Vector3(-0.15f, -0.4f, ((float)matrixPos[2]) / (float)(m_cubeSpacingMultiplier * m_cubeDepth));
 
-            Vector3 horizPos = new Vector3(0.5f, ((float)m_lastMatrixPosition[1] + 1.0f) / (float)m_cubeHeight - 0.5f, ((float)m_lastMatrixPosition[2] + 1.0f) / (float)m_cubeDepth - 0.5f);
-            Vector3 vertPos = new Vector3(((float)m_lastMatrixPosition[0] + 1.0f) / (float)m_cubeWidth - 0.5f, 0.5f, ((float)m_lastMatrixPosition[2] + 1.0f) / (float)m_cubeDepth - 0.5f);
-            Vector3 depthPos = new Vector3(0.5f, 0.5f, ((float)m_lastMatrixPosition[2] + 1.0f) / (float)m_cubeDepth - 0.5f);
-            m_horizLine.transform.localPosition = horizPos;
-            m_vertLine.transform.localPosition = vertPos;
-            m_depthLine.transform.localPosition = depthPos;
+                iTween.MoveTo(m_vertLine, iTween.Hash("position", vertPos, "time", 0.1f, "easetype", "easeOutCubic", "islocal", true));
+                iTween.MoveTo(m_depthLine, iTween.Hash("position", depthPos, "time", 0.1f, "easetype", "easeOutCubic", "islocal", true));
 
-            //iTween.MoveTo(m_horizLine, iTween.Hash("position", horizPos, "time", 0.2f, "easetype", "easeOutCubic", "islocal", true));
-            //iTween.MoveTo(m_vertLine, iTween.Hash("position", horizPos, "time", 0.2f, "easetype", "easeOutCubic", "islocal", true));
-            //iTween.MoveTo(m_depthLine, iTween.Hash("position", horizPos, "time", 0.2f, "easetype", "easeOutCubic", "islocal", true));
+                for (int x = 0; x < m_cubeDepth; x++)
+                {
+                    for (int y = 0; y < m_cubeHeight; y++)
+                    {
+                        for (int z = 0; z < m_cubeWidth; z++)
+                        {
+							ClipCubeHolder holder = GetCubeHolder(x, matrixPos[1], matrixPos[2]);
+
+                            if (x == matrixPos[0])
+                            {
+                                if (holder.attach != null)
+                                    holder.attach.SetSelected(true);
+                            }
+                            else
+                            {
+                                if (holder.attach != null)
+                                    holder.attach.SetSelected(false);
+                            }
+                        }
+                    }
+                }
+				m_lastMatrixPosition = matrixPos;
+            }
         }
 
         public void TriggerClip(int[] coords, int trigger)
         {
+            Debug.Log("Firing " + trigger + "," + coords[1] + "," + coords[2]);
             ClipCubeHolder holder = GetCubeHolder(trigger, coords[1], coords[2]);
             if (holder.attach != null)
-				holder.attach.musicRef.Send();
+				holder.attach.Fire();
         }
 
         protected int[] GetPositionInMatrix(Vector3 hand)
@@ -200,25 +232,25 @@ namespace VRControls
             int[] triggered = new int[3];
             Vector3 handLocal = transform.InverseTransformPoint(hand);
 
-            triggered[0] = Mathf.FloorToInt(
+            triggered[0] = Mathf.RoundToInt(
                     Mathf.Clamp(
                         Utils.Remap(handLocal.x, interiorTrigger.GetSize().x * -0.5f, interiorTrigger.GetSize().x * 0.5f, 0.0f, 1.0f) * m_cubeWidth,
                         0.0f,
-                        m_cubeWidth)
+                        m_cubeWidth-1)
             );
-            triggered[1] = Mathf.FloorToInt(
+			triggered[1] = Mathf.RoundToInt(
                     Mathf.Clamp(
                         Utils.Remap(handLocal.y, interiorTrigger.GetSize().y * -0.5f, interiorTrigger.GetSize().y * 0.5f, 0.0f, 1.0f) * m_cubeHeight,
                         0.0f,
-                        m_cubeHeight)
+                        m_cubeHeight-1)
             );
-            triggered[2] = Mathf.FloorToInt(
+			triggered[2] = Mathf.RoundToInt(
                         Mathf.Clamp(
                             Utils.Remap(handLocal.z, interiorTrigger.GetSize().z * -0.5f, interiorTrigger.GetSize().x * 0.5f, 0.0f, 1.0f) * m_cubeWidth,
                             0.0f,
-                            m_cubeDepth)
+                            m_cubeDepth-1)
                 );
-
+			Debug.Log("x:" + triggered[0] + "y:" + triggered[1] + "z:" + triggered[2]);
             return triggered;
         }
     }

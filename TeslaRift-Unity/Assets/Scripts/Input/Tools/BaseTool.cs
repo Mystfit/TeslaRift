@@ -76,6 +76,7 @@ public class BaseTool : MonoBehaviour {
     }
     
     public virtual void TransitionOut(){
+
     }
 
     public virtual void LeavingProximity(){

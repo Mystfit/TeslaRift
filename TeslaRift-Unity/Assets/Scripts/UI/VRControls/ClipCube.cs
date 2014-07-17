@@ -5,25 +5,14 @@ using UI;
 
 namespace VRControls
 {
-    public class ClipCube : BaseVRControl
+    public class ClipCube : CubeButton
     {
         public bool m_toggleClip = false;
-
-        protected BarSlider m_barSlider;
-        protected Slider m_sliderAttach;
-        protected UIFrame m_frame;
 
         public override void Awake()
         {
             base.Awake();
             SetIsDraggable(true);
-            SetIsDockable(true);
-
-            m_barSlider = GetComponent<BarSlider>();
-            transform.localScale = UIFactory.sliderScale;
-
-            m_frame = GetComponent<UIFrame>();
-            m_frame.SetMatchTextWidth(true);
         }
 
         public override void Init(InstrumentParameter managedReference)
@@ -67,26 +56,6 @@ namespace VRControls
                         break;
                 }
             }
-        }
-
-        public void SetColour(Color color)
-        {
-            renderer.materials[1].SetColor("_Color", color);
-        }
-
-        public override void Gesture_First()
-        {
-            if (mode == BaseTool.ToolMode.GRABBING)
-            {
-                StartDragging(HydraController.Instance.GetHand(m_hand));
-            }
-            else if (mode == BaseTool.ToolMode.PRIMARY)
-            {
-                if (musicRef != null)
-                    musicRef.Send(true);
-            }
-
-            base.Gesture_First();
         }
     }
 }

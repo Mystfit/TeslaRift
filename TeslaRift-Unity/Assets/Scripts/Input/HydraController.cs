@@ -16,8 +16,7 @@ public enum HydraStates
 public enum ProximityType
 {
     INSTRUMENT_INTERIOR = 0,
-    INSTRUMENT_PROXIMITY,
-    GENERATOR
+    INSTRUMENT_PROXIMITY
 }
 
 public class HydraController : MonoBehaviour
@@ -267,7 +266,10 @@ public class HydraController : MonoBehaviour
         List<GameObject> targetList = GetCollisionList(proximityType, hand);
 
         if (!targetList.Contains(proximityTarget))
+        {
             targetList.Add(proximityTarget);
+            Debug.Log("Adding " + proximityTarget.name);
+        }
     }
 
 
@@ -278,6 +280,8 @@ public class HydraController : MonoBehaviour
     {
         List<GameObject> targetList = GetCollisionList(proximityType, hand);
         targetList.Remove(proximityTarget);
+
+        Debug.Log("Removing " + proximityTarget.name);
     }
 
 
@@ -302,8 +306,6 @@ public class HydraController : MonoBehaviour
                     targetList = m_leftInstrumentProximity;
                 else if (hand == SixenseHands.RIGHT)
                     targetList = m_rightInstrumentProximity;
-                break;
-            case ProximityType.GENERATOR:
                 break;
         }
 
@@ -340,6 +342,29 @@ public class HydraController : MonoBehaviour
             if (!m_gloveCalibrator.isCalibrated)
                 m_gloveCalibrator.StartCalibration();
         }
+
+		if(GlobalConfig.Instance.DebugCollisions){
+	        //Debugging proximity lists
+	        if (m_gloveCalibrator.m_leftHandActive)
+	        {
+	            Debug.Log("Left Proximity:");
+	            foreach (GameObject obj in m_leftInstrumentInterior)
+	                Debug.Log(obj.name);
+	            Debug.Log("Left Interior:");
+	            foreach (GameObject obj in m_leftInstrumentInterior)
+	                Debug.Log(obj.name);
+	        }
+
+	        if (m_gloveCalibrator.m_rightHandActive)
+	        {
+	            Debug.Log("Right Proximity:");
+	            foreach (GameObject obj in m_rightInstrumentProximity)
+	                Debug.Log(obj.name);
+	            Debug.Log("Right Interior:");
+	            foreach (GameObject obj in m_rightInstrumentInterior)
+	                Debug.Log(obj.name);
+	        }
+		}
     }
 
     public void FreezeHands()
@@ -389,6 +414,7 @@ public class HydraController : MonoBehaviour
         {
             //ToolController.Instance.PopTool(hand);
             ToolController.Instance.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.HOVER);
+            //ToolController.Instance.PopTool(hand);
             m_glove.SetCollider(m_glove.activeGestureIndex);
         }
     }

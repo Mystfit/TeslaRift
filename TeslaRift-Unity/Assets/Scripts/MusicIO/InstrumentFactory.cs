@@ -23,7 +23,7 @@ public class InstrumentFactory : MonoBehaviour {
     public float m_panelOrbitDistance = 0.2f;
     public TextAsset m_liveSessionFile;
 
-    public Scroller m_instrumentHolder;
+    public Picker m_instrumentHolder;
     public TetrahedronBlender m_returnHolder;
 
     void Start () {
@@ -55,7 +55,6 @@ public class InstrumentFactory : MonoBehaviour {
                 }
             }
         }
-        
     }
     
     

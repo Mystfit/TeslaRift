@@ -18,6 +18,7 @@ namespace UI
         public GameObject sliderPrefab;
         public GameObject framePrefab;
         public GameObject clipCubePrefab;
+        public GameObject cubeButtonPrefab;
         public GameObject clipPlaceholderPrefab;
         public GameObject rotaryPrefab;
         public GameObject paramScrollerPrefab;
@@ -31,6 +32,7 @@ namespace UI
         public GameObject valueTriggerPrefab;
         public GameObject controlMatrixPrefab;
         public GameObject tetrahedronBlenderPrefab;
+        public GameObject instrumentDockPrefab;
 
         //Lookups
         public Dictionary<Type, GameObject> prefabs { get { return m_prefabLookup; } }
@@ -78,11 +80,13 @@ namespace UI
             m_prefabLookup[typeof(ValueTrigger)] = Instance.valueTriggerPrefab;
             m_prefabLookup[typeof(ControlMatrix)] = Instance.controlMatrixPrefab;
             m_prefabLookup[typeof(ClipCube)] = Instance.clipCubePrefab;
+            m_prefabLookup[typeof(CubeButton)] = Instance.cubeButtonPrefab;
             m_prefabLookup[typeof(TetrahedronBlender)] = Instance.tetrahedronBlenderPrefab;
             m_prefabLookup[typeof(Scroller)] = Instance.paramScrollerPrefab;
             m_prefabLookup[typeof(InstrumentOrb)] = Instance.instrumentPrefab;
             m_prefabLookup[typeof(Slider)] = Instance.sliderPrefab;
             m_prefabLookup[typeof(Rotary)] = Instance.rotaryPrefab;
+            m_prefabLookup[typeof(InstrumentDock)] = Instance.instrumentDockPrefab;
         }
 
 

@@ -31,7 +31,8 @@ namespace UI
             if (control != null)
             {
                 m_controls.Remove(control.id);
-                GameObject.Destroy(control);
+				HydraController.Instance.RemoveFromAllCollisionLists(control.gameObject);
+                GameObject.Destroy(control.gameObject);
             }
         }
 

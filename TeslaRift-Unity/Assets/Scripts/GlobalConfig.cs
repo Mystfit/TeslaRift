@@ -7,10 +7,7 @@ using DotNumerics.LinearAlgebra;
 
 public class GlobalConfig : MonoBehaviour {
     
-    public bool IsClient = false;
-    public bool ShowtimeEnabled = true;
-    public string ProjectSourceName;
-
+	public bool DebugCollisions = false;
     public static GlobalConfig m_instance;
 
     // Use this for initialization
@@ -27,8 +24,6 @@ public class GlobalConfig : MonoBehaviour {
         
         if(Input.GetKeyDown(KeyCode.R)){
             Application.LoadLevel(Application.loadedLevel);
-        }
-
-        
+        }  
     }
 }

@@ -109,7 +109,7 @@ namespace VRControls
         /*
          * Fires stored values through attached parameters
          */
-        public void FireValues()
+        public override void Fire()
         {
             foreach (KeyValuePair<InstrumentParameter, float> pair in m_storedValues)
                 pair.Key.setVal(pair.Value);
@@ -126,7 +126,7 @@ namespace VRControls
             if (m_mode == BaseTool.ToolMode.PRIMARY)
             {
                 SetSelected(true);
-                FireValues();
+                Fire();
             }
             base.Gesture_First();
         }
@@ -145,7 +145,7 @@ namespace VRControls
             base.Update();
             if (musicRef.isDirty)
             {
-                FireValues();
+                Fire();
                 musicRef.setClean();
             }
         }
