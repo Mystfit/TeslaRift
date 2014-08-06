@@ -84,6 +84,12 @@ namespace VRControls
             m_paramscroller.RemoveDockableAttachment(attach);
         }
 
+		public override void Undock ()
+		{
+			base.Undock ();
+			Debug.Log ("Undocking?");
+		}
+
         public override void HideControls()
         {
             //Perform mode

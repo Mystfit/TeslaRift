@@ -9,8 +9,15 @@ namespace VRControls
 {
     public class RBFSphere : BaseVRControl
     {
+        //Plug arrangement
+        public int m_numStartPlugs;
+        public float m_sphereRadius;
+        public float m_arcSize;
+        public float m_minAngle;
+        public float m_plugYOffset;
+		public bool m_togglePlacement;
+
         //Training points
-        public RBFPlug[] m_plugs;
         public bool m_toggleResetRbf;
         public ValueTrigger m_selectedTraining;
 
@@ -29,11 +36,36 @@ namespace VRControls
             SetAsDock(true);
             SetSoloChildControlsVisible(true);
             AddAcceptedDocktype(typeof(ValueTrigger));
+            AddAcceptedDocktype(typeof(RBFPlug));
 
-            foreach (RBFPlug plug in ChildControls)
-                AddChildControl(plug);
 
-            EnableControls();
+			for(int p = 0; p < m_numStartPlugs; p++){
+                RBFPlug plug = UIFactory.CreateMusicRefAttachment(typeof(RBFPlug)) as RBFPlug;
+                plug.DockInto(this);
+			}
+
+            PlacePlugs();
+
+
+            //Dock existing children in at runtime
+            for (int i = 0; i < transform.childCount; i++)
+            {
+				Debug.Log("Child: " + (i+1) + " of " + transform.childCount + ". Name: " + transform.GetChild(i).name);
+                BaseVRControl attach = transform.GetChild(i).GetComponent<BaseVRControl>();
+                if (attach != null){
+					Debug.Log ("-- Has attachment. ID: " + attach.id);
+					if(!ChildControls.Contains(attach))
+                    	attach.DockInto(this);
+					else
+					   Debug.Log ("-- Adding " + attach + " twice at runtime! WHY?!" );
+
+				} else {
+					Debug.Log ("No attachment found.");
+				}
+            }
+
+			
+			EnableControls();
             ShowControls();
         }
 
@@ -41,21 +73,26 @@ namespace VRControls
         {
             if (base.AddDockableAttachment(attach))
             {
-                attach.rigidbody.isKinematic = true;
+                attach.SetCloneable(false);
 
-                ValueTrigger rbfAttach = attach as ValueTrigger;
-                rbfAttach.SetToolmodeResponse(new BaseTool.ToolMode[]{
-                    BaseTool.ToolMode.PRIMARY, 
-                    BaseTool.ToolMode.GRABBING
-                });
-                rbfAttach.SetCloneable(false);
-                rbfAttach.SetIsDraggable(true);
-                rbfAttach.SetIsDockable(true);
+                if (attach.GetType() == typeof(RBFPlug))
+                {
+                    AddChildControl(attach);
+                }
+                else if (attach.GetType() == typeof(ValueTrigger))
+                {
+                    ValueTrigger rbfAttach = attach as ValueTrigger;
+                    rbfAttach.SetToolmodeResponse(new BaseTool.ToolMode[]{
+                        BaseTool.ToolMode.PRIMARY, 
+                        BaseTool.ToolMode.GRABBING
+                    });
 
-                foreach (RBFPlug plug in ChildControls)
-                    rbfAttach.StoreParameterValue(plug.musicRef);
+                    foreach (RBFPlug plug in ChildControls)
+                        rbfAttach.StoreParameterValue(plug.musicRef);
 
-                rbfAttach.SetSelected(true);
+                    rbfAttach.SetSelected(true);
+                }
+                
                 return true;
             }
             return false;
@@ -65,12 +102,17 @@ namespace VRControls
         {
             base.RemoveDockableAttachment(attach);
 
-            ValueTrigger rbfAttach = attach as ValueTrigger;
-            rbfAttach.SetToolmodeResponse(new BaseTool.ToolMode[]{
-                BaseTool.ToolMode.GRABBING
-            });
-
-            attach.rigidbody.isKinematic = false;
+            if (attach.GetType() == typeof(RBFPlug))
+            {
+                RemoveChildControl(attach);
+            }
+            else if (attach.GetType() == typeof(ValueTrigger))
+            {
+                ValueTrigger rbfAttach = attach as ValueTrigger;
+                rbfAttach.SetToolmodeResponse(new BaseTool.ToolMode[]{
+                    BaseTool.ToolMode.GRABBING
+                });
+            }
         }
 
         public override void Undock()
@@ -86,10 +128,10 @@ namespace VRControls
             if (m_selectedTraining != null)
                 m_selectedTraining.SetSelected(true);
 
-            foreach (ValueTrigger attach in DockedChildren)
+            foreach (BaseVRControl attach in DockedChildren)
                 attach.ShowControls();
-            foreach (RBFPlug plug in ChildControls)
-                plug.ShowControls();
+			foreach (BaseVRControl attach in ChildControls)
+				attach.ShowControls();
 
             SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.GRABBING });
         }
@@ -156,6 +198,11 @@ namespace VRControls
                 ResetRBF();
             }
 
+			if(m_togglePlacement){
+				m_togglePlacement = false;
+				PlacePlugs();
+			}
+
             base.Update();
         }
 
@@ -195,6 +242,30 @@ namespace VRControls
                     plug.SetPlugVal((float)output[index++]);
             }
             base.Gesture_IdleInterior();
+        }
+
+
+        /* 
+         * Places plugs evenly spaced around circumference
+         */
+        public void PlacePlugs()
+        {
+			for(int i = 0; i < ChildControls.Count; i++){
+
+	            Vector3[] points = GeometryUtils.BuildArcPositions(m_sphereRadius, m_arcSize, ChildControls.Count, m_minAngle, Mathf.PI*0.5f, true);
+
+                //Bit of fudging to get the upwards facing rotation for the plugs
+                points[i].z = points[i].y;
+                points[i].y = m_plugYOffset;
+                Vector3 lookRot = Quaternion.LookRotation(points[i]).eulerAngles;
+                points[i].y = -m_plugYOffset;
+
+                iTween.MoveTo(ChildControls[i].gameObject, iTween.Hash("position", points[i], "time", 0.5f, "islocal", true));
+                iTween.RotateTo(ChildControls[i].gameObject, iTween.Hash("rotation", lookRot, "time", 0.5f, "islocal", true));
+
+                //ChildControls[i].transform.localPosition = points[i];
+
+			}
         }
     }
 }

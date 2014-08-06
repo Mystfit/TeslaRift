@@ -17,7 +17,6 @@ namespace VRControls
         public static string EDITOR_DOCK = "editorDock";
     }
 
-    //[JsonObject(MemberSerialization.OptIn)]
     [JsonConverter(typeof(BaseVRControlSerializer))]
     public abstract class BaseVRControl : MonoBehaviour
     {
@@ -266,15 +265,40 @@ namespace VRControls
          */
         protected Material m_outlineMat;
         public void SetOutlineMat(Material mat) { m_outlineMat = mat; }
+
         public void SetOutlineSize(float size)
         {
-            if (m_outlineMat != null)
-                iTween.ValueTo(gameObject, iTween.Hash("from", m_outlineMat.GetFloat("_Outline"), "to", size, "time", 0.1f, "onupdate", "SetOutlineUpdate", "easetype", iTween.EaseType.easeOutExpo));
+            SetOutlineSize(size, true);
+        }
+        public void SetOutlineSize(float size, bool animate)
+        {
+            if (animate)
+            {
+                if (m_outlineMat != null)
+                    iTween.ValueTo(gameObject, iTween.Hash("from", m_outlineMat.GetFloat("_Outline"), "to", size, "time", 0.1f, "onupdate", "SetOutlineUpdate", "easetype", iTween.EaseType.easeOutExpo));
+
+            }
+            else
+            {
+                SetOutlineUpdate(size);
+            }
         }
         public void SetOutlineColor(Color color)
         {
-            if (m_outlineMat != null)
-                iTween.ValueTo(gameObject, iTween.Hash("from", m_outlineMat.GetColor("_OutlineColor"), "to", color, "time", 0.1f, "onupdate", "SetOutlineColorUpdate", "easetype", iTween.EaseType.easeOutExpo));
+            SetOutlineColor(color, true);
+        }
+        public void SetOutlineColor(Color color, bool animate)
+        {
+            if (animate)
+            {
+                if (m_outlineMat != null)
+                    iTween.ValueTo(gameObject, iTween.Hash("from", m_outlineMat.GetColor("_OutlineColor"), "to", color, "time", 0.1f, "onupdate", "SetOutlineColorUpdate", "easetype", iTween.EaseType.easeOutExpo));
+
+            }
+            else
+            {
+                SetOutlineColorUpdate(color);
+            }
         }
         private void SetOutlineUpdate(float size) { m_outlineMat.SetFloat("_Outline", size); }
         private void SetOutlineColorUpdate(Color color) { m_outlineMat.SetColor("_OutlineColor", color); }
@@ -563,8 +587,9 @@ namespace VRControls
         protected List<BaseVRControl> m_childControls;
         public List<BaseVRControl> ChildControls { get { return m_childControls; } }
         public void AddChildControl(BaseVRControl control) { m_childControls.Add(control); }
-
-        public bool controlsEnabled { get { return m_controlsEnabled; } }
+        public void RemoveChildControl(BaseVRControl control) { m_childControls.Remove(control); }
+        
+		public bool controlsEnabled { get { return m_controlsEnabled; } }
         protected bool m_controlsEnabled = true;
 
         public bool controlsVisible { get { return m_controlsVisible; } }

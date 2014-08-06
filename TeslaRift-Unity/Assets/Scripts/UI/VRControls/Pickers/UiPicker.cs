@@ -21,6 +21,10 @@ namespace VRControls
             ValueTrigger trigger = UIFactory.CreateMusicRefAttachment(typeof(ValueTrigger)) as ValueTrigger;
             trigger.DockInto(m_scroller);
             trigger.SetCloneable(true);
+
+            RBFPlug plug = UIFactory.CreateMusicRefAttachment(typeof(RBFPlug)) as RBFPlug;
+            plug.DockInto(m_scroller);
+            plug.SetCloneable(true);
         }
     }
 }

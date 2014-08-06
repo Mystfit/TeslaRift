@@ -38,19 +38,15 @@ namespace VRControls
 
             AddGroupDocktype(VRControls.EditorWorkspace.EditorTypes);
 
-            //Dock existing children in at runtime
-            for(int i = 0; i < transform.childCount; i++)
+            //Dock existing children in at runtime -- Needs to be moved to BaseVRControl
+            for (int i = 0; i < transform.childCount; i++)
             {
-                BaseVRControl attach = transform.GetChild(i).GetComponent<BaseVRControl>();    
+                BaseVRControl attach = transform.GetChild(i).GetComponent<BaseVRControl>();
                 if(attach != null)
                     attach.DockInto(this);
             }
-           
-            //GameObject pageObj = new GameObject("controlLayout");
-            //m_activeLayout = pageObj.AddComponent<ControlLayout>();
-            //m_activeLayout.SetJsonPath(m_layoutsPath + "layout_0.json");
-            //m_activeLayout.DockInto(m_controlStateMenu);
-
+        
+            //Create default layout
 			m_activeLayout = CreateControlLayout(m_layoutsPath + "layout_0.json");
 
             //Add existing controls to default layout

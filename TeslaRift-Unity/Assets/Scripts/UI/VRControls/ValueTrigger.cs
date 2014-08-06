@@ -29,6 +29,8 @@ namespace VRControls
             SetIsDraggable(true);
             SetIsDockable(true);
             AddAcceptedDocktype(typeof(Slider));
+            AddAcceptedDocktype(typeof(ClipCube));
+			m_scroller.AddAcceptedDocktype(typeof(ClipCube));
 
             m_storedValues = new Dictionary<InstrumentParameter, float>();
             SetOutlineMat(GetComponentInChildren<MeshRenderer>().material);
@@ -94,15 +96,6 @@ namespace VRControls
             m_scroller.HideControls();
             m_valueLabel.gameObject.SetActive(false);
             m_rotary.SetInactive();
-        }
-
-        public override void SetSelected(bool state)
-        {
-            base.SetSelected(state);
-            //if (selected)
-            //    iTween.ColorTo(gameObject, iTween.Hash("color", m_selectedColor, "time", 0.2f));
-            //else
-            //    iTween.ColorTo(gameObject, iTween.Hash("color", m_defaultColor, "time", 0.2f));
         }
 
 

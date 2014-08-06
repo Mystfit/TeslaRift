@@ -158,8 +158,8 @@ public class InstrumentFactory : MonoBehaviour {
         foreach(XmlNode clip in clipList){
             string name = clip.Attributes["name"].Value as String;
             int index = int.Parse( clip.Attributes["index"].Value );
-            bool looping = Convert.ToBoolean( clip.Attributes["looping"].Value );
-            instrumentDef.AddClip(name, looping, index);
+            //bool looping = Convert.ToBoolean( clip.Attributes["looping"].Value );
+            instrumentDef.AddClip(name, true, index);
         }
             
         //Get sends in track

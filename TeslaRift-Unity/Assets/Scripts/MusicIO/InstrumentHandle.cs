@@ -66,7 +66,22 @@ namespace MusicIO
             }
         }
 
-       
+
+        //Mixer values
+        //------------
+        public float meterVolume
+        {
+            get { return m_meterValue;  }
+            set { 
+                m_meterValue = value;
+                m_isMeterDirty = true;
+            }
+        }
+        protected float m_meterValue;
+
+        public bool isMeterDirty { get { return m_isMeterDirty; } }
+        public void SetMeterClean() { m_isMeterDirty = false; }
+        protected bool m_isMeterDirty;
 
 
         // Clip functions

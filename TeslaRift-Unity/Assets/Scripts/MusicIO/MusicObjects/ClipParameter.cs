@@ -40,6 +40,12 @@ namespace MusicIO
             m_scene = clipScene;
         }
 
+		public override void setVal (float value)
+		{
+			base.setVal (value);
+			Send();
+		}
+
         public override void Send(bool force)
         {
             SetRemoteArg("trackindex", owner.trackIndex);

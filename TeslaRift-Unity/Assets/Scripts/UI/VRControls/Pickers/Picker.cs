@@ -17,6 +17,7 @@ namespace VRControls
             CUBEBUTTON,
             CONTROLMATRIX,
             RBFSPHERE,
+			RBFPLUG,
             VALUETRIGGER
         }
 
@@ -25,6 +26,7 @@ namespace VRControls
             {PickerDockTypes.CUBEBUTTON, typeof(CubeButton)},
             {PickerDockTypes.CONTROLMATRIX, typeof(ControlMatrix)},
             {PickerDockTypes.RBFSPHERE, typeof(RBFSphere)},
+			{PickerDockTypes.RBFPLUG, typeof(RBFPlug)},
             {PickerDockTypes.VALUETRIGGER, typeof(ValueTrigger)}
         };
 

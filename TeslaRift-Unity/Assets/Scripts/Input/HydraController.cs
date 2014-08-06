@@ -268,7 +268,7 @@ public class HydraController : MonoBehaviour
         if (!targetList.Contains(proximityTarget))
         {
             targetList.Add(proximityTarget);
-            Debug.Log("Adding " + proximityTarget.name);
+            //Debug.Log("Adding " + proximityTarget.name);
         }
     }
 
@@ -281,7 +281,7 @@ public class HydraController : MonoBehaviour
         List<GameObject> targetList = GetCollisionList(proximityType, hand);
         targetList.Remove(proximityTarget);
 
-        Debug.Log("Removing " + proximityTarget.name);
+        //Debug.Log("Removing " + proximityTarget.name);
     }
 
 

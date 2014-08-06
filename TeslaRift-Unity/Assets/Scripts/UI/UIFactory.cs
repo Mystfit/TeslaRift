@@ -29,6 +29,7 @@ namespace UI
 
         //Fissure control prefabs
         public GameObject rbfSpherePrefab;
+		public GameObject rbfPlugPrefab;
         public GameObject valueTriggerPrefab;
         public GameObject controlMatrixPrefab;
         public GameObject tetrahedronBlenderPrefab;
@@ -77,6 +78,7 @@ namespace UI
 
             m_prefabLookup = new Dictionary<Type, GameObject>();
             m_prefabLookup[typeof(RBFSphere)] = Instance.rbfSpherePrefab;
+			m_prefabLookup[typeof(RBFPlug)] = Instance.rbfPlugPrefab;
             m_prefabLookup[typeof(ValueTrigger)] = Instance.valueTriggerPrefab;
             m_prefabLookup[typeof(ControlMatrix)] = Instance.controlMatrixPrefab;
             m_prefabLookup[typeof(ClipCube)] = Instance.clipCubePrefab;
@@ -87,6 +89,7 @@ namespace UI
             m_prefabLookup[typeof(Slider)] = Instance.sliderPrefab;
             m_prefabLookup[typeof(Rotary)] = Instance.rotaryPrefab;
             m_prefabLookup[typeof(InstrumentDock)] = Instance.instrumentDockPrefab;
+
         }
 
 

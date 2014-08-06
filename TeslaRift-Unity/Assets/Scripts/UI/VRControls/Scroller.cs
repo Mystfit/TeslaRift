@@ -9,7 +9,7 @@ namespace VRControls
     public class Scroller : BaseVRControl
     {
         //Accepted dockable objects for this ui control
-        public enum ScrollerDockTypes { INSTRUMENT, SLIDER, CLIP, VALUETRIGGER };
+        public enum ScrollerDockTypes { INSTRUMENT, SLIDER, CUBEBUTTON, VALUETRIGGER, RBFPLUG, RBFSPHERE };
         public ScrollerDockTypes[] m_acceptedDockTypes;
 
         //Colliders
@@ -75,6 +75,15 @@ namespace VRControls
 
                 if (m_acceptedDockTypes[i] == ScrollerDockTypes.VALUETRIGGER)
                     AddAcceptedDocktype(typeof(ValueTrigger));
+
+				if (m_acceptedDockTypes[i] == ScrollerDockTypes.RBFPLUG)
+					AddAcceptedDocktype(typeof(RBFPlug));
+
+                if (m_acceptedDockTypes[i] == ScrollerDockTypes.RBFSPHERE)
+                    AddAcceptedDocktype(typeof(RBFSphere));
+
+				if (m_acceptedDockTypes[i] == ScrollerDockTypes.CUBEBUTTON)
+					AddAcceptedDocktype(typeof(CubeButton));
             }
 
             UpdateColliders(Vector3.zero, new Vector3(m_collisionWidth, m_upperVisibleBounds - m_lowerVisibleBounds, m_collisionDepth));

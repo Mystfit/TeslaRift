@@ -15,6 +15,10 @@ namespace VRControls
         protected GameObject m_dividingQuad;
         protected GameObject m_rotator;
 
+        public GameObject m_modelFrame;
+        public GameObject m_modelInterior;
+        public GameObject m_modelExterior;
+
         public float m_dividerWidth = 0.005f;
         public float m_controlsMirrorOffset = 0.05f;
         public float m_controlsYOffset = 0.05f;
@@ -23,6 +27,10 @@ namespace VRControls
 
 		public InstrumentHandle instrumentRef { get { return m_instrumentRef; } }
         protected InstrumentHandle m_instrumentRef;
+
+        //Meter value
+        protected float m_displayedMeter;
+        public float m_meterDecay = 0.05f;
 
         public override void Awake()
         {
@@ -39,7 +47,7 @@ namespace VRControls
             SetIsDockable(true);
             SetIsDraggable(true);
             SetCloneable(true);
-            SetOutlineMat(renderer.materials[1]);
+            SetOutlineMat(m_modelFrame.renderer.material);
         }
 
 
@@ -67,7 +75,12 @@ namespace VRControls
                 gameObject.name = instrumentRef.name;
 
                 //Set color
-                renderer.materials[1].SetColor("_Color", m_instrumentRef.color);
+                m_modelFrame.renderer.material.SetColor("_Color", m_instrumentRef.color);
+
+                m_modelExterior.renderer.material.SetColor("_Color", m_instrumentRef.color * new Color(1.0f, 1.0f, 1.0f, 0.35f));
+                m_modelExterior.renderer.material.SetColor("_Emission", m_instrumentRef.color);
+
+                m_modelInterior.renderer.material.SetColor("_Color", m_instrumentRef.color * new Color(1.4f, 1.4f, 1.4f, 1.0f));
 
                 m_rotator = new GameObject("rotator");
                 m_rotator.transform.parent = transform;
@@ -174,10 +187,24 @@ namespace VRControls
         public override void Update()
         {
             base.Update();
+
+            if (instrumentRef.isMeterDirty)
+            {
+                m_displayedMeter = instrumentRef.meterVolume;
+                instrumentRef.SetMeterClean();
+            }
+
+            SetOutlineColor(UIFactory.outlineSelectedColor * new Color(1.0f, 1.0f, 1.0f, 0.2f + m_displayedMeter * 0.8f), false);
+            SetOutlineSize(UIFactory.outlineSelectedSize * m_displayedMeter, false);
+            float scale = m_displayedMeter * 0.8f + 0.2f;
+            m_modelInterior.transform.localScale = new Vector3(scale, scale, scale);
             if (m_instrumentRef.playingClip != null)
                 SetSelected(true);
             else
                 SetSelected(false);
+
+            m_displayedMeter -=m_meterDecay;
+            m_displayedMeter = Mathf.Clamp(m_displayedMeter, 0.0f, 1.0f);
         }
 
 

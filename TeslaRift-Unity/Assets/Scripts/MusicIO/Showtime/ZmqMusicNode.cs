@@ -39,6 +39,7 @@ public class ZmqMusicNode : MonoBehaviour {
         m_node.subscribeToMethod(liveNode.methods["send_updated"], sendValueUpdated);
         m_node.subscribeToMethod(liveNode.methods["fired_slot_index"], clipFired);
         m_node.subscribeToMethod(liveNode.methods["playing_slot_index"], clipPlaying);
+        m_node.subscribeToMethod(liveNode.methods["output_meter"], outputMeter);
     }
 
     /* 
@@ -115,6 +116,19 @@ public class ZmqMusicNode : MonoBehaviour {
             ClipParameter clip = InstrumentController.Instance.FindClip(trackIndex, slotIndex);
             clip.SetClipState(ClipParameter.ClipState.IS_PLAYING);
         }
+
+        return null;
+    }
+
+    public object outputMeter(ZstMethod methodData)
+    {
+        Dictionary<string, object> output = JsonConvert.DeserializeObject<Dictionary<string, object>>(methodData.output.ToString());
+        int trackIndex = Convert.ToInt32(output["trackindex"]);
+        float meterValue = Convert.ToSingle(output["value"]);
+
+        InstrumentHandle playingInstrument = InstrumentController.Instance.GetInstrumentByTrackindex(trackIndex);
+
+        playingInstrument.meterVolume = meterValue;
 
         return null;
     }

@@ -13,6 +13,47 @@ ModelImporter:
     100014: transform1
     100016: transform2
     100018: transform3
+    100020: icos_interior
+    100022: icos_mesh
+    100024: icos_mesh1
+    100026: polySurface10
+    100028: polySurface11
+    100030: polySurface12
+    100032: polySurface13
+    100034: polySurface14
+    100036: polySurface15
+    100038: polySurface16
+    100040: polySurface17
+    100042: polySurface18
+    100044: polySurface19
+    100046: polySurface20
+    100048: polySurface4
+    100050: polySurface5
+    100052: polySurface6
+    100054: polySurface7
+    100056: polySurface8
+    100058: polySurface9
+    100060: transform10
+    100062: transform11
+    100064: transform12
+    100066: transform13
+    100068: transform14
+    100070: transform15
+    100072: transform16
+    100074: transform17
+    100076: transform18
+    100078: transform19
+    100080: transform20
+    100082: transform21
+    100084: transform4
+    100086: transform5
+    100088: transform6
+    100090: transform7
+    100092: transform8
+    100094: transform9
+    100096: icosExterior
+    100098: icosFrame
+    100100: icosInterior
     400000: //RootNode
     400002: pSolid1
     400004: pSolid2
@@ -23,19 +64,74 @@ ModelImporter:
     400014: transform1
     400016: transform2
     400018: transform3
+    400020: icos_interior
+    400022: icos_mesh
+    400024: icos_mesh1
+    400026: polySurface10
+    400028: polySurface11
+    400030: polySurface12
+    400032: polySurface13
+    400034: polySurface14
+    400036: polySurface15
+    400038: polySurface16
+    400040: polySurface17
+    400042: polySurface18
+    400044: polySurface19
+    400046: polySurface20
+    400048: polySurface4
+    400050: polySurface5
+    400052: polySurface6
+    400054: polySurface7
+    400056: polySurface8
+    400058: polySurface9
+    400060: transform10
+    400062: transform11
+    400064: transform12
+    400066: transform13
+    400068: transform14
+    400070: transform15
+    400072: transform16
+    400074: transform17
+    400076: transform18
+    400078: transform19
+    400080: transform20
+    400082: transform21
+    400084: transform4
+    400086: transform5
+    400088: transform6
+    400090: transform7
+    400092: transform8
+    400094: transform9
+    400096: icosExterior
+    400098: icosFrame
+    400100: icosInterior
     2300000: //RootNode
     2300002: pSolid1
     2300004: pSolid2
     2300006: polySurface3
+    2300008: icos_interior
+    2300010: icos_mesh
+    2300012: icosExterior
+    2300014: icosFrame
+    2300016: icosInterior
     3300000: //RootNode
     3300002: pSolid1
     3300004: pSolid2
     3300006: polySurface3
+    3300008: icos_interior
+    3300010: icos_mesh
+    3300012: icosExterior
+    3300014: icosFrame
+    3300016: icosInterior
     4300000: pSolid1
     4300002: pSolid2
     4300004: icosahedron
     4300006: polySurface3
     4300008: icos_mesh
+    4300010: icos_interior
+    4300012: icosExterior
+    4300014: icosInterior
+    4300016: icosFrame
     9500000: //RootNode
   materials:
     importMaterials: 0

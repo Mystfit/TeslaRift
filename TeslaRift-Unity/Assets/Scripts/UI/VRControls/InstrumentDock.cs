@@ -92,7 +92,7 @@ namespace VRControls
 
         public void PlaceObjects()
         {
-            Vector3[] points = GeometryUtils.BuildArcPositions(m_carouselRadius, m_arcSize, m_childDockables.Count, m_minAngle, true);
+            Vector3[] points = GeometryUtils.BuildArcPositions(m_carouselRadius, m_arcSize, m_childDockables.Count, m_minAngle, -Mathf.PI*0.5f, true);
             for (int i = 0; i < points.Length; i++)
             {
                 points[i].z = points[i].y;
