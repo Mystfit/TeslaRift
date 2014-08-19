@@ -55,9 +55,11 @@ public class ValueTriggerSerializer : BaseVRControlSerializer
             var musicRef = BaseVRControlSerializer.FindExistingMusicRef(Type.GetType(musicRefType), o["musicRefProperties"]);
             var musicRefValue = o["value"].Value<float>();
 
-            Slider slider = UIFactory.CreateMusicRefAttachment(typeof(Slider), musicRef) as Slider;
-            musicRef.setVal(musicRefValue, true);
-			slider.DockInto(trigger);
+			if(musicRef != null){
+            	Slider slider = UIFactory.CreateMusicRefAttachment(typeof(Slider), musicRef) as Slider;
+            	musicRef.setVal(musicRefValue, true);
+				slider.DockInto(trigger);
+			}
 		}
 	}
 

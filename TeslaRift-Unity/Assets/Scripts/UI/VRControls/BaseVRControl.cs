@@ -709,6 +709,8 @@ namespace VRControls
 
             foreach (BaseVRControl attach in DockedChildren)
                 attach.BuildJsonHierarchy(attachments);
+            foreach (BaseVRControl control in ChildControls)
+                control.BuildJsonHierarchy(attachments);
 
 			return JsonConvert.SerializeObject(attachments, new Formatting(), new ControlHierarchySerializer());
 		}

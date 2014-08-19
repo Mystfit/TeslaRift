@@ -203,8 +203,8 @@ namespace VRControls
             else
                 SetSelected(false);
 
-            m_displayedMeter -=m_meterDecay;
-            m_displayedMeter = Mathf.Clamp(m_displayedMeter, 0.0f, 1.0f);
+            //m_displayedMeter -=m_meterDecay;
+            //m_displayedMeter = Mathf.Clamp(m_displayedMeter, 0.0f, 1.0f);
         }
 
 

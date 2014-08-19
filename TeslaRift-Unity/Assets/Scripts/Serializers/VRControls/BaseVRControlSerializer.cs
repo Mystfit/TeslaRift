@@ -130,9 +130,10 @@ public class BaseVRControlSerializer : JsonConverter
             param = InstrumentController.Instance.FindSendParameter(musicRefProperties["trackindex"].Value<int>(), musicRefProperties["sendindex"].Value<int>());
         else if (musicRefType == typeof(DeviceParameter))
             param = InstrumentController.Instance.FindParameter(musicRefProperties["trackindex"].Value<int>(), musicRefProperties["deviceindex"].Value<int>(), musicRefProperties["parameterindex"].Value<int>(), musicRefProperties["category"].Value<int>());
-        else if (musicRefType == typeof(NoteParameter))
-			param = InstrumentController.Instance.GetInstrumentByTrackindex(musicRefProperties.Value<int>("trackindex")).noteChannel;
-        
+        else if (musicRefType == typeof(NoteParameter)){
+			var temp = musicRefProperties["trackindex"].Value<int>();
+			param = InstrumentController.Instance.GetInstrumentByTrackindex(temp).noteChannel;
+		}
         return param;
     }
 

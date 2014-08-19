@@ -39,7 +39,7 @@ public class ZmqMusicNode : MonoBehaviour {
         m_node.subscribeToMethod(liveNode.methods["send_updated"], sendValueUpdated);
         m_node.subscribeToMethod(liveNode.methods["fired_slot_index"], clipFired);
         m_node.subscribeToMethod(liveNode.methods["playing_slot_index"], clipPlaying);
-        m_node.subscribeToMethod(liveNode.methods["output_meter"], outputMeter);
+        m_node.subscribeToMethod(liveNode.methods["meters_updated"], outputMeter);
     }
 
     /* 
@@ -122,14 +122,14 @@ public class ZmqMusicNode : MonoBehaviour {
 
     public object outputMeter(ZstMethod methodData)
     {
-        Dictionary<string, object> output = JsonConvert.DeserializeObject<Dictionary<string, object>>(methodData.output.ToString());
-        int trackIndex = Convert.ToInt32(output["trackindex"]);
-        float meterValue = Convert.ToSingle(output["value"]);
+        float[] output = JsonConvert.DeserializeObject<float[]>(methodData.output.ToString());
 
-        InstrumentHandle playingInstrument = InstrumentController.Instance.GetInstrumentByTrackindex(trackIndex);
-
-        playingInstrument.meterVolume = meterValue;
-
+        for (int i = 0; i < output.Length; i++)
+        {
+            float meterVal = Mathf.Clamp(Utils.Remap(20.0f * Mathf.Log(output[i]), -60.0f, 6.0f, 0.0f, 1.0f), 0.0f, 1.0f);
+            Debug.Log(meterVal);
+            InstrumentController.Instance.GetInstrumentByTrackindex(i).meterVolume = meterVal;
+        }
         return null;
     }
 
