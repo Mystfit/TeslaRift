@@ -109,12 +109,12 @@ namespace VRControls
         public override void Gesture_First()
         {
             base.Gesture_First();
-            if (m_mode == BaseTool.ToolMode.PRIMARY)
+            if (mode == BaseTool.ToolMode.PRIMARY)
                 m_paramscroller.ToggleControls();
 
-            if (m_mode == BaseTool.ToolMode.GRABBING)
+            if (mode == BaseTool.ToolMode.GRABBING)
             {
-                m_lastPlugDragPos = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(m_hand)).z;
+                m_lastPlugDragPos = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(ActiveHand)).z;
                 m_originalPosSet = true;
             }
         }
@@ -129,11 +129,11 @@ namespace VRControls
 
         public override void Gesture_IdleInterior()
         {
-            if (m_mode == BaseTool.ToolMode.GRABBING)
+            if (mode == BaseTool.ToolMode.GRABBING)
             {
                 if (m_originalPosSet)
                 {
-                    Vector3 pos = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(m_hand));
+                    Vector3 pos = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(ActiveHand));
                     float delta = m_lastPlugDragPos - pos.z;
 
                     float newVal = musicRef.val - (delta / m_maxPlugDragDistance);
@@ -151,7 +151,7 @@ namespace VRControls
             {
                 foreach (Slider attach in m_paramscroller.DockedChildren)
                 {
-                    if (attach.HasMusicRef)
+                    if (attach.musicRef != null)
                     {
                         attach.musicRef.setVal(value);
                     }

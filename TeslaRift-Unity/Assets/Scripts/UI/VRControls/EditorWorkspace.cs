@@ -26,7 +26,7 @@ namespace VRControls
         public override void Awake()
         {
             //Set the ID before the superclass to override it
-            m_id = VRControls.StaticIds.EDITOR_DOCK;
+            SetId(VRControls.StaticIds.EDITOR_DOCK);
 
             base.Awake();
 

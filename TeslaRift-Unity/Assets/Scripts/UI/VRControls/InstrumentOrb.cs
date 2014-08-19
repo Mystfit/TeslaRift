@@ -37,10 +37,10 @@ namespace VRControls
             base.Awake();
 
             //Since instrument attachments are created at runtime, we need to set the filter here
-            m_respondsToToolMode = new BaseTool.ToolMode[]{
+            SetToolmodeResponse(new BaseTool.ToolMode[]{
                 BaseTool.ToolMode.GRABBING,
                 BaseTool.ToolMode.HOVER
-            };
+            });
 
             //Set the collision state
             SetCollideable(true);
@@ -216,8 +216,8 @@ namespace VRControls
             base.Gesture_First();
 
             //Make sure to start dragging the object if we're using the drag gesture
-            if (m_mode == BaseTool.ToolMode.GRABBING)
-                StartDragging(HydraController.Instance.GetHand(m_hand));
+            if (mode == BaseTool.ToolMode.GRABBING)
+                StartDragging(HydraController.Instance.GetHand(ActiveHand));
 
             if (mode == BaseTool.ToolMode.PRIMARY)
                 ToggleControls();
@@ -231,7 +231,7 @@ namespace VRControls
         public override void Gesture_Exit()
         {
             base.Gesture_Exit();
-            if (m_mode == BaseTool.ToolMode.GRABBING)
+            if (mode == BaseTool.ToolMode.GRABBING)
             {
                 StopDragging();
             }

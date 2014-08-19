@@ -62,9 +62,9 @@ namespace VRControls
 
         public bool DockContainsInstrument(InstrumentHandle musicRef)
         {
-            if (m_childDockables != null)
+            if (DockedChildren != null)
             {
-                foreach (InstrumentOrb attach in m_childDockables)
+                foreach (InstrumentOrb attach in DockedChildren)
                 {
                     if (attach.instrumentRef != null)
                     {
@@ -92,18 +92,18 @@ namespace VRControls
 
         public void PlaceObjects()
         {
-            Vector3[] points = GeometryUtils.BuildArcPositions(m_carouselRadius, m_arcSize, m_childDockables.Count, m_minAngle, -Mathf.PI*0.5f, true);
+            Vector3[] points = GeometryUtils.BuildArcPositions(m_carouselRadius, m_arcSize, DockedChildren.Count, m_minAngle, -Mathf.PI * 0.5f, true);
             for (int i = 0; i < points.Length; i++)
             {
                 points[i].z = points[i].y;
                 points[i].y = 0.0f;
             }
 
-            for (int i = 0; i < m_childDockables.Count; i++)
+            for (int i = 0; i < DockedChildren.Count; i++)
             {
-                iTween.MoveTo(m_childDockables[i].gameObject, iTween.Hash("position", points[i], "time", 0.5f, "islocal", true));
-				iTween.ScaleTo(m_volumetrics[m_childDockables[i]], iTween.Hash("scale", UIFactory.VolumetricCylinderScale , "time", 0.5f));
-				m_volumetrics[m_childDockables[i]].transform.localPosition = points[i] + new Vector3(0.0f, m_volumetricYOffset, 0.0f);
+                iTween.MoveTo(DockedChildren[i].gameObject, iTween.Hash("position", points[i], "time", 0.5f, "islocal", true));
+                iTween.ScaleTo(m_volumetrics[DockedChildren[i]], iTween.Hash("scale", UIFactory.VolumetricCylinderScale, "time", 0.5f));
+                m_volumetrics[DockedChildren[i]].transform.localPosition = points[i] + new Vector3(0.0f, m_volumetricYOffset, 0.0f);
                 //iTween.MoveTo(m_volumetrics[m_childDockables[i]], iTween.Hash("position", points[i] + new Vector3(0.0f, m_volumetricYOffset, 0.0f), "time", 0.5f, "islocal", true));
             }
         }

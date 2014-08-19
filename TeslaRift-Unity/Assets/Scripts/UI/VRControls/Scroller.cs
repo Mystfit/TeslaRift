@@ -61,7 +61,6 @@ namespace VRControls
         public override void Awake()
         {
             base.Awake();
-            m_childDockables = new List<BaseVRControl>();
             m_controlHolder = transform.Find("paramHolder");
             SetAsDock(true);
 
@@ -132,30 +131,30 @@ namespace VRControls
 
         protected void CalculateDisplayedItems()
         {
-            if (m_childDockables.Count < m_maxDisplayedAttachments)
-                m_numDisplayedAttachments = m_childDockables.Count;
+            if (DockedChildren.Count < m_maxDisplayedAttachments)
+                m_numDisplayedAttachments = DockedChildren.Count;
             else
                 m_numDisplayedAttachments = m_maxDisplayedAttachments;
 
             if (m_maxDisplayedAttachments < 0)
-                m_numDisplayedAttachments = m_childDockables.Count;
+                m_numDisplayedAttachments = DockedChildren.Count;
         }
 
         public void PlaceObjects()
         {
-            for (int i = 0; i < m_childDockables.Count; i++)
+            for (int i = 0; i < DockedChildren.Count; i++)
             {
-                Vector3 pos = new Vector3(0.0f, i * (m_childDockables[i].interiorTrigger.GetSize().y + m_itemSpacing), 0.0f);
+                Vector3 pos = new Vector3(0.0f, i * (DockedChildren[i].interiorTrigger.GetSize().y + m_itemSpacing), 0.0f);
                 if (isDockablesTweenable)
                 {
-                    iTween tween = m_childDockables[i].GetComponent<iTween>();
+                    iTween tween = DockedChildren[i].GetComponent<iTween>();
                     if (tween != null)
                         Destroy(tween);
-                    iTween.MoveTo(m_childDockables[i].gameObject, iTween.Hash("position", pos, "time", 0.3f, "islocal", true));
+                    iTween.MoveTo(DockedChildren[i].gameObject, iTween.Hash("position", pos, "time", 0.3f, "islocal", true));
                 }
                 else
                 {
-                    m_childDockables[i].transform.localPosition = pos;
+                    DockedChildren[i].transform.localPosition = pos;
                 }
             }
             MaskControls();
@@ -196,10 +195,10 @@ namespace VRControls
                 m_scrollVel = 0.0f;
                 m_lastPosition = m_controlHolder.localPosition;
             }
-            else if (m_controlHolder.localPosition.y < (m_childDockables.Count - m_numDisplayedAttachments) * m_lastAttachHeight * -1.0f)
+            else if (m_controlHolder.localPosition.y < (DockedChildren.Count - m_numDisplayedAttachments) * m_lastAttachHeight * -1.0f)
             {
                 m_controlHolder.localPosition = new Vector3(m_controlHolder.transform.localPosition.x,
-                                                            (m_childDockables.Count - m_numDisplayedAttachments) * m_lastAttachHeight * -1.0f,
+                                                            (DockedChildren.Count - m_numDisplayedAttachments) * m_lastAttachHeight * -1.0f,
                                                             m_controlHolder.transform.localPosition.z);
                 m_scrollVel = 0.0f;
                 m_lastPosition = m_controlHolder.localPosition;
@@ -214,7 +213,7 @@ namespace VRControls
          */
         protected void MaskControls()
         {
-            foreach (BaseVRControl attach in m_childDockables)
+            foreach (BaseVRControl attach in DockedChildren)
             {
                 float attachY = attach.transform.localPosition.y + m_controlHolder.localPosition.y;
                 if (attachY < m_lowerVisibleBounds || attachY > m_upperVisibleBounds)
@@ -246,7 +245,7 @@ namespace VRControls
 
         protected void DragScroller()
         {
-            Vector3 inversePoint = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(m_hand));
+            Vector3 inversePoint = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(ActiveHand));
             float posY = inversePoint.y;
             m_controlHolder.localPosition = m_offset + new Vector3(0.0f, posY, 0.0f);
             m_scrollVel = (m_controlHolder.localPosition - m_lastPosition).y;
@@ -258,7 +257,7 @@ namespace VRControls
          */
         public override void Gesture_IdleProximity()
         {
-            if (m_mode == BaseTool.ToolMode.SECONDARY)
+            if (mode == BaseTool.ToolMode.SECONDARY)
             {
                 if (bIsDragging)
                     DragScroller();
@@ -302,11 +301,11 @@ namespace VRControls
         public override void Gesture_First()
         {
             base.Gesture_First();
-            if (m_mode == BaseTool.ToolMode.SECONDARY)
+            if (mode == BaseTool.ToolMode.SECONDARY)
             {
                 bIsDragging = true;
                 m_scrollVel = 0.0f;
-                Vector3 handPos = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(m_hand));
+                Vector3 handPos = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(ActiveHand));
                 handPos.x = 0;
                 handPos.z = 0;
                 m_offset = m_controlHolder.localPosition - handPos;

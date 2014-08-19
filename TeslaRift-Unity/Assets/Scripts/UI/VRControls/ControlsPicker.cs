@@ -61,7 +61,7 @@ namespace VRControls
         public override void Update()
         {
             base.Update();
-            Vector3 facingDir = HydraController.Instance.GetHand(m_hand).transform.up;
+            Vector3 facingDir = HydraController.Instance.GetHand(ActiveHand).transform.up;
             if (facingDir.y >= 0.0f && m_activeScroller != m_instrumentScroller)
             {
                 ToggleInstrumentPickerControls();

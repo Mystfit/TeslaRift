@@ -126,9 +126,8 @@ public class ZmqMusicNode : MonoBehaviour {
 
         for (int i = 0; i < output.Length; i++)
         {
-            float meterVal = Mathf.Clamp(Utils.Remap(20.0f * Mathf.Log(output[i]), -60.0f, 6.0f, 0.0f, 1.0f), 0.0f, 1.0f);
-            Debug.Log(meterVal);
-            InstrumentController.Instance.GetInstrumentByTrackindex(i).meterVolume = meterVal;
+            //float dbVal = Mathf.Clamp(Utils.Remap(20.0f * Mathf.Log(output[i]), -60.0f, 6.0f, 0.0f, 1.0f), 0.0f, 1.0f);
+            InstrumentController.Instance.GetInstrumentByTrackindex(i).meterVolume = output[i];
         }
         return null;
     }

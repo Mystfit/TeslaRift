@@ -119,7 +119,7 @@ namespace VRControls
         {
             base.Gesture_First();
             if (mode == BaseTool.ToolMode.GRABBING)
-                StartDragging(HydraController.Instance.GetHand(m_hand));
+                StartDragging(HydraController.Instance.GetHand(ActiveHand));
             else if (mode == BaseTool.ToolMode.SECONDARY)
                 DisableChildColliders();
             else
@@ -161,11 +161,11 @@ namespace VRControls
 			if(m_currentInstrument)
 			{
 	            RaycastHit hit = new RaycastHit();
-	            Vector3 origin = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(m_hand));
+                Vector3 origin = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(ActiveHand));
 	            Vector3 dir = (origin * -1.0f).normalized;
 	            Vector3 hitPos = origin;
 
-	            float dist = Vector3.Distance(HydraController.Instance.GetHandColliderPosition(m_hand), transform.position);
+                float dist = Vector3.Distance(HydraController.Instance.GetHandColliderPosition(ActiveHand), transform.position);
 	            Debug.Log(dist);
 
 	            //GeometryUtils.BaryCentricDistance.Result result = m_distanceCalculator.GetClosestTriangleAndPoint(origin);

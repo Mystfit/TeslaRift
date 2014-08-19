@@ -141,7 +141,7 @@ namespace VRControls
             base.HideControls();
             SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.SECONDARY });
             ResetRBF();
-            foreach (ValueTrigger attach in m_childDockables)
+            foreach (ValueTrigger attach in DockedChildren)
                 attach.HideControls();
             foreach (RBFPlug plug in ChildControls)
                 plug.HideControls();
@@ -167,7 +167,7 @@ namespace VRControls
         {
             m_rbf.reset(m_numInputs, ChildControls.Count);
             m_rbf.setSigma(m_sigma);
-            foreach (ValueTrigger point in m_childDockables)
+            foreach (ValueTrigger point in DockedChildren)
             {
                 int index = 0;
                 double[] values = new double[point.storedValues.Count];
@@ -186,7 +186,7 @@ namespace VRControls
                 m_rbf.addTrainingPoint(positionVals, values);
             }
 
-            if (m_childDockables.Count > 0)
+            if (DockedChildren.Count > 0)
                 m_rbf.calculateWeights();
         }
 
@@ -216,15 +216,15 @@ namespace VRControls
         {
             base.Gesture_First();
             if (mode == BaseTool.ToolMode.GRABBING)
-                StartDragging(HydraController.Instance.GetHand(m_hand));
+                StartDragging(HydraController.Instance.GetHand(ActiveHand));
         }
 
         public override void Gesture_IdleInterior()
         {
-            if (m_mode == BaseTool.ToolMode.SECONDARY)
+            if (mode == BaseTool.ToolMode.SECONDARY)
             {
                 //Set rbf value from hand position inside sphere
-                Vector3 handPosition = transform.InverseTransformPoint(HydraController.Instance.GetHand(m_hand).transform.position);
+                Vector3 handPosition = transform.InverseTransformPoint(HydraController.Instance.GetHand(ActiveHand).transform.position);
                 Quaternion handAngle = Quaternion.LookRotation(handPosition);
                 float distance = Vector3.Distance(transform.position, handPosition);
                 double[] input = new double[5] { handAngle.x, handAngle.y, handAngle.z, handAngle.w, distance };

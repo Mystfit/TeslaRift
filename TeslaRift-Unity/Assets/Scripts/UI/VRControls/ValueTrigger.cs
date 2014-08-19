@@ -114,9 +114,9 @@ namespace VRControls
          */
         public override void Gesture_First()
         {
-            if (m_mode == BaseTool.ToolMode.GRABBING)
-                StartDragging(HydraController.Instance.GetHand(m_hand));
-            if (m_mode == BaseTool.ToolMode.PRIMARY)
+            if (mode == BaseTool.ToolMode.GRABBING)
+                StartDragging(HydraController.Instance.GetHand(ActiveHand));
+            if (mode == BaseTool.ToolMode.PRIMARY)
             {
                 SetSelected(true);
                 Fire();
@@ -127,7 +127,7 @@ namespace VRControls
         public override void Gesture_Exit()
         {
             base.Gesture_Exit();
-            if (m_mode == BaseTool.ToolMode.GRABBING)
+            if (mode == BaseTool.ToolMode.GRABBING)
             {
                 StopDragging();
             }

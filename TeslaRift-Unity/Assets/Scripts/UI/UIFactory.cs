@@ -177,7 +177,7 @@ namespace UI
                         //InstrumentHandle specific clone initialization
                         if (clone is InstrumentOrb)
                             musicRef = ((InstrumentOrb)clone).instrumentRef;
-                        else if (clone.HasMusicRef)
+                        else if (clone.musicRef != null)
                             musicRef = clone.musicRef;
                     }
 

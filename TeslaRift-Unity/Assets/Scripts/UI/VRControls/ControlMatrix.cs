@@ -160,7 +160,7 @@ namespace VRControls
         {
             base.Gesture_First();
             if (mode == BaseTool.ToolMode.GRABBING)
-                StartDragging(HydraController.Instance.GetHand(m_hand));
+                StartDragging(HydraController.Instance.GetHand(ActiveHand));
             
             UpdateMatrixPosition();
 
@@ -184,7 +184,7 @@ namespace VRControls
 
         public void UpdateMatrixPosition()
         {
-            int[] matrixPos = GetPositionInMatrix(HydraController.Instance.GetHandColliderPosition(m_hand));
+            int[] matrixPos = GetPositionInMatrix(HydraController.Instance.GetHandColliderPosition(ActiveHand));
             
 			if (!Enumerable.SequenceEqual(matrixPos, m_lastMatrixPosition))
 			{
