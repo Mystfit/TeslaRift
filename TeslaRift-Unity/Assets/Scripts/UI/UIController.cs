@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace UI
 {
-    class UIController : MonoBehaviour
+    public class UIController : MonoBehaviour
     {
         public enum UIContext{ EDITING = 0, PERFORMING };
 
