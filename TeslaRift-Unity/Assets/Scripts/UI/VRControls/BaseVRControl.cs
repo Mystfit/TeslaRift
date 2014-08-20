@@ -88,6 +88,7 @@ namespace VRControls
         /// </summary>
         /// <param name="state"></param>
         public void SetIsSaveable(bool state) { m_isSaveable = state; }
+
         /// <summary>
         /// Check if VRControl is savable
         /// </summary>
@@ -99,6 +100,7 @@ namespace VRControls
         /// </summary>
         /// <param name="state"></param>
         public void SetIsSerializeable(bool state) { m_isSerializeable = state; }
+
         /// <summary>
         /// Check if VRControl is serializable to JSON
         /// </summary>
@@ -111,6 +113,7 @@ namespace VRControls
         /// <param name="id"></param>
         public void SetId(string id) { m_id = id; }
         private string m_id = "";
+
         /// <summary>
         /// Get the unique id of this VRControl
         /// </summary>
@@ -176,6 +179,7 @@ namespace VRControls
         /// </summary>
         public bool IsCollideable { get { return m_doesCollide; } }
         private bool m_doesCollide = true;
+
         /// <summary>
         /// Set if VRControl will react to collisions from input devices
         /// </summary>
@@ -204,14 +208,17 @@ namespace VRControls
         /// Get the interior hand trigger associated with this VRControl
         /// </summary>
         public HandProximityTrigger interiorTrigger { get { return m_interiorTrigger; } }
+
         /// <summary>
         /// Get the proximity hand trigger associated with this VRControl
         /// </summary>
         public HandProximityTrigger proximityTrigger { get { return m_proximityTrigger; } }
+
         /// <summary>
         /// Gets the collider component of the interior hand trigger
         /// </summary>
         public virtual Collider interiorCollider { get { return m_interiorTrigger.collider; } }
+
         /// <summary>
         /// Gets the collider component of the exterior hand trigger
         /// </summary>
@@ -225,6 +232,7 @@ namespace VRControls
             foreach (BaseVRControl attach in m_childDockables)
                 attach.DisableColliders();
         }
+
         /// <summary>
         /// Enable all child colliders in this VRControl
         /// </summary>
@@ -233,6 +241,7 @@ namespace VRControls
             foreach (BaseVRControl attach in m_childDockables)
                 attach.EnableColliders();
         }
+
         /// <summary>
         /// Disable colliders associated with this VRControl
         /// </summary>
@@ -241,6 +250,7 @@ namespace VRControls
             interiorCollider.gameObject.SetActive(false);
             proximityCollider.gameObject.SetActive(false);
         }
+
         /// <summary>
         /// Enable colliders associated with this VRControl
         /// </summary>
@@ -263,6 +273,7 @@ namespace VRControls
         {
             UpdateColliders(position, size, 1.2f);
         }
+
         /// <summary>
         /// Update position and size of colliders associated with this VRControl
         /// </summary>
@@ -272,6 +283,7 @@ namespace VRControls
         {
             UpdateColliders(position, new Vector3(size, size, size), 1.2f);
         }
+
         /// <summary>
         /// Update position and size of colliders associated with this VRControl 
         /// </summary>
@@ -294,6 +306,7 @@ namespace VRControls
         /// </summary>
         /// <param name="state"></param>
         public void SetTransient(bool state) { m_isTransient = state; }
+
         /// <summary>
         /// Check if this VRControl is temporary
         /// </summary>
@@ -305,6 +318,7 @@ namespace VRControls
         /// </summary>
         /// <param name="state"></param>
         public void SetCloneable(bool state) { m_isCloneable = state; isCloneable = state; }
+
         /// <summary>
         /// Check if this VRControl is cloneable
         /// </summary>
@@ -320,6 +334,7 @@ namespace VRControls
         /// Check if this is the first gesture running on this VRControl after an interaction was triggered
         /// </summary>
         public bool IsFirstGesture { get { return bIsFirstGesture; } }
+
         /// <summary>
         /// Reset first gesture flag
         /// </summary>
@@ -335,6 +350,7 @@ namespace VRControls
         /// Gets the active hand object manipulating for this control
         /// </summary>
         public BaseTool.ToolHand ActiveHand { get { return m_hand; } }
+
         /// <summary>
         /// Sets the active hand object manipulating for this control
         /// </summary>
@@ -351,6 +367,7 @@ namespace VRControls
         /// Gets toolmode of the hand controlling this object
         /// </summary>
         public BaseTool.ToolMode mode { get { return m_mode; } }
+
         /// <summary>
         /// Sets toolmode of the hand controlling this obejct
         /// </summary>
@@ -368,10 +385,12 @@ namespace VRControls
         /// </summary>
         public bool selected { get { return m_selected; } }
         private bool m_selected;
+
         /// <summary>
         /// Toggel selected state of this VRControl
         /// </summary>
         public virtual void ToggleSelected() { SetSelected(!m_selected); }
+
         /// <summary>
         /// Set selected state of this VRControl
         /// </summary>
@@ -417,6 +436,7 @@ namespace VRControls
         /// <param name="mat"></param>
         public void SetOutlineMat(Material mat) { m_outlineMat = mat; }
         private Material m_outlineMat;
+
         /// <summary>
         /// Set size scale of the outline shader
         /// </summary>
@@ -425,6 +445,7 @@ namespace VRControls
         {
             SetOutlineSize(size, true);
         }
+
         /// <summary>
         /// Set size of the outline shader and optionally animate it to the target size
         /// </summary>
@@ -442,6 +463,7 @@ namespace VRControls
                 SetOutlineUpdate(size);
             }
         }
+
         /// <summary>
         /// Set colour of the outline material
         /// </summary>
@@ -450,6 +472,7 @@ namespace VRControls
         {
             SetOutlineColor(color, true);
         }
+
         /// <summary>
         /// Set colour of the outline material
         /// </summary>
@@ -482,6 +505,7 @@ namespace VRControls
                 SetOutlineColor(UIFactory.outlineHoverColor);
             }
         }
+
         /// <summary>
         /// Reset the outline shader to hidden
         /// </summary>
@@ -504,6 +528,7 @@ namespace VRControls
         /// </summary>
         /// <param name="state"></param>
         private void SetIsDragging(bool state) { m_isDragging = (IsDraggable) ? state : false; isDraggable = state; }
+
         /// <summary>
         /// Gets dragging status of this VRControl
         /// </summary>
@@ -514,6 +539,7 @@ namespace VRControls
         /// Check if VRControl is draggable
         /// </summary>
         public bool IsDraggable { get { return m_isDraggable; } }
+
         /// <summary>
         /// Set set draggable state of VRControl
         /// </summary>
@@ -555,6 +581,7 @@ namespace VRControls
                 }
             }
         }
+
         /// <summary>
         /// Detach this VRControl from its dragging target and dock into the closest appropriate dock
         /// </summary>
@@ -586,6 +613,7 @@ namespace VRControls
         /// Check if this VRControl accepts child controls
         /// </summary>
         public bool IsDock { get { return m_acceptsDockables; } }
+
         /// <summary>
         /// Sets VRControl to accept child controls
         /// </summary>
@@ -597,6 +625,7 @@ namespace VRControls
         /// Check if this VRControl can dock into appropriate docks
         /// </summary>
         public bool IsDockable { get { isDockable = true; return m_isDockable; } }
+
         /// <summary>
         /// Sets this VRControl ability to dock into appropriate docks
         /// </summary>
@@ -608,6 +637,7 @@ namespace VRControls
         /// Get minimized scale of this VRControl
         /// </summary>
         public float minimizedScale { get { return m_minimizedScale; } }
+
         /// <summary>
         /// Get maximized scale of this VRControl
         /// </summary>
@@ -662,6 +692,7 @@ namespace VRControls
             }
             if (IsDraggable) SetIsDragging(false);
         }
+
         /// <summary>
         /// Remove this VRControl from its dock
         /// </summary>
@@ -673,6 +704,7 @@ namespace VRControls
                 m_dockedInto = null;
             }
         }
+
         /// <summary>
         /// Dock this control into the closest valid dock based on the VRControl types this VRControl can dock into
         /// </summary>
@@ -720,6 +752,7 @@ namespace VRControls
                 SetFloating();
             }
         }
+
         /// <summary>
         /// Set this VRControl as floating without a parent dock. Deletes temporary transient VRControls.
         /// </summary>
@@ -763,6 +796,7 @@ namespace VRControls
             }
             return false;
         }
+
         /// <summary>
         /// Undock a child VRControl from this VRControl
         /// </summary>
@@ -787,6 +821,7 @@ namespace VRControls
         /// </summary>
         /// <param name="type"></param>
         public virtual void AddAcceptedDocktype(System.Type type) { m_acceptedTypes.Add(type); }
+
         /// <summary>
         /// Adds multiple types to the list of types this VRControl can dock into
         /// </summary>
@@ -840,11 +875,13 @@ namespace VRControls
         /// Gets list of child docked VRControls
         /// </summary>
         public List<BaseVRControl> ChildControls { get { return m_childControls; } }
+
         /// <summary>
         /// Adds a new child VRControl
         /// </summary>
         /// <param name="control">VRControl to add</param>
         public void AddChildControl(BaseVRControl control) { m_childControls.Add(control); }
+
         /// <summary>
         /// Removes a child VRControl
         /// </summary>
@@ -857,6 +894,7 @@ namespace VRControls
         /// </summary>
 		public bool controlsEnabled { get { return m_controlsEnabled; } }
         private bool m_controlsEnabled = true;
+
         /// <summary>
         /// Check if child VRControls are visible
         /// </summary>
@@ -867,6 +905,7 @@ namespace VRControls
         /// Set controls active
         /// </summary>
         public void EnableControls() { m_controlsEnabled = true; }
+
         /// <summary>
         /// Set controls inactive
         /// </summary>
@@ -875,6 +914,7 @@ namespace VRControls
             m_controlsEnabled = false;
             HideControls();
         }
+
         /// <summary>
         /// Show controls
         /// </summary>
@@ -885,6 +925,7 @@ namespace VRControls
             if (m_dockedInto != null)
                 m_dockedInto.ChildAttachmentOpeningControls(this);
         }
+
         /// <summary>
         /// Hide controls
         /// </summary>
@@ -922,6 +963,7 @@ namespace VRControls
         /// </summary>
         /// <param name="state"></param>
         public void SetSoloChildControlsVisible(bool state) { m_soloChildControlsVisible = state; }
+
         /// <summary>
         /// Get state of this VRControl for having only a single VRControl controls visible
         /// </summary>
@@ -960,6 +1002,7 @@ namespace VRControls
             if (m_respondsToToolMode == null)
                 m_respondsToToolMode = new BaseTool.ToolMode[] { BaseTool.ToolMode.PRIMARY, BaseTool.ToolMode.SECONDARY };
         }
+
         /// <summary>
         /// MusicIO reference this VRControl is responisble for controlling or tracking
         /// </summary>
@@ -970,6 +1013,7 @@ namespace VRControls
         /// Freezes MusicRef. Stops this VRControl frrom tracking the value of the attached MusicRef
         /// </summary>
         public void Freeze() { bIsFrozen = true; }
+
         /// <summary>
         /// Sets this VRControl to track MusicRef
         /// </summary>
