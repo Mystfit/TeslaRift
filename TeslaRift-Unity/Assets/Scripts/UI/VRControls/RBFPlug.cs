@@ -90,18 +90,14 @@ namespace VRControls
 			Debug.Log ("Undocking?");
 		}
 
-        public override void HideControls()
+        public override void SetUIContextToPerformer()
         {
-            //Perform mode
-            base.HideControls();
             m_cap.renderer.materials[0].SetColor("_Color", m_performColor);
             //iTween.ColorTo(m_cap, iTween.Hash("color", m_performColor, "time", 0.2f, "includechildren", false));
         }
 
-        public override void ShowControls()
+        public override void SetUIContextToEditor()
         {
-            //Edit mode
-            base.ShowControls();
             m_cap.renderer.materials[0].SetColor("_Color", m_editColor);
             //iTween.ColorTo(m_cap, iTween.Hash("color", m_editColor, "time", 0.2f, "includechildren", false));
         }

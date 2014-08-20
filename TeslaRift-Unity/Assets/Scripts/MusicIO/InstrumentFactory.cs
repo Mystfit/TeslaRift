@@ -176,6 +176,7 @@ public class InstrumentFactory : MonoBehaviour {
         }
 
         InstrumentOrb instrument = UIFactory.CreateInstrumentRefAttachment(instrumentDef) as InstrumentOrb;
+        instrument.SetAsTemplate(true);
 
         return instrument;
     }

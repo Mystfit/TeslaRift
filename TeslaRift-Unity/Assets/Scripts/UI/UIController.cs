@@ -10,6 +10,9 @@ namespace UI
 {
     class UIController : MonoBehaviour
     {
+        public enum UIContext{ EDITING = 0, PERFORMING };
+
+
         public static UIController Instance { get { return m_instance; } }
         private static UIController m_instance;
 
@@ -47,5 +50,39 @@ namespace UI
                 return m_controls[id];
             return null;
         }
+
+
+        public void ToggleNextUIContext()
+        {
+            int numContexts = Enum.GetNames(typeof(UIContext)).Length;
+            int nextContext = ((int)m_uiContext + 1) % numContexts;
+            SetUIContext((UIContext)nextContext);
+        }
+
+        public void TogglePreviousUIContext()
+        {
+            int numContexts = Enum.GetNames(typeof(UIContext)).Length;
+            int nextContext = ((int)m_uiContext - 1) % numContexts;
+            SetUIContext((UIContext)nextContext);
+        }
+
+        public void SetUIContext(UIContext mode)
+        {
+            foreach(KeyValuePair<string, BaseVRControl> control in m_controls){
+                if(!control.Value.isTemplate)
+                    control.Value.SwitchUIContext(mode);
+            }
+
+            m_uiContext = mode;
+        }
+
+        public UIContext GetUIContext
+        {
+            get
+            {
+                return m_uiContext;
+            }
+        }
+        private UIContext m_uiContext;
     }
 }

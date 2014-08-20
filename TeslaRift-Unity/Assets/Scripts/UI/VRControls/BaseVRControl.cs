@@ -30,6 +30,7 @@ namespace VRControls
         public bool isDock;
         public bool isSaveable;
         public bool isSerializeable = true;
+        public bool isTemplate = false;
         public bool m_toggleControls;
 
         public virtual void Awake()
@@ -44,6 +45,7 @@ namespace VRControls
             SetAsDock(isDock);
             SetIsSaveable(isSaveable);
             SetIsSerializeable(isSerializeable);
+            SetAsTemplate(isTemplate);
 
             m_acceptedTypes = new List<System.Type>();
             m_childDockables = new List<BaseVRControl>();
@@ -75,6 +77,7 @@ namespace VRControls
             isDraggable = m_isDraggable;
             isSaveable = m_isSaveable;
             isSerializeable = m_isSerializeable;
+            isTemplate = m_isTemplate;
         }
 
 
@@ -565,6 +568,7 @@ namespace VRControls
                     if (IsCloneable)
                     {
                         BaseVRControl attach = UI.UIFactory.CreateMusicRefAttachment(this);
+                        attach.SetAsTemplate(false);
                         attach.StartDragging(HydraController.Instance.GetHand(m_hand));
                         attach.SetIsSaveable(true);
                     }
@@ -970,6 +974,40 @@ namespace VRControls
         public bool SoloChildControlsVisible { get { return m_soloChildControlsVisible; } }
         private bool m_soloChildControlsVisible;
 
+        /// <summary>
+        /// Mark this VRControl as being a template control. 
+        /// Templates can't be serialized or deleted.
+        /// </summary>
+        /// <param name="state"></param>
+        public void SetAsTemplate(bool state) { m_isTemplate = state; }
+        public bool IsTemplate{ get { return m_isTemplate; }}
+        private bool m_isTemplate;
+
+
+        /*
+         * Ui context switching
+         */
+        /// <summary>
+        /// Switch between different UI context modes depending on the global state of the performance
+        /// </summary>
+        /// <param name="context"></param>
+        public void SwitchUIContext(UIController.UIContext context)
+        {
+            if (context == UIController.UIContext.EDITING)
+                SetUIContextToEditor();
+            else if (context == UIController.UIContext.PERFORMING)
+                SetUIContextToPerformer();
+        }
+
+        /// <summary>
+        /// Overrideable implementation that VRControl triggers when moving into Editor context
+        /// </summary>
+        public virtual void SetUIContextToEditor(){}
+
+        /// <summary>
+        /// Overrideable implementation that VRControl triggers when moving into Performance context
+        /// </summary>
+        public virtual void SetUIContextToPerformer(){}
 
         /*
          * Gesture implementations
@@ -1038,7 +1076,7 @@ namespace VRControls
             if (attachments == null)
                 attachments = new List<BaseVRControl>();
 
-            if (this.IsSerializeable)
+            if (this.IsSerializeable && !IsTemplate)
                 attachments.Add(this);
 
             foreach (BaseVRControl attach in DockedChildren)

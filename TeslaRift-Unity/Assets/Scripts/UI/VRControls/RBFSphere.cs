@@ -122,29 +122,18 @@ namespace VRControls
             SetTransient(false);
         }
 
-        public override void ShowControls()
+        public override void SetUIContextToEditor()
         {
-            base.ShowControls();
             if (m_selectedTraining != null)
                 m_selectedTraining.SetSelected(true);
-
-            foreach (BaseVRControl attach in DockedChildren)
-                attach.ShowControls();
-			foreach (BaseVRControl attach in ChildControls)
-				attach.ShowControls();
 
             SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.GRABBING });
         }
 
-        public override void HideControls()
+        public override void SetUIContextToPerformer()
         {
-            base.HideControls();
             SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.SECONDARY });
             ResetRBF();
-            foreach (ValueTrigger attach in DockedChildren)
-                attach.HideControls();
-            foreach (RBFPlug plug in ChildControls)
-                plug.HideControls();
         }
 
         public override void ChildAttachmentSelected(BaseVRControl attach)
