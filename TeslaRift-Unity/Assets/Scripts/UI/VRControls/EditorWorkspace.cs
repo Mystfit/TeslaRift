@@ -124,7 +124,7 @@ namespace VRControls
             layout.Init(this);
             layout.SetJsonPath(path);
             layout.DockInto(m_controlStateMenu);
-			return page;
+            return layout;
 		}
 
         public void SaveWorkspace()
