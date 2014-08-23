@@ -32,7 +32,9 @@ namespace VRControls
             AddAcceptedDocktype(typeof(ClipCube));
 			m_scroller.AddAcceptedDocktype(typeof(ClipCube));
 
-            m_storedValues = new Dictionary<InstrumentParameter, float>();
+			if(m_storedValues == null)
+            	m_storedValues = new Dictionary<InstrumentParameter, float>();
+
             SetOutlineMat(GetComponentInChildren<MeshRenderer>().material);
 
             Init(new InstrumentParameter("valuetrigger"));
@@ -76,6 +78,8 @@ namespace VRControls
         public void StoreParameterValue(InstrumentParameter param) { StoreParameterValue(param, param.val); }
         public void StoreParameterValue(InstrumentParameter param, float val)
         {
+			if(m_storedValues == null)
+				m_storedValues = new Dictionary<InstrumentParameter, float>();
             m_storedValues[param] = val;
         }
 

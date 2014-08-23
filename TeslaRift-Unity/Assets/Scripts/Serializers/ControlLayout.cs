@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace VRControls
 {
-    public class ControlLayout : BaseVRControl
+    public class ControlLayout : CubeButton
     {
         public void SetOwner(EditorWorkspace workspace) { m_owner = workspace; }
         public EditorWorkspace owner { get { return m_owner; } }

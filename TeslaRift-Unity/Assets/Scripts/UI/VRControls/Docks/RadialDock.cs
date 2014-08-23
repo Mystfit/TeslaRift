@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace VRControls
 {
-    public class InstrumentDock : BaseVRControl
+    public class RadialDock : BaseVRControl
     {
         public float m_carouselRadius = 1.0f;
         public float m_arcSize = Mathf.PI / 2;
@@ -21,58 +21,34 @@ namespace VRControls
             SetIsDockable(true);
             SetAsDock(true);
             SetSoloChildControlsVisible(true);
-            AddAcceptedDocktype(typeof(InstrumentOrb));
 
             m_volumetrics = new Dictionary<BaseVRControl, GameObject>();
         }
 
         public override bool AddDockableAttachment(BaseVRControl attach)
         {
-            InstrumentOrb instrument = attach as InstrumentOrb;
-            if (!DockContainsInstrument(instrument.instrumentRef))
+            if (base.AddDockableAttachment(attach))
             {
-                if (base.AddDockableAttachment(instrument))
-                {
-                    //attach.rigidbody.velocity = Vector3.zero;
-                    instrument.rigidbody.isKinematic = true;
-                    instrument.SetToolmodeResponse(new BaseTool.ToolMode[]{
-                            BaseTool.ToolMode.PRIMARY, 
-                            BaseTool.ToolMode.GRABBING,
-                            BaseTool.ToolMode.HOVER,
-                            BaseTool.ToolMode.SECONDARY
-                        });
-                    instrument.EnableControls();
-                    instrument.SetCloneable(false);
+                attach.SetToolmodeResponse(new BaseTool.ToolMode[]{
+                        BaseTool.ToolMode.PRIMARY, 
+                        BaseTool.ToolMode.GRABBING,
+                        BaseTool.ToolMode.HOVER,
+                        BaseTool.ToolMode.SECONDARY
+                    });
+                attach.EnableControls();
+                attach.SetCloneable(false);
 
-                    GameObject volumetric = UIFactory.CreateVolumetricCylinder();
-                    volumetric.transform.position = new Vector3(attach.transform.position.x, m_volumetricYOffset, attach.transform.position.z);
-                    volumetric.transform.parent = transform;
+                GameObject volumetric = UIFactory.CreateVolumetricCylinder();
+                volumetric.transform.position = new Vector3(attach.transform.position.x, m_volumetricYOffset, attach.transform.position.z);
+                volumetric.transform.parent = transform;
 
-                    iTween.ColorTo(volumetric, iTween.Hash("color", new Color(1.0f, 1.0f, 1.0f, 0.2f), "time", 0.8f));
-                    m_volumetrics[instrument] = volumetric;
+                iTween.ColorTo(volumetric, iTween.Hash("color", new Color(1.0f, 1.0f, 1.0f, 0.2f), "time", 0.8f));
+                m_volumetrics[attach] = volumetric;
 
-                    PlaceObjects();
-                    //iTween.MoveTo(attach.gameObject, iTween.Hash("position", transform.localPosition, "uselocal", true ));
-                    return true;
-                }
+                PlaceObjects();
+                return true;
             }
-            instrument.SetFloating();
-            return false;
-        }
-
-        public bool DockContainsInstrument(InstrumentHandle musicRef)
-        {
-            if (DockedChildren != null)
-            {
-                foreach (InstrumentOrb attach in DockedChildren)
-                {
-                    if (attach.instrumentRef != null)
-                    {
-                        if (attach.instrumentRef == musicRef)
-                            return true;
-                    }
-                }
-            }
+            attach.SetFloating();
             return false;
         }
 
@@ -86,7 +62,6 @@ namespace VRControls
             Destroy(m_volumetrics[attach]);
 
             attach.DisableControls();
-            attach.rigidbody.isKinematic = false;
             PlaceObjects();
         }
 

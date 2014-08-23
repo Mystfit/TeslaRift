@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-//using UnityEditor;
 using System.Collections;
 using System.Linq;
 using System;
@@ -79,36 +78,6 @@ namespace VRControls
             isSerializeable = m_isSerializeable;
             isTemplate = m_isTemplate;
         }
-
-
-
-        /*
-         * Serialization
-         */
-
-        /// <summary>
-        /// Flag this VRControl as savable
-        /// </summary>
-        /// <param name="state"></param>
-        public void SetIsSaveable(bool state) { m_isSaveable = state; }
-
-        /// <summary>
-        /// Check if VRControl is savable
-        /// </summary>
-        public bool IsSaveable { get { return m_isSaveable; } }
-        private bool m_isSaveable = false;
-
-        /// <summary>
-        /// Flag this VRControl as serializable to JSON
-        /// </summary>
-        /// <param name="state"></param>
-        public void SetIsSerializeable(bool state) { m_isSerializeable = state; }
-
-        /// <summary>
-        /// Check if VRControl is serializable to JSON
-        /// </summary>
-        public bool IsSerializeable { get { return m_isSerializeable; } }
-        private bool m_isSerializeable;
 
         /// <summary>
         /// Override the id of this VRControl
@@ -672,6 +641,30 @@ namespace VRControls
          */
 
         /// <summary>
+        /// Dock all child VRControls of a type that are not currently docked.
+        /// </summary>
+        /// <param name="type"></param>
+        public void DockChildTransforms()
+        {
+            List<BaseVRControl> children = new List<BaseVRControl>();
+
+
+            for (int i = 0; i < transform.childCount; i++)
+            {
+
+                BaseVRControl control = transform.GetChild(i).GetComponent<BaseVRControl>();
+                if (control != null)
+                    children.Add(control);
+            }
+
+            List<BaseVRControl> sortedChildren = children.OrderBy(o => o.gameObject.name).ToList();
+            foreach (BaseVRControl control in sortedChildren)
+            {
+                control.DockInto(this);
+            }
+        }
+
+        /// <summary>
         /// Get the object this VRControl is docked into
         /// </summary>
         public BaseVRControl DockedInto { get { return m_dockedInto; } }
@@ -848,7 +841,7 @@ namespace VRControls
         {
             foreach (System.Type acceptedType in m_acceptedTypes)
             {
-                if (type == acceptedType)
+                if (acceptedType.IsAssignableFrom(type))
                     return true;
             }
             return false;
@@ -997,6 +990,7 @@ namespace VRControls
                 SetUIContextToEditor();
             else if (context == UIController.UIContext.PERFORMING)
                 SetUIContextToPerformer();
+            m_uiContext = context;
         }
 
         /// <summary>
@@ -1008,6 +1002,14 @@ namespace VRControls
         /// Overrideable implementation that VRControl triggers when moving into Performance context
         /// </summary>
         public virtual void SetUIContextToPerformer(){}
+
+        /// <summary>
+        /// Get the current UI context this VRControl is using
+        /// </summary>
+        /// <returns></returns>
+        public UIController.UIContext GetUiContext() { return m_uiContext; }
+        private UIController.UIContext m_uiContext;
+
 
         /*
          * Gesture implementations
@@ -1064,6 +1066,30 @@ namespace VRControls
          */
 
         /// <summary>
+        /// Flag this VRControl as savable
+        /// </summary>
+        /// <param name="state"></param>
+        public void SetIsSaveable(bool state) { m_isSaveable = state; }
+
+        /// <summary>
+        /// Check if VRControl is savable
+        /// </summary>
+        public bool IsSaveable { get { return m_isSaveable; } }
+        private bool m_isSaveable = false;
+
+        /// <summary>
+        /// Flag this VRControl as serializable to JSON
+        /// </summary>
+        /// <param name="state"></param>
+        public void SetIsSerializeable(bool state) { m_isSerializeable = state; }
+
+        /// <summary>
+        /// Check if VRControl is serializable to JSON
+        /// </summary>
+        public bool IsSerializeable { get { return m_isSerializeable; } }
+        private bool m_isSerializeable;
+
+        /// <summary>
         /// Builds JSON hierarchy of the VRCOntrol and all child VRControls that are serializable
         /// </summary>
         /// <param name="attachments">List of VRControls to serialize</param>
@@ -1105,8 +1131,6 @@ namespace VRControls
 
         public string BuildJsonHierarchy(){
             return BuildJsonHierarchy(null);
-        }
-
-        
+        }        
 	}
 }

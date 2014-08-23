@@ -52,14 +52,14 @@ namespace UI
         }
 
 
-        public void ToggleNextUIContext()
+        public void NextUIContext()
         {
             int numContexts = Enum.GetNames(typeof(UIContext)).Length;
             int nextContext = ((int)m_uiContext + 1) % numContexts;
             SetUIContext((UIContext)nextContext);
         }
 
-        public void TogglePreviousUIContext()
+        public void PrevUIContext()
         {
             int numContexts = Enum.GetNames(typeof(UIContext)).Length;
             int nextContext = ((int)m_uiContext - 1) % numContexts;

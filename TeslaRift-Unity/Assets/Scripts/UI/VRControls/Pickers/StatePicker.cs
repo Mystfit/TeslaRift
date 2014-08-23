@@ -7,6 +7,8 @@ namespace VRControls
 {
     public class StatePicker : Picker
     {
+        public InstrumentDock m_instrumentDock;
+
         public override void Awake()
         {
             base.Awake();

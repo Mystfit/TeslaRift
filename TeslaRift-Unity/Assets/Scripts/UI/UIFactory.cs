@@ -25,7 +25,9 @@ namespace UI
         public GameObject instrumentPrefab;
         public GameObject guiQuadPrefab;
         public GameObject volumetricCylinderPrefab;
+        public GameObject controlLayoutPrefab;
         public Texture2D whiteTexturePrefab;
+        public GameObject rbfSpikePrefab;
 
         //Fissure control prefabs
         public GameObject rbfSpherePrefab;
@@ -89,7 +91,7 @@ namespace UI
             m_prefabLookup[typeof(Slider)] = Instance.sliderPrefab;
             m_prefabLookup[typeof(Rotary)] = Instance.rotaryPrefab;
             m_prefabLookup[typeof(InstrumentDock)] = Instance.instrumentDockPrefab;
-
+            m_prefabLookup[typeof(ControlLayout)] = Instance.controlLayoutPrefab;
         }
 
 
@@ -120,6 +122,16 @@ namespace UI
             UIFrame attach = frame.GetComponent<UIFrame>();
 
             return attach;
+        }
+
+        /*
+         * RBFSpike
+         */
+        public static RBFSpike CreateRBFSpike()
+        {
+            GameObject gameobject = Instantiate(Instance.rbfSpikePrefab) as GameObject;
+            RBFSpike spike = gameobject.GetComponent<RBFSpike>();
+            return spike;
         }
 
 

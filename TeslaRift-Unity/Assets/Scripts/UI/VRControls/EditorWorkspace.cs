@@ -120,16 +120,10 @@ namespace VRControls
         }
 
 		public ControlLayout CreateControlLayout(string path){
-			GameObject controlPage = new GameObject("controlPage");
-			ControlLayout page = controlPage.AddComponent<ControlLayout>();
-			page.Init(this);
-			page.SetJsonPath(path);
-
-			CubeButton button = UIFactory.CreateMusicRefAttachment(typeof(CubeButton)) as CubeButton;
-			button.AddAcceptedDocktype(typeof(ControlLayout));
-			page.DockInto(button);
-            button.DockInto(m_controlStateMenu);
-
+            ControlLayout layout = UIFactory.CreateMusicRefAttachment(typeof(ControlLayout)) as ControlLayout;
+            layout.Init(this);
+            layout.SetJsonPath(path);
+            layout.DockInto(m_controlStateMenu);
 			return page;
 		}
 

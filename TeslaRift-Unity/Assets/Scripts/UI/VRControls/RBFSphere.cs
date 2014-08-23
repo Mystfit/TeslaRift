@@ -17,6 +17,10 @@ namespace VRControls
         public float m_plugYOffset;
 		public bool m_togglePlacement;
 
+        //Valuetrigger arrangement
+        protected Dictionary<ValueTrigger, RBFSpike> m_pointSpikes;
+        public float m_maxPointDistance = 0.35698f;
+
         //Training points
         public bool m_toggleResetRbf;
         public ValueTrigger m_selectedTraining;
@@ -31,6 +35,7 @@ namespace VRControls
             base.Awake();
             m_rbf = new RBFCore(1, 1);
             m_rbf.setSigma(m_sigma);
+            m_pointSpikes = new Dictionary<ValueTrigger, RBFSpike>();
 
             SetIsDraggable(true);
             SetAsDock(true);
@@ -38,32 +43,14 @@ namespace VRControls
             AddAcceptedDocktype(typeof(ValueTrigger));
             AddAcceptedDocktype(typeof(RBFPlug));
 
-
-			for(int p = 0; p < m_numStartPlugs; p++){
-                RBFPlug plug = UIFactory.CreateMusicRefAttachment(typeof(RBFPlug)) as RBFPlug;
-                plug.DockInto(this);
-			}
-
-            PlacePlugs();
-
-
-            //Dock existing children in at runtime
-            for (int i = 0; i < transform.childCount; i++)
+            for (int p = 0; p < m_numStartPlugs; p++)
             {
-				Debug.Log("Child: " + (i+1) + " of " + transform.childCount + ". Name: " + transform.GetChild(i).name);
-                BaseVRControl attach = transform.GetChild(i).GetComponent<BaseVRControl>();
-                if (attach != null){
-					Debug.Log ("-- Has attachment. ID: " + attach.id);
-					if(!ChildControls.Contains(attach))
-                    	attach.DockInto(this);
-					else
-					   Debug.Log ("-- Adding " + attach + " twice at runtime! WHY?!" );
-
-				} else {
-					Debug.Log ("No attachment found.");
-				}
+                RBFPlug plug = UIFactory.CreateMusicRefAttachment(typeof(RBFPlug)) as RBFPlug;
+                plug.transform.parent = transform;
             }
 
+            DockChildTransforms();
+            PlacePlugs();
 			
 			EnableControls();
             ShowControls();
@@ -91,6 +78,12 @@ namespace VRControls
                         rbfAttach.StoreParameterValue(plug.musicRef);
 
                     rbfAttach.SetSelected(true);
+
+					RBFSpike spike = UIFactory.CreateRBFSpike();
+                    spike.transform.parent = transform;
+                    spike.transform.localPosition = Vector3.zero;
+					if(spike != null)
+						m_pointSpikes[rbfAttach] = spike;
                 }
                 
                 return true;
@@ -112,6 +105,9 @@ namespace VRControls
                 rbfAttach.SetToolmodeResponse(new BaseTool.ToolMode[]{
                     BaseTool.ToolMode.GRABBING
                 });
+                RBFSpike spike = m_pointSpikes[rbfAttach];
+                m_pointSpikes.Remove(rbfAttach);
+                GameObject.Destroy(spike.gameObject);
             }
         }
 
@@ -191,6 +187,15 @@ namespace VRControls
 				m_togglePlacement = false;
 				PlacePlugs();
 			}
+
+            if (m_pointSpikes.Count > 0)
+            {
+                foreach (KeyValuePair<ValueTrigger, RBFSpike> pair in m_pointSpikes)
+                {
+                    pair.Value.SetScale(Vector3.Distance(transform.position, pair.Key.transform.position) / m_maxPointDistance);
+                    pair.Value.transform.LookAt(pair.Key.transform);
+                }
+            }
 
             base.Update();
         }
