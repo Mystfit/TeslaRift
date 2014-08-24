@@ -116,7 +116,7 @@ public class GloveController : MonoBehaviour {
             
             if(m_toggleCalibration){
                 m_toggleCalibration = false;
-                m_toggleNextGestureCalibration = true;
+                //m_toggleNextGestureCalibration = true;
                 m_calibrationState = CalibrationState.CALIBRATING;
                 m_calibratingGestureIndex = 0;
                 Debug.Log("Glove calibration start:");
@@ -124,15 +124,16 @@ public class GloveController : MonoBehaviour {
                 //Set first gesture that needs to be calibrated
                 m_activeGesture = m_gestures[m_calibratingGestureIndex];
                 Debug.Log("Calibrate " + m_gestures[m_calibratingGestureIndex]);
+                animation.Play(activeGesture);
             }
                 
             //Calibration
             switch(m_calibrationState){
             
             case CalibrationState.AWAITING_CALIBRATION:
-                if( Convert.ToBoolean( m_arduino.digitalRead(m_bendCalibratePin ) ) || Input.GetKeyDown(KeyCode.RightArrow) ){
-                    m_calibrationState = CalibrationState.CALIBRATING;
-                }
+                //if( Convert.ToBoolean( m_arduino.digitalRead(m_bendCalibratePin ) ) || Input.GetKeyDown(KeyCode.RightArrow) ){
+                //    m_calibrationState = CalibrationState.CALIBRATING;
+                //}
                 break;
             
             case CalibrationState.CALIBRATING:
@@ -182,6 +183,8 @@ public class GloveController : MonoBehaviour {
                         
                         if(m_calibratingGestureIndex < m_gestures.Length){
                             m_activeGesture = m_gestures[m_calibratingGestureIndex];
+                            animation.Play(activeGesture);
+
                             Debug.Log("Calibrate " + m_gestures[m_calibratingGestureIndex]);
                         } else {
                             m_calibrationState = CalibrationState.CALIBRATED;
@@ -307,8 +310,10 @@ public class GloveController : MonoBehaviour {
             case "PLAY_4":
                 col.center = transform.InverseTransformPoint(m_joints[gestureIndex].transform.position);
                 col.size = new Vector3(0.025f, 0.07f, 0.15f);
-                SetFingerLight(new float[] { 0.0f, 0.0f, 0.0f, 0.8f });
                 break;
+			default:
+				SetFingerLight(new float[] { 0.0f, 0.0f, 0.0f, 0.0f });
+				break;
         }
     }
 

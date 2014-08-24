@@ -23,7 +23,6 @@ namespace VRControls
         public float m_controlsMirrorOffset = 0.05f;
         public float m_controlsYOffset = 0.05f;
         public float m_clipCubeSpacing = 0.03f;
-        public bool m_facePerformer = true;
 
 		public InstrumentHandle instrumentRef { get { return m_instrumentRef; } }
         protected InstrumentHandle m_instrumentRef;
@@ -175,16 +174,6 @@ namespace VRControls
             base.HideControls();
         }
 
-        void FixedUpdate()
-        {
-            //Rotate to face player eyes
-            if (m_facePerformer)
-            {
-                // Look at and dampen the rotation
-                Quaternion rotation = Quaternion.LookRotation(this.interiorCollider.bounds.center - HydraController.Instance.EyeCenter);
-                m_rotator.transform.rotation = Quaternion.Euler(new Vector3(0.0f, rotation.eulerAngles.y, 0.0f));
-            }
-        }
 
         public override void Update()
         {

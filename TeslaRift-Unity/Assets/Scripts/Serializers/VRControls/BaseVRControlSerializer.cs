@@ -103,11 +103,17 @@ public class BaseVRControlSerializer : JsonConverter
             Quaternion rotation = JsonConvert.DeserializeObject<Quaternion>(jsonObject["worldRot"].Value<string>());
             attach.transform.position = position;
             attach.transform.rotation = rotation;
+            attach.jsonPosition = position;
+            attach.jsonRotation = rotation;
 
             //Switch for incoming object types
             if (controlType == typeof(ValueTrigger).ToString())
             {
                 ValueTriggerSerializer.CreateFromJson(jsonObject, (ValueTrigger)attach);
+            }
+            else if (controlType == typeof(ControlMatrix).ToString())
+            {
+                ControlMatrixSerializer.CreateFromJson(jsonObject, (ControlMatrix)attach);
             }
 
             attach.SetId(jsonObject["id"].Value<string>());

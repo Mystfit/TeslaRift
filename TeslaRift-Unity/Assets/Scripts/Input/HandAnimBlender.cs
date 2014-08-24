@@ -11,12 +11,22 @@ public class HandAnimBlender : MonoBehaviour {
     protected string[] m_gestureNames;
     protected GloveController m_glove;
 
+    private bool m_animBlendingActive = false;
+
     // Use this for initialization
     void Start () {
         m_rollingAverage = new List<double[]>();
         m_glove = GetComponent<GloveController>();
 
-        foreach(string gesture in m_glove.gestureTypes){
+        
+    }
+
+    public void InitAnimBlending()
+    {
+        m_animBlendingActive = true;
+
+        foreach (string gesture in m_glove.gestureTypes)
+        {
             animation.Play(gesture);
             animation[gesture].layer = 1;
             animation[gesture].blendMode = AnimationBlendMode.Blend;
@@ -31,24 +41,33 @@ public class HandAnimBlender : MonoBehaviour {
     
     // Update is called once per frame
     void Update () {
+        if (m_glove.GetCalibrationState() == GloveController.CalibrationState.CALIBRATED)
+        {
+            if (!m_animBlendingActive)
+                InitAnimBlending();
 
-        m_rollingAverage.Add(m_glove.GetRawGestures());
-        if(m_rollingAverage.Count > m_smoothingSamples){
-            m_rollingAverage.RemoveAt(0);
-        }
-        double[] totalVals = new double[m_glove.GetRawGestures().Length];
-        double[] avgValues = new double[m_glove.GetRawGestures().Length];
-
-        foreach(double[] vals in m_rollingAverage){
-            for(int i = 0; i < vals.Length; i++){
-                totalVals[i] += vals[i];
+            m_rollingAverage.Add(m_glove.GetRawGestures());
+            if (m_rollingAverage.Count > m_smoothingSamples)
+            {
+                m_rollingAverage.RemoveAt(0);
             }
-        }
+            double[] totalVals = new double[m_glove.GetRawGestures().Length];
+            double[] avgValues = new double[m_glove.GetRawGestures().Length];
 
-        for(int i=0; i < totalVals.Length; i++){
-            avgValues[i] = totalVals[i] / m_rollingAverage.Count;
-        }
+            foreach (double[] vals in m_rollingAverage)
+            {
+                for (int i = 0; i < vals.Length; i++)
+                {
+                    totalVals[i] += vals[i];
+                }
+            }
 
-        SetWeights(avgValues);
+            for (int i = 0; i < totalVals.Length; i++)
+            {
+                avgValues[i] = totalVals[i] / m_rollingAverage.Count;
+            }
+
+            SetWeights(avgValues);
+        }
     }
 }

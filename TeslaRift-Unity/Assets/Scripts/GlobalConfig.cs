@@ -8,7 +8,7 @@ using DotNumerics.LinearAlgebra;
 public class GlobalConfig : MonoBehaviour {
     
 	public bool DebugCollisions = false;
-    public static GlobalConfig m_instance;
+     public static GlobalConfig m_instance;
 
     // Use this for initialization
     void Awake () {

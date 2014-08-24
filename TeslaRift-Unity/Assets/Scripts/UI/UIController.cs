@@ -33,6 +33,7 @@ namespace UI
         {
             if (control != null)
             {
+                control.Undock();
                 m_controls.Remove(control.id);
 				HydraController.Instance.RemoveFromAllCollisionLists(control.gameObject);
                 GameObject.Destroy(control.gameObject);

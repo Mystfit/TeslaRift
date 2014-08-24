@@ -37,28 +37,24 @@ namespace VRControls
             SetIsSaveable(true);
 
             AddGroupDocktype(VRControls.EditorWorkspace.EditorTypes);
+            AddAcceptedDocktype(typeof(ControlLayout));
+			DockChildTransforms();
 
-            //Dock existing children in at runtime -- Needs to be moved to BaseVRControl
-            for (int i = 0; i < transform.childCount; i++)
-            {
-                BaseVRControl attach = transform.GetChild(i).GetComponent<BaseVRControl>();
-                if(attach != null)
-                    attach.DockInto(this);
-            }
-        
-            //Create default layout
-			m_activeLayout = CreateControlLayout(m_layoutsPath + "layout_0.json");
+            ControlLayout defaultLayout = CreateControlLayout(-1);
+            defaultLayout.SetIsSaveable(false);
+            defaultLayout.DockInto(m_controlStateMenu);
+			defaultLayout.SetAsDock(true);
+			defaultLayout.gameObject.name = "defaultLayout";
 
-            //Add existing controls to default layout
-            for (int i = 0; i < transform.childCount; i++)
-            {
-                GameObject child = transform.GetChild(i).gameObject;
-                if (child.name != "AreaTrigger" && child.name != "dockTag")
-                {
-                    BaseVRControl attach = child.GetComponent<BaseVRControl>();
-                    m_activeLayout.AddControl(attach);
-                }
-            }
+            //List<BaseVRControl> defaultControls = new List<BaseVRControl>();
+            //foreach (BaseVRControl control in DockedChildren){
+            //    control.name = "default_" + control.name;
+            //    defaultControls.Add(control);
+            //}
+            //defaultLayout.ApplyControlHierarchy(defaultControls);
+            SetActiveWorkspace(defaultLayout);
+
+            OpenWorkspaceFiles();
         }
 
         public override bool AddDockableAttachment(BaseVRControl attach)
@@ -66,6 +62,15 @@ namespace VRControls
             if(base.AddDockableAttachment(attach))
             {
                 attach.SetIsSaveable(true);
+
+                if(attach.GetType() == typeof(ControlLayout)){
+                    //m_activeLayout = attach as ControlLayout;
+                    SaveWorkspace((ControlLayout)attach);
+                    attach.DockInto(m_controlStateMenu);
+					attach.SetAsDock(true);
+                    SetActiveWorkspace((ControlLayout)attach);
+                }
+
                 return true;
             }
             return false;
@@ -76,13 +81,16 @@ namespace VRControls
             base.Update();
             if (Input.GetKeyDown(KeyCode.S))
             {
-				SaveWorkspace();
+                ControlLayout layout = UIFactory.CreateMusicRefAttachment(typeof(ControlLayout)) as ControlLayout;
+                layout.SetTransient(true);
+                layout.SetAsTemplate(false);
+                layout.SetCloneable(false);
+                layout.DockInto(this);
+				//SaveWorkspace(m_activeLayout);
             }
 			if (Input.GetKeyDown(KeyCode.L))
 			{
 				OpenWorkspaceFiles();
-                if (m_controlStateMenu.DockedChildren.Count > 0)
-					m_controlStateMenu.DockedChildren[m_controlStateMenu.DockedChildren.Count - 1].Fire();
 			}
             
             if (Input.GetKeyDown(KeyCode.Alpha0))
@@ -105,53 +113,131 @@ namespace VRControls
         }
 
 
+        /// <summary>
+        /// Removes all layouts from the scene
+        /// </summary>
+        public void DestroyLayouts()
+        {
+            //Remove all existing layouts except the default blank layout
+            List<ControlLayout> layoutsToDestroy = new List<ControlLayout>();
+
+            foreach (ControlLayout layout in m_controlStateMenu.DockedChildren)
+            {
+                if (layout.gameObject.name != "defaultLayout")
+                    layoutsToDestroy.Add(layout);
+            }
+
+            foreach (ControlLayout layout in layoutsToDestroy)
+                UIController.Instance.DestroyControl(layout);
+        }
+
+
+        /// <summary>
+        /// Opens layouts from JSON
+        /// </summary>
         public void OpenWorkspaceFiles()
         {
-			string[] files = Directory.GetFiles(m_layoutsPath);
+
+            DestroyLayouts();
+
+            string[] files = Directory.GetFiles(m_layoutsPath);
+
+
             foreach (string path in files)
             {
                 if (path.EndsWith(".json"))
                 {
-					ControlLayout page = CreateControlLayout(path);
-                    page.ReadLayout();
-                    page.SetInactive();
+                    //ControlLayout page = CreateControlLayout(path);
+                    //ControlLayout layout = UIFactory.CreateMusicRefAttachment(typeof(ControlLayout)) as ControlLayout;
+                    //layout.Init(this);
+                    //layout.SetJsonPath(path);
+                    //layout.layoutIndex = int.Parse(path.Substring(path.Length - "#.json".Length, 1));
+                    //layout.ReadLayout();
+
+                    List<BaseVRControl> controls = ControlLayout.ReadLayout(path);
+                    ControlLayout layout = ControlLayout.StripLayoutFromControlList(controls);
+
+
+                    if(layout != null){
+                        layout.Init(this);
+                        layout.SetJsonPath(path);
+                        layout.layoutIndex = int.Parse(path.Substring(path.Length - "#.json".Length, 1));
+                        layout.ApplyControlHierarchy(controls);
+                        layout.DockInto(m_controlStateMenu);
+						layout.SetLocalControlsActive(false);
+						layout.SetAsDock(true);
+                    }
 				}
             }
         }
+       
 
-		public ControlLayout CreateControlLayout(string path){
+        /// <summary>
+        /// Creaate a ControlLayout for writing to a json file
+        /// </summary>
+        /// <param name="layoutIndex">Index of layout file to write</param>
+        /// <returns></returns>
+		public ControlLayout CreateControlLayout(int layoutIndex){
+            string path = m_layoutsPath + "layout_" + layoutIndex + ".json";
             ControlLayout layout = UIFactory.CreateMusicRefAttachment(typeof(ControlLayout)) as ControlLayout;
             layout.Init(this);
             layout.SetJsonPath(path);
-            layout.DockInto(m_controlStateMenu);
+            layout.layoutIndex = layoutIndex;
             return layout;
 		}
 
-        public void SaveWorkspace()
+        public void SaveWorkspace(ControlLayout layout)
         {
-            string path = m_layoutsPath + "layout_" + (Directory.GetFiles(m_layoutsPath).Length + 1) + ".json";
-            ControlLayout.WriteLayout(this, path);
+            //Check if the layout has been saved yet
+            if (layout.layoutIndex < 0)
+            {
+                int numLoadedLayouts = m_controlStateMenu.DockedChildren.Count;
+                layout.layoutIndex = numLoadedLayouts + 1;
+                layout.SetJsonPath(m_layoutsPath + "layout_" + layout.layoutIndex + ".json");
+            }
+
+            List<BaseVRControl> controls = BuildFlatHierarchy();
+            //List<ControlLayout> layouts = layout.StripLayoutsFromControlList(controls);
+
+            layout.ApplyControlHierarchy(controls);
+                
+            //foreach (ControlLayout l in layouts)
+            //    controls.Add(l);
+            controls.Add(layout);
+
+            layout.WriteLayout(controls);
         }
 
         public void SetActiveWorkspace(ControlLayout layout)
         {
             if (m_activeLayout != null)
             {
+				m_activeLayout.SetColour(Color.white);
+
                 foreach (BaseVRControl attach in m_activeLayout.LoadedControls)
                 {
-                    attach.Undock();
-                    attach.DockInto(m_activeLayout);
+
+                        attach.Undock();
+                        attach.DockInto(m_activeLayout);
+					    attach.SetInactive();
+                    
                 }
-                m_activeLayout.SetInactive();
+                //m_activeLayout.SetInactive();
             }
 
+            layout.UnpackKeyedHierarchy(layout.GetKeyedHierarchy(layout.LoadedControls));
+
             //Dock layout controls
-            foreach (BaseVRControl attach in layout.DockedChildren)
+            foreach (BaseVRControl attach in layout.LoadedControls)
             {
-                attach.DockInto(this);
+	            attach.SetActive();
+	            attach.transform.position = attach.jsonPosition;
+	            attach.transform.rotation = attach.jsonRotation;
+                //attach.DockInto(this);
             }
 
             m_activeLayout = layout;
+            m_activeLayout.SetColour(Color.red);
         }
     }
 }

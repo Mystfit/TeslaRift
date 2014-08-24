@@ -16,4 +16,3 @@ C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\Newtonsoft.Json.xml
 C:\Code\TeslaRift\TeslaRift-Unity\Temp\bin\Debug\ZstShowtime.pdb
 C:\Code\TeslaRift\TeslaRift-Unity\obj\Debug\Assembly-CSharp.dll
 C:\Code\TeslaRift\TeslaRift-Unity\obj\Debug\Assembly-CSharp.pdb
-C:\Code\TeslaRift\TeslaRift-Unity\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache

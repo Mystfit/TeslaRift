@@ -83,7 +83,8 @@ public class ZmqMusicNode : MonoBehaviour {
         if (slotIndex >= 0)
         {
             ClipParameter clip = InstrumentController.Instance.FindClip(trackIndex, slotIndex);
-            clip.SetClipState(ClipParameter.ClipState.IS_QUEUED);
+            if(clip != null)
+				clip.SetClipState(ClipParameter.ClipState.IS_QUEUED);
         }
 
         return null;

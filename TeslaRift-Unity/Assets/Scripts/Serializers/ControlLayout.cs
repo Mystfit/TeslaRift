@@ -23,6 +23,8 @@ namespace VRControls
         public List<BaseVRControl> LoadedControls { get { return m_loadedControls; } }
         protected List<BaseVRControl> m_loadedControls;
 
+        public int layoutIndex = -1;
+
         public override void Awake()
         {
             base.Awake();
@@ -44,10 +46,33 @@ namespace VRControls
                 m_loadedControls.Add(control);
         }
 
-        public static void WriteLayout(BaseVRControl rootHierarchyControl, string path)
+        public void SetLocalControls(List<BaseVRControl> controls)
         {
-            StreamWriter writer = new StreamWriter(path);
-            writer.WriteLine(rootHierarchyControl.BuildJsonHierarchy());
+            m_loadedControls = controls;
+            foreach (BaseVRControl control in m_loadedControls)
+            {
+                control.jsonPosition = control.transform.position;
+                control.jsonRotation = control.transform.rotation;
+                if (control.jsonParentId == string.Empty)
+                {
+                    control.jsonParentId = DockedInto.id;
+                }
+            }
+        }
+
+		public void SetLocalControlsActive(bool state){
+			foreach(BaseVRControl control in m_loadedControls){
+				if(state)
+					control.SetActive();
+				else
+					control.SetInactive();
+			}
+		}
+
+        public void WriteLayout(List<BaseVRControl> controls)
+        {
+            StreamWriter writer = new StreamWriter(m_path);
+			writer.WriteLine(this.BuildJsonHierarchy(controls));
             writer.Close();
         }
 
@@ -66,33 +91,73 @@ namespace VRControls
             owner.SetActiveWorkspace(this);
         }
 
-        public void ReadLayout()
+        public static List<BaseVRControl> ReadLayout(string path)
         {
-            StreamReader reader = new StreamReader(m_path);
+            StreamReader reader = new StreamReader(path);
             string json = reader.ReadToEnd();
             reader.Close();
+            return JsonConvert.DeserializeObject<List<BaseVRControl>>(json, new ControlHierarchySerializer());
+			//ApplyControlHierarchy(JsonConvert.DeserializeObject<List<BaseVRControl>>(json, new ControlHierarchySerializer()));
+		}
 
-            List<BaseVRControl> m_loadedControls = JsonConvert.DeserializeObject<List<BaseVRControl>>(json, new ControlHierarchySerializer());
+        public void ApplyControlHierarchy(List<BaseVRControl> controlList)
+        {
+			Dictionary<string, BaseVRControl> keyedHierarchy = GetKeyedHierarchy(controlList);
+            List<BaseVRControl> strippedControlList = UnpackKeyedHierarchy(keyedHierarchy);
+			SetLocalControls(strippedControlList);
+        }
 
-            Dictionary<string, BaseVRControl> keyedHierarchy = new Dictionary<string, BaseVRControl>();
-            foreach (BaseVRControl attach in m_loadedControls)
-            {
-                keyedHierarchy[attach.id] = attach;
-            }
+		public Dictionary<string, BaseVRControl> GetKeyedHierarchy(List<BaseVRControl> controlList){
+			Dictionary<string, BaseVRControl> keyedHierarchy = new Dictionary<string, BaseVRControl>();
+			foreach (BaseVRControl attach in controlList)
+			{
+				if (attach != null)
+					keyedHierarchy[attach.id] = attach;
+			}
 
-            foreach (KeyValuePair<string, BaseVRControl> pair in keyedHierarchy)
-            {
+			return keyedHierarchy;
+		}
 
-                if (pair.Value.jsonParentId == VRControls.StaticIds.EDITOR_DOCK)
-                {
-                    pair.Value.DockInto(this);
-                }
+        public List<BaseVRControl> UnpackKeyedHierarchy(Dictionary<string, BaseVRControl> keyedHierarchy)
+		{
+			List<BaseVRControl> controlList = new List<BaseVRControl>();
 
-                if (keyedHierarchy.ContainsKey(pair.Value.jsonParentId))
-                {
-                    pair.Value.DockInto(keyedHierarchy[pair.Value.jsonParentId]);
-                }
-            }
+			foreach (KeyValuePair<string, BaseVRControl> pair in keyedHierarchy)
+			{
+				BaseVRControl control = pair.Value;
+
+				string dockId;
+				
+				if(control.DockedInto != null){
+					dockId = control.DockedInto.id;
+				} else {
+					dockId = control.jsonParentId;
+				}
+				
+				
+				if (dockId == VRControls.StaticIds.EDITOR_DOCK)
+				{
+					if (control.id.Equals(this.id)){
+						//continue;
+					}else {
+						control.DockInto(this);
+					}
+				}
+
+				if (keyedHierarchy.ContainsKey(dockId))
+					control.DockInto(keyedHierarchy[dockId]);
+
+				controlList.Add(control);
+			}
+
+			return controlList;
+		}
+
+        public static ControlLayout StripLayoutFromControlList(List<BaseVRControl> controlList)
+        {
+            ControlLayout layout = controlList.Find(x => x.GetType() == typeof(ControlLayout)) as ControlLayout; ;
+            controlList.Remove(layout);
+            return layout;
         }
     }
 }

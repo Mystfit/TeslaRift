@@ -10,18 +10,30 @@ using UI;
 using UnityEngine;
 
 
-public class RBFSphereSerializer : BaseVRControlSerializer
+public class ControlMatrixSerializer : BaseVRControlSerializer
 {
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
-        RBFSphere attach = value as RBFSphere;
+        ControlMatrix attach = value as ControlMatrix;
 
         writer.WriteStartObject();
         base.WriteJson(writer, value, serializer);
+        writer.WritePropertyName("dockedControls");
+        writer.WriteStartObject();
+        foreach (ClipCubeHolder holder in attach.GetCubeArray)
+        {
 
+            if (holder.attach != null)
+            {
+				Debug.Log("Saving clipmatrix slot " + holder.x + ", " + holder.y + ", " + holder.z);
+                writer.WritePropertyName(holder.attach.id);
+                writer.WriteValue(new int[3] { holder.x, holder.y, holder.z });
+            }
+        }
+        writer.WriteEndObject();
         //writer.WritePropertyName("savedValues");
         //writer.WriteStartArray();
-        //foreach (KeyValuePair<InstrumentParameter, float> param in attach.ChildControls)
+        //foreach (KeyValuePair<InstrumentParameter, float> param in attach.storedValues)
         //{
         //    writer.WriteStartObject();
         //    writer.WritePropertyName("musicRefType");
@@ -38,12 +50,19 @@ public class RBFSphereSerializer : BaseVRControlSerializer
 
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
     {
-        return base.ReadJson(reader, objectType, existingValue, serializer) as RBFSphere;
+        return base.ReadJson(reader, objectType, existingValue, serializer) as ValueTrigger;
     }
 
-    public static void CreateFromJson(JObject jsonObject, RBFSphere trigger)
+    public static void CreateFromJson(JObject jsonObject, ControlMatrix controlMatrix)
     {
-        //var savedValueObjects = JsonConvert.DeserializeObject<List<object>>(savedValueArray);
+        var musicRefs = jsonObject["dockedControls"];
+        controlMatrix.SetAsDock(true);
+        controlMatrix.SetIsSaveable(true);
+
+        foreach (JObject o in musicRefs)
+        {
+            Debug.Log(o.Values());
+        }
 
         //var musicRefs = jsonObject["savedValues"];
         //trigger.SetAsDock(true);
@@ -66,6 +85,6 @@ public class RBFSphereSerializer : BaseVRControlSerializer
 
     public override bool CanConvert(Type objectType)
     {
-        return typeof(RBFSphere).IsAssignableFrom(objectType);
+        return typeof(ControlMatrix).IsAssignableFrom(objectType);
     }
 }

@@ -29,6 +29,11 @@ namespace VRControls
             plug.DockInto(m_scroller);
             plug.SetAsTemplate(true);
             plug.SetCloneable(true);
+
+            ControlLayout layout = UIFactory.CreateMusicRefAttachment(typeof(ControlLayout)) as ControlLayout;
+            layout.DockInto(m_scroller);
+            layout.SetAsTemplate(true);
+            layout.SetCloneable(true);
         }
     }
 }

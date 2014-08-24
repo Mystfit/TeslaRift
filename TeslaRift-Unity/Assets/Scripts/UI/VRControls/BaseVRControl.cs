@@ -30,6 +30,7 @@ namespace VRControls
         public bool isSaveable;
         public bool isSerializeable = true;
         public bool isTemplate = false;
+        public bool isFacingPerformer;
         public bool m_toggleControls;
 
         public virtual void Awake()
@@ -45,6 +46,7 @@ namespace VRControls
             SetIsSaveable(isSaveable);
             SetIsSerializeable(isSerializeable);
             SetAsTemplate(isTemplate);
+            SetFacingPerformer(isFacingPerformer);
 
             m_acceptedTypes = new List<System.Type>();
             m_childDockables = new List<BaseVRControl>();
@@ -77,7 +79,25 @@ namespace VRControls
             isSaveable = m_isSaveable;
             isSerializeable = m_isSerializeable;
             isTemplate = m_isTemplate;
+            isFacingPerformer = m_facePerformer;
         }
+        public virtual void FixedUpdate()
+        {
+            FacePerformer();
+        }
+
+        public virtual void FacePerformer()
+        {
+            //Rotate to face player eyes
+            if (m_facePerformer)
+            {
+                // Look at and dampen the rotation
+                Quaternion rotation = Quaternion.LookRotation(this.interiorCollider.bounds.center - HydraController.Instance.EyeCenter);
+                transform.rotation = Quaternion.Euler(new Vector3(0.0f, rotation.eulerAngles.y, 0.0f));
+            }
+        }
+        public void SetFacingPerformer(bool state) { m_facePerformer = state; }
+        private bool m_facePerformer;
 
         /// <summary>
         /// Override the id of this VRControl
@@ -95,6 +115,16 @@ namespace VRControls
         /// Id of the json parent this object should be docked into. Used when loading VRControl from JSON
         /// </summary>
         public string jsonParentId;
+
+        /// <summary>
+        /// Position of this control when loaded from JSON
+        /// </summary>
+        public Vector3 jsonPosition;
+
+        /// <summary>
+        /// Rotation of this control when loaded from JSON
+        /// </summary>
+        public Quaternion jsonRotation;
 
 
         /*
@@ -121,7 +151,7 @@ namespace VRControls
         /// </summary>
         /// <param name="modes">Array of toolmodes</param>
         public void SetToolmodeResponse(BaseTool.ToolMode[] modes) { m_respondsToToolMode = modes; }
-        private BaseTool.ToolMode[] m_respondsToToolMode;
+        public BaseTool.ToolMode[] m_respondsToToolMode;
 
         /// <summary>
         /// Check if this VRControl will react to a given toolmode
@@ -130,14 +160,16 @@ namespace VRControls
         /// <returns>True is control reacts to given toolmode</returns>
         public bool respondsToToolMode(BaseTool.ToolMode mode)
         {
-            if (m_respondsToToolMode.Length > 0)
-            {
-                foreach (BaseTool.ToolMode responder in m_respondsToToolMode)
-                {
-                    if (responder == mode)
-                        return true;
-                }
-            }
+			if(m_respondsToToolMode != null){
+	            if (m_respondsToToolMode.Length > 0)
+	            {
+	                foreach (BaseTool.ToolMode responder in m_respondsToToolMode)
+	                {
+	                    if (responder == mode)
+	                        return true;
+	                }
+	            }
+			}
 
             return false;
         }
@@ -647,11 +679,9 @@ namespace VRControls
         public void DockChildTransforms()
         {
             List<BaseVRControl> children = new List<BaseVRControl>();
-
-
+		
             for (int i = 0; i < transform.childCount; i++)
             {
-
                 BaseVRControl control = transform.GetChild(i).GetComponent<BaseVRControl>();
                 if (control != null)
                     children.Add(control);
@@ -789,7 +819,7 @@ namespace VRControls
             }
             else
             {
-                Debug.LogError(this + " can't dock with a " + attach.GetType());
+				throw new Exception(this + " can't dock with a " + attach.GetType());
             }
             return false;
         }
@@ -1094,24 +1124,48 @@ namespace VRControls
         /// </summary>
         /// <param name="attachments">List of VRControls to serialize</param>
         /// <returns></returns>
+
         public string BuildJsonHierarchy(List<BaseVRControl> attachments)
         {
+            return JsonConvert.SerializeObject(attachments, new Formatting(), new ControlHierarchySerializer());
+        }
+
+        public List<BaseVRControl> BuildFlatHierarchy()
+        {
+            return BuildFlatHierarchy(null);
+        }
+
+        public List<BaseVRControl> BuildFlatHierarchy(List<BaseVRControl> attachments)
+        {
             if (!IsSaveable)
-                return string.Empty;
+                return null;
 
             if (attachments == null)
                 attachments = new List<BaseVRControl>();
 
             if (this.IsSerializeable && !IsTemplate)
+            {
                 attachments.Add(this);
+            }
 
-            foreach (BaseVRControl attach in DockedChildren)
-                attach.BuildJsonHierarchy(attachments);
-            foreach (BaseVRControl control in ChildControls)
-                control.BuildJsonHierarchy(attachments);
+            if (DockedChildren != null)
+            {
+                foreach (BaseVRControl attach in DockedChildren){
+					if(attach != null)
+						attach.BuildFlatHierarchy(attachments);
+				}
+            }
+            if (ChildControls != null)
+            {
+                foreach (BaseVRControl control in ChildControls){
+					if(control != null)
+						control.BuildFlatHierarchy(attachments);
+				}
+            }
 
-            return JsonConvert.SerializeObject(attachments, new Formatting(), new ControlHierarchySerializer());
+            return attachments;
         }
+
 
         [JsonProperty]
         [JsonConverter(typeof(Vector3Serializer))]
@@ -1127,10 +1181,6 @@ namespace VRControls
         {
             get { return transform.rotation; }
             set { transform.rotation = value; }
-        }
-
-        public string BuildJsonHierarchy(){
-            return BuildJsonHierarchy(null);
-        }        
+        }     
 	}
 }

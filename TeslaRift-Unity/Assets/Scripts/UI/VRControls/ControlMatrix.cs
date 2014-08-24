@@ -3,9 +3,11 @@ using UI;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace VRControls
 {
+    [JsonConverter(typeof(ControlMatrixSerializer))]
     public class ControlMatrix : BaseVRControl
     {
         public bool m_generateGrid = false;
@@ -28,6 +30,7 @@ namespace VRControls
 
             SetAsDock(true);
             SetCollideable(true);
+            SetFacingPerformer(true);
             AddAcceptedDocktype(typeof(ClipCube));
             AddAcceptedDocktype(typeof(ValueTrigger));
 
@@ -47,7 +50,6 @@ namespace VRControls
                             cubePlaceholder.position = m_cubeParent.position;
                             cubePlaceholder.parent = m_cubeParent;
                             cubePlaceholder.localPosition = new Vector3(x * m_cubeSpacingMultiplier, y * m_cubeSpacingMultiplier, z * m_cubeSpacingMultiplier);
-
                         }
                         else
                         {
@@ -63,6 +65,8 @@ namespace VRControls
                 }
             }
         }
+
+        public ClipCubeHolder[, ,] GetCubeArray { get { return m_cubeHolders;} }
 
         public ClipCubeHolder GetCubeHolder(int x, int y, int z)
         {

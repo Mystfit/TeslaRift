@@ -88,6 +88,7 @@ ModelImporter:
     7400014: INDEX_MIDDLE
     7400016: PINKY
     7400018: INDEX_PINKY
+    7400020: BLANK
     9500000: //RootNode
     11100000: //RootNode
     13700000: techHand
@@ -753,6 +754,86 @@ ModelImporter:
       - path: root/ring0/ring1/ring2/ring3
         weight: 1
       - path: techHand
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: BLANK
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 5
+      wrapMode: 8
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 1
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: finger_index
+        weight: 1
+      - path: finger_middle
+        weight: 1
+      - path: finger_pinky
+        weight: 1
+      - path: finger_ring
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/index0
+        weight: 1
+      - path: root/index0/index1
+        weight: 1
+      - path: root/index0/index1/index2
+        weight: 1
+      - path: root/index0/index1/index2/index3
+        weight: 1
+      - path: root/middle0
+        weight: 1
+      - path: root/middle0/middle1
+        weight: 1
+      - path: root/middle0/middle1/middle2
+        weight: 1
+      - path: root/middle0/middle1/middle2/middle3
+        weight: 1
+      - path: root/pinky0
+        weight: 1
+      - path: root/pinky0/pinky1
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2
+        weight: 1
+      - path: root/pinky0/pinky1/pinky2/pinky3
+        weight: 1
+      - path: root/ring0
+        weight: 1
+      - path: root/ring0/ring1
+        weight: 1
+      - path: root/ring0/ring1/ring2
+        weight: 1
+      - path: root/ring0/ring1/ring2/ring3
+        weight: 1
+      - path: techHand
+        weight: 1
+      - path: techHand/polySurface4
+        weight: 1
+      - path: techHand/polySurface4/polySurface8
+        weight: 1
+      - path: techHand/polySurface4/polySurface8/polySurface12
+        weight: 1
+      - path: techHand/polySurface4/polySurface8/polySurface12/hand_base
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}

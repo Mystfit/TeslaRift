@@ -12,10 +12,6 @@ namespace VRControls
         public enum ScrollerDockTypes { INSTRUMENT, SLIDER, CUBEBUTTON, VALUETRIGGER, RBFPLUG, RBFSPHERE };
         public ScrollerDockTypes[] m_acceptedDockTypes;
 
-        //Colliders
-        public float m_faceDampening;
-        public bool m_facePerformer;
-
         public float m_collisionWidth = 0.5f;
         public float m_collisionDepth = 0.5f;
 
@@ -84,6 +80,8 @@ namespace VRControls
 				if (m_acceptedDockTypes[i] == ScrollerDockTypes.CUBEBUTTON)
 					AddAcceptedDocktype(typeof(CubeButton));
             }
+
+            SetFacingPerformer(true);
 
             UpdateColliders(Vector3.zero, new Vector3(m_collisionWidth, m_upperVisibleBounds - m_lowerVisibleBounds, m_collisionDepth));
         }
@@ -232,16 +230,7 @@ namespace VRControls
             }
         }
 
-        void FixedUpdate()
-        {
-            //Rotate to face player eyes
-            if (m_facePerformer)
-            {
-                // Look at and dampen the rotation
-                Quaternion rotation = Quaternion.LookRotation(this.interiorCollider.bounds.center - HydraController.Instance.EyeCenter);
-                transform.rotation = Quaternion.Euler(new Vector3(0.0f, rotation.eulerAngles.y, 0.0f));
-            }
-        }
+        
 
         protected void DragScroller()
         {

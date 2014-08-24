@@ -64,7 +64,10 @@ namespace VRControls
 
                 if (attach.GetType() == typeof(RBFPlug))
                 {
+                    RBFPlug plug = attach as RBFPlug;
+                    plug.SetSphere(this);
                     AddChildControl(attach);
+                    
                 }
                 else if (attach.GetType() == typeof(ValueTrigger))
                 {
@@ -152,23 +155,26 @@ namespace VRControls
         {
             m_rbf.reset(m_numInputs, ChildControls.Count);
             m_rbf.setSigma(m_sigma);
-            foreach (ValueTrigger point in DockedChildren)
+            foreach (BaseVRControl control in DockedChildren)
             {
-                int index = 0;
-                double[] values = new double[point.storedValues.Count];
-                foreach (KeyValuePair<InstrumentParameter, float> val in point.storedValues)
-                    values[index++] = (double)val.Value;
+				ValueTrigger point = control as ValueTrigger;
+				if(point != null){
+	                int index = 0;
+	                double[] values = new double[point.storedValues.Count];
+	                foreach (KeyValuePair<InstrumentParameter, float> val in point.storedValues)
+	                    values[index++] = (double)val.Value;
 
-                double[] positionVals = new double[m_numInputs];
-                Quaternion angle = Quaternion.LookRotation(point.transform.localPosition);
+	                double[] positionVals = new double[m_numInputs];
+	                Quaternion angle = Quaternion.LookRotation(point.transform.localPosition);
 
-                positionVals[0] = angle.x;
-                positionVals[1] = angle.y;
-                positionVals[2] = angle.z;
-                positionVals[3] = angle.w;
-                positionVals[4] = Vector3.Distance(Vector3.zero, point.transform.localPosition);
+	                positionVals[0] = angle.x;
+	                positionVals[1] = angle.y;
+	                positionVals[2] = angle.z;
+	                positionVals[3] = angle.w;
+	                positionVals[4] = Vector3.Distance(Vector3.zero, point.transform.localPosition);
 
-                m_rbf.addTrainingPoint(positionVals, values);
+	                m_rbf.addTrainingPoint(positionVals, values);
+				}
             }
 
             if (DockedChildren.Count > 0)

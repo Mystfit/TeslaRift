@@ -7,11 +7,16 @@ namespace VRControls
 {
     public class RBFPlug : BaseVRControl
     {
-        public RBFSphere m_rbfSphere;
+        private RBFSphere m_rbfSphere;
         public Rotary m_rotary;
         public Scroller m_paramscroller;
         public Color m_performColor;
         public Color m_editColor;
+
+        public void SetSphere(RBFSphere sphere)
+        {
+            m_rbfSphere = sphere;
+        }
 
         //Plug values
         public void SetPlugVal(float val)
@@ -23,7 +28,7 @@ namespace VRControls
             musicRef.setVal(Mathf.Clamp(val, 0.0f, 1.0f));
             m_rotary.setVal(musicRef.val);
             if (!silent)
-                m_rbfSphere.UpdatePlugValues(this);
+                if(m_rbfSphere != null) m_rbfSphere.UpdatePlugValues(this);
             if (m_plugTop != null)
                 m_plugTop.localPosition = new Vector3(0.0f, 0.0f, musicRef.val * m_maxPlugDragDistance);
             if (m_plugInner != null)
