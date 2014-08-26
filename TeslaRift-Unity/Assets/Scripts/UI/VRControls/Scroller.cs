@@ -47,8 +47,8 @@ namespace VRControls
         protected float m_scrollVel;		//Current scrolling velocity
         protected Vector3 m_offset;
         protected Vector3 m_lastPosition;
-        protected float m_lastAttachHeight;
-        protected float m_lastAttachWidth;
+        //protected float m_lastAttachHeight;
+        //protected float m_lastAttachWidth;
         protected bool bIsDragging;
 
         protected Transform m_controlHolder;
@@ -81,7 +81,7 @@ namespace VRControls
 					AddAcceptedDocktype(typeof(CubeButton));
             }
 
-            SetFacingPerformer(true);
+            SetFacingPerformer(false);
 
             UpdateColliders(Vector3.zero, new Vector3(m_collisionWidth, m_upperVisibleBounds - m_lowerVisibleBounds, m_collisionDepth));
         }
@@ -96,10 +96,10 @@ namespace VRControls
                 attach.transform.parent = m_controlHolder.transform;
                 attach.transform.localRotation = Quaternion.identity;
                 //attach.transform.localScale = new Vector3(m_itemScale, m_itemScale, m_itemScale);
-                m_lastAttachHeight = attach.interiorTrigger.GetSize().y + m_itemSpacing;
-                m_lastAttachWidth = attach.interiorTrigger.GetSize().x;
+                //m_lastAttachHeight = attach.interiorTrigger.GetSize().y + m_itemSpacing;
+                //m_lastAttachWidth = attach.interiorTrigger.GetSize().x;
                 PlaceObjects();
-                UpdateColliders(new Vector3(m_lastAttachWidth * 0.5f, (m_upperVisibleBounds - m_lowerVisibleBounds) * 0.5f, 0.0f), new Vector3(m_lastAttachWidth, m_upperVisibleBounds - m_lowerVisibleBounds, m_collisionDepth));
+                UpdateColliders(new Vector3(m_collisionWidth * 0.5f, (m_upperVisibleBounds - m_lowerVisibleBounds) * 0.5f, 0.0f), new Vector3(m_collisionWidth, m_upperVisibleBounds - m_lowerVisibleBounds, m_collisionDepth));
                 return true;
             }
             return false;
@@ -142,7 +142,7 @@ namespace VRControls
         {
             for (int i = 0; i < DockedChildren.Count; i++)
             {
-                Vector3 pos = new Vector3(0.0f, i * (DockedChildren[i].interiorTrigger.GetSize().y + m_itemSpacing), 0.0f);
+                Vector3 pos = new Vector3(0.0f, i * m_itemSpacing, 0.0f);
                 if (isDockablesTweenable)
                 {
                     iTween tween = DockedChildren[i].GetComponent<iTween>();
@@ -193,10 +193,10 @@ namespace VRControls
                 m_scrollVel = 0.0f;
                 m_lastPosition = m_controlHolder.localPosition;
             }
-            else if (m_controlHolder.localPosition.y < (DockedChildren.Count - m_numDisplayedAttachments) * m_lastAttachHeight * -1.0f)
+            else if (m_controlHolder.localPosition.y < (DockedChildren.Count - m_numDisplayedAttachments) * m_itemSpacing * -1.0f)
             {
                 m_controlHolder.localPosition = new Vector3(m_controlHolder.transform.localPosition.x,
-                                                            (DockedChildren.Count - m_numDisplayedAttachments) * m_lastAttachHeight * -1.0f,
+                                                            (DockedChildren.Count - m_numDisplayedAttachments) * m_itemSpacing * -1.0f,
                                                             m_controlHolder.transform.localPosition.z);
                 m_scrollVel = 0.0f;
                 m_lastPosition = m_controlHolder.localPosition;

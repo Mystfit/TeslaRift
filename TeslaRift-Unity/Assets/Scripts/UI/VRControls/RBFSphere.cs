@@ -82,11 +82,14 @@ namespace VRControls
 
                     rbfAttach.SetSelected(true);
 
-					RBFSpike spike = UIFactory.CreateRBFSpike();
-                    spike.transform.parent = transform;
-                    spike.transform.localPosition = Vector3.zero;
-					if(spike != null)
-						m_pointSpikes[rbfAttach] = spike;
+                    if (!m_pointSpikes.ContainsKey(rbfAttach))
+                    {
+                        RBFSpike spike = UIFactory.CreateRBFSpike();
+                        spike.transform.parent = transform;
+                        spike.transform.localPosition = Vector3.zero;
+                        if (spike != null)
+                            m_pointSpikes[rbfAttach] = spike;
+                    }
                 }
                 
                 return true;
@@ -108,10 +111,14 @@ namespace VRControls
                 rbfAttach.SetToolmodeResponse(new BaseTool.ToolMode[]{
                     BaseTool.ToolMode.GRABBING
                 });
-                RBFSpike spike = m_pointSpikes[rbfAttach];
-                m_pointSpikes.Remove(rbfAttach);
-                GameObject.Destroy(spike.gameObject);
             }
+        }
+
+        public void RemoveSpike(ValueTrigger control)
+        {
+            RBFSpike spike = m_pointSpikes[control];
+            m_pointSpikes.Remove(control);
+            GameObject.Destroy(spike.gameObject);
         }
 
         public override void Undock()
@@ -198,8 +205,15 @@ namespace VRControls
             {
                 foreach (KeyValuePair<ValueTrigger, RBFSpike> pair in m_pointSpikes)
                 {
-                    pair.Value.SetScale(Vector3.Distance(transform.position, pair.Key.transform.position) / m_maxPointDistance);
-                    pair.Value.transform.LookAt(pair.Key.transform);
+                    if (pair.Key.DockedInto != this && pair.Key.DockedInto != null)
+                    {
+                        RemoveSpike(pair.Key);
+                    }
+                    else
+                    {
+                        pair.Value.SetScale(Vector3.Distance(transform.position, pair.Key.transform.position) / m_maxPointDistance);
+                        pair.Value.transform.LookAt(pair.Key.transform);
+                    }
                 }
             }
 

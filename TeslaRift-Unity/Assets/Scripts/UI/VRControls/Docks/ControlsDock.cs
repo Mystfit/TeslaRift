@@ -16,6 +16,19 @@ namespace VRControls
             AddAcceptedDocktype(typeof(Picker));
 
             DockChildTransforms();
+
+            foreach (BaseVRControl control in DockedChildren)
+                control.HideControls();
+        }
+
+        public override bool AddDockableAttachment(BaseVRControl attach)
+        {
+            if (base.AddDockableAttachment(attach))
+            {
+                attach.SetToolmodeResponse(new BaseTool.ToolMode[]{BaseTool.ToolMode.HOVER, BaseTool.ToolMode.SECONDARY});
+                return true;
+            }
+            return false;
         }
     }
 }

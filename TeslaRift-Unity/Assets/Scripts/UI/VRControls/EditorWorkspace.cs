@@ -54,7 +54,7 @@ namespace VRControls
             //defaultLayout.ApplyControlHierarchy(defaultControls);
             SetActiveWorkspace(defaultLayout);
 
-            OpenWorkspaceFiles();
+            //OpenWorkspaceFiles();
         }
 
         public override bool AddDockableAttachment(BaseVRControl attach)
@@ -110,6 +110,22 @@ namespace VRControls
                 if (m_controlStateMenu.DockedChildren.Count > 2)
 					m_controlStateMenu.DockedChildren[2].Fire();
             }
+
+            //Pick up all free floating controls in range of the editor workspace.
+            if (UIController.Instance.orphanedControls.Count > 0)
+            {
+                List<BaseVRControl> removedControls = new List<BaseVRControl>();
+                foreach (BaseVRControl control in UIController.Instance.orphanedControls)
+                {
+                    control.DockInto(this);
+                    removedControls.Add(control);
+                }
+
+                foreach (BaseVRControl control in removedControls)
+                {
+                    UIController.Instance.orphanedControls.Remove(control);
+                }
+            }
         }
 
 
@@ -137,12 +153,9 @@ namespace VRControls
         /// </summary>
         public void OpenWorkspaceFiles()
         {
-
             DestroyLayouts();
 
             string[] files = Directory.GetFiles(m_layoutsPath);
-
-
             foreach (string path in files)
             {
                 if (path.EndsWith(".json"))

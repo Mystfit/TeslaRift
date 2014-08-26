@@ -130,7 +130,15 @@ namespace VRControls
 
         public override void Gesture_IdleInterior()
         {
-            if (mode == BaseTool.ToolMode.GRABBING)
+
+            BaseTool.ToolMode contextMode = BaseTool.ToolMode.GRABBING;
+
+            if (uiContext == UIController.UIContext.EDITING)
+                contextMode = BaseTool.ToolMode.PRIMARY;
+            else if (uiContext == UIController.UIContext.PERFORMING)
+                contextMode = BaseTool.ToolMode.GRABBING;
+
+            if (mode == contextMode)
             {
                 if (m_originalPosSet)
                 {

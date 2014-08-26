@@ -80,20 +80,21 @@ namespace VRControls
             isSerializeable = m_isSerializeable;
             isTemplate = m_isTemplate;
             isFacingPerformer = m_facePerformer;
-        }
-        public virtual void FixedUpdate()
-        {
+
             FacePerformer();
         }
 
         public virtual void FacePerformer()
         {
             //Rotate to face player eyes
-            if (m_facePerformer)
+            if (m_facePerformer && !IsDragging)
             {
                 // Look at and dampen the rotation
-                Quaternion rotation = Quaternion.LookRotation(this.interiorCollider.bounds.center - HydraController.Instance.EyeCenter);
-                transform.rotation = Quaternion.Euler(new Vector3(0.0f, rotation.eulerAngles.y, 0.0f));
+                //Vector3 targetVec = Quaternion.LookRotation(this.interiorCollider.bounds.center - HydraController.Instance.EyeCenter, Vector3.up).eulerAngles;
+                Vector3 targetVec = Quaternion.LookRotation(transform.position - HydraController.Instance.EyeCenter, Vector3.up).eulerAngles;
+                targetVec.x = 0.0f;
+                targetVec.z = 0.0f;
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(targetVec), (float)Time.deltaTime * 10.0f);
             }
         }
         public void SetFacingPerformer(bool state) { m_facePerformer = state; }
@@ -170,7 +171,6 @@ namespace VRControls
 	                }
 	            }
 			}
-
             return false;
         }
 
@@ -563,26 +563,27 @@ namespace VRControls
         {
             if (IsDraggable)
             {
-                if (!HydraController.Instance.IsHandDragging(m_hand))
+                //if (HydraController.Instance.IsHandDragging(m_hand)) { 
+                //    HydraController.Instance.GetHandDragging(m_hand).StopDragging();
+                //}
+
+                //Clone instrument here
+                if (IsCloneable)
                 {
-                    //Clone instrument here
-                    if (IsCloneable)
-                    {
-                        BaseVRControl attach = UI.UIFactory.CreateMusicRefAttachment(this);
-                        attach.SetAsTemplate(false);
-                        attach.StartDragging(HydraController.Instance.GetHand(m_hand));
-                        attach.SetIsSaveable(true);
-                    }
-                    else
-                    {
-                        if (IsDragging) StopDragging();
-                        SetIsDragging(true);
-                        Undock();
-                        FixedJoint joint = gameObject.AddComponent<FixedJoint>();
-                        joint.connectedBody = target.GetComponent<Rigidbody>();
-                        rigidbody.isKinematic = false;
-                        HydraController.Instance.SetHandDragging(m_hand, this);
-                    }
+                    BaseVRControl attach = UI.UIFactory.CreateMusicRefAttachment(this);
+                    attach.SetAsTemplate(false);
+                    attach.StartDragging(HydraController.Instance.GetHand(m_hand));
+                    attach.SetIsSaveable(true);
+                }
+                else
+                {
+                    //if (IsDragging) StopDragging();
+                    SetIsDragging(true);
+                    Undock();
+                    FixedJoint joint = gameObject.AddComponent<FixedJoint>();
+                    joint.connectedBody = target.GetComponent<Rigidbody>();
+                    rigidbody.isKinematic = false;
+                    HydraController.Instance.SetHandDragging(m_hand, this);
                 }
             }
         }
@@ -749,18 +750,21 @@ namespace VRControls
                 {
                     if (dockAttach != this)
                     {
-                        if (dockAttach.DockAcceptsType(this.GetType()) && dockAttach.IsDock)
+                        if (dockAttach.id != VRControls.StaticIds.EDITOR_DOCK)
                         {
-                            if (closestValidDock == null)
+                            if (dockAttach.DockAcceptsType(this.GetType()) && dockAttach.IsDock)
                             {
-                                closestDist = Vector3.Distance(dockAttach.transform.position, transform.position);
-                                closestValidDock = dockAttach;
-                            }
-                            float dist = Vector3.Distance(dockAttach.transform.position, transform.position);
-                            if (dist < closestDist)
-                            {
-                                closestValidDock = dockAttach;
-                                closestDist = dist;
+                                if (closestValidDock == null)
+                                {
+                                    closestDist = Vector3.Distance(dockAttach.transform.position, transform.position);
+                                    closestValidDock = dockAttach;
+                                }
+                                float dist = Vector3.Distance(dockAttach.transform.position, transform.position);
+                                if (dist < closestDist)
+                                {
+                                    closestValidDock = dockAttach;
+                                    closestDist = dist;
+                                }
                             }
                         }
                     }
@@ -785,16 +789,7 @@ namespace VRControls
         /// </summary>
         public virtual void SetFloating()
         {
-            if (IsTransient)
-            {
-                if (DockedInto == null)
-                {
-                    UIController.Instance.DestroyControl(this);
-                    return;
-                }
-            }
-
-            HydraController.Instance.RemoveFromAllCollisionLists(gameObject);
+            UIController.Instance.AddOrphanControl(this);
         }
 
         /// <summary>
@@ -807,21 +802,16 @@ namespace VRControls
             if (m_childDockables == null)
                 m_childDockables = new List<BaseVRControl>();
 
-            if (DockAcceptsType(attach.GetType()))
-            {
-                m_childDockables.Add(attach);
-                attach.transform.parent = transform;
+            if (!DockAcceptsType(attach.GetType()))
+                throw new Exception(this + " can't dock with a " + attach.GetType());
+            
+            m_childDockables.Add(attach);
+            attach.transform.parent = transform;
 
-                if(attach.rigidbody != null)
-                    attach.rigidbody.isKinematic = true;
+            if(attach.rigidbody != null)
+                attach.rigidbody.isKinematic = true;
 
-                return true;
-            }
-            else
-            {
-				throw new Exception(this + " can't dock with a " + attach.GetType());
-            }
-            return false;
+            return true;			
         }
 
         /// <summary>
@@ -983,7 +973,21 @@ namespace VRControls
                 m_visibleAttachmentControls = attach;
             }
         }
+
+        /// <summary>
+        /// Gets the active child control which has its controls visible
+        /// </summary>
+        public BaseVRControl visibleControls { get { return m_visibleAttachmentControls; } }
         private BaseVRControl m_visibleAttachmentControls;
+
+        /// <summary>
+        /// Closes all docked children controls
+        /// </summary>
+        public void HideChildControls()
+        {
+            foreach (BaseVRControl control in DockedChildren)
+                control.HideControls();
+        }
 
         /// <summary>
         /// Set this VRControl to only allow one child VRCOntrol to have its controls visible at a time
@@ -1037,7 +1041,7 @@ namespace VRControls
         /// Get the current UI context this VRControl is using
         /// </summary>
         /// <returns></returns>
-        public UIController.UIContext GetUiContext() { return m_uiContext; }
+        public UIController.UIContext uiContext { get { return m_uiContext; } }
         private UIController.UIContext m_uiContext;
 
 

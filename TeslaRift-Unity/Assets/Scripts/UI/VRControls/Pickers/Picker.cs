@@ -56,12 +56,11 @@ namespace VRControls
             m_scroller.AddAcceptedDocktype(type);
         }
 
-        public override void Gesture_First()
+        public override void StartHover()
         {
-            if (m_scroller != null)
-                ToggleControls();
-
-            base.Gesture_First();
+            base.StartHover();
+            if (m_scroller != null && !controlsVisible && typeof(RadialDock).IsAssignableFrom(DockedInto.GetType()))
+                ShowControls();
         }
 
         public override bool AddDockableAttachment(BaseVRControl attach)
@@ -90,6 +89,11 @@ namespace VRControls
         {
             base.HideControls();
             m_scroller.HideControls();
+        }
+
+        public override void Gesture_IdleInterior()
+        {
+            base.Gesture_IdleInterior();
         }
     }
 }

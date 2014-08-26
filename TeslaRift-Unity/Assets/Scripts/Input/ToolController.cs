@@ -42,8 +42,4 @@ public class ToolController : MonoBehaviour {
     public BaseTool currentTool(BaseTool.ToolHand hand){
         return m_hydraRef.GetHand(hand).GetComponent<BaseTool>();
     }
-    
-    // Update is called once per frame
-    void Update () {
-    }
 }

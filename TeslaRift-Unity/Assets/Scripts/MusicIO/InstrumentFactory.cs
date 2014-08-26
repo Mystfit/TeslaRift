@@ -121,13 +121,10 @@ public class InstrumentFactory : MonoBehaviour {
         }
 
         bool isMidi = false;
-        bool armed = false;
 
-        if(!isReturn) {
+        if(!isReturn)
             isMidi = bool.Parse(track.Attributes["midi"].Value);
-            armed = bool.Parse( track.Attributes["armed"].Value );
-        }
-
+        
         InstrumentHandle instrumentDef = new InstrumentHandle(peer, track.Attributes["name"].Value, color, trackIndex, isMidi, isReturn);
 
         //Get devices present in track
@@ -158,7 +155,6 @@ public class InstrumentFactory : MonoBehaviour {
         foreach(XmlNode clip in clipList){
             string name = clip.Attributes["name"].Value as String;
             int index = int.Parse( clip.Attributes["index"].Value );
-            //bool looping = Convert.ToBoolean( clip.Attributes["looping"].Value );
             instrumentDef.AddClip(name, true, index);
         }
             
@@ -169,9 +165,6 @@ public class InstrumentFactory : MonoBehaviour {
             int sendIndex = int.Parse( send.Attributes["index"].Value );
             name = name.Replace("/", "-");
             name = name.Replace(" ", "_");
-            //name = "Send-" + name;
-            float min = Convert.ToSingle(send.Attributes["min"].Value);
-            float max = Convert.ToSingle(send.Attributes["max"].Value);
             instrumentDef.AddSend(name, sendIndex);
         }
 

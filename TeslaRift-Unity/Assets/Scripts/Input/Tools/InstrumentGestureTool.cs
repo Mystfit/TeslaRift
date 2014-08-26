@@ -154,7 +154,9 @@ public class InstrumentGestureTool : BaseTool {
             
         case GestureState.EXTERIOR:
             m_attachment.Gesture_IdleExterior();
-            //LeavingProximity();
+
+            //TODO: Check the state changing here
+            LeavingProximity();
             break;
             
         case GestureState.EXTERIOR_TO_PROXIMITY:

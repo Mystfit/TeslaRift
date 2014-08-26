@@ -21,9 +21,26 @@ namespace VRControls
             if (!DockContainsInstrument(instrument.instrumentRef))
             {
                 if (base.AddDockableAttachment(instrument))
+                {
+                    instrument.SetFacingPerformer(true);
+
+                    attach.SetToolmodeResponse(new BaseTool.ToolMode[]{
+                        BaseTool.ToolMode.PRIMARY, 
+                        BaseTool.ToolMode.GRABBING,
+                        BaseTool.ToolMode.HOVER,
+                        BaseTool.ToolMode.SECONDARY
+                    });
                     return true;
+                }
+                    
             }
             return false;
+        }
+
+        public override void RemoveDockableAttachment(BaseVRControl attach)
+        {
+            base.RemoveDockableAttachment(attach);
+            SetFacingPerformer(false);
         }
 
         public bool DockContainsInstrument(InstrumentHandle musicRef)

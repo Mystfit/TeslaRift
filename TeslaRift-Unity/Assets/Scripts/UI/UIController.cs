@@ -16,12 +16,16 @@ namespace UI
         public static UIController Instance { get { return m_instance; } }
         private static UIController m_instance;
 
+        public List<BaseVRControl> orphanedControls { get { return m_orphanedControls; } }
+        private List<BaseVRControl> m_orphanedControls;
+
         private Dictionary<string, BaseVRControl> m_controls;
 
         public void Awake()
         {
             m_instance = this;
             m_controls = new Dictionary<string, BaseVRControl>();
+            m_orphanedControls = new List<BaseVRControl>();
         }
 
         public void DestroyControl(string id)
@@ -38,6 +42,24 @@ namespace UI
 				HydraController.Instance.RemoveFromAllCollisionLists(control.gameObject);
                 GameObject.Destroy(control.gameObject);
             }
+        }
+
+        public void AddOrphanControl(BaseVRControl control)
+        {
+            if (control.IsTransient)
+            {
+                if (control.DockedInto == null)
+                {
+                    DestroyControl(control);
+                    return;
+                }
+            }
+            else
+            {
+                m_orphanedControls.Add(control);
+            }
+
+            //HydraController.Instance.RemoveFromAllCollisionLists(control.gameObject);
         }
 
         public void AddControl(BaseVRControl control)

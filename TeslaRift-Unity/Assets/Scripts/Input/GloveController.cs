@@ -9,7 +9,6 @@ public class GloveController : MonoBehaviour {
     
     //Arduino
     private int[] m_bendPins = {1,0,3,2};
-    private int m_bendCalibratePin = 18;
     private double[] m_bendValues;
     private Arduino m_arduino;
 

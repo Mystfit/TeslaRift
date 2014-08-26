@@ -19,8 +19,6 @@ namespace VRControls
         public Dictionary<InstrumentParameter, float> storedValues { get { return m_storedValues; } }
 
         //Gui objects
-        public TextMesh m_valueLabel;
-        public Rotary m_rotary;
         public Scroller m_scroller;
 
         public override void Awake()
@@ -65,6 +63,11 @@ namespace VRControls
             m_storedValues.Remove(attach.musicRef);
         }
 
+        public override void DockInto(BaseVRControl attach)
+        {
+            base.DockInto(attach);
+        }
+
         public override void Undock()
         {
             base.Undock();
@@ -88,8 +91,6 @@ namespace VRControls
             base.ShowControls();
             //SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.PRIMARY, BaseTool.ToolMode.GRABBING, BaseTool.ToolMode.HOVER });
             m_scroller.ShowControls();
-            m_valueLabel.gameObject.SetActive(true);
-            m_rotary.SetActive();
         }
 
         public override void HideControls()
@@ -98,8 +99,6 @@ namespace VRControls
             SetSelected(false);
             //SetToolmodeResponse(new BaseTool.ToolMode[0]);
             m_scroller.HideControls();
-            m_valueLabel.gameObject.SetActive(false);
-            m_rotary.SetInactive();
         }
 
 
