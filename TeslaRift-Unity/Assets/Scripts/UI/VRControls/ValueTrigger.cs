@@ -132,7 +132,7 @@ namespace VRControls
             base.Gesture_Exit();
             if (mode == BaseTool.ToolMode.GRABBING)
             {
-                StopDragging();
+                //StopDragging();
             }
         }
 

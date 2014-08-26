@@ -53,7 +53,7 @@ namespace VRControls
             m_childControls = new List<BaseVRControl>();
             SetCollideable(m_doesCollide);
 
-            m_maximizedScale = (transform.localScale.x + transform.localScale.y + transform.localScale.z) / 3.0f;
+            //m_maximizedScale = (transform.localScale.x + transform.localScale.y + transform.localScale.z) / 3.0f;
 
             UIController.Instance.AddControl(this);
         }

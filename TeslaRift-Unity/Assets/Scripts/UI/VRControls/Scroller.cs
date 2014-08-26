@@ -24,7 +24,7 @@ namespace VRControls
         public float m_itemScale = 1.0f;
 
         public void SetItemSpacing(float spacing) { m_itemSpacing = spacing; }
-        public float m_itemSpacing = 0.0f;
+        public float m_itemSpacing = 0.1f;
 
         public float upperVisibleBounds { get { return m_upperVisibleBounds; } }
         public float m_upperVisibleBounds = 1.2f;
@@ -95,9 +95,6 @@ namespace VRControls
 				attach.Minimize();
                 attach.transform.parent = m_controlHolder.transform;
                 attach.transform.localRotation = Quaternion.identity;
-                //attach.transform.localScale = new Vector3(m_itemScale, m_itemScale, m_itemScale);
-                //m_lastAttachHeight = attach.interiorTrigger.GetSize().y + m_itemSpacing;
-                //m_lastAttachWidth = attach.interiorTrigger.GetSize().x;
                 PlaceObjects();
                 UpdateColliders(new Vector3(m_collisionWidth * 0.5f, (m_upperVisibleBounds - m_lowerVisibleBounds) * 0.5f, 0.0f), new Vector3(m_collisionWidth, m_upperVisibleBounds - m_lowerVisibleBounds, m_collisionDepth));
                 return true;

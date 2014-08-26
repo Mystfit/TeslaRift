@@ -53,6 +53,10 @@ namespace UI
                     DestroyControl(control);
                     return;
                 }
+                else
+                {
+                    throw new Exception("Control still docked");
+                }
             }
             else
             {

@@ -11,6 +11,7 @@ namespace VRControls
         public override void Awake()
         {
             base.Awake();
+            m_hideControlsWhenLeaving = false;
             AddAcceptedDocktype(typeof(InstrumentOrb));
         }
 
@@ -23,8 +24,7 @@ namespace VRControls
                 if (base.AddDockableAttachment(instrument))
                 {
                     instrument.SetFacingPerformer(true);
-
-                    attach.SetToolmodeResponse(new BaseTool.ToolMode[]{
+                    instrument.SetToolmodeResponse(new BaseTool.ToolMode[]{
                         BaseTool.ToolMode.PRIMARY, 
                         BaseTool.ToolMode.GRABBING,
                         BaseTool.ToolMode.HOVER,

@@ -43,6 +43,7 @@ namespace VRControls
         {
             base.Awake();
             SetAsDock(true);
+            SetFacingPerformer(true);
 
             foreach (PickerDockTypes t in m_acceptedDockTypes)
                 AddAcceptedDocktype(m_typeMappings[t]);

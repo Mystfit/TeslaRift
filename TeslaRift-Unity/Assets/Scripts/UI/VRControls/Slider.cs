@@ -99,7 +99,7 @@ namespace VRControls
         {
             if (IsTransient && IsDragging)
             {
-                StopDragging();
+                //StopDragging();
             }
 
             //frame.SetTextAsDeselected();

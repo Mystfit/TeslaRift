@@ -13,6 +13,7 @@ namespace VRControls
         public float m_minAngle = Mathf.PI * 0.1f;
         public float m_volumetricYOffset = 0.0f;
         public float m_minimumHandDistance = 0.2f;
+        public bool m_hideControlsWhenLeaving = true;
         protected Dictionary<BaseVRControl, GameObject> m_volumetrics;
 
         // Use this for initialization
@@ -36,6 +37,11 @@ namespace VRControls
                 GameObject volumetric = UIFactory.CreateVolumetricCylinder();
                 volumetric.transform.position = new Vector3(attach.transform.position.x, m_volumetricYOffset, attach.transform.position.z);
                 volumetric.transform.parent = transform;
+                
+                Vector3 scaleVec = volumetric.transform.localScale;
+                scaleVec.y = 0.0f;
+                volumetric.transform.localScale = scaleVec;
+                volumetric.SetActive(false);
 
                 iTween.ColorTo(volumetric, iTween.Hash("color", new Color(1.0f, 1.0f, 1.0f, 0.2f), "time", 0.8f));
                 m_volumetrics[attach] = volumetric;
@@ -62,38 +68,44 @@ namespace VRControls
 
         public override void ChildAttachmentOpeningControls(BaseVRControl attach)
         {
+            HideVolumetric(visibleControls);
+            base.ChildAttachmentOpeningControls(attach);
             ShowVolumetric(visibleControls);
         }
 
 
         private void ShowVolumetric(BaseVRControl attach)
         {
-             //Hide open volumetric
             if (attach != null)
             {
                 if (m_volumetrics.ContainsKey(attach))
                 {
-                    Hashtable volParams = new Hashtable();
-                    volParams.Add("targetVolumetric", m_volumetrics[attach]);
-
-                    iTween.ScaleTo(m_volumetrics[attach], iTween.Hash(
-                        "scale", 0.0f,
-                        "time", 0.3f,
-                        "onComplete", "SetActive",
-                        "onCompleteTarget", this,
-                        "onCompleteParams", volParams));
-                    base.ChildAttachmentOpeningControls(attach);
-
-                    //Show active volumetric
                     m_volumetrics[attach].SetActive(true);
-                    iTween.ScaleTo(m_volumetrics[attach], iTween.Hash("scale", UIFactory.VolumetricCylinderScale, "time", 0.5f));
+                    iTween.ScaleTo(m_volumetrics[attach], iTween.Hash("scale", UIFactory.VolumetricCylinderScale, "time", 0.3f));
                 }
             }
         }
-        
 
-        private void HideVolumetric(Hashtable parameters){
-            ((GameObject)parameters["targetVolumetric"]).SetActive(false);
+
+        private void HideVolumetric(BaseVRControl attach)
+        {
+            if (attach != null)
+            {
+                if (m_volumetrics.ContainsKey(attach))
+                {
+                    iTween.ScaleTo(m_volumetrics[attach], iTween.Hash(
+                        "scale", new Vector3(m_volumetrics[attach].transform.localScale.x,0.0f,m_volumetrics[attach].transform.localScale.z),
+                        "time", 0.3f,
+                        "oncomplete", "HideVolumetricComplete",
+                        "oncompletetarget", this.gameObject,
+                        "oncompleteparams", m_volumetrics[attach]));
+                }
+            }
+        }
+
+        private void HideVolumetricComplete(Object param)
+        {
+            ((GameObject)param).SetActive(false);
         }
 
         public void PlaceObjects()
@@ -108,7 +120,7 @@ namespace VRControls
             for (int i = 0; i < DockedChildren.Count; i++)
             {
                 iTween.MoveTo(DockedChildren[i].gameObject, iTween.Hash("position", points[i], "time", 0.5f, "islocal", true));
-                iTween.ScaleTo(m_volumetrics[DockedChildren[i]], iTween.Hash("scale", UIFactory.VolumetricCylinderScale, "time", 0.5f));
+                //iTween.ScaleTo(m_volumetrics[DockedChildren[i]], iTween.Hash("scale", UIFactory.VolumetricCylinderScale, "time", 0.5f));
                 m_volumetrics[DockedChildren[i]].transform.localPosition = points[i] + new Vector3(0.0f, m_volumetricYOffset, 0.0f);
                 //iTween.MoveTo(m_volumetrics[m_childDockables[i]], iTween.Hash("position", points[i] + new Vector3(0.0f, m_volumetricYOffset, 0.0f), "time", 0.5f, "islocal", true));
             }
@@ -117,8 +129,8 @@ namespace VRControls
         public override void Update()
         {
  	        base.Update();
-            HideInactiveMenuControls();
-             
+            if(m_hideControlsWhenLeaving)
+                HideInactiveMenuControls();
         }
 
         protected void HideInactiveMenuControls()
@@ -136,7 +148,10 @@ namespace VRControls
                 float distance = Vector3.Distance(handPosition, controlPosition);
 
                 if (distance > m_minimumHandDistance)
+                {
                     HideChildControls();
+                    HideVolumetric(visibleControls);
+                }
             }
         }
     }

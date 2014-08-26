@@ -22,7 +22,7 @@ namespace VRControls
         public float m_dividerWidth = 0.005f;
         public float m_controlsMirrorOffset = 0.05f;
         public float m_controlsYOffset = 0.05f;
-        public float m_clipCubeSpacing = 0.03f;
+        public float m_itemSpacing = 0.1f;
 
 		public InstrumentHandle instrumentRef { get { return m_instrumentRef; } }
         protected InstrumentHandle m_instrumentRef;
@@ -70,6 +70,12 @@ namespace VRControls
 
         public void InitInstrumentControls()
         {
+            BaseTool.ToolMode[] defaultToolResponse = new BaseTool.ToolMode[]{
+                BaseTool.ToolMode.GRABBING, 
+                BaseTool.ToolMode.PRIMARY,
+            };
+
+
             if (m_instrumentRef != null)
             {
                 //Set name
@@ -89,11 +95,10 @@ namespace VRControls
 
                 //Create clip scroller
                 Scroller clipScroller = UIFactory.CreateMusicRefAttachment(typeof(Scroller)) as Scroller;
-                clipScroller.SetItemSpacing(m_clipCubeSpacing);
+                clipScroller.SetItemSpacing(m_itemSpacing);
                 clipScroller.AddAcceptedDocktype(typeof(ClipCube));
                 clipScroller.transform.parent = m_rotator.transform;
                 clipScroller.SetOffset(new Vector3(-m_controlsMirrorOffset, m_controlsYOffset + 0.02f, 0.0f));
-                //clipScroller.SetItemScale(UIFactory.sliderScale.x);
 
                 //Create clips
                 foreach (ClipParameter clip in m_instrumentRef.clipList)
@@ -102,22 +107,23 @@ namespace VRControls
                     cube.SetCloneable(true);
                     cube.SetColour(m_instrumentRef.color);
                     cube.DockInto(clipScroller);
+                    cube.SetToolmodeResponse(defaultToolResponse);
                 }
 
                 //Create parameter scroller
                 Scroller paramScroller = UIFactory.CreateMusicRefAttachment(typeof(Scroller)) as Scroller;
                 paramScroller.transform.parent = m_rotator.transform;
                 paramScroller.SetOffset(new Vector3(m_controlsMirrorOffset, m_controlsYOffset, 0.0f));
+                paramScroller.SetItemSpacing(m_itemSpacing);
 
-                paramScroller.SetItemSpacing(m_clipCubeSpacing);
-                //paramScroller.SetItemScale(UIFactory.sliderScale.x);
-
+                
                 //Create note slider
                 if (m_instrumentRef.isMidi)
                 {
                     Slider noteSlider = UIFactory.CreateMusicRefAttachment(typeof(Slider), m_instrumentRef.noteChannel) as Slider;
                     noteSlider.SetCloneable(true);
                     noteSlider.DockInto(paramScroller);
+                    noteSlider.SetToolmodeResponse(defaultToolResponse);
                 }
 
                 //Create parameters
@@ -126,6 +132,7 @@ namespace VRControls
                     Slider slider = UIFactory.CreateMusicRefAttachment(typeof(Slider), param) as Slider;
                     slider.SetCloneable(true);
                     slider.DockInto(paramScroller);
+                    slider.SetToolmodeResponse(defaultToolResponse);
                 }
 
                 //Create send sliders
@@ -134,6 +141,7 @@ namespace VRControls
                     Slider slider = UIFactory.CreateMusicRefAttachment(typeof(Slider), send) as Slider;
                     slider.SetCloneable(true);
                     slider.DockInto(paramScroller);
+                    slider.SetToolmodeResponse(defaultToolResponse);
                 }
 
                 if (m_instrumentRef.clipList.Count < clipScroller.numDisplayedAttachments)
@@ -227,7 +235,7 @@ namespace VRControls
             base.Gesture_Exit();
             if (mode == BaseTool.ToolMode.GRABBING)
             {
-                StopDragging();
+                //StopDragging();
             }
         }
 

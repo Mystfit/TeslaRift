@@ -24,7 +24,7 @@ public class InstrumentFactory : MonoBehaviour {
     public TextAsset m_liveSessionFile;
 
     public Picker m_instrumentHolder;
-    public TetrahedronBlender m_returnHolder;
+    public Picker m_returnHolder;
 
     void Start () {
         m_instance = this;
@@ -87,14 +87,13 @@ public class InstrumentFactory : MonoBehaviour {
             }
         }
 
-        int returnIndex = 0;
         foreach (XmlNode returnTrack in returnList)
         {
             InstrumentOrb returnInstrument = CreateInstrumentFromXmlList(returnTrack, peer);
             if (returnInstrument != null)
             {
                 InstrumentController.Instance.AddReturn(returnInstrument.instrumentRef);
-                m_returnHolder.AddReturnInstrument(returnInstrument, returnIndex++); 
+                returnInstrument.DockInto(m_returnHolder);
             }
         }
     }

@@ -118,11 +118,20 @@ public class HydraController : MonoBehaviour
     /*
      * Gets sets hand dragging state
      */
-    public BaseVRControl IsHandDragging(BaseTool.ToolHand hand)
+    public bool IsHandDragging(BaseTool.ToolHand hand)
     {
         if (hand == BaseTool.ToolHand.LEFT)
-            return m_leftHandDragTarget;
-        return m_rightHandDragTarget;
+        {
+            if (m_leftHandDragTarget != null)
+                return true;
+            return false;
+        }
+        else
+        {
+            if (m_rightHandDragTarget != null)
+                return true;
+        }
+        return false;
     }
 
     public void SetHandDragging(BaseTool.ToolHand hand, BaseVRControl target)
