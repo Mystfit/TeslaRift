@@ -169,8 +169,8 @@ namespace VRControls
             if (controlsEnabled)
             {
                 m_rotator.SetActive(true);
-                m_parameterScroller.GetComponent<Scroller>().SetDockablesAsTweenable(true);
-                m_clipScroller.GetComponent<Scroller>().SetDockablesAsTweenable(true);
+                //m_parameterScroller.GetComponent<Scroller>().SetDockablesAsTweenable(true);
+                //m_clipScroller.GetComponent<Scroller>().SetDockablesAsTweenable(true);
 
                 base.ShowControls();
             }

@@ -61,6 +61,7 @@ public class UIFrame : MonoBehaviour {
     public bool toggleVertical = false;
     public bool toggleOutline = false;
     public bool toggleBackground = false;
+    public bool toggleHideFrame = false;
     
     /*
      * Active dimensions
@@ -76,6 +77,7 @@ public class UIFrame : MonoBehaviour {
     private bool bIsAnimating;
     private bool bRotated = false;
     private bool bIsOutlineVisible = false;
+    private bool bIsFrameVisible = true;
     
     void Awake () {
         m_frameComponents = new List<GameObject>();
@@ -110,6 +112,7 @@ public class UIFrame : MonoBehaviour {
         if(toggleUpdate){
             toggleUpdate = false;
             AnimateSize(m_frameWidth, m_frameHeight);
+            SetLabel(m_sliderLabel);
         }
         
         if(toggleVertical){
@@ -131,6 +134,13 @@ public class UIFrame : MonoBehaviour {
         if(toggleBackground){
             toggleBackground = false;
             AnimateBackgroundColor(m_backgroundColor);
+        }
+
+        if (toggleHideFrame)
+        {
+            toggleHideFrame = false;
+            bIsFrameVisible = !bIsFrameVisible;
+            FrameVisible(bIsFrameVisible);
         }
     }
     
@@ -340,28 +350,28 @@ public class UIFrame : MonoBehaviour {
         float targetWidth = (bRotated) ? height : width;
         bIsAnimating = true;
 
-        //SetWidth(targetWidth);
-        //SetHeight(targetHeight);
-        //AnimationComplete();
+        SetWidth(targetWidth);
+        SetHeight(targetHeight);
+        AnimationComplete();
 
-        iTween.ValueTo(gameObject, iTween.Hash(
-            "from", m_lastWidth, 
-            "to", targetWidth, 
-            "time", m_easeTime,
-            "onupdate", "SetWidth", 
-            "onupdatetarget", gameObject, 
-            "oncomplete", "AnimationComplete",
-            "easetype", "easeInOutSine"
-        ));
-        iTween.ValueTo(gameObject, iTween.Hash(
-            "from", m_lastHeight, 
-            "to", targetHeight, 
-            "time", m_easeTime,
-            "onupdate", "SetHeight", 
-            "onupdatetarget", gameObject, 
-            "oncomplete", "AnimationComplete",
-            "easetype", "easeInOutSine"
-        ));
+        //iTween.ValueTo(gameObject, iTween.Hash(
+        //    "from", m_lastWidth, 
+        //    "to", targetWidth, 
+        //    "time", m_easeTime,
+        //    "onupdate", "SetWidth", 
+        //    "onupdatetarget", gameObject, 
+        //    "oncomplete", "AnimationComplete",
+        //    "easetype", "easeInOutSine"
+        //));
+        //iTween.ValueTo(gameObject, iTween.Hash(
+        //    "from", m_lastHeight, 
+        //    "to", targetHeight, 
+        //    "time", m_easeTime,
+        //    "onupdate", "SetHeight", 
+        //    "onupdatetarget", gameObject, 
+        //    "oncomplete", "AnimationComplete",
+        //    "easetype", "easeInOutSine"
+        //));
     }
     
     public void AnimateBackgroundColor(Color color){
@@ -403,6 +413,16 @@ public class UIFrame : MonoBehaviour {
             "oncomplete", "OutlineAnimationComplete",
             "easetype", "easeInOutSine"
         ));
+    }
+
+
+    /*
+     * Shows or hides frame components
+     */
+    public void FrameVisible(bool state)
+    {
+        foreach (GameObject o in m_frameComponents)
+            o.SetActive(state);
     }
     
     
@@ -523,7 +543,7 @@ public class UIFrame : MonoBehaviour {
 
             if(m_matchTextWidth)
                 AnimateSize(m_label.renderer.bounds.size.x, m_frameHeight);
-            toggleUpdate = true;
+            //toggleUpdate = true;
         }
     }
 

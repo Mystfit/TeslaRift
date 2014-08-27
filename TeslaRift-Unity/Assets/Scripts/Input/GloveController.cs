@@ -67,6 +67,10 @@ public class GloveController : MonoBehaviour {
     public Color m_handHoverColor;
     public float m_handHoverOutlineSize;
     public float m_handOutlineSize;
+
+    //Debug Hud objects
+    private GameObject m_hudSliders;
+    private GameObject m_activeGestureText;
         
     void Awake( )
     {   
@@ -85,6 +89,14 @@ public class GloveController : MonoBehaviour {
         
         for(int i = 0; i < m_gestures.Length; i++)
             m_gestureIndexLookup[m_gestures[i]] = i;
+
+        Transform hudSliderTransform = transform.Find("ges_sliders");
+        if(hudSliderTransform != null)
+            m_hudSliders = hudSliderTransform.gameObject;
+
+        Transform activeGestureTex = transform.Find("active_gesture_text");
+        if (activeGestureTex != null)
+            m_activeGestureText = activeGestureTex.gameObject;
     }
     
     
@@ -98,6 +110,22 @@ public class GloveController : MonoBehaviour {
             m_arduino.reportAnalog(m_bendPins[i], 1);
         }
     }
+
+    public void ToggleDebugText()
+    {
+        ShowDebugText(!bIsDebugTextVisible);
+    }
+
+    public void ShowDebugText(bool state)
+    {
+        if (m_hudSliders != null)
+        {
+            m_hudSliders.SetActive(state);
+            m_activeGestureText.SetActive(state);
+        }
+        bIsDebugTextVisible = state;
+    }
+    private bool bIsDebugTextVisible = false;
 
     public void ToggleCalibration(){
         m_toggleCalibration = true;
@@ -130,9 +158,6 @@ public class GloveController : MonoBehaviour {
             switch(m_calibrationState){
             
             case CalibrationState.AWAITING_CALIBRATION:
-                //if( Convert.ToBoolean( m_arduino.digitalRead(m_bendCalibratePin ) ) || Input.GetKeyDown(KeyCode.RightArrow) ){
-                //    m_calibrationState = CalibrationState.CALIBRATING;
-                //}
                 break;
             
             case CalibrationState.CALIBRATING:
@@ -188,7 +213,6 @@ public class GloveController : MonoBehaviour {
                         } else {
                             m_calibrationState = CalibrationState.CALIBRATED;
                             m_rbf.calculateWeights();
-                            GetComponentInChildren<Hud_ActiveGesture>().gameObject.SetActive(false);
                             Debug.Log("Calibration complete!");
                         }
                     }

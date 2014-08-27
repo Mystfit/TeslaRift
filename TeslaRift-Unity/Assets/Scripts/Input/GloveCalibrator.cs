@@ -18,7 +18,8 @@ public class GloveCalibrator : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-
+        //m_leftGlove.ShowDebugText(false);
+        //m_rightGlove.ShowDebugText(false);
     }
 
     public void StartCalibration(){
@@ -41,7 +42,6 @@ public class GloveCalibrator : MonoBehaviour {
                             m_leftGlove.ToggleCalibration();
                             calibrationStart = true;
                         }
-
                     }
 
                     if(m_rightHandActive && m_rightGlove != null){
@@ -64,6 +64,8 @@ public class GloveCalibrator : MonoBehaviour {
                             if(m_leftGlove.GetCalibrationState() == GloveController.CalibrationState.CALIBRATED || 
                                m_rightGlove.GetCalibrationState() == GloveController.CalibrationState.CALIBRATED){
                                 m_gloveCalibrateHud.Finished();
+                                m_leftGlove.ShowDebugText(false);
+                                m_rightGlove.ShowDebugText(false);
                                 m_toggleCalibration = false;
                                 isCalibrated = true;
                             } else {

@@ -13,12 +13,12 @@ namespace VRControls
         {
             base.Awake();
             SetIsDraggable(false);
-            m_frame.SetLabel("Mode");
         }
 
         public override void Fire()
         {
             base.Fire();
+            animation.Play("button_down");
             UIController.Instance.NextUIContext();
         }
     }

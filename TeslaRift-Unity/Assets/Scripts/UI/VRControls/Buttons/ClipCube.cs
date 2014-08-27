@@ -13,6 +13,7 @@ namespace VRControls
         {
             base.Awake();
             SetIsDraggable(true);
+            SetOutlineMat(renderer.materials[0]);
         }
 
         public override void Init(InstrumentParameter managedReference)

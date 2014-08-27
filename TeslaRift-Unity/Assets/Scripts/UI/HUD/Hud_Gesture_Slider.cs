@@ -4,14 +4,14 @@ using System.Collections;
 
 public class Hud_Gesture_Slider : MonoBehaviour {
 
-    public GloveController m_targetGlove;
+    private GloveController m_targetGlove;
     public int m_gestureindex;
     protected BarSlider m_slider;
     protected UIFrame m_frame;
 
     // Use this for initialization
     void Start () {
-        m_targetGlove = m_targetGlove.GetComponent<GloveController>();
+        m_targetGlove = transform.parent.parent.GetComponent<GloveController>();
         m_slider = GetComponent<BarSlider>();
         m_frame = GetComponent<UIFrame>();
         m_frame.SetLabel(m_targetGlove.GetGestureName(m_gestureindex));

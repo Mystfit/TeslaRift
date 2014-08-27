@@ -7,7 +7,6 @@ namespace VRControls
 {
     public class CubeButton : BaseVRControl
     {
-        protected BarSlider m_barSlider;
         protected Slider m_sliderAttach;
         protected UIFrame m_frame;
 
@@ -19,13 +18,11 @@ namespace VRControls
             SetIsDockable(true);
 			SetAsDock(true);
 
-            m_barSlider = GetComponent<BarSlider>();
-            transform.localScale = UIFactory.sliderScale;
+            //transform.localScale = UIFactory.sliderScale;
 
             m_frame = GetComponent<UIFrame>();
-            m_frame.SetMatchTextWidth(true);
-
-            SetOutlineMat(renderer.materials[0]);
+            if(m_frame != null)
+                m_frame.SetMatchTextWidth(true);
         }
 
 		public override void Update(){

@@ -374,6 +374,14 @@ public class HydraController : MonoBehaviour
 	                Debug.Log(obj.name);
 	        }
 		}
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            if(m_leftGlove != null)
+                m_leftGlove.ToggleDebugText();
+            if (m_rightGlove != null)
+                m_rightGlove.ToggleDebugText();
+        }
     }
 
     public void FreezeHands()

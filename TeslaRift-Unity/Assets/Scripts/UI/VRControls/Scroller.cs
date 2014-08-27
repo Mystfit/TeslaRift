@@ -140,11 +140,11 @@ namespace VRControls
             for (int i = 0; i < DockedChildren.Count; i++)
             {
                 Vector3 pos = new Vector3(0.0f, i * m_itemSpacing, 0.0f);
-                if (isDockablesTweenable)
+                if (m_tweenDockables)
                 {
-                    iTween tween = DockedChildren[i].GetComponent<iTween>();
-                    if (tween != null)
-                        Destroy(tween);
+                    //iTween tween = DockedChildren[i].GetComponent<iTween>();
+                    //if (tween != null)
+                        //Destroy(tween);
                     iTween.MoveTo(DockedChildren[i].gameObject, iTween.Hash("position", pos, "time", 0.3f, "islocal", true));
                 }
                 else
@@ -213,15 +213,26 @@ namespace VRControls
                 float attachY = attach.transform.localPosition.y + m_controlHolder.localPosition.y;
                 if (attachY < m_lowerVisibleBounds || attachY > m_upperVisibleBounds)
                 {
-                    if (attach.gameObject.GetComponent<iTween>() == null && attach.transform.localScale.x != 0.0f)
+                    //if (attach.gameObject.GetComponent<iTween>() == null && attach.transform.localScale.x != 0.0f)
+                    if (m_tweenDockables)
+                    {
                         iTween.ScaleTo(attach.gameObject, iTween.Hash("x", 0.0f, "time", 0.15f, "oncomplete", "SetInactive", "easetype", iTween.EaseType.easeOutQuad));
+                    }
+                    else
+                    {
+                        attach.transform.localScale = new Vector3(0.0f, attach.transform.localScale.y, attach.transform.localScale.z);
+                        attach.SetInactive();
+                    }
                 }
                 else
                 {
                     if (!attach.gameObject.activeSelf)
                     {
                         attach.SetActive();
-                        iTween.ScaleTo(attach.gameObject, iTween.Hash("x", attach.minimizedScale, "time", 0.15f, "easetype", iTween.EaseType.easeInQuad));
+                        if (m_tweenDockables)
+                            iTween.ScaleTo(attach.gameObject, iTween.Hash("x", attach.minimizedScale, "time", 0.15f, "easetype", iTween.EaseType.easeInQuad));
+                        else
+                            attach.transform.localScale = new Vector3(attach.minimizedScale, attach.transform.localScale.y, attach.transform.localScale.z);
                     }
                 }
             }
