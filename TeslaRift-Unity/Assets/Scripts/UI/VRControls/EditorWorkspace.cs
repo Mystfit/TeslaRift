@@ -15,6 +15,7 @@ namespace VRControls
             typeof(InstrumentDock),
             typeof(ValueTrigger),
             typeof(RBFSphere),
+            typeof(RBFPlug),
             typeof(TetrahedronBlender),
             typeof(ControlMatrix)
         };

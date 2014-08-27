@@ -19,8 +19,8 @@ namespace VRControls
         public float m_cubeSpacingMultiplier = 1.0f;
         protected ClipCubeHolder[, ,] m_cubeHolders;
 
-        public GameObject m_vertLine;
-        public GameObject m_depthLine;
+        //public GameObject m_vertLine;
+        //public GameObject m_depthLine;
         public int[] m_lastMatrixPosition;
 
         // Use this for initialization
@@ -112,7 +112,11 @@ namespace VRControls
                     attach.SetCloneable(false);
                     holder.attach = attach;
                     attach.transform.parent = holder.placeholder;
-                    iTween.MoveTo(attach.gameObject, iTween.Hash("position", Vector3.zero, "islocal", true, "time", 0.5f));
+
+                    if (GlobalConfig.Instance.EnableAnimations)
+                        iTween.MoveTo(attach.gameObject, iTween.Hash("position", Vector3.zero, "islocal", true, "time", 0.5f));
+                    else
+                        attach.transform.localPosition = Vector3.zero;
                     attach.transform.rotation = holder.placeholder.rotation;
                     return true;
                 }
@@ -163,9 +167,7 @@ namespace VRControls
         public override void Gesture_First()
         {
             base.Gesture_First();
-            if (mode == BaseTool.ToolMode.GRABBING)
-                StartDragging(HydraController.Instance.GetHand(ActiveHand));
-            
+                        
             UpdateMatrixPosition();
 
             if (mode == BaseTool.ToolMode.PLAY1)
@@ -176,7 +178,6 @@ namespace VRControls
                 TriggerClip(m_lastMatrixPosition, 2);
             else if (mode == BaseTool.ToolMode.PLAY4)
                 TriggerClip(m_lastMatrixPosition, 3);
-            
         }
 
 
@@ -195,8 +196,8 @@ namespace VRControls
 				Vector3 vertPos = new Vector3(-0.15f, ((float)matrixPos[0]) / (float)(m_cubeSpacingMultiplier * m_cubeWidth), 0.1f);
 				Vector3 depthPos = new Vector3(-0.15f, -0.4f, ((float)matrixPos[2]) / (float)(m_cubeSpacingMultiplier * m_cubeDepth));
 
-                iTween.MoveTo(m_vertLine, iTween.Hash("position", vertPos, "time", 0.1f, "easetype", "easeOutCubic", "islocal", true));
-                iTween.MoveTo(m_depthLine, iTween.Hash("position", depthPos, "time", 0.1f, "easetype", "easeOutCubic", "islocal", true));
+                //iTween.MoveTo(m_vertLine, iTween.Hash("position", vertPos, "time", 0.1f, "easetype", "easeOutCubic", "islocal", true));
+                //iTween.MoveTo(m_depthLine, iTween.Hash("position", depthPos, "time", 0.1f, "easetype", "easeOutCubic", "islocal", true));
 
                 for (int x = 0; x < m_cubeDepth; x++)
                 {

@@ -24,7 +24,10 @@ namespace VRControls
             SetIsDraggable(true);
             SetIsDockable(true);
             m_slider = GetComponent<BarSlider>();
+
             m_frame = GetComponent<UIFrame>();
+                        UpdateColliders(new Vector3(m_frame.currentWidth * 0.5f, m_frame.currentHeight * 0.5f, 0.0f), new Vector3(m_frame.currentWidth, m_frame.currentHeight, m_collisionDepth));
+
             Maximize();
         }
 
@@ -67,19 +70,13 @@ namespace VRControls
          */
         public override void Gesture_First()
         {
-            if (mode == BaseTool.ToolMode.GRABBING)
-                StartDragging(HydraController.Instance.GetHand(ActiveHand));
+            base.Gesture_First();
 
             if (mode == BaseTool.ToolMode.PLAY1
                || mode == BaseTool.ToolMode.PLAY2
                || mode == BaseTool.ToolMode.PLAY3
                || mode == BaseTool.ToolMode.PLAY4)
                 SetValueFromHand();
-
-            //if (mode == BaseTool.ToolMode.PRIMARY)
-            //   frame.SetTextAsSelected();
-
-            base.Gesture_First();
         }
 
         public override void Gesture_IdleInterior()

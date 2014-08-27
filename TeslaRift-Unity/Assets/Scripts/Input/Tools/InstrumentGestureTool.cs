@@ -9,7 +9,7 @@ public class InstrumentGestureTool : BaseTool {
     /*
      * Object we are interacting with
      */
-    public GameObject m_heldObject;
+    public BaseVRControl m_heldObject;
     protected BaseVRControl m_attachment;
     
     /*
@@ -74,33 +74,47 @@ public class InstrumentGestureTool : BaseTool {
         case HandState.HOLDING:
             //Closest proximity triggers
             //--------------------------
-            GameObject activeInterior = HydraController.Instance.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR, m_mode);
-            GameObject activeProximity = HydraController.Instance.HandTarget(m_hand, ProximityType.INSTRUMENT_PROXIMITY, m_mode);
+            BaseVRControl activeInterior = HydraController.Instance.HandTarget(m_hand, ProximityType.INSTRUMENT_INTERIOR, m_mode);
+            BaseVRControl activeProximity = HydraController.Instance.HandTarget(m_hand, ProximityType.INSTRUMENT_PROXIMITY, m_mode);
             
             //Set proximity state based on last state and current position
             //--------------------------
-            if(activeProximity == m_heldObject){
-                if(activeInterior == m_heldObject){
-                    //Inside interior
-                    if(m_gestureState == GestureState.PROXIMITY)
-                        m_gestureState = GestureState.PROXIMITY_TO_INTERIOR;
-                    else if(m_gestureState == GestureState.EXTERIOR)
-                        m_gestureState = GestureState.EXTERIOR_TO_INTERIOR;
-                } else {
-                    //Inside proximity
-                    if(m_gestureState == GestureState.INTERIOR)
-                        m_gestureState = GestureState.INTERIOR_TO_PROXIMITY;
-                    else if(m_gestureState == GestureState.EXTERIOR)
-                        m_gestureState = GestureState.EXTERIOR_TO_PROXIMITY;
-                }
-            } else {
-                //Outside exterior
-                if(m_gestureState == GestureState.PROXIMITY)
-                    m_gestureState = GestureState.PROXIMITY_TO_EXTERIOR;
-                else if(m_gestureState == GestureState.INTERIOR)
-                    m_gestureState = GestureState.INTERIOR_TO_EXTERIOR;
+            //if(activeProximity == m_heldObject){
+            //    if(activeInterior == m_heldObject){
+            //        //Inside interior
+            //        if(m_gestureState == GestureState.PROXIMITY)
+            //            m_gestureState = GestureState.PROXIMITY_TO_INTERIOR;
+            //        else if(m_gestureState == GestureState.EXTERIOR)
+            //            m_gestureState = GestureState.EXTERIOR_TO_INTERIOR;
+            //    } else {
+            //        //Inside proximity
+            //        if(m_gestureState == GestureState.INTERIOR)
+            //            m_gestureState = GestureState.INTERIOR_TO_PROXIMITY;
+            //        else if(m_gestureState == GestureState.EXTERIOR)
+            //            m_gestureState = GestureState.EXTERIOR_TO_PROXIMITY;
+            //    }
+            //} else {
+            //    //Outside exterior
+            //    if(m_gestureState == GestureState.PROXIMITY)
+            //        m_gestureState = GestureState.PROXIMITY_TO_EXTERIOR;
+            //    else if(m_gestureState == GestureState.INTERIOR)
+            //        m_gestureState = GestureState.INTERIOR_TO_EXTERIOR;
+            //}
+
+            if (activeInterior == m_heldObject)
+            {
+                if (m_gestureState == GestureState.PROXIMITY)
+                    m_gestureState = GestureState.PROXIMITY_TO_INTERIOR;
+                else if (m_gestureState == GestureState.EXTERIOR)
+                    m_gestureState = GestureState.EXTERIOR_TO_INTERIOR;
+                else
+                    m_gestureState = GestureState.INTERIOR;
             }
-            
+            else
+            {
+                m_gestureState = GestureState.EXTERIOR;
+            }
+
             ProcessGestures();
             break;
         }
@@ -142,7 +156,7 @@ public class InstrumentGestureTool : BaseTool {
             m_gestureTimer = m_betweenGestureDelay;
             m_gestureState = GestureState.INTERIOR;
             m_lastGestureState = GestureState.PROXIMITY_TO_INTERIOR;
-            m_attachment.StartHover();
+            //m_attachment.StartHover();
             break;
             
         case GestureState.PROXIMITY_TO_EXTERIOR:
@@ -169,7 +183,7 @@ public class InstrumentGestureTool : BaseTool {
             m_gestureTimer = m_betweenGestureDelay;
             m_gestureState = GestureState.INTERIOR;
             m_lastGestureState = GestureState.EXTERIOR;
-            m_attachment.StartHover();
+            //m_attachment.StartHover();
             break;
         }
             

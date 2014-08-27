@@ -24,7 +24,16 @@ public class Hud_Glove_Calibration : MonoBehaviour {
 
     public void Finished(){
         m_text.text = "GLOVES CALIBRATION COMPLETE";
-        iTween.FadeTo(this.gameObject, iTween.Hash("alpha", 0, "time", 2.0f, "oncomplete", ""));
+        if (GlobalConfig.Instance.EnableAnimations)
+        {
+            iTween.FadeTo(this.gameObject, iTween.Hash("alpha", 0, "time", 2.0f, "oncomplete", ""));
+        }
+        else
+        {
+            Color existing = renderer.material.GetColor("_Color");
+            existing.a = 0.0f;
+            renderer.material.SetColor("_Color", existing);
+        }
     }
 
     public void Hide(){

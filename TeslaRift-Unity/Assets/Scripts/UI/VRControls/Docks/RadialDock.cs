@@ -43,7 +43,10 @@ namespace VRControls
                 volumetric.transform.localScale = scaleVec;
                 volumetric.SetActive(false);
 
-                iTween.ColorTo(volumetric, iTween.Hash("color", new Color(1.0f, 1.0f, 1.0f, 0.2f), "time", 0.8f));
+                if (GlobalConfig.Instance.EnableAnimations)
+                    iTween.ColorTo(volumetric, iTween.Hash("color", new Color(1.0f, 1.0f, 1.0f, 0.2f), "time", 0.8f));
+                else
+                    volumetric.renderer.material.SetColor("_Color", new Color(1.0f, 1.0f, 1.0f, 0.2f));
                 m_volumetrics[attach] = volumetric;
 
                 PlaceObjects();
@@ -81,7 +84,10 @@ namespace VRControls
                 if (m_volumetrics.ContainsKey(attach))
                 {
                     m_volumetrics[attach].SetActive(true);
-                    iTween.ScaleTo(m_volumetrics[attach], iTween.Hash("scale", UIFactory.VolumetricCylinderScale, "time", 0.3f));
+                    if (GlobalConfig.Instance.EnableAnimations)
+                        iTween.ScaleTo(m_volumetrics[attach], iTween.Hash("scale", UIFactory.VolumetricCylinderScale, "time", 0.3f));
+                    else
+                        m_volumetrics[attach].transform.localScale = UIFactory.VolumetricCylinderScale;
                 }
             }
         }
@@ -93,12 +99,20 @@ namespace VRControls
             {
                 if (m_volumetrics.ContainsKey(attach))
                 {
-                    iTween.ScaleTo(m_volumetrics[attach], iTween.Hash(
-                        "scale", new Vector3(m_volumetrics[attach].transform.localScale.x,0.0f,m_volumetrics[attach].transform.localScale.z),
-                        "time", 0.3f,
-                        "oncomplete", "HideVolumetricComplete",
-                        "oncompletetarget", this.gameObject,
-                        "oncompleteparams", m_volumetrics[attach]));
+                    if (GlobalConfig.Instance.EnableAnimations)
+                    {
+                        iTween.ScaleTo(m_volumetrics[attach], iTween.Hash(
+                            "scale", new Vector3(m_volumetrics[attach].transform.localScale.x, 0.0f, m_volumetrics[attach].transform.localScale.z),
+                            "time", 0.3f,
+                            "oncomplete", "HideVolumetricComplete",
+                            "oncompletetarget", this.gameObject,
+                            "oncompleteparams", m_volumetrics[attach]));
+                    }
+                    else
+                    {
+                        m_volumetrics[attach].transform.localScale = new Vector3(m_volumetrics[attach].transform.localScale.x, 0.0f, m_volumetrics[attach].transform.localScale.z);
+                        m_volumetrics[attach].SetActive(false);
+                    }
                 }
             }
         }
@@ -119,10 +133,11 @@ namespace VRControls
 
             for (int i = 0; i < DockedChildren.Count; i++)
             {
-                iTween.MoveTo(DockedChildren[i].gameObject, iTween.Hash("position", points[i], "time", 0.5f, "islocal", true));
-                //iTween.ScaleTo(m_volumetrics[DockedChildren[i]], iTween.Hash("scale", UIFactory.VolumetricCylinderScale, "time", 0.5f));
+                if (GlobalConfig.Instance.EnableAnimations)
+                    iTween.MoveTo(DockedChildren[i].gameObject, iTween.Hash("position", points[i], "time", 0.5f, "islocal", true));
+                else
+                    DockedChildren[i].transform.localPosition = points[i];
                 m_volumetrics[DockedChildren[i]].transform.localPosition = points[i] + new Vector3(0.0f, m_volumetricYOffset, 0.0f);
-                //iTween.MoveTo(m_volumetrics[m_childDockables[i]], iTween.Hash("position", points[i] + new Vector3(0.0f, m_volumetricYOffset, 0.0f), "time", 0.5f, "islocal", true));
             }
         }
 

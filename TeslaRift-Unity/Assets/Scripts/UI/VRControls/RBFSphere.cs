@@ -19,6 +19,8 @@ namespace VRControls
 
         //Valuetrigger arrangement
         protected Dictionary<ValueTrigger, RBFSpike> m_pointSpikes;
+        private List<ValueTrigger> m_spikesToRemove;
+
         public float m_maxPointDistance = 0.35698f;
 
         //Training points
@@ -36,6 +38,7 @@ namespace VRControls
             m_rbf = new RBFCore(1, 1);
             m_rbf.setSigma(m_sigma);
             m_pointSpikes = new Dictionary<ValueTrigger, RBFSpike>();
+            m_spikesToRemove = new List<ValueTrigger>();
 
             SetIsDraggable(true);
             SetAsDock(true);
@@ -67,7 +70,7 @@ namespace VRControls
                     RBFPlug plug = attach as RBFPlug;
                     plug.SetSphere(this);
                     AddChildControl(attach);
-                    
+                    PlacePlugs();
                 }
                 else if (attach.GetType() == typeof(ValueTrigger))
                 {
@@ -114,11 +117,15 @@ namespace VRControls
             }
         }
 
-        public void RemoveSpike(ValueTrigger control)
+        public void RemoveSpikes()
         {
-            RBFSpike spike = m_pointSpikes[control];
-            m_pointSpikes.Remove(control);
-            GameObject.Destroy(spike.gameObject);
+            foreach (ValueTrigger control in m_spikesToRemove)
+            {
+                RBFSpike spike = m_pointSpikes[control];
+                m_pointSpikes.Remove(control);
+                GameObject.Destroy(spike.gameObject);
+            }
+            m_spikesToRemove.Clear();
         }
 
         public override void Undock()
@@ -207,7 +214,7 @@ namespace VRControls
                 {
                     if (pair.Key.DockedInto != this && pair.Key.DockedInto != null)
                     {
-                        RemoveSpike(pair.Key);
+                        m_spikesToRemove.Add(pair.Key);
                     }
                     else
                     {
@@ -215,6 +222,11 @@ namespace VRControls
                         pair.Value.transform.LookAt(pair.Key.transform);
                     }
                 }
+            }
+
+            if (m_spikesToRemove.Count > 0)
+            {
+                RemoveSpikes();
             }
 
             base.Update();
@@ -226,12 +238,6 @@ namespace VRControls
                 m_selectedTraining.StoreParameterValue(plug.musicRef);
         }
 
-        public override void Gesture_First()
-        {
-            base.Gesture_First();
-            if (mode == BaseTool.ToolMode.GRABBING)
-                StartDragging(HydraController.Instance.GetHand(ActiveHand));
-        }
 
         public override void Gesture_IdleInterior()
         {
@@ -271,14 +277,19 @@ namespace VRControls
                 //Bit of fudging to get the upwards facing rotation for the plugs
                 points[i].z = points[i].y;
                 points[i].y = m_plugYOffset;
-                Vector3 lookRot = Quaternion.LookRotation(points[i]).eulerAngles;
+                Quaternion lookRot = Quaternion.LookRotation(points[i]);
                 points[i].y = -m_plugYOffset;
 
-                iTween.MoveTo(ChildControls[i].gameObject, iTween.Hash("position", points[i], "time", 0.5f, "islocal", true));
-                iTween.RotateTo(ChildControls[i].gameObject, iTween.Hash("rotation", lookRot, "time", 0.5f, "islocal", true));
-
-                //ChildControls[i].transform.localPosition = points[i];
-
+                if (GlobalConfig.Instance.EnableAnimations)
+                {
+                    iTween.MoveTo(ChildControls[i].gameObject, iTween.Hash("position", points[i], "time", 0.5f, "islocal", true));
+                    iTween.RotateTo(ChildControls[i].gameObject, iTween.Hash("rotation", lookRot.eulerAngles, "time", 0.5f, "islocal", true));
+                }
+                else
+                {
+                    ChildControls[i].transform.localPosition = points[i];
+                    ChildControls[i].transform.localRotation = lookRot;
+                }
 			}
         }
     }

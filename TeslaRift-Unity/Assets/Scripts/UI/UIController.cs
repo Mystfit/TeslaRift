@@ -39,7 +39,7 @@ namespace UI
             {
                 control.Undock();
                 m_controls.Remove(control.id);
-				HydraController.Instance.RemoveFromAllCollisionLists(control.gameObject);
+				HydraController.Instance.RemoveFromAllCollisionLists(control);
                 GameObject.Destroy(control.gameObject);
             }
         }

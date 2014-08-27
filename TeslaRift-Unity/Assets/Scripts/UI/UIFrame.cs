@@ -212,7 +212,6 @@ public class UIFrame : MonoBehaviour {
     protected void UpdateBackground(float width, float height){
         if(m_backgroundQuad != null){
             m_backgroundQuad.localScale = new Vector3(width, height - (m_frameThickness*2));
-            //m_backgroundQuad.localPosition = new Vector3(-(m_frameThickness*0.5f), -(m_frameThickness*0.5f), 0.0f);
             Vector3 borderOffset = new Vector3(-(m_frameThickness*0.5f), -(m_frameThickness*0.5f), 0.0f);
             m_backgroundQuad.localPosition = GetAnchorOffset(width, height, m_anchorPoint) + borderOffset + m_frameOffset * 2.0f;
         }
@@ -308,16 +307,7 @@ public class UIFrame : MonoBehaviour {
      */
     public void RotateToVertical(){
         bRotated = true;
-
         transform.rotation = Quaternion.Euler( new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 90.0f) );
-        
-        /*
-         * iTween.RotateTo(gameObject, iTween.Hash(
-            "rotation", new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 90.0f),
-            "time", m_easeTime,
-            "easetype", "easeInOutSine"
-        ));
-        */
         AnimateSize(m_frameWidth, m_frameHeight);
     }
     
@@ -327,17 +317,7 @@ public class UIFrame : MonoBehaviour {
      */
     public void RotateToHorizontal(){
         bRotated = false;
-
         transform.rotation = Quaternion.Euler( new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 0.0f) );
-
-        /*
-         * 
-        iTween.RotateTo(gameObject, iTween.Hash(
-            "rotation", new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 0.0f),
-            "time", m_easeTime,
-            "easetype", "easeInOutSine"
-        )); 
-        */
         AnimateSize(m_frameWidth, m_frameHeight);
     }
     
@@ -345,7 +325,8 @@ public class UIFrame : MonoBehaviour {
     /*
      * Animates the panel size
      */
-    public void AnimateSize(float width, float height){
+    public void AnimateSize(float width, float height)
+    {
         float targetHeight = (bRotated) ? width : height;
         float targetWidth = (bRotated) ? height : width;
         bIsAnimating = true;
@@ -353,36 +334,24 @@ public class UIFrame : MonoBehaviour {
         SetWidth(targetWidth);
         SetHeight(targetHeight);
         AnimationComplete();
-
-        //iTween.ValueTo(gameObject, iTween.Hash(
-        //    "from", m_lastWidth, 
-        //    "to", targetWidth, 
-        //    "time", m_easeTime,
-        //    "onupdate", "SetWidth", 
-        //    "onupdatetarget", gameObject, 
-        //    "oncomplete", "AnimationComplete",
-        //    "easetype", "easeInOutSine"
-        //));
-        //iTween.ValueTo(gameObject, iTween.Hash(
-        //    "from", m_lastHeight, 
-        //    "to", targetHeight, 
-        //    "time", m_easeTime,
-        //    "onupdate", "SetHeight", 
-        //    "onupdatetarget", gameObject, 
-        //    "oncomplete", "AnimationComplete",
-        //    "easetype", "easeInOutSine"
-        //));
     }
     
     public void AnimateBackgroundColor(Color color){
-        iTween.ColorTo(m_backgroundQuad.gameObject, iTween.Hash(
-            "color", color, 
-            "time", m_easeTime,
-            "includechildren", true,
-            "onupdatetarget", gameObject, 
-            "oncomplete", "AnimationComplete",
-            "easetype", "easeInOutSine"
-        ));
+        if (GlobalConfig.Instance.EnableAnimations)
+        {
+            iTween.ColorTo(m_backgroundQuad.gameObject, iTween.Hash(
+                "color", color,
+                "time", m_easeTime,
+                "includechildren", true,
+                "onupdatetarget", gameObject,
+                "oncomplete", "AnimationComplete",
+                "easetype", "easeInOutSine"
+            ));
+        }
+        else
+        {
+            m_backgroundQuad.renderer.material.SetColor("_Color", color);
+        }
     }
     
     
@@ -403,16 +372,22 @@ public class UIFrame : MonoBehaviour {
             fromVal = m_outlineOffset;
             toVal = 0.0f;
         }
-        
-        iTween.ValueTo(gameObject, iTween.Hash(
-            "from", fromVal, 
-            "to", toVal, 
-            "time", m_easeTime,
-            "onupdate", "SetOutlineOffset", 
-            "onupdatetarget", gameObject, 
-            "oncomplete", "OutlineAnimationComplete",
-            "easetype", "easeInOutSine"
-        ));
+
+        if (GlobalConfig.Instance.EnableAnimations)
+        {
+            iTween.ValueTo(gameObject, iTween.Hash(
+                "from", fromVal,
+                "to", toVal,
+                "time", m_easeTime,
+                "onupdate", "SetOutlineOffset",
+                "onupdatetarget", gameObject,
+                "oncomplete", "OutlineAnimationComplete",
+                "easetype", "easeInOutSine"
+            ));
+        } else {
+            SetOutlineOffset(toVal);
+            OutlineAnimationComplete();
+        }
     }
 
 
@@ -450,12 +425,26 @@ public class UIFrame : MonoBehaviour {
      */
     public void SetTextAsSelected()
     {
-        iTween.ColorTo(m_label.gameObject, iTween.Hash("color",  UIFactory.textLabelSelectedColor, "time", 0.15f, "easetype", "easeOutCubic"));
+        if (GlobalConfig.Instance.EnableAnimations)
+        {
+            iTween.ColorTo(m_label.gameObject, iTween.Hash("color", UIFactory.textLabelSelectedColor, "time", 0.15f, "easetype", "easeOutCubic"));
+        }
+        else
+        {
+            m_label.renderer.material.SetColor("_Color", UIFactory.textLabelSelectedColor);
+        }
     }
 
     public void SetTextAsDeselected()
     {
-        iTween.ColorTo(m_label.gameObject, iTween.Hash("color",  UIFactory.textLabelDeselectedColor, "time", 0.15f, "easetype", "easeOutCubic"));
+        if (GlobalConfig.Instance.EnableAnimations)
+        {
+            iTween.ColorTo(m_label.gameObject, iTween.Hash("color", UIFactory.textLabelDeselectedColor, "time", 0.15f, "easetype", "easeOutCubic"));
+        }
+        else
+        {
+            m_label.renderer.material.SetColor("_Color", UIFactory.textLabelDeselectedColor);
+        }
     }
     
     

@@ -92,19 +92,16 @@ namespace VRControls
 		public override void Undock ()
 		{
 			base.Undock ();
-			Debug.Log ("Undocking?");
 		}
 
         public override void SetUIContextToPerformer()
         {
             m_cap.renderer.materials[0].SetColor("_Color", m_performColor);
-            //iTween.ColorTo(m_cap, iTween.Hash("color", m_performColor, "time", 0.2f, "includechildren", false));
         }
 
         public override void SetUIContextToEditor()
         {
             m_cap.renderer.materials[0].SetColor("_Color", m_editColor);
-            //iTween.ColorTo(m_cap, iTween.Hash("color", m_editColor, "time", 0.2f, "includechildren", false));
         }
 
         public override void Gesture_First()
@@ -113,10 +110,14 @@ namespace VRControls
             if (mode == BaseTool.ToolMode.PRIMARY)
                 m_paramscroller.ToggleControls();
 
-            if (mode == BaseTool.ToolMode.GRABBING)
+            //Performance mode uses grabbing gesture to control plug position - replace with primary?
+            if (uiContext == UIController.UIContext.PERFORMING)
             {
-                m_lastPlugDragPos = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(ActiveHand)).z;
-                m_originalPosSet = true;
+                if (mode == BaseTool.ToolMode.GRABBING)
+                {
+                    m_lastPlugDragPos = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(ActiveHand)).z;
+                    m_originalPosSet = true;
+                }
             }
         }
 
@@ -134,9 +135,14 @@ namespace VRControls
             BaseTool.ToolMode contextMode = BaseTool.ToolMode.GRABBING;
 
             if (uiContext == UIController.UIContext.EDITING)
+            {
                 contextMode = BaseTool.ToolMode.PRIMARY;
+            }
             else if (uiContext == UIController.UIContext.PERFORMING)
+            {
                 contextMode = BaseTool.ToolMode.GRABBING;
+            }
+                
 
             if (mode == contextMode)
             {

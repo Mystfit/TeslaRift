@@ -170,6 +170,10 @@ namespace VRControls
         // Update is called once per frame
         public override void Update()
         {
+            if (m_scrollVel != 0.0f)
+            {
+                MaskControls();
+            }
             if (!bIsDragging)
             {
                 if (m_scrollVel > m_speedCutoff || m_scrollVel < -m_speedCutoff)
@@ -198,8 +202,6 @@ namespace VRControls
                 m_scrollVel = 0.0f;
                 m_lastPosition = m_controlHolder.localPosition;
             }
-
-            MaskControls();
             base.Update();
         }
 

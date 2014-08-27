@@ -217,10 +217,6 @@ namespace VRControls
         {
             base.Gesture_First();
 
-            //Make sure to start dragging the object if we're using the drag gesture
-            if (mode == BaseTool.ToolMode.GRABBING)
-                StartDragging(HydraController.Instance.GetHand(ActiveHand));
-
             if (mode == BaseTool.ToolMode.PRIMARY)
                 ToggleControls();
         }

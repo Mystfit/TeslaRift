@@ -24,8 +24,6 @@ namespace VRControls
 
         public override void Gesture_First()
         {
-            if (mode == BaseTool.ToolMode.GRABBING)
-                StartDragging(HydraController.Instance.GetHand(ActiveHand));
             if (mode == BaseTool.ToolMode.PRIMARY)
                 ToggleControls();
 
@@ -39,7 +37,10 @@ namespace VRControls
                 m_rbfSphere1.ShowControls();
             if (m_rbfSphere2 != null)
                 m_rbfSphere2.ShowControls();
-            iTween.ColorTo(m_centerLight, iTween.Hash("color", m_editingColor, "time", 0.2f));
+            if (GlobalConfig.Instance.EnableAnimations)
+                iTween.ColorTo(m_centerLight, iTween.Hash("color", m_editingColor, "time", 0.2f));
+            else
+                m_centerLight.renderer.material.SetColor("_Color", m_editingColor);
         }
 
         public override void HideControls()
@@ -49,7 +50,10 @@ namespace VRControls
                 m_rbfSphere1.HideControls();
             if (m_rbfSphere2 != null)
                 m_rbfSphere2.HideControls();
-            iTween.ColorTo(m_centerLight, iTween.Hash("color", m_performingColor, "time", 0.2f));
+            if (GlobalConfig.Instance.EnableAnimations)
+                iTween.ColorTo(m_centerLight, iTween.Hash("color", m_performingColor, "time", 0.2f));
+            else
+                m_centerLight.renderer.material.SetColor("_Color", m_performingColor);
         }
     }
 }

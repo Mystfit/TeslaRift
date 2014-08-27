@@ -48,10 +48,11 @@ public class HydraController : MonoBehaviour
 
     //Collision lists
     //---------------
-    private List<GameObject> m_leftInstrumentProximity;
-    private List<GameObject> m_rightInstrumentProximity;
-    private List<GameObject> m_leftInstrumentInterior;
-    private List<GameObject> m_rightInstrumentInterior;
+    private Dictionary<BaseVRControl, bool> m_leftInstrumentProximity;
+    private Dictionary<BaseVRControl, bool> m_rightInstrumentProximity;
+    private Dictionary<BaseVRControl, bool> m_leftInstrumentInterior;
+    private Dictionary<BaseVRControl, bool> m_rightInstrumentInterior;
+    private List<BaseVRControl> m_cleanupCollisions;
 
     private GloveController m_leftGlove;
     private GloveController m_rightGlove;
@@ -65,14 +66,15 @@ public class HydraController : MonoBehaviour
         m_instance = this;
 
         //Collision lists
-        m_leftInstrumentProximity = new List<GameObject>();
-        m_rightInstrumentProximity = new List<GameObject>();
-        m_leftInstrumentInterior = new List<GameObject>();
-        m_rightInstrumentInterior = new List<GameObject>();
+        m_leftInstrumentProximity = new Dictionary<BaseVRControl, bool>();
+        m_rightInstrumentProximity = new Dictionary<BaseVRControl, bool>();
+        m_leftInstrumentInterior = new Dictionary<BaseVRControl, bool>();
+        m_rightInstrumentInterior = new Dictionary<BaseVRControl, bool>();
         m_leftHandHydra = m_leftHand.GetComponent<HydraHand>();
         m_rightHandHydra = m_rightHand.GetComponent<HydraHand>();
         m_leftGlove = m_leftHand.GetComponent<GloveController>();
         m_rightGlove = m_rightHand.GetComponent<GloveController>();
+        m_cleanupCollisions = new List<BaseVRControl>();
     }
 
 
@@ -218,38 +220,34 @@ public class HydraController : MonoBehaviour
      * Returns the the closest object to the hand in a specific proximity list
      */
 
-    public GameObject HandTarget(BaseTool.ToolHand hand, ProximityType proximityTarget, BaseTool.ToolMode mode)
+    public BaseVRControl HandTarget(BaseTool.ToolHand hand, ProximityType proximityTarget, BaseTool.ToolMode mode)
     {
-        return GetClosestObjectInList(GetCollisionList(proximityTarget, BaseTool.ToolHandToSixenseHand(hand)), GetHand(hand), mode);
-    }
+        Dictionary<BaseVRControl, bool> targetList = GetCollisionList(proximityTarget, BaseTool.ToolHandToSixenseHand(hand));
 
-
-    public GameObject GetClosestObjectInList(List<GameObject> targetList, GameObject target, BaseTool.ToolMode mode)
-    {
         float closestDistance = -1.0f;
-        GameObject closestObject = null;
+        BaseVRControl closestObject = null;
 
-        if (targetList != null && target != null)
+        if (targetList != null && GetHand(hand) != null)
         {
-            foreach (GameObject obj in targetList)
+            foreach (KeyValuePair<BaseVRControl, bool> obj in targetList)
             {
-                if (obj != null)
+                if (obj.Key != null)
                 {
-                    float dist = Vector3.Distance(obj.transform.position, target.transform.position);
+                    if (!obj.Key.proximityCollider.bounds.Intersects(GetHand(hand).collider.bounds))
+                    {
+                        m_cleanupCollisions.Add(obj.Key);                        
+                        Debug.LogWarning("Control " + obj.Key.name + " shouldn't be colliding!");
+                        continue;
+                    }
+                    float dist = Vector3.Distance(obj.Key.transform.position, GetHand(hand).transform.position);
                     if (dist < closestDistance || closestDistance < 0)
                     {
-                        BaseVRControl attach = obj.GetComponent<BaseVRControl>();
-
-                        if (attach != null)
+                        if (obj.Key.respondsToToolMode(mode))
                         {
-                            if (attach.respondsToToolMode(mode))
-                            {
-                                closestDistance = dist;
-                                closestObject = obj;
-                            }
+                            closestDistance = dist;
+                            closestObject = obj.Key;
                         }
                     }
-
                 }
             }
         }
@@ -257,7 +255,22 @@ public class HydraController : MonoBehaviour
         return closestObject;
     }
 
-    public void RemoveFromAllCollisionLists(GameObject target)
+
+    public void CleanupMisplacedCollisions()
+    {
+        if (m_cleanupCollisions.Count > 0)
+        {
+            foreach (BaseVRControl control in m_cleanupCollisions)
+                RemoveFromAllCollisionLists(control);
+            m_cleanupCollisions.Clear();
+        }
+    }
+
+
+    /*
+     * Remove all instances of 
+     */
+    public void RemoveFromAllCollisionLists(BaseVRControl target)
     {
         GetCollisionList(ProximityType.INSTRUMENT_INTERIOR, SixenseHands.LEFT).Remove(target);
         GetCollisionList(ProximityType.INSTRUMENT_INTERIOR, SixenseHands.RIGHT).Remove(target);
@@ -270,24 +283,19 @@ public class HydraController : MonoBehaviour
     /*
      * Adds a proximity target to a list of active colliders with a hand 
      */
-    public void AddCollision(GameObject proximityTarget, SixenseHands hand, ProximityType proximityType)
+    public void AddCollision(BaseVRControl proximityTarget, SixenseHands hand, ProximityType proximityType)
     {
-        List<GameObject> targetList = GetCollisionList(proximityType, hand);
-
-        if (!targetList.Contains(proximityTarget))
-        {
-            targetList.Add(proximityTarget);
-            //Debug.Log("Adding " + proximityTarget.name);
-        }
+        Dictionary<BaseVRControl, bool> targetList = GetCollisionList(proximityType, hand);
+        targetList[proximityTarget] = true;
     }
 
 
     /*
      * Removes a proximity target from a list of active colliders with a hand 
      */
-    public void RemoveCollision(GameObject proximityTarget, SixenseHands hand, ProximityType proximityType)
+    public void RemoveCollision(BaseVRControl proximityTarget, SixenseHands hand, ProximityType proximityType)
     {
-        List<GameObject> targetList = GetCollisionList(proximityType, hand);
+        Dictionary<BaseVRControl, bool> targetList = GetCollisionList(proximityType, hand);
         targetList.Remove(proximityTarget);
 
         //Debug.Log("Removing " + proximityTarget.name);
@@ -297,10 +305,9 @@ public class HydraController : MonoBehaviour
     /*
      * Gets a secific proximity collider list
      */
-    public List<GameObject> GetCollisionList(ProximityType proximityType, SixenseHands hand)
+    public Dictionary<BaseVRControl, bool> GetCollisionList(ProximityType proximityType, SixenseHands hand)
     {
-
-        List<GameObject> targetList = null;
+        Dictionary<BaseVRControl, bool> targetList = null;
 
         switch (proximityType)
         {
@@ -328,6 +335,8 @@ public class HydraController : MonoBehaviour
      */
     void Update()
     {
+        CleanupMisplacedCollisions();
+
         if (m_leftHandController == null)
             m_leftHandController = SixenseInput.GetController(SixenseHands.LEFT);
 
@@ -357,21 +366,21 @@ public class HydraController : MonoBehaviour
 	        if (m_gloveCalibrator.m_leftHandActive)
 	        {
 	            Debug.Log("Left Proximity:");
-	            foreach (GameObject obj in m_leftInstrumentInterior)
-	                Debug.Log(obj.name);
+	            foreach (KeyValuePair<BaseVRControl, bool> control in m_leftInstrumentProximity)
+                    Debug.Log(control.Key.name);
 	            Debug.Log("Left Interior:");
-	            foreach (GameObject obj in m_leftInstrumentInterior)
-	                Debug.Log(obj.name);
+	            foreach (KeyValuePair<BaseVRControl, bool> control in m_leftInstrumentInterior)
+	                Debug.Log(control.Key.name);
 	        }
 
 	        if (m_gloveCalibrator.m_rightHandActive)
 	        {
-	            Debug.Log("Right Proximity:");
-	            foreach (GameObject obj in m_rightInstrumentProximity)
-	                Debug.Log(obj.name);
-	            Debug.Log("Right Interior:");
-	            foreach (GameObject obj in m_rightInstrumentInterior)
-	                Debug.Log(obj.name);
+                Debug.Log("Left Proximity:");
+                foreach (KeyValuePair<BaseVRControl, bool> control in m_rightInstrumentProximity)
+                    Debug.Log(control.Key.name);
+                Debug.Log("Left Interior:");
+                foreach (KeyValuePair<BaseVRControl, bool> control in m_rightInstrumentInterior)
+                    Debug.Log(control.Key.name);
 	        }
 		}
 

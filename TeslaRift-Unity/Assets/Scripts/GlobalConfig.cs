@@ -8,7 +8,8 @@ using DotNumerics.LinearAlgebra;
 public class GlobalConfig : MonoBehaviour {
     
 	public bool DebugCollisions = false;
-     public static GlobalConfig m_instance;
+    public bool EnableAnimations = false;
+    public static GlobalConfig m_instance;
 
     // Use this for initialization
     void Awake () {
@@ -19,10 +20,13 @@ public class GlobalConfig : MonoBehaviour {
     
     // Update is called once per frame
     void Update () {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
             Application.Quit();
+        }
         
         if(Input.GetKeyDown(KeyCode.R)){
+            ZmqMusicNode.Instance.OnApplicationQuit();
             Application.LoadLevel(Application.loadedLevel);
         }  
     }

@@ -86,6 +86,7 @@ namespace VRControls
 
         public virtual void FacePerformer()
         {
+            float deltaTime = (float)Time.deltaTime * m_facePerformerSpeed;
             //Rotate to face player eyes
             if (m_facePerformer && !IsDragging)
             {
@@ -99,6 +100,7 @@ namespace VRControls
         }
         public void SetFacingPerformer(bool state) { m_facePerformer = state; }
         private bool m_facePerformer;
+        public float m_facePerformerSpeed = 10.0f;
 
         /// <summary>
         /// Override the id of this VRControl
@@ -447,7 +449,7 @@ namespace VRControls
         /// <param name="size"></param>
         public void SetOutlineSize(float size)
         {
-            SetOutlineSize(size, true);
+            SetOutlineSize(size, false);
         }
 
         /// <summary>
@@ -474,7 +476,7 @@ namespace VRControls
         /// <param name="color"></param>
         public void SetOutlineColor(Color color)
         {
-            SetOutlineColor(color, true);
+            SetOutlineColor(color, false);
         }
 
         /// <summary>
@@ -486,17 +488,21 @@ namespace VRControls
         {
             if (animate)
             {
-                if (m_outlineMat != null)
-                    iTween.ValueTo(gameObject, iTween.Hash("from", m_outlineMat.GetColor("_OutlineColor"), "to", color, "time", 0.1f, "onupdate", "SetOutlineColorUpdate", "easetype", iTween.EaseType.easeOutExpo));
-
+                iTween.ValueTo(gameObject, iTween.Hash("from", m_outlineMat.GetColor("_OutlineColor"), "to", color, "time", 0.1f, "onupdate", "SetOutlineColorUpdate", "easetype", iTween.EaseType.easeOutExpo));
             }
             else
             {
                 SetOutlineColorUpdate(color);
             }
         }
-        private void SetOutlineUpdate(float size) { m_outlineMat.SetFloat("_Outline", size); }
-        private void SetOutlineColorUpdate(Color color) { m_outlineMat.SetColor("_OutlineColor", color); }
+        private void SetOutlineUpdate(float size) {
+            if (m_outlineMat != null)
+                m_outlineMat.SetFloat("_Outline", size); 
+        }
+        private void SetOutlineColorUpdate(Color color) {
+            if (m_outlineMat != null)
+                m_outlineMat.SetColor("_OutlineColor", color); 
+        }
 
         /// <summary>
         /// Set the outline shader to the specified colour and size set by the global UI settings when hovering
@@ -1048,7 +1054,14 @@ namespace VRControls
         /*
          * Gesture implementations
          */
-        public virtual void Gesture_First() { bIsFirstGesture = false; }
+        public virtual void Gesture_First() { 
+            bIsFirstGesture = false;
+            if (IsDraggable)
+            {
+                if (mode == BaseTool.ToolMode.GRABBING)
+                    StartDragging(HydraController.Instance.GetHand(ActiveHand));
+            }
+        }
         public virtual void Gesture_Exit() { bIsFirstGesture = true; }
         public virtual void Gesture_IdleInterior() { }
         public virtual void Gesture_IdleProximity() { }

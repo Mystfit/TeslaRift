@@ -39,10 +39,7 @@ namespace VRControls
 
         public override void Gesture_First()
         {
-			if (mode == BaseTool.ToolMode.GRABBING)
-				StartDragging(HydraController.Instance.GetHand(ActiveHand));
-
-			else if (mode == BaseTool.ToolMode.PRIMARY)
+			if (mode == BaseTool.ToolMode.PRIMARY)
 				Fire();
 
             base.Gesture_First();

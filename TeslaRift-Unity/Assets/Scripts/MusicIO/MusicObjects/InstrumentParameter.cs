@@ -17,7 +17,6 @@ namespace MusicIO
 	[JsonConverter(typeof(InstrumentParameterSerializer))]
 	public class InstrumentParameter
     {
-
         /*
          * Value properties
          */
@@ -121,6 +120,7 @@ namespace MusicIO
                 m_isDirty = true;
 
             m_fValue = value;
+            InstrumentController.Instance.AddToQueue(this);
         }
 
         /*
@@ -149,8 +149,8 @@ namespace MusicIO
             {
                 if (m_remoteMethod != null)
                     ZmqMusicNode.Instance.node.updateRemoteMethod(m_remoteMethod, m_remoteMethod.args);
-            }
-            setClean();
+                setClean();
+            } 
         }
     }
 }

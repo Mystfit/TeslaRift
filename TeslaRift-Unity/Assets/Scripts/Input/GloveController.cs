@@ -340,25 +340,46 @@ public class GloveController : MonoBehaviour {
         }
     }
 
-     public void SetFingerLight(float[] strength)
+    public void SetFingerLight(float[] strength)
     {
-        iTween.ColorTo(m_fingerIndex, iTween.Hash("color", Color.Lerp(m_fingerInactiveColor, m_fingerActiveColor, strength[0]), "time", 0.1f, "easetype", "easeOutCubic"));
-        iTween.ColorTo(m_fingerMiddle, iTween.Hash("color", Color.Lerp(m_fingerInactiveColor, m_fingerActiveColor, strength[1]), "time", 0.1f, "easetype", "easeOutCubic"));
-        iTween.ColorTo(m_fingerRing, iTween.Hash("color", Color.Lerp(m_fingerInactiveColor, m_fingerActiveColor, strength[2]), "time", 0.1f, "easetype", "easeOutCubic"));
-        iTween.ColorTo(m_fingerPinky, iTween.Hash("color", Color.Lerp(m_fingerInactiveColor, m_fingerActiveColor, strength[3]), "time", 0.1f, "easetype", "easeOutCubic"));
+        if (GlobalConfig.Instance.EnableAnimations)
+        {
+            iTween.ColorTo(m_fingerIndex, iTween.Hash("color", Color.Lerp(m_fingerInactiveColor, m_fingerActiveColor, strength[0]), "time", 0.1f, "easetype", "easeOutCubic"));
+            iTween.ColorTo(m_fingerMiddle, iTween.Hash("color", Color.Lerp(m_fingerInactiveColor, m_fingerActiveColor, strength[1]), "time", 0.1f, "easetype", "easeOutCubic"));
+            iTween.ColorTo(m_fingerRing, iTween.Hash("color", Color.Lerp(m_fingerInactiveColor, m_fingerActiveColor, strength[2]), "time", 0.1f, "easetype", "easeOutCubic"));
+            iTween.ColorTo(m_fingerPinky, iTween.Hash("color", Color.Lerp(m_fingerInactiveColor, m_fingerActiveColor, strength[3]), "time", 0.1f, "easetype", "easeOutCubic"));
+        }
+        else {
+            m_fingerIndex.renderer.material.SetColor("_Color", Color.Lerp(m_fingerInactiveColor, m_fingerActiveColor, strength[0]));
+            m_fingerMiddle.renderer.material.SetColor("_Color", Color.Lerp(m_fingerInactiveColor, m_fingerActiveColor, strength[1]));
+            m_fingerRing.renderer.material.SetColor("_Color", Color.Lerp(m_fingerInactiveColor, m_fingerActiveColor, strength[2]));
+            m_fingerPinky.renderer.material.SetColor("_Color", Color.Lerp(m_fingerInactiveColor, m_fingerActiveColor, strength[3]));
+        }
     }
 
-     public void StartHover()
-     {
-         iTween.ValueTo(gameObject, iTween.Hash("from", 0.0f, "to", m_handHoverOutlineSize, "time", 0.1f, "onupdate", "SetOutlineUpdate", "easetype", iTween.EaseType.easeOutExpo));
-         //iTween.ColorTo(m_fingerBase, iTween.Hash("color", m_handHoverColor, "time", 0.1f, "easetype", iTween.EaseType.easeOutExpo));
-     }
+    public void StartHover()
+    {
+        if (GlobalConfig.Instance.EnableAnimations)
+        {
+            iTween.ValueTo(gameObject, iTween.Hash("from", 0.0f, "to", m_handHoverOutlineSize, "time", 0.1f, "onupdate", "SetOutlineUpdate", "easetype", iTween.EaseType.easeOutExpo));
+        }
+        else
+        {
+            SetOutlineUpdate(m_handHoverOutlineSize);
+        }
+    }
 
-     public void StopHover()
-     {
-         iTween.ValueTo(gameObject, iTween.Hash("from", m_handHoverOutlineSize, "to", 0.0f, "time", 0.0f, "onupdate", "SetOutlineUpdate", "easetype", iTween.EaseType.easeOutExpo));
-         //iTween.ColorTo(m_fingerBase, iTween.Hash("color", m_fingerInactiveColor, "time", 0.1f, "easetype", iTween.EaseType.easeOutExpo));
-     }
+    public void StopHover()
+    {
+        if (GlobalConfig.Instance.EnableAnimations)
+        {
+            iTween.ValueTo(gameObject, iTween.Hash("from", m_handHoverOutlineSize, "to", 0.0f, "time", 0.0f, "onupdate", "SetOutlineUpdate", "easetype", iTween.EaseType.easeOutExpo));
+        }
+        else
+        {
+            SetOutlineUpdate(0.0f);
+        }
+    }
 
      public void SetOutlineUpdate(float size)
      {
@@ -366,7 +387,6 @@ public class GloveController : MonoBehaviour {
          m_fingerMiddle.renderer.material.SetFloat("_Outline", size);
          m_fingerRing.renderer.material.SetFloat("_Outline", size);
          m_fingerPinky.renderer.material.SetFloat("_Outline", size);
-         //m_fingerBase.renderer.material.SetFloat("_Outline", size);
      }
     
 

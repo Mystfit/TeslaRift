@@ -16,6 +16,7 @@ public class InstrumentController : MonoBehaviour
     protected InstrumentHandle m_selectedInstrument;
     protected GameObject m_lastSelectedGameInstrument = null;
 
+    private Queue<InstrumentParameter> m_queuedParameters;
 
     // Unity
     //-------------------------------------
@@ -24,20 +25,31 @@ public class InstrumentController : MonoBehaviour
         m_instruments = new List<InstrumentHandle>();
         m_returns = new List<InstrumentHandle>();
         m_instance = this;
+        m_queuedParameters = new Queue<InstrumentParameter>();
+    }
+
+    public void AddToQueue(InstrumentParameter param)
+    {
+        m_queuedParameters.Enqueue(param);
     }
 
 
     void Update()
     {
-        foreach (InstrumentHandle instrument in m_instruments)
+        if (m_queuedParameters.Count > 0)
         {
-            instrument.update();
+            m_queuedParameters.Dequeue().Send();
         }
 
-        foreach (InstrumentHandle instrument in m_returns)
-        {
-            instrument.update();
-        }
+        //foreach (InstrumentHandle instrument in m_instruments)
+        //{
+        //    instrument.update();
+        //}
+
+        //foreach (InstrumentHandle instrument in m_returns)
+        //{
+        //    instrument.update();
+        //}
     }
 
 

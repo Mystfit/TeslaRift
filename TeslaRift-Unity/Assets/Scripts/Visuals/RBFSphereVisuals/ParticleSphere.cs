@@ -70,7 +70,10 @@ public class ParticleSphere : MonoBehaviour {
             foreach (KeyValuePair<GameObject, float> particle in GetPointsInRange(target.transform.position, m_lightDist))
             {
                 particle.Key.renderer.material.SetColor("_Color", new Color(1.0f, 1.0f, 1.0f, m_baseOpacity + 0.5f - (particle.Value / m_lightDist) * 0.5f));
-                iTween.ColorTo(particle.Key, iTween.Hash("time", 0.3f, "color", new Color(1.0f, 1.0f, 1.0f, m_baseOpacity)));
+                if (GlobalConfig.Instance.EnableAnimations)
+                    iTween.ColorTo(particle.Key, iTween.Hash("time", 0.3f, "color", new Color(1.0f, 1.0f, 1.0f, m_baseOpacity)));
+                else
+                    particle.Key.renderer.material.SetColor("_Color", new Color(1.0f, 1.0f, 1.0f, m_baseOpacity));
             }
         }
     }

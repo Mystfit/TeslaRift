@@ -156,21 +156,21 @@ namespace MusicIO
 
         // Update functions
         //-----------------
-        public void update()
-        {
-            processParameters();
-        }
+        //public void update()
+        //{
+        //    processParameters();
+        //}
 
-        public virtual void processParameters()
-        {
-            foreach (InstrumentParameter param in m_params)
-                param.Send();
+        //public virtual void processParameters()
+        //{
+        //    foreach (InstrumentParameter param in m_params)
+        //        param.Send();
 
-            foreach (SendParameter sendVol in m_sends)
-                sendVol.Send();
+        //    foreach (SendParameter sendVol in m_sends)
+        //        sendVol.Send();
 
-			if(m_noteChannel != null)
-				m_noteChannel.Send();
-        }
+        //    if(m_noteChannel != null)
+        //        m_noteChannel.Send();
+        //}
     }
 }

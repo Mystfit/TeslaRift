@@ -87,7 +87,10 @@ namespace VRControls
                 }
                 else
                 {
-                    iTween.MoveTo(attach.gameObject, iTween.Hash("position", Vector3.zero, "time", 0.2f, "islocal", true));
+                    if (GlobalConfig.Instance.EnableAnimations)
+                        iTween.MoveTo(attach.gameObject, iTween.Hash("position", Vector3.zero, "time", 0.2f, "islocal", true));
+                    else
+                        attach.transform.localPosition = Vector3.zero;
                 }
 
                 ShowControls();
@@ -118,9 +121,7 @@ namespace VRControls
         public override void Gesture_First()
         {
             base.Gesture_First();
-            if (mode == BaseTool.ToolMode.GRABBING)
-                StartDragging(HydraController.Instance.GetHand(ActiveHand));
-            else if (mode == BaseTool.ToolMode.SECONDARY)
+            if(mode == BaseTool.ToolMode.SECONDARY)
                 DisableChildColliders();
             else
                 EnableChildColliders();
@@ -168,8 +169,6 @@ namespace VRControls
                 float dist = Vector3.Distance(HydraController.Instance.GetHandColliderPosition(ActiveHand), transform.position);
 	            Debug.Log(dist);
 
-	            //GeometryUtils.BaryCentricDistance.Result result = m_distanceCalculator.GetClosestTriangleAndPoint(origin);
-
 	            if (dist > m_closestRadius)
 	            {
 	                if (collider.Raycast(new Ray(transform.position + origin, dir), out hit, dist))
@@ -184,7 +183,6 @@ namespace VRControls
 	                        hitPos = Vector3.Lerp(hitPos, closestVertex, distanceRatio);
 	                    }
 	                }
-	                //hitPos = result.closestPoint;
 	            }
 	            else
 	            {
@@ -193,7 +191,7 @@ namespace VRControls
 
 	            m_currentInstrument.transform.localPosition = hitPos;
 
-	            //Get coordinated inside blender
+	            //Get coordinate inside blender
 	            float[] sendVals = GeometryUtils.BarycentricTetrahedronLerp(
 	                GetCorner(0),
 	                GetCorner(1),

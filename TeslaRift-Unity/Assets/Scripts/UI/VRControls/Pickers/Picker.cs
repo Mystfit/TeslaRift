@@ -91,10 +91,5 @@ namespace VRControls
             base.HideControls();
             m_scroller.HideControls();
         }
-
-        public override void Gesture_IdleInterior()
-        {
-            base.Gesture_IdleInterior();
-        }
     }
 }

@@ -1,11 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
+using VRControls;
 
 public class HandProximityTrigger : MonoBehaviour {
     
-    public GameObject proximityRoot;
+    public BaseVRControl proximityRoot;
     public ProximityType proximityTarget;
     public bool isActive = true;
+
+    public void Awake()
+    {
+        proximityRoot = transform.parent.parent.GetComponent<BaseVRControl>();
+        if (proximityRoot == null)
+            Debug.LogError("Proximity trigger can't find VRControl component in parent! Parent:" + transform.parent.parent.gameObject.name);
+    }
     
     public void Init(ProximityType type){
         proximityTarget = type;
