@@ -28,7 +28,7 @@ namespace VRControls
             musicRef.setVal(Mathf.Clamp(val, 0.0f, 1.0f));
             m_rotary.setVal(musicRef.val);
             if (!silent)
-                if(m_rbfSphere != null) m_rbfSphere.UpdatePlugValues(this);
+                if(m_rbfSphere != null) m_rbfSphere.UpdatePlugValues();
             if (m_plugTop != null)
                 m_plugTop.localPosition = new Vector3(0.0f, 0.0f, musicRef.val * m_maxPlugDragDistance);
             if (m_plugInner != null)
@@ -89,35 +89,47 @@ namespace VRControls
             m_paramscroller.RemoveDockableAttachment(attach);
         }
 
-		public override void Undock ()
-		{
-			base.Undock ();
-		}
+        /*
+         * Make sure to mark this editor object as permanent
+         */
+        public override void Undock()
+        {
+            base.Undock();
+            SetAsDock(true);
+            SetTransient(false);
+        }
 
         public override void SetUIContextToPerformer()
         {
+            base.SetUIContextToPerformer();
             m_cap.renderer.materials[0].SetColor("_Color", m_performColor);
         }
 
         public override void SetUIContextToEditor()
         {
+            base.SetUIContextToEditor();
             m_cap.renderer.materials[0].SetColor("_Color", m_editColor);
         }
 
         public override void Gesture_First()
         {
             base.Gesture_First();
-            if (mode == BaseTool.ToolMode.PRIMARY)
-                m_paramscroller.ToggleControls();
 
-            //Performance mode uses grabbing gesture to control plug position - replace with primary?
-            if (uiContext == UIController.UIContext.PERFORMING)
+            BaseTool.ToolMode contextMode = BaseTool.ToolMode.GRABBING;
+
+            if (uiContext == UIController.UIContext.EDITING)
             {
-                if (mode == BaseTool.ToolMode.GRABBING)
-                {
-                    m_lastPlugDragPos = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(ActiveHand)).z;
-                    m_originalPosSet = true;
-                }
+                contextMode = BaseTool.ToolMode.PRIMARY;
+            }
+            else if (uiContext == UIController.UIContext.PERFORMING)
+            {
+                contextMode = BaseTool.ToolMode.GRABBING;
+            }
+
+            if (mode == contextMode)
+            {
+                m_lastPlugDragPos = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(ActiveHand)).z;
+                m_originalPosSet = true;
             }
         }
 

@@ -21,7 +21,7 @@ public class ValueTriggerSerializer : BaseVRControlSerializer
 
         writer.WritePropertyName("savedValues");
         writer.WriteStartArray();
-        foreach (KeyValuePair<InstrumentParameter, float> param in attach.storedValues)
+        foreach (KeyValuePair<BaseVRControl, float> param in attach.storedValues)
         {
             writer.WriteStartObject();
             writer.WritePropertyName("musicRefType");

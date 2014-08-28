@@ -111,6 +111,9 @@ namespace VRControls
             base.RemoveDockableAttachment(attach);
         }
 
+        /*
+         * Make sure to mark this editor object as permanent
+         */
         public override void Undock()
         {
             base.Undock();

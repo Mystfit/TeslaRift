@@ -124,6 +124,9 @@ namespace VRControls
             return false;
         }
 
+        /*
+         * Make sure to mark this editor object as permanent
+         */
         public override void Undock()
         {
             base.Undock();

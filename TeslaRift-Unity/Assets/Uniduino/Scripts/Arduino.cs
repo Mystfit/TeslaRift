@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.IO;
 
 
 #if (UNITY_3_0 || UNITY_3_0_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5)		
@@ -19,8 +20,10 @@ namespace Uniduino
 	
 	public partial class Arduino : ArduinoBase
 	{
-		// Modify these to suit your device configuration	
+		// Modify these to suit your device configuration
+        public bool UsePortConfigFile = true;
 		public string PortName = "";
+        public string PortConfigFile = "";
 		public int Baud = 57600;   		// default baud rate
 		public int RebootDelay = 3; 	// amount of time to wait after opening connection for arduino to reboot before sending firmata commands
 			
@@ -33,7 +36,14 @@ namespace Uniduino
 		/// <summary>
 		/// Automatically connect to the arduino if properly configured.
 		/// </summary>
-		public virtual void Awake () {		
+		public virtual void Awake () {
+
+            if (UsePortConfigFile)
+            {
+                StreamReader reader = new StreamReader(PortConfigFile);
+                PortName = reader.ReadToEnd();
+                reader.Close();
+            }
 					
 			Log("Arduino awake");
 			if (instance == null) instance = this; // track the first instance that was created as a convenience, but dont preclude multiple uniduino's coexisting

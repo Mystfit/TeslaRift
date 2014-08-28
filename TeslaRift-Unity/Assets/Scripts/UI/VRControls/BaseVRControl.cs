@@ -53,6 +53,8 @@ namespace VRControls
             m_childControls = new List<BaseVRControl>();
             SetCollideable(m_doesCollide);
 
+            Maximize();
+
             //m_maximizedScale = (transform.localScale.x + transform.localScale.y + transform.localScale.z) / 3.0f;
 
             UIController.Instance.AddControl(this);
@@ -567,7 +569,7 @@ namespace VRControls
         /// <param name="target">GameObject to attach VRControl to</param>
         public virtual void StartDragging(GameObject target)
         {
-            if (IsDraggable)
+            if (IsDraggable && !HydraController.Instance.IsHandDragging(ActiveHand))
             {
                 //if (HydraController.Instance.IsHandDragging(m_hand)) { 
                 //    HydraController.Instance.GetHandDragging(m_hand).StopDragging();
@@ -578,7 +580,7 @@ namespace VRControls
                 {
                     BaseVRControl attach = UI.UIFactory.CreateMusicRefAttachment(this);
                     attach.SetAsTemplate(false);
-                    attach.StartDragging(HydraController.Instance.GetHand(m_hand));
+                    attach.StartDragging(HydraController.Instance.GetHand(ActiveHand));
                     attach.SetIsSaveable(true);
                 }
                 else
@@ -943,10 +945,13 @@ namespace VRControls
         /// </summary>
         public virtual void ShowControls()
         {
-            m_controlsVisible = true;
+            if (controlsEnabled)
+            {
+                m_controlsVisible = true;
 
-            if (m_dockedInto != null)
-                m_dockedInto.ChildAttachmentOpeningControls(this);
+                if (m_dockedInto != null)
+                    m_dockedInto.ChildAttachmentOpeningControls(this);
+            }
         }
 
         /// <summary>
@@ -955,10 +960,13 @@ namespace VRControls
         public virtual void HideControls() { m_controlsVisible = false; }
         public void ToggleControls()
         {
-            if (controlsVisible)
-                HideControls();
-            else
-                ShowControls();
+            if (controlsEnabled)
+            {
+                if (controlsVisible)
+                    HideControls();
+                else
+                    ShowControls();
+            }
         }
 
         /// <summary>
@@ -1036,12 +1044,12 @@ namespace VRControls
         /// <summary>
         /// Overrideable implementation that VRControl triggers when moving into Editor context
         /// </summary>
-        public virtual void SetUIContextToEditor(){}
+        public virtual void SetUIContextToEditor() { SetIsDraggable(true); }
 
         /// <summary>
         /// Overrideable implementation that VRControl triggers when moving into Performance context
         /// </summary>
-        public virtual void SetUIContextToPerformer(){}
+        public virtual void SetUIContextToPerformer() { SetIsDraggable(false); }
 
         /// <summary>
         /// Get the current UI context this VRControl is using

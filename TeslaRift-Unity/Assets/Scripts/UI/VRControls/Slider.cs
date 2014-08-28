@@ -28,7 +28,7 @@ namespace VRControls
             m_frame = GetComponent<UIFrame>();
                         UpdateColliders(new Vector3(m_frame.currentWidth * 0.5f, m_frame.currentHeight * 0.5f, 0.0f), new Vector3(m_frame.currentWidth, m_frame.currentHeight, m_collisionDepth));
 
-            Maximize();
+            //Maximize();
         }
 
         public override void Init(InstrumentParameter managedReference)

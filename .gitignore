@@ -6,6 +6,7 @@
 TeslaRift-Unity/Library
 TeslaRift-Unity/Temp
 TeslaRift-Unity/obj
+TeslaRift-Unity/build
 *.csproj
 *.pidb
 *.unityproj

@@ -17,11 +17,15 @@ namespace VRControls
         public float m_plugYOffset;
 		public bool m_togglePlacement;
 
+        public enum PlugFormation { RADIAL = 0, POLAR };
+        public PlugFormation m_plugFormation;
+
         //Valuetrigger arrangement
         protected Dictionary<ValueTrigger, RBFSpike> m_pointSpikes;
         private List<ValueTrigger> m_spikesToRemove;
 
         public float m_maxPointDistance = 0.35698f;
+        public float m_plugSeperation = 0.1f;
 
         //Training points
         public bool m_toggleResetRbf;
@@ -81,7 +85,7 @@ namespace VRControls
                     });
 
                     foreach (RBFPlug plug in ChildControls)
-                        rbfAttach.StoreParameterValue(plug.musicRef);
+                        rbfAttach.StoreParameterValue(plug);
 
                     rbfAttach.SetSelected(true);
 
@@ -128,6 +132,9 @@ namespace VRControls
             m_spikesToRemove.Clear();
         }
 
+        /*
+         * Make sure to mark this editor object as permanent
+         */
         public override void Undock()
         {
             base.Undock();
@@ -139,13 +146,31 @@ namespace VRControls
         {
             if (m_selectedTraining != null)
                 m_selectedTraining.SetSelected(true);
-
+            
+            foreach (BaseVRControl control in DockedChildren)
+            {
+                if (control.GetType() == typeof(ValueTrigger))
+                {
+                    control.SetToolmodeResponse(new BaseTool.ToolMode[]
+                    {
+                        BaseTool.ToolMode.PRIMARY,
+                        BaseTool.ToolMode.GRABBING
+                    });
+                }
+            }
+            
             SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.GRABBING });
         }
 
         public override void SetUIContextToPerformer()
         {
-            SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.SECONDARY });
+            foreach (BaseVRControl control in DockedChildren)
+            {
+                if (control.GetType() == typeof(ValueTrigger))
+                    control.SetToolmodeResponse(new BaseTool.ToolMode[0]);
+            }
+
+            SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.PRIMARY });
             ResetRBF();
         }
 
@@ -159,7 +184,7 @@ namespace VRControls
             m_selectedTraining = attach as ValueTrigger;
 
             foreach (RBFPlug plug in ChildControls)
-                plug.SetPlugVal(m_selectedTraining.storedValues[plug.musicRef], true);
+                plug.SetPlugVal(m_selectedTraining.storedValues[plug], true);
         }
 
         /*
@@ -169,13 +194,18 @@ namespace VRControls
         {
             m_rbf.reset(m_numInputs, ChildControls.Count);
             m_rbf.setSigma(m_sigma);
+
             foreach (BaseVRControl control in DockedChildren)
             {
 				ValueTrigger point = control as ValueTrigger;
 				if(point != null){
 	                int index = 0;
 	                double[] values = new double[point.storedValues.Count];
-	                foreach (KeyValuePair<InstrumentParameter, float> val in point.storedValues)
+
+                    if (point.storedValues.Count != ChildControls.Count)
+                        throw new System.Exception("ValueTrigger stored values not equal to number of plugs!");
+
+                    foreach (KeyValuePair<BaseVRControl, float> val in point.storedValues)
 	                    values[index++] = (double)val.Value;
 
 	                double[] positionVals = new double[m_numInputs];
@@ -232,16 +262,26 @@ namespace VRControls
             base.Update();
         }
 
-        public void UpdatePlugValues(RBFPlug plug)
+        public void UpdatePlugValues()
         {
             if (m_selectedTraining)
-                m_selectedTraining.StoreParameterValue(plug.musicRef);
+            {
+                foreach(RBFPlug plug in ChildControls)
+                    m_selectedTraining.StoreParameterValue(plug);
+            }
         }
 
 
         public override void Gesture_IdleInterior()
         {
-            if (mode == BaseTool.ToolMode.SECONDARY)
+            if (uiContext == UIController.UIContext.PERFORMING && mode == BaseTool.ToolMode.PRIMARY)
+                CalculateRBF();
+            base.Gesture_IdleInterior();
+        }
+
+        public void CalculateRBF()
+        {
+            if (ChildControls.Count > 0 && DockedChildren.Count > 0)
             {
                 //Set rbf value from hand position inside sphere
                 Vector3 handPosition = transform.InverseTransformPoint(HydraController.Instance.GetHand(ActiveHand).transform.position);
@@ -255,23 +295,30 @@ namespace VRControls
                 {
                     outStr += output[i].ToString() + " ";
                 }
-                Debug.Log(outStr);
+                //Debug.Log(outStr);
 
                 int index = 0;
                 foreach (RBFPlug plug in ChildControls)
                     plug.SetPlugVal((float)output[index++]);
             }
-            base.Gesture_IdleInterior();
+        }
+
+
+        public void PlacePlugs()
+        {
+            if (m_plugFormation == PlugFormation.RADIAL)
+                PlacePlugsRadial();
+            else if(m_plugFormation == PlugFormation.POLAR)
+                PlacePlugsPolar();
         }
 
 
         /* 
          * Places plugs evenly spaced around circumference
          */
-        public void PlacePlugs()
+        public void PlacePlugsRadial()
         {
 			for(int i = 0; i < ChildControls.Count; i++){
-
 	            Vector3[] points = GeometryUtils.BuildArcPositions(m_sphereRadius, m_arcSize, ChildControls.Count, m_minAngle, Mathf.PI*0.5f, true);
 
                 //Bit of fudging to get the upwards facing rotation for the plugs
@@ -291,6 +338,16 @@ namespace VRControls
                     ChildControls[i].transform.localRotation = lookRot;
                 }
 			}
+        }
+
+        public void PlacePlugsPolar()
+        {
+            Dictionary<RBFPlug, Vector3> m_plugPositions = new Dictionary<RBFPlug, Vector3>();
+            foreach (RBFPlug plug in ChildControls)
+            {
+                plug.transform.localPosition = Vector3.Normalize(plug.transform.localPosition) * m_sphereRadius;
+                plug.transform.rotation = Quaternion.LookRotation(plug.transform.position - transform.position);
+            }   
         }
     }
 }

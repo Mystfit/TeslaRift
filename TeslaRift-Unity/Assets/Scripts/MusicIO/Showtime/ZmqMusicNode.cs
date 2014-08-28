@@ -1,6 +1,7 @@
 using UnityEngine;
 using ZST;
 using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -10,6 +11,8 @@ public class ZmqMusicNode : MonoBehaviour {
 
     public InstrumentFactory m_instrumentSpawner;
 
+    public string m_stageServerFile = "server.txt";
+    public bool m_useServerFile = true;
     public string m_stageAddress = "127.0.0.1";
     public string m_port = "6000";
 
@@ -23,6 +26,15 @@ public class ZmqMusicNode : MonoBehaviour {
     // Use this for initialization
     void Start () {
         m_instance = this;
+
+
+        if (m_useServerFile)
+        {
+            StreamReader reader = new StreamReader(m_stageServerFile);
+            m_stageAddress = reader.ReadToEnd();
+            reader.Close();
+        }
+
         m_node = new ZstNode("UnityNode", "tcp://" + m_stageAddress + ":" + m_port);
         m_node.requestRegisterNode();
         m_peers = m_node.requestNodePeerlinks();

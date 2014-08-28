@@ -15,8 +15,8 @@ namespace VRControls
         public Color m_selectedColor;
         public Color m_defaultColor;
 
-        protected Dictionary<InstrumentParameter, float> m_storedValues;
-        public Dictionary<InstrumentParameter, float> storedValues { get { return m_storedValues; } }
+        protected Dictionary<BaseVRControl, float> m_storedValues;
+        public Dictionary<BaseVRControl, float> storedValues { get { return m_storedValues; } }
 
         //Gui objects
         public Scroller m_scroller;
@@ -31,7 +31,7 @@ namespace VRControls
 			m_scroller.AddAcceptedDocktype(typeof(ClipCube));
 
 			if(m_storedValues == null)
-            	m_storedValues = new Dictionary<InstrumentParameter, float>();
+                m_storedValues = new Dictionary<BaseVRControl, float>();
 
             SetOutlineMat(GetComponentInChildren<MeshRenderer>().material);
 
@@ -49,7 +49,7 @@ namespace VRControls
 					attach.Freeze();
 	                m_scroller.AddDockableAttachment(attach);
 	                if(m_scroller.DockedChildren.Contains(attach))
-	                    m_storedValues[attach.musicRef] = attach.musicRef.val;
+	                    m_storedValues[attach] = attach.musicRef.val;
 	                return true;
 	            }
 			}
@@ -60,7 +60,7 @@ namespace VRControls
         {
             base.RemoveDockableAttachment(attach);
             m_scroller.RemoveDockableAttachment(attach);
-            m_storedValues.Remove(attach.musicRef);
+            m_storedValues.Remove(attach);
         }
 
         public override void DockInto(BaseVRControl attach)
@@ -68,6 +68,9 @@ namespace VRControls
             base.DockInto(attach);
         }
 
+        /*
+         * Make sure to mark this editor object as permanent
+         */
         public override void Undock()
         {
             base.Undock();
@@ -78,12 +81,12 @@ namespace VRControls
         /*
          * Saves a value in this control to be fired later
          */
-        public void StoreParameterValue(InstrumentParameter param) { StoreParameterValue(param, param.val); }
-        public void StoreParameterValue(InstrumentParameter param, float val)
+        public void StoreParameterValue(BaseVRControl control) { StoreParameterValue(control, control.musicRef.val); }
+        public void StoreParameterValue(BaseVRControl control, float val)
         {
 			if(m_storedValues == null)
-				m_storedValues = new Dictionary<InstrumentParameter, float>();
-            m_storedValues[param] = val;
+				m_storedValues = new Dictionary<BaseVRControl, float>();
+            m_storedValues[control] = val;
         }
 
         public override void ShowControls()
@@ -107,8 +110,8 @@ namespace VRControls
          */
         public override void Fire()
         {
-            foreach (KeyValuePair<InstrumentParameter, float> pair in m_storedValues)
-                pair.Key.setVal(pair.Value);
+            foreach (KeyValuePair<BaseVRControl, float> pair in m_storedValues)
+                pair.Key.musicRef.setVal(pair.Value);
         }
 
 

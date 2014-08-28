@@ -38,12 +38,12 @@ namespace VRControls
         public Vector3 m_scrollerOffset;
         public Color m_defaultColor;
         public Color m_activeColor;
+        public GameObject m_model;
 
         public override void Awake()
         {
             base.Awake();
             SetAsDock(true);
-            SetFacingPerformer(true);
 
             foreach (PickerDockTypes t in m_acceptedDockTypes)
                 AddAcceptedDocktype(m_typeMappings[t]);
@@ -83,13 +83,36 @@ namespace VRControls
         public override void ShowControls()
         {
             base.ShowControls();
-            m_scroller.ShowControls();
+            if (controlsEnabled)
+                m_scroller.ShowControls();
         }
 
         public override void HideControls()
         {
             base.HideControls();
-            m_scroller.HideControls();
+            if (controlsEnabled)
+                m_scroller.HideControls();
+        }
+
+        public override void SetUIContextToEditor()
+        {
+            EnableControls();
+            if (m_model != null)
+            {
+                m_model.renderer.material.SetColor("_Color", m_defaultColor);
+                m_model.renderer.material.SetColor("_Emission", m_defaultColor);
+            }
+        }
+
+        public override void SetUIContextToPerformer()
+        {
+            HideControls();
+            DisableControls();
+            if (m_model != null)
+            {
+                m_model.renderer.material.SetColor("_Color", new Color(0.5f,0.5f,0.5f,1.0f));
+                m_model.renderer.material.SetColor("_Emission", new Color(0.5f, 0.5f, 0.5f, 1.0f));
+            }
         }
     }
 }

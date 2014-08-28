@@ -81,7 +81,7 @@ namespace VRControls
 					AddAcceptedDocktype(typeof(CubeButton));
             }
 
-            SetFacingPerformer(false);
+            //SetFacingPerformer(false);
 
             UpdateColliders(Vector3.zero, new Vector3(m_collisionWidth, m_upperVisibleBounds - m_lowerVisibleBounds, m_collisionDepth));
         }
