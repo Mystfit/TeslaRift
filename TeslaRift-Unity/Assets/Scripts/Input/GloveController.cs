@@ -34,6 +34,8 @@ public class GloveController : MonoBehaviour {
     public string m_activeGesture;
     private string m_activeGestureDown;
     private bool m_isDirty = true;
+    public string m_rbfFilePath = "";
+    public bool m_loadRbfFromFile = false;
 
     public int gestureIndex(string gestureName){ return m_gestureIndexLookup[gestureName]; }
     protected Dictionary<string, int> m_gestureIndexLookup;
@@ -97,6 +99,25 @@ public class GloveController : MonoBehaviour {
         Transform activeGestureTex = transform.Find("active_gesture_text");
         if (activeGestureTex != null)
             m_activeGestureText = activeGestureTex.gameObject;
+
+        if (m_loadRbfFromFile)
+            LoadRBF();
+    }
+
+
+    public bool LoadRBF()
+    {
+        if (m_rbfFilePath != String.Empty)
+        {
+            if (m_rbf.LoadRBF(m_rbfFilePath))
+            {
+                m_calibrationState = CalibrationState.CALIBRATED;
+                Debug.Log("Glove RBF loaded from file");
+                return true;
+            }
+        }
+
+        return false;
     }
     
     
@@ -214,6 +235,9 @@ public class GloveController : MonoBehaviour {
                             m_calibrationState = CalibrationState.CALIBRATED;
                             m_rbf.calculateWeights();
                             Debug.Log("Calibration complete!");
+
+                            if (m_rbfFilePath != String.Empty)
+                                m_rbf.SaveRBF(m_rbfFilePath);
                         }
                     }
                 } 

@@ -12,8 +12,8 @@ namespace VRControls
         public override void Awake()
         {
             base.Awake();
-            m_scroller.AddAcceptedDocktype(typeof(CubeButton));
-            AddAcceptedDocktype(typeof(CubeButton));
+            m_scroller.AddAcceptedDocktype(typeof(ControlLayout));
+            AddAcceptedDocktype(typeof(ControlLayout));
         }
 
         public override bool AddDockableAttachment(BaseVRControl attach)
@@ -22,6 +22,7 @@ namespace VRControls
             {
                 ControlLayout layout = attach as ControlLayout;
                 layout.Init(m_editorWorkspace);
+                //layout.DockInto(m_editorWorkspace);
             }
             return base.AddDockableAttachment(attach);
         }

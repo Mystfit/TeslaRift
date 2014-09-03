@@ -17,7 +17,8 @@ namespace VRControls
             typeof(RBFSphere),
             typeof(RBFPlug),
             typeof(TetrahedronBlender),
-            typeof(ControlMatrix)
+            typeof(ControlMatrix),
+            typeof(ControlLayout)
         };
 
 		public string m_layoutsPath = "Assets/Resources/savedLayouts/";
@@ -38,7 +39,6 @@ namespace VRControls
             SetIsSaveable(true);
 
             AddGroupDocktype(VRControls.EditorWorkspace.EditorTypes);
-            AddAcceptedDocktype(typeof(ControlLayout));
 			DockChildTransforms();
 
             ControlLayout defaultLayout = CreateControlLayout(-1);
@@ -123,9 +123,7 @@ namespace VRControls
                 }
 
                 foreach (BaseVRControl control in removedControls)
-                {
                     UIController.Instance.orphanedControls.Remove(control);
-                }
             }
         }
 
@@ -170,7 +168,6 @@ namespace VRControls
 
                     List<BaseVRControl> controls = ControlLayout.ReadLayout(path);
                     ControlLayout layout = ControlLayout.StripLayoutFromControlList(controls);
-
 
                     if(layout != null){
                         layout.Init(this);

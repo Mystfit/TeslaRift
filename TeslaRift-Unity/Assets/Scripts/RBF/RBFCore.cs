@@ -22,6 +22,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DotNumerics.LinearAlgebra;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace RBF{
     public class RBFCore{
@@ -169,6 +171,46 @@ namespace RBF{
             
             return Math.Sqrt(dist);
         }
+
+        /*
+         * Save this RBF to a file
+         */
+        public void SaveRBF(string path)
+        {
+            string json = JsonConvert.SerializeObject(trainingPoints);
+
+            StreamWriter writer = new StreamWriter(path);
+            writer.WriteLine(json);
+            writer.Close();
+        }
+
+
+        /*
+         * Load RBF From file
+         */
+        public bool LoadRBF(string path)
+        {
+            try {
+                StreamReader reader = new StreamReader(path);
+                string json = reader.ReadToEnd();
+                reader.Close();
+                List<RBFTraining> converted = JsonConvert.DeserializeObject<List<RBFTraining>>(json);
+
+                if (converted.Count > 0)
+                {
+                    reset(converted[0].inputDim.Length, converted[0].outputDim.Length);
+                    m_trainingPoints = converted;
+                    calculateWeights();
+
+                    return true;
+                }
+            } catch(Exception e)
+            {
+                Debug.LogError(e);
+            }
+
+            return false;
+        }
         
         
         //Getters
@@ -212,9 +254,16 @@ namespace RBF{
             m_inputDimensions = inputDimensions;
             m_outputDimensions = outputDimensions;
         }
-        
-        public double[] inputDim{ get { return m_inputDimensions; }}
-        public double[] outputDim{ get { return m_outputDimensions; }}
+
+        public double[] inputDim
+        {
+            get { return m_inputDimensions; }
+            set { m_inputDimensions = value; }
+        }
+        public double[] outputDim{ 
+            get { return m_outputDimensions; }
+            set { m_outputDimensions = value; }
+        }
     }
     
     

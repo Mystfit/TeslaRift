@@ -357,14 +357,50 @@ namespace VRControls
         /// <summary>
         /// Gets the active hand object manipulating for this control
         /// </summary>
-        public BaseTool.ToolHand ActiveHand { get { return m_hand; } }
+        public BaseTool.ToolHand MajorHand { get { return m_majorHand; } }
+        public BaseTool.ToolHand MinorHand { get { return m_minorHand; } }
+        public BaseTool.ToolHand HandState { get { return m_handState; } }
+        
+        public void AddActiveHand(BaseTool.ToolHand hand)
+        {
+            if (m_handState == BaseTool.ToolHand.BOTH)
+            {
+                return;
+            }
+            else if (m_handState == BaseTool.ToolHand.LEFT || m_handState == BaseTool.ToolHand.RIGHT)
+            {
+                m_handState = BaseTool.ToolHand.BOTH;
+                m_minorHand = hand;
+            }
+            else
+            {
+                m_handState = hand;
+                m_majorHand = hand;
+            }
+        }
 
-        /// <summary>
-        /// Sets the active hand object manipulating for this control
-        /// </summary>
-        /// <param name="hand"></param>
-        public void SetActiveHand(BaseTool.ToolHand hand) { m_hand = hand; }
-        private BaseTool.ToolHand m_hand;
+        public void RemoveActiveHand(BaseTool.ToolHand hand)
+        {
+            if (m_handState == BaseTool.ToolHand.BOTH)
+            {
+                if (hand == BaseTool.ToolHand.LEFT)
+                    m_handState = BaseTool.ToolHand.RIGHT;
+                else if (hand == BaseTool.ToolHand.RIGHT)
+                    m_handState = BaseTool.ToolHand.LEFT;
+                return;
+            }
+            else if ((m_handState == BaseTool.ToolHand.LEFT && hand == BaseTool.ToolHand.LEFT)
+                || (m_handState == BaseTool.ToolHand.RIGHT && hand == BaseTool.ToolHand.RIGHT))
+            {
+                m_handState = BaseTool.ToolHand.NONE;
+            }
+            m_majorHand = m_handState;
+        }
+
+        private BaseTool.ToolHand m_majorHand;
+        private BaseTool.ToolHand m_minorHand;
+        private BaseTool.ToolHand m_handState;
+
 
 
         /*
@@ -569,7 +605,7 @@ namespace VRControls
         /// <param name="target">GameObject to attach VRControl to</param>
         public virtual void StartDragging(GameObject target)
         {
-            if (IsDraggable && !HydraController.Instance.IsHandDragging(ActiveHand))
+            if (IsDraggable && !HydraController.Instance.IsHandDragging(MajorHand))
             {
                 //if (HydraController.Instance.IsHandDragging(m_hand)) { 
                 //    HydraController.Instance.GetHandDragging(m_hand).StopDragging();
@@ -580,7 +616,7 @@ namespace VRControls
                 {
                     BaseVRControl attach = UI.UIFactory.CreateMusicRefAttachment(this);
                     attach.SetAsTemplate(false);
-                    attach.StartDragging(HydraController.Instance.GetHand(ActiveHand));
+                    attach.StartDragging(HydraController.Instance.GetHand(MajorHand));
                     attach.SetIsSaveable(true);
                 }
                 else
@@ -591,7 +627,7 @@ namespace VRControls
                     FixedJoint joint = gameObject.AddComponent<FixedJoint>();
                     joint.connectedBody = target.GetComponent<Rigidbody>();
                     rigidbody.isKinematic = false;
-                    HydraController.Instance.SetHandDragging(m_hand, this);
+                    HydraController.Instance.SetHandDragging(MajorHand, this);
                 }
             }
         }
@@ -614,7 +650,7 @@ namespace VRControls
 
                 //If we're a dockable object, we need to find something to slot into.
                 if (IsDockable) DockIntoClosest();
-                HydraController.Instance.SetHandDragging(m_hand, null);
+                HydraController.Instance.SetHandDragging(MajorHand, null);
             }
         }
 
@@ -1067,7 +1103,7 @@ namespace VRControls
             if (IsDraggable)
             {
                 if (mode == BaseTool.ToolMode.GRABBING)
-                    StartDragging(HydraController.Instance.GetHand(ActiveHand));
+                    StartDragging(HydraController.Instance.GetHand(MajorHand));
             }
         }
         public virtual void Gesture_Exit() { bIsFirstGesture = true; }

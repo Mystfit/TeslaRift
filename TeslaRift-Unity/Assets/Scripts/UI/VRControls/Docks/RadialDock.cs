@@ -150,7 +150,7 @@ namespace VRControls
 
         protected void HideInactiveMenuControls()
         {
-            Vector3 handPosition = HydraController.Instance.GetHandColliderPosition(ActiveHand);
+            Vector3 handPosition = HydraController.Instance.GetHandColliderPosition(MajorHand);
             Vector3 controlPosition;
             if (visibleControls != null)
             {

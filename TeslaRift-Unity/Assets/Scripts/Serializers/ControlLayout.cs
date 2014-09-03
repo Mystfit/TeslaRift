@@ -40,6 +40,12 @@ namespace VRControls
             SetOwner(owningWorkspace);
         }
 
+        public override void Undock()
+        {
+            base.Undock();
+            SetTransient(false);
+        }
+
         public void AddControl(BaseVRControl control)
         {
             if (!m_loadedControls.Contains(control))
@@ -97,7 +103,6 @@ namespace VRControls
             string json = reader.ReadToEnd();
             reader.Close();
             return JsonConvert.DeserializeObject<List<BaseVRControl>>(json, new ControlHierarchySerializer());
-			//ApplyControlHierarchy(JsonConvert.DeserializeObject<List<BaseVRControl>>(json, new ControlHierarchySerializer()));
 		}
 
         public void ApplyControlHierarchy(List<BaseVRControl> controlList)

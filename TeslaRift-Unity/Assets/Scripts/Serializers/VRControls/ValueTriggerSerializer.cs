@@ -25,9 +25,9 @@ public class ValueTriggerSerializer : BaseVRControlSerializer
         {
             writer.WriteStartObject();
             writer.WritePropertyName("musicRefType");
-            writer.WriteValue(param.Key.GetType().ToString());
+            writer.WriteValue(param.Key.musicRef.GetType().ToString());
             writer.WritePropertyName("musicRefProperties");
-            serializer.Serialize(writer, param.Key);
+            serializer.Serialize(writer, param.Key.musicRef);
             writer.WritePropertyName("value");
             serializer.Serialize(writer, param.Value);
             writer.WriteEndObject();

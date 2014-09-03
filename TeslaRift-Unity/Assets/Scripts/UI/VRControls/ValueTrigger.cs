@@ -92,7 +92,6 @@ namespace VRControls
         public override void ShowControls()
         {
             base.ShowControls();
-            //SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.PRIMARY, BaseTool.ToolMode.GRABBING, BaseTool.ToolMode.HOVER });
             m_scroller.ShowControls();
         }
 
@@ -100,7 +99,6 @@ namespace VRControls
         {
             base.HideControls();
             SetSelected(false);
-            //SetToolmodeResponse(new BaseTool.ToolMode[0]);
             m_scroller.HideControls();
         }
 

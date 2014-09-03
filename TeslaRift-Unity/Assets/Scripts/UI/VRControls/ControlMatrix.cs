@@ -192,7 +192,7 @@ namespace VRControls
 
         public void UpdateMatrixPosition()
         {
-            int[] matrixPos = GetPositionInMatrix(HydraController.Instance.GetHandColliderPosition(ActiveHand));
+            int[] matrixPos = GetPositionInMatrix(HydraController.Instance.GetHandColliderPosition(MajorHand));
             
 			if (!Enumerable.SequenceEqual(matrixPos, m_lastMatrixPosition))
 			{

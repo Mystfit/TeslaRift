@@ -210,7 +210,7 @@ public class InstrumentGestureTool : BaseTool {
                     m_attachment = attach;
                     m_toolHandState = BaseTool.HandState.HOLDING;
                     m_attachment.SetToolMode( m_mode);
-                    m_attachment.SetActiveHand( m_hand);
+                    m_attachment.AddActiveHand( Hand );
                     m_attachment.StartHover();
                     m_gloveController.StartHover();
                 }
@@ -267,6 +267,7 @@ public class InstrumentGestureTool : BaseTool {
                 break;
             }
             m_attachment.StopHover();
+            m_attachment.RemoveActiveHand(Hand);
             m_gloveController.StopHover();
             m_heldObject = null;
         }

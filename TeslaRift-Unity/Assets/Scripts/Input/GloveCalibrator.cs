@@ -36,6 +36,7 @@ public class GloveCalibrator : MonoBehaviour {
             } else {
                 if(m_leftHandActive || m_rightHandActive){
                     bool calibrationStart = false;
+                    HydraController.Instance.UnfreezeHands();
 
                     if(m_leftHandActive && m_leftGlove != null){
                         if(m_leftGlove.GetCalibrationState() == GloveController.CalibrationState.AWAITING_CALIBRATION){
@@ -53,7 +54,6 @@ public class GloveCalibrator : MonoBehaviour {
 
                     if(calibrationStart){
                         m_currentCalibrateTime = m_calibrateDuration;
-                        HydraController.Instance.UnfreezeHands();
                     } else {
                         //Countdown to next gesture
                         if(m_currentCalibrateTime > 0.0f){

@@ -17,7 +17,7 @@ public class BaseTool : MonoBehaviour {
     protected List<object> m_targets = null;
     protected InstrumentHandle m_instrumentRef = null;
     
-    public enum ToolHand {BOTH = 0, LEFT, RIGHT };
+    public enum ToolHand {NONE, LEFT, RIGHT, BOTH};
     protected ToolHand m_hand;
     public ToolHand Hand{get { return m_hand; }}
     
@@ -98,16 +98,4 @@ public class BaseTool : MonoBehaviour {
     public static Vector3 HandToObjectSpace(Vector3 worldPosition, Transform objectSpace){
         return objectSpace.InverseTransformPoint(worldPosition);
     }
-}
-
-
-/*
- * String enum class defining interactable tag types
- */
-public static class InteractableTypes
-{
-    public const string GENERATOR = "Generator"; 
-    public const string INSTRUMENT = "Instrument"; 
-    public const string RBFPOINT = "RBFPoint";
-    public const string MUSICGROUP = "MusicGroup";
 }

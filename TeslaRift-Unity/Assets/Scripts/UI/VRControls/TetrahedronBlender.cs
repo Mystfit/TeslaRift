@@ -165,11 +165,11 @@ namespace VRControls
 			if(m_currentInstrument)
 			{
 	            RaycastHit hit = new RaycastHit();
-                Vector3 origin = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(ActiveHand));
+                Vector3 origin = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(MajorHand));
 	            Vector3 dir = (origin * -1.0f).normalized;
 	            Vector3 hitPos = origin;
 
-                float dist = Vector3.Distance(HydraController.Instance.GetHandColliderPosition(ActiveHand), transform.position);
+                float dist = Vector3.Distance(HydraController.Instance.GetHandColliderPosition(MajorHand), transform.position);
 	            Debug.Log(dist);
 
 	            if (dist > m_closestRadius)

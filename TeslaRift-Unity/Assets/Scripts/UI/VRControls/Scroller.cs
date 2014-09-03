@@ -244,7 +244,7 @@ namespace VRControls
 
         protected void DragScroller()
         {
-            Vector3 inversePoint = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(ActiveHand));
+            Vector3 inversePoint = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(MajorHand));
             float posY = inversePoint.y;
             m_controlHolder.localPosition = m_offset + new Vector3(0.0f, posY, 0.0f);
             m_scrollVel = (m_controlHolder.localPosition - m_lastPosition).y;
@@ -304,7 +304,7 @@ namespace VRControls
             {
                 bIsDragging = true;
                 m_scrollVel = 0.0f;
-                Vector3 handPos = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(ActiveHand));
+                Vector3 handPos = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(MajorHand));
                 handPos.x = 0;
                 handPos.z = 0;
                 m_offset = m_controlHolder.localPosition - handPos;

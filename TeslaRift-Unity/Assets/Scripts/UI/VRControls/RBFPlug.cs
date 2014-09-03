@@ -128,7 +128,7 @@ namespace VRControls
 
             if (mode == contextMode)
             {
-                m_lastPlugDragPos = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(ActiveHand)).z;
+                m_lastPlugDragPos = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(MajorHand)).z;
                 m_originalPosSet = true;
             }
         }
@@ -160,7 +160,7 @@ namespace VRControls
             {
                 if (m_originalPosSet)
                 {
-                    Vector3 pos = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(ActiveHand));
+                    Vector3 pos = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(MajorHand));
                     float delta = m_lastPlugDragPos - pos.z;
 
                     float newVal = musicRef.val - (delta / m_maxPlugDragDistance);

@@ -284,7 +284,7 @@ namespace VRControls
             if (ChildControls.Count > 0 && DockedChildren.Count > 0)
             {
                 //Set rbf value from hand position inside sphere
-                Vector3 handPosition = transform.InverseTransformPoint(HydraController.Instance.GetHand(ActiveHand).transform.position);
+                Vector3 handPosition = transform.InverseTransformPoint(HydraController.Instance.GetHand(MajorHand).transform.position);
                 Quaternion handAngle = Quaternion.LookRotation(handPosition);
                 float distance = Vector3.Distance(transform.position, handPosition);
                 double[] input = new double[5] { handAngle.x, handAngle.y, handAngle.z, handAngle.w, distance };

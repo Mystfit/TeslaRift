@@ -110,7 +110,7 @@ namespace VRControls
          */
         public void SetValueFromHand()
         {
-            Vector3 pos = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(ActiveHand));
+            Vector3 pos = transform.InverseTransformPoint(HydraController.Instance.GetHandColliderPosition(MajorHand));
             Vector2 sliderPosVal = new Vector2(
                 Mathf.Clamp(pos.x - frame.GetAnchorOffset(m_frame.width, m_frame.height, frame.m_anchorPoint).x, m_frame.width * -0.5f, m_frame.height * 0.5f),
                 Mathf.Clamp(pos.y - frame.GetAnchorOffset(m_frame.width, m_frame.height, frame.m_anchorPoint).y, m_frame.width * -0.5f, m_frame.height * 0.5f)
