@@ -194,7 +194,7 @@ namespace UI
                     }
 
                     //Initialize musicref objects
-                    if (attach is InstrumentOrb)
+                    if (attach is InstrumentOrb && musicRef != null)
                         ((InstrumentOrb)attach).Init((InstrumentHandle)musicRef);
                     else
                         if (musicRef != null)

@@ -21,12 +21,17 @@ namespace VRControls
             typeof(ControlLayout)
         };
 
+        private static EditorWorkspace m_instance;
+        public static EditorWorkspace Instance { get { return m_instance; } }
+
 		public string m_layoutsPath = "Assets/Resources/savedLayouts/";
         protected ControlLayout m_activeLayout;
         public Picker m_controlStateMenu;
 
         public override void Awake()
         {
+            m_instance = this;
+
             //Set the ID before the superclass to override it
             SetId(VRControls.StaticIds.EDITOR_DOCK);
 
@@ -47,15 +52,7 @@ namespace VRControls
 			defaultLayout.SetAsDock(true);
 			defaultLayout.gameObject.name = "defaultLayout";
 
-            //List<BaseVRControl> defaultControls = new List<BaseVRControl>();
-            //foreach (BaseVRControl control in DockedChildren){
-            //    control.name = "default_" + control.name;
-            //    defaultControls.Add(control);
-            //}
-            //defaultLayout.ApplyControlHierarchy(defaultControls);
             SetActiveWorkspace(defaultLayout);
-
-            //OpenWorkspaceFiles();
         }
 
         public override bool AddDockableAttachment(BaseVRControl attach)
@@ -65,7 +62,6 @@ namespace VRControls
                 attach.SetIsSaveable(true);
 
                 if(attach.GetType() == typeof(ControlLayout)){
-                    //m_activeLayout = attach as ControlLayout;
                     SaveWorkspace((ControlLayout)attach);
                     attach.DockInto(m_controlStateMenu);
 					attach.SetAsDock(true);
@@ -76,41 +72,19 @@ namespace VRControls
             }
             return false;
         }
+
+        public void CreateManualLayout()
+        {
+            ControlLayout layout = UIFactory.CreateMusicRefAttachment(typeof(ControlLayout)) as ControlLayout;
+            layout.SetTransient(true);
+            layout.SetAsTemplate(false);
+            layout.SetCloneable(false);
+            layout.DockInto(this);
+        }
         
         public override void Update()
         {
             base.Update();
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                ControlLayout layout = UIFactory.CreateMusicRefAttachment(typeof(ControlLayout)) as ControlLayout;
-                layout.SetTransient(true);
-                layout.SetAsTemplate(false);
-                layout.SetCloneable(false);
-                layout.DockInto(this);
-				//SaveWorkspace(m_activeLayout);
-            }
-			if (Input.GetKeyDown(KeyCode.L))
-			{
-				OpenWorkspaceFiles();
-			}
-            
-            if (Input.GetKeyDown(KeyCode.Alpha0))
-            {
-                if (m_controlStateMenu.DockedChildren.Count > 0)
-					m_controlStateMenu.DockedChildren[0].Fire();
-            }
-            
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                if (m_controlStateMenu.DockedChildren.Count > 1)
-					m_controlStateMenu.DockedChildren[1].Fire();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                if (m_controlStateMenu.DockedChildren.Count > 2)
-					m_controlStateMenu.DockedChildren[2].Fire();
-            }
 
             //Pick up all free floating controls in range of the editor workspace.
             if (UIController.Instance.orphanedControls.Count > 0)

@@ -85,9 +85,20 @@ public class SixenseObjectController : MonoBehaviour {
 	
 	protected void UpdatePosition( SixenseInput.Controller controller )
 	{
-		Vector3 controllerPosition = new Vector3( controller.Position.x * Sensitivity.x,
-												  controller.Position.y * Sensitivity.y,
-												  controller.Position.z * Sensitivity.z );
+        Vector3 controllerPosition;
+        if (GlobalConfig.Instance.UseRemoteGloves)
+        {
+            controllerPosition = new Vector3(
+                HydraGloveNode.Instance.handPosition(Hand).x * Sensitivity.x,
+                HydraGloveNode.Instance.handPosition(Hand).y * Sensitivity.y,
+                HydraGloveNode.Instance.handPosition(Hand).z * Sensitivity.z);
+        }
+        else
+        {
+            controllerPosition = new Vector3(controller.Position.x * Sensitivity.x,
+                                                  controller.Position.y * Sensitivity.y,
+                                                  controller.Position.z * Sensitivity.z);
+        }
 		
 		// distance controller has moved since enabling positional control
 		Vector3 vDeltaControllerPos = controllerPosition - m_baseControllerPosition;
@@ -99,7 +110,12 @@ public class SixenseObjectController : MonoBehaviour {
 	
 	protected void UpdateRotation( SixenseInput.Controller controller )
 	{
-		Quaternion offsetRotation = Quaternion.Inverse(m_initialControllerRotation) * controller.Rotation;
+        Quaternion rotation;
+        if (GlobalConfig.Instance.UseRemoteGloves)
+            rotation = HydraGloveNode.Instance.handRotation(Hand);
+        else
+            rotation = controller.Rotation;
+        Quaternion offsetRotation = Quaternion.Inverse(m_initialControllerRotation) * rotation;
 		this.gameObject.transform.localRotation = m_initialRotation * offsetRotation;
 	}
 }

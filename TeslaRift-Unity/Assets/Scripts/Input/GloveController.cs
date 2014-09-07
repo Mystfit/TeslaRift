@@ -9,6 +9,7 @@ public class GloveController : MonoBehaviour {
     
     //Arduino
     private int[] m_bendPins = {1,0,3,2};
+    public double[] bendValues { get { return m_bendValues;  } }
     private double[] m_bendValues;
     private Arduino m_arduino;
 
@@ -24,6 +25,7 @@ public class GloveController : MonoBehaviour {
     public int m_calibrationSamples = 60;
     protected bool bIsCollectingSamples;
     protected double[] m_calibrationAvg;
+    private SixenseHands m_hand;
 
     //RBF
     private RBFCore m_rbf;
@@ -76,11 +78,8 @@ public class GloveController : MonoBehaviour {
         
     void Awake( )
     {   
-        m_arduino = GetComponent<Arduino>();
-        if(m_arduino == null)
-            throw new Exception("No arduino component found on glove!");
         
-        m_arduino.Setup(ConfigurePins);
+
         m_rbf = new RBFCore(m_bendPins.Length, m_gestures.Length);
         m_rbf.setSigma(m_sigma);
         m_bendValues = new double[m_bendPins.Length];
@@ -100,6 +99,24 @@ public class GloveController : MonoBehaviour {
         if (activeGestureTex != null)
             m_activeGestureText = activeGestureTex.gameObject;
 
+        m_hand = GetComponent<HydraHand>().Hand;
+
+        //Start Arduino
+        m_arduino = GetComponent<Arduino>();
+        if (m_arduino == null)
+            throw new Exception("No arduino component found on glove!");
+        if (!GlobalConfig.Instance.UseRemoteGloves)
+        {
+            if (m_hand == SixenseHands.LEFT)
+                m_arduino.PortName = GlobalConfig.Instance.LeftComPort;
+            else
+                m_arduino.PortName = GlobalConfig.Instance.RightComPort;
+
+            m_arduino.Setup(ConfigurePins);
+            m_arduino.Connect();
+        }
+
+        //Load cached RBF glove values
         if (m_loadRbfFromFile)
             LoadRBF();
     }
@@ -157,10 +174,16 @@ public class GloveController : MonoBehaviour {
     }
 
     void Update () 
-    {       
-        if(m_arduino.Connected){
-            for(int i = 0; i < m_bendValues.Length; i++)
-                m_bendValues[i] = (double)m_arduino.analogRead(m_bendPins[i]);
+    {
+        if (m_arduino.Connected || GlobalConfig.Instance.UseRemoteGloves)
+        {
+            if (GlobalConfig.Instance.UseRemoteGloves)
+                m_bendValues = HydraGloveNode.Instance.gloveBendValues(m_hand);
+            else
+            {
+                for (int i = 0; i < m_bendValues.Length; i++)
+                    m_bendValues[i] = (double)m_arduino.analogRead(m_bendPins[i]);
+            }
             
             if(m_toggleCalibration){
                 m_toggleCalibration = false;

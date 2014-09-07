@@ -148,7 +148,7 @@ namespace MusicIO
             if (isDirty || force)
             {
                 if (m_remoteMethod != null)
-                    ZmqMusicNode.Instance.node.updateRemoteMethod(m_remoteMethod, m_remoteMethod.args);
+                    MusicNode.Instance.node.updateRemoteMethod(m_remoteMethod, m_remoteMethod.args);
                 setClean();
             } 
         }

@@ -21,9 +21,6 @@ namespace Uniduino
 	public partial class Arduino : ArduinoBase
 	{
 		// Modify these to suit your device configuration
-        public bool UsePortConfigFile = true;
-		public string PortName = "";
-        public string PortConfigFile = "";
 		public int Baud = 57600;   		// default baud rate
 		public int RebootDelay = 3; 	// amount of time to wait after opening connection for arduino to reboot before sending firmata commands
 			
@@ -32,22 +29,16 @@ namespace Uniduino
 				
 		private static Arduino instance = null;		
 		public static Arduino global { get { return instance; } } // conveniently expose the singleton for the common case where only one arduino is connected
-				
+
+        public string PortName;
+		
 		/// <summary>
 		/// Automatically connect to the arduino if properly configured.
 		/// </summary>
 		public virtual void Awake () {
-
-            if (UsePortConfigFile)
-            {
-                StreamReader reader = new StreamReader(PortConfigFile);
-                PortName = reader.ReadToEnd();
-                reader.Close();
-            }
-					
 			Log("Arduino awake");
 			if (instance == null) instance = this; // track the first instance that was created as a convenience, but dont preclude multiple uniduino's coexisting
-	
+	        
 			DontDestroyOnLoad(this);
 			
 			if (AutoConnect)

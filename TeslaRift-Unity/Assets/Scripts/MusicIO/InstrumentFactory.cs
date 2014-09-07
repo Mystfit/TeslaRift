@@ -21,7 +21,6 @@ public class InstrumentFactory : MonoBehaviour {
     public float m_radialInnerRadius = 0.05f;   
     public float m_radialOuterRadius = 0.5f;
     public float m_panelOrbitDistance = 0.2f;
-    public TextAsset m_liveSessionFile;
 
     public Picker m_instrumentHolder;
     public Picker m_returnHolder;
@@ -63,15 +62,29 @@ public class InstrumentFactory : MonoBehaviour {
      */
     public void LoadLiveSessionXml(ZstPeerLink peer){
 
-        ZstMethod response = ZmqMusicNode.Instance.node.updateRemoteMethod(peer.methods["get_song_layout"]);
-        string xmlString = response.output.ToString();
+        ZstMethod response = MusicNode.Instance.node.updateRemoteMethod(peer.methods["get_song_layout"]);
+        string xmlString = "";
+        try
+        {
+            xmlString = response.output.ToString();
+        }
+        catch (NullReferenceException e)
+        {
+            Debug.LogWarning("No response from Live. Check if it's running.");
+            return;
+        }
 
         XmlDocument sessionXml = new XmlDocument ();
 
-        if(xmlString != null)
+        if(xmlString != null){
             sessionXml.LoadXml(xmlString);
+        }
         else
-            sessionXml.LoadXml(m_liveSessionFile.text);
+        {
+            Debug.LogWarning("No song layout in string");
+            return;
+        }
+
 
         //Get track, return, master information
         XmlNodeList trackList = sessionXml.GetElementsByTagName("track"); //instrument array    
@@ -171,5 +184,20 @@ public class InstrumentFactory : MonoBehaviour {
         instrument.SetAsTemplate(true);
 
         return instrument;
+    }
+
+
+    public void CreateKaossMidi(ZST.ZstPeerLink kaossNode, Color color)
+    {
+        InstrumentHandle kaossInstrumentHandle = new InstrumentHandle(
+            kaossNode, kaossNode.name, color, -1, false, false);
+        kaossInstrumentHandle.AddParam(new KaossParameter("touch_x", kaossInstrumentHandle, "x", 0, 127));
+        kaossInstrumentHandle.AddParam(new KaossParameter("touch_y", kaossInstrumentHandle, "y", 0, 127));
+        kaossInstrumentHandle.AddParam(new KaossParameter("touch_trigger", kaossInstrumentHandle, "trigger", 0, 1));
+        kaossInstrumentHandle.AddParam(new KaossParameter("gate_hold", kaossInstrumentHandle, "value", 0, 1));
+        kaossInstrumentHandle.AddParam(new KaossParameter("fader", kaossInstrumentHandle, "value", 0, 127));
+
+        InstrumentOrb kaossInstrument = UIFactory.CreateInstrumentRefAttachment(kaossInstrumentHandle) as InstrumentOrb;
+        kaossInstrument.DockInto(m_returnHolder);
     }
 }

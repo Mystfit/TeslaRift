@@ -115,6 +115,11 @@ namespace MusicIO
             m_params.Add(param);
         }
 
+        public void AddParam(InstrumentParameter param)
+        {
+            m_params.Add(param);
+        }
+
         public void AddSend(string name, int sendIndex)
         {
             SendParameter send = new SendParameter(name, this, sendIndex);

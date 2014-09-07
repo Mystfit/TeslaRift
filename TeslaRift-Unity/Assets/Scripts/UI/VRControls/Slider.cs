@@ -16,6 +16,7 @@ namespace VRControls
 
         [Range(0.0f, 1.0f)]
         public float m_sliderVal;
+        public bool m_overrideSlider = false;
 
         // Use this for initialization
         public override void Awake()
@@ -135,7 +136,6 @@ namespace VRControls
             if (musicRef != null)
             {
                 musicRef.setVal(val);
-                m_sliderVal = val;
             } else
                 m_slider.SetSliderVal(val);
             
@@ -146,11 +146,11 @@ namespace VRControls
         {
             if (musicRef != null)
             {
-                //if (musicRef.val != m_sliderVal)
-                //    SetSliderValue(m_sliderVal);
-
                 if (!bIsFrozen)
                 {
+                    if (m_overrideSlider && musicRef.val != m_sliderVal)
+                        musicRef.setVal(m_sliderVal);
+
                     m_slider.SetSliderVal(musicRef.val);
                     frame.SetValueLabel(musicRef.scaledVal.ToString());
                 }

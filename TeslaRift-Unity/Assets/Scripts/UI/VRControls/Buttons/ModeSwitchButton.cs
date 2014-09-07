@@ -18,7 +18,7 @@ namespace VRControls
             SetIsDraggable(false);
             UIController.Instance.SetUIContext(UIController.UIContext.EDITING);
 
-            SetOutlineMat(renderer.material);
+            SetOutlineMat(m_centerSphere.renderer.material);
         }
 
         public override void Fire()

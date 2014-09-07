@@ -348,11 +348,11 @@ public class SixenseInput : MonoBehaviour
 						for ( int i = 0; i < MAX_CONTROLLERS; i++ )
 						{
 							
-							if ( ( m_Controllers[i] != null ) && Input.GetKeyDown(KeyCode.P) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) ){
+						//	if ( ( m_Controllers[i] != null ) && Input.GetKeyDown(KeyCode.P) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) ){
 						//	if ( ( m_Controllers[i] != null ) && Controllers[i].GetButtonDown( SixenseButtons.START ) && ( Controllers[i].Hand == SixenseHands.UNKNOWN ) ){
 						//		//Hardcoded binding redirct
 						//		RebindHands();
-							}
+						//	}
 						}
 					}
 				}

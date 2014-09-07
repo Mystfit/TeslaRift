@@ -38,6 +38,7 @@ public class HydraController : MonoBehaviour
     private Vector3 m_lastRightHandPos;
     protected BaseVRControl m_leftHandDragTarget;
     protected BaseVRControl m_rightHandDragTarget;
+    private Queue<KeyCode> m_pressedKeys;
 
     public Transform m_leftHandTip;
     public Transform m_rightHandTip;
@@ -70,9 +71,12 @@ public class HydraController : MonoBehaviour
         m_rightInstrumentInterior = new Dictionary<BaseVRControl, bool>();
         m_leftHandHydra = m_leftHand.GetComponent<HydraHand>();
         m_rightHandHydra = m_rightHand.GetComponent<HydraHand>();
+        m_leftHandController = SixenseInput.GetController(SixenseHands.LEFT);
+        m_rightHandController = SixenseInput.GetController(SixenseHands.RIGHT);
         m_leftGlove = m_leftHand.GetComponent<GloveController>();
         m_rightGlove = m_rightHand.GetComponent<GloveController>();
         m_cleanupCollisions = new List<BaseVRControl>();
+        m_pressedKeys = new Queue<KeyCode>();
     }
 
 
@@ -350,47 +354,118 @@ public class HydraController : MonoBehaviour
         SetCommonTools(BaseTool.ToolHand.LEFT);
         SetCommonTools(BaseTool.ToolHand.RIGHT);
 
-        //Keyboard inputs
-        if (Input.GetKeyDown(KeyCode.Space))
-            FreezeHands();
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (GlobalConfig.Instance.DebugCollisions)
         {
-            if (!m_gloveCalibrator.isCalibrated)
-                m_gloveCalibrator.StartCalibration();
-        }
-
-		if(GlobalConfig.Instance.DebugCollisions){
-	        //Debugging proximity lists
-	        if (m_gloveCalibrator.m_leftHandActive)
-	        {
-	            Debug.Log("Left Proximity:");
-	            foreach (KeyValuePair<BaseVRControl, bool> control in m_leftInstrumentProximity)
+            //Debugging proximity lists
+            if (m_gloveCalibrator.m_leftHandActive)
+            {
+                Debug.Log("Left Proximity:");
+                foreach (KeyValuePair<BaseVRControl, bool> control in m_leftInstrumentProximity)
                     Debug.Log(control.Key.name);
-	            Debug.Log("Left Interior:");
-	            foreach (KeyValuePair<BaseVRControl, bool> control in m_leftInstrumentInterior)
-	                Debug.Log(control.Key.name);
-	        }
+                Debug.Log("Left Interior:");
+                foreach (KeyValuePair<BaseVRControl, bool> control in m_leftInstrumentInterior)
+                    Debug.Log(control.Key.name);
+            }
 
-	        if (m_gloveCalibrator.m_rightHandActive)
-	        {
+            if (m_gloveCalibrator.m_rightHandActive)
+            {
                 Debug.Log("Left Proximity:");
                 foreach (KeyValuePair<BaseVRControl, bool> control in m_rightInstrumentProximity)
                     Debug.Log(control.Key.name);
                 Debug.Log("Left Interior:");
                 foreach (KeyValuePair<BaseVRControl, bool> control in m_rightInstrumentInterior)
                     Debug.Log(control.Key.name);
-	        }
-		}
+            }
+        }
 
-        if (Input.GetKeyDown(KeyCode.D))
+        ////Keyboard inputs
+        //if (Input.GetKeyDown(KeyCode.Space)) {
+        //    FreezeHands();
+        //    if (!m_gloveCalibrator.isCalibrated)
+        //        m_gloveCalibrator.StartCalibration();
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //    Application.Quit();
+
+        //if (Input.GetKeyDown(KeyCode.R))
+        //{
+        //    MusicNode.Instance.OnApplicationQuit();
+        //    Application.LoadLevel(Application.loadedLevel);
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.D))
+        //{
+        //    if(m_leftGlove != null)
+        //        m_leftGlove.ToggleDebugText();
+        //    if (m_rightGlove != null)
+        //        m_rightGlove.ToggleDebugText();
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    bool leftLoaded = false;
+        //    bool rightLoaded = false;
+        //    if (m_leftGlove != null)
+        //    {
+        //        if (m_leftGlove.gameObject.activeInHierarchy)
+        //            leftLoaded = m_leftGlove.LoadRBF();
+        //    }
+        //    if (m_rightGlove != null) {
+        //        if (m_rightGlove.gameObject.activeInHierarchy)
+        //            rightLoaded = m_rightGlove.LoadRBF();
+        //    }
+
+        //    if (leftLoaded || rightLoaded)
+        //        m_gloveCalibrator.StartCalibration();  
+        //}
+
+        
+
+        int e = System.Enum.GetNames(typeof(KeyCode)).Length;
+        for (int i = 0; i < e; i++)
         {
-            if(m_leftGlove != null)
+            if (Input.GetKeyDown((KeyCode)i))
+                QueueKeyPress((KeyCode)i);
+        }
+
+        while (m_pressedKeys.Count > 0)
+            TriggerKeyDown(m_pressedKeys.Dequeue());
+    }
+
+    public void QueueKeyPress(KeyCode key)
+    {
+        m_pressedKeys.Enqueue(key);
+    }
+
+    public void TriggerKeyDown(KeyCode key)
+    {
+        //Keyboard inputs
+        if (key == KeyCode.Space)
+        {
+            FreezeHands();
+            if (!m_gloveCalibrator.isCalibrated)
+                m_gloveCalibrator.StartCalibration();
+        }
+
+        if (key == KeyCode.Escape)
+            Application.Quit();
+
+        if (key == KeyCode.R)
+        {
+            MusicNode.Instance.OnApplicationQuit();
+            Application.LoadLevel(Application.loadedLevel);
+        }
+
+        if (key == KeyCode.D)
+        {
+            if (m_leftGlove != null)
                 m_leftGlove.ToggleDebugText();
             if (m_rightGlove != null)
                 m_rightGlove.ToggleDebugText();
         }
 
-        if (Input.GetKeyDown(KeyCode.P))
+        if (key == KeyCode.P)
         {
             bool leftLoaded = false;
             bool rightLoaded = false;
@@ -399,14 +474,21 @@ public class HydraController : MonoBehaviour
                 if (m_leftGlove.gameObject.activeInHierarchy)
                     leftLoaded = m_leftGlove.LoadRBF();
             }
-            if (m_rightGlove != null) {
+            if (m_rightGlove != null)
+            {
                 if (m_rightGlove.gameObject.activeInHierarchy)
                     rightLoaded = m_rightGlove.LoadRBF();
             }
 
             if (leftLoaded || rightLoaded)
-                m_gloveCalibrator.StartCalibration();  
+                m_gloveCalibrator.StartCalibration();
         }
+
+        if (key == KeyCode.S)
+            EditorWorkspace.Instance.CreateManualLayout();
+        
+        if (key == KeyCode.L)
+            EditorWorkspace.Instance.OpenWorkspaceFiles();
     }
 
     public void FreezeHands()
@@ -430,15 +512,15 @@ public class HydraController : MonoBehaviour
 
         GloveController glove = GetGloveController(hand);
 
-        if (glove.GetGestureDown("CLOSED_HAND") || Input.GetKeyDown(KeyCode.LeftControl))
+        if (glove.GetGestureDown("CLOSED_HAND"))
             ToolController.Instance.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.GRABBING);
-        else if (glove.GetGestureDown("PINKY") || Input.GetKeyDown(KeyCode.LeftShift))
+        else if (glove.GetGestureDown("PINKY"))
             ToolController.Instance.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.TERTIARY);
-        else if (glove.GetGestureDown("INDEX_POINT") || Input.GetKeyDown(KeyCode.W))
+        else if (glove.GetGestureDown("INDEX_POINT"))
             ToolController.Instance.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.PRIMARY);
-        else if (glove.GetGestureDown("INDEX_MIDDLE") || Input.GetKeyDown(KeyCode.E))
+        else if (glove.GetGestureDown("INDEX_MIDDLE"))
             ToolController.Instance.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.SECONDARY);
-        else if (glove.GetGestureDown("ROCK_ON") || Input.GetKeyDown(KeyCode.S))
+        else if (glove.GetGestureDown("ROCK_ON"))
             ToolController.Instance.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.TERTIARY);
 
         //FingerPlaying gestures
@@ -454,9 +536,7 @@ public class HydraController : MonoBehaviour
         //Return to idle
         if (glove.GetGestureDown("IDLE_HAND"))
         {
-            //ToolController.Instance.PopTool(hand);
             ToolController.Instance.PushTool(typeof(InstrumentGestureTool), hand, BaseTool.ToolMode.HOVER);
-            //ToolController.Instance.PopTool(hand);
             glove.SetCollider(glove.activeGestureIndex);
         }
     }

@@ -1,0 +1,10 @@
+{
+  "UseRiftCamera": true,
+  "ShowtimeStageAddress": "curiosity.soad.vuw.ac.nz",
+  "ShowtimeStagePort": 6000,
+  "DebugCollisions": false,
+  "EnableAnimations": false,
+  "MasterInputNode": "",
+  "LeftComPort": "COM6",
+  "RightComPort": "COM7"
+}

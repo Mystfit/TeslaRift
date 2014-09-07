@@ -126,12 +126,12 @@ namespace VRControls
 
         protected void CalculateDisplayedItems()
         {
-            if (DockedChildren.Count < m_maxDisplayedAttachments)
+            if (DockedChildren.Count <= m_maxDisplayedAttachments)
                 m_numDisplayedAttachments = DockedChildren.Count;
             else
                 m_numDisplayedAttachments = m_maxDisplayedAttachments;
 
-            if (m_maxDisplayedAttachments < 0)
+            if (m_maxDisplayedAttachments <= 0)
                 m_numDisplayedAttachments = DockedChildren.Count;
         }
 
@@ -170,10 +170,6 @@ namespace VRControls
         // Update is called once per frame
         public override void Update()
         {
-            if (m_scrollVel != 0.0f)
-            {
-                MaskControls();
-            }
             if (!bIsDragging)
             {
                 if (m_scrollVel > m_speedCutoff || m_scrollVel < -m_speedCutoff)
@@ -201,6 +197,10 @@ namespace VRControls
                                                             m_controlHolder.transform.localPosition.z);
                 m_scrollVel = 0.0f;
                 m_lastPosition = m_controlHolder.localPosition;
+            }
+            if (m_scrollVel != 0.0f)
+            {
+                MaskControls();
             }
             base.Update();
         }

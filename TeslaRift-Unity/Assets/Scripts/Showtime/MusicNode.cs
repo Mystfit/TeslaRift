@@ -1,57 +1,78 @@
-using UnityEngine;
 using ZST;
 using System;
-using System.IO;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using MusicIO;
 
-public class ZmqMusicNode : MonoBehaviour {
+public class MusicNode : UnityNode {
 
     public InstrumentFactory m_instrumentSpawner;
 
-    public string m_stageServerFile = "server.txt";
-    public bool m_useServerFile = true;
-    public string m_stageAddress = "127.0.0.1";
-    public string m_port = "6000";
+    private static MusicNode m_instance; 
+    public static MusicNode Instance { get { return m_instance; }}
 
-    public ZstNode node { get { return m_node; }}
-    protected ZstNode m_node;
-    protected Dictionary<string, ZstPeerLink> m_peers;
-
-    private static ZmqMusicNode m_instance; 
-    public static ZmqMusicNode Instance { get { return m_instance; }}
+    private ZstPeerLink m_liveNode;
+    private ZstPeerLink m_kp3Node;
+    private ZstPeerLink m_kaossNode;
 
     // Use this for initialization
-    void Start () {
+    public override void Awake()
+    {
+        base.Awake();
+
         m_instance = this;
 
-
-        if (m_useServerFile)
+        if (m_peers.ContainsKey("LiveNode"))
         {
-            StreamReader reader = new StreamReader(m_stageServerFile);
-            m_stageAddress = reader.ReadToEnd();
-            reader.Close();
+            m_liveNode = m_peers["LiveNode"];
+            ConnectToLive(m_liveNode);
         }
 
-        m_node = new ZstNode("UnityNode", "tcp://" + m_stageAddress + ":" + m_port);
-        m_node.requestRegisterNode();
-        m_peers = m_node.requestNodePeerlinks();
+        if (m_peers.ContainsKey("Kaoss"))
+        {
+            m_kaossNode = m_peers["Kaoss"];
+            ConnectToKaosspad(m_kaossNode, Color.green);
+        }
 
-        ZstPeerLink liveNode = m_peers["LiveNode"];
+        if (m_peers.ContainsKey("KP3"))
+        {
+            m_kp3Node = m_peers["KP3"];
+            ConnectToKaosspad(m_kp3Node, Color.red);
+        }
+    }
 
+    public override void Close()
+    {
+        Dictionary<string, object> args = new Dictionary<string,object>();
+        args["trigger"] = 0;
+        if (m_kp3Node != null)
+            m_node.updateRemoteMethod(m_kp3Node.methods["touch_trigger"], args);
+        if (m_kaossNode != null)
+            m_node.updateRemoteMethod(m_kaossNode.methods["touch_trigger"], args);
+
+        base.Close();
+    }
+
+    public void ConnectToLive(ZstPeerLink liveNode)
+    {
         m_node.subscribeToNode(liveNode);
         m_node.connectToPeer(liveNode);
 
         m_instrumentSpawner.LoadLiveSessionXml(liveNode);
-
-        //Subscribe to value updates
         m_node.subscribeToMethod(liveNode.methods["value_updated"], instrumentValueUpdated);
         m_node.subscribeToMethod(liveNode.methods["send_updated"], sendValueUpdated);
         m_node.subscribeToMethod(liveNode.methods["fired_slot_index"], clipFired);
         m_node.subscribeToMethod(liveNode.methods["playing_slot_index"], clipPlaying);
         m_node.subscribeToMethod(liveNode.methods["meters_updated"], outputMeter);
+    }
+
+    public void ConnectToKaosspad(ZstPeerLink kaossPadNode, Color color)
+    {
+        m_node.subscribeToNode(kaossPadNode);
+        m_node.connectToPeer(kaossPadNode);
+        m_instrumentSpawner.CreateKaossMidi(kaossPadNode, color);
     }
 
     /* 
@@ -143,13 +164,5 @@ public class ZmqMusicNode : MonoBehaviour {
             InstrumentController.Instance.GetInstrumentByTrackindex(i).meterVolume = output[i];
         }
         return null;
-    }
-
-    /*
-     * Exit and cleanup
-     */
-    public void OnApplicationQuit(){
-        bool result = m_node.close();
-        Debug.Log("Network cleanup: " + result);
     }
 }
