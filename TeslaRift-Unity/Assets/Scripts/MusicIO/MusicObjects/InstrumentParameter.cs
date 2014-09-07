@@ -147,7 +147,7 @@ namespace MusicIO
         {
             if (isDirty || force)
             {
-                if (m_remoteMethod != null)
+                if (m_remoteMethod != null && !GlobalConfig.Instance.UseMastersInput)
                     MusicNode.Instance.node.updateRemoteMethod(m_remoteMethod, m_remoteMethod.args);
                 setClean();
             } 

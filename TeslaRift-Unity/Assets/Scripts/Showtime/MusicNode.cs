@@ -47,10 +47,13 @@ public class MusicNode : UnityNode {
     {
         Dictionary<string, object> args = new Dictionary<string,object>();
         args["trigger"] = 0;
-        if (m_kp3Node != null)
-            m_node.updateRemoteMethod(m_kp3Node.methods["touch_trigger"], args);
-        if (m_kaossNode != null)
-            m_node.updateRemoteMethod(m_kaossNode.methods["touch_trigger"], args);
+        if (!GlobalConfig.Instance.UseMastersInput)
+        {
+            if (m_kp3Node != null)
+                m_node.updateRemoteMethod(m_kp3Node.methods["touch_trigger"], args);
+            if (m_kaossNode != null)
+                m_node.updateRemoteMethod(m_kaossNode.methods["touch_trigger"], args);
+        }
 
         base.Close();
     }

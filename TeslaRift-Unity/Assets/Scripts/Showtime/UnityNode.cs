@@ -9,6 +9,9 @@ using UnityEngine;
 
 public class UnityNode : MonoBehaviour
 {
+    private static string MASTER_SUFFIX = "_master";
+    private static string SLAVE_SUFFIX = "_slave";
+
     public ZstNode node { get { return m_node; } }
     protected ZstNode m_node;
     public string m_nodeName = "UnityNode";
@@ -18,6 +21,11 @@ public class UnityNode : MonoBehaviour
 
     public virtual void Awake()
     {
+        if (GlobalConfig.Instance.MasterInputNode == string.Empty)
+            m_nodeName += MASTER_SUFFIX;
+        else
+            m_nodeName += SLAVE_SUFFIX;
+
         m_node = new ZstNode(m_nodeName, "tcp://" + GlobalConfig.Instance.ShowtimeStageAddress + ":" + GlobalConfig.Instance.ShowtimeStagePort.ToString());
         m_node.requestRegisterNode();
         m_peers = m_node.requestNodePeerlinks();
