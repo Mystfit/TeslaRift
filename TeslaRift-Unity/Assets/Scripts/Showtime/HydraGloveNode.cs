@@ -52,7 +52,7 @@ public class HydraGloveNode : UnityNode
         m_gloves[0] = HydraController.Instance.GetGloveController(BaseTool.ToolHand.LEFT);
         m_gloves[1] = HydraController.Instance.GetGloveController(BaseTool.ToolHand.RIGHT);
 
-        if (GlobalConfig.Instance.UseRemoteGloves)
+        if (GlobalConfig.Instance.UseMastersInput)
         {
             if (peers.ContainsKey(GlobalConfig.Instance.MasterInputNode))
                 ConnectToRemoteGloves(peers[GlobalConfig.Instance.MasterInputNode]);
@@ -73,7 +73,7 @@ public class HydraGloveNode : UnityNode
         }
         else
         {
-            if (!GlobalConfig.Instance.UseRemoteGloves)
+            if (!GlobalConfig.Instance.UseMastersInput)
             {
                 SendGloveUpdate();
                 SendKeyboardUpdate();

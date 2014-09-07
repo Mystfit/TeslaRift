@@ -47,7 +47,7 @@ public class GlobalConfig  {
     public bool EnableAnimations;
     [JsonProperty]
     public string MasterInputNode = "";
-    public bool UseRemoteGloves{
+    public bool UseMastersInput{
         get
         {
             if (MasterInputNode != string.Empty)
