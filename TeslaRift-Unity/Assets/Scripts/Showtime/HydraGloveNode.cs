@@ -8,8 +8,6 @@ using MusicIO;
 
 public class HydraGloveNode : UnityNode
 {
-    private static string MASTER_SUFFIX = "_master";
-    private static string SLAVE_SUFFIX = "_slave";
     private static string KEYBOARD_EVENT = "keyboard_event";
     private static string GLOVE_EVENT = "glove_event";
 
@@ -33,11 +31,6 @@ public class HydraGloveNode : UnityNode
     {
         m_instance = this;
 
-        if (GlobalConfig.Instance.MasterInputNode == string.Empty)
-            m_nodeName += MASTER_SUFFIX;
-        else
-            m_nodeName += SLAVE_SUFFIX;
-
         base.Awake();
 
         m_handPositions = new Vector3[2];
@@ -52,10 +45,10 @@ public class HydraGloveNode : UnityNode
         m_gloves[0] = HydraController.Instance.GetGloveController(BaseTool.ToolHand.LEFT);
         m_gloves[1] = HydraController.Instance.GetGloveController(BaseTool.ToolHand.RIGHT);
 
-        if (GlobalConfig.Instance.UseMastersInput)
+        if (GlobalConfig.Instance.UseRemoteInput)
         {
-            if (peers.ContainsKey(GlobalConfig.Instance.MasterInputNode))
-                ConnectToRemoteGloves(peers[GlobalConfig.Instance.MasterInputNode]);
+            if (peers.ContainsKey(GlobalConfig.Instance.InputSource))
+                ConnectToRemoteGloves(peers[GlobalConfig.Instance.InputSource]);
         }
         else
         {
@@ -73,7 +66,7 @@ public class HydraGloveNode : UnityNode
         }
         else
         {
-            if (!GlobalConfig.Instance.UseMastersInput)
+            if (!GlobalConfig.Instance.UseRemoteInput)
             {
                 SendGloveUpdate();
                 SendKeyboardUpdate();

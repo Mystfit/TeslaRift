@@ -105,7 +105,7 @@ public class GloveController : MonoBehaviour {
         m_arduino = GetComponent<Arduino>();
         if (m_arduino == null)
             throw new Exception("No arduino component found on glove!");
-        if (!GlobalConfig.Instance.UseMastersInput)
+        if (!GlobalConfig.Instance.UseRemoteInput)
         {
             if (m_hand == SixenseHands.LEFT)
                 m_arduino.PortName = GlobalConfig.Instance.LeftComPort;
@@ -175,9 +175,9 @@ public class GloveController : MonoBehaviour {
 
     void Update () 
     {
-        if (m_arduino.Connected || GlobalConfig.Instance.UseMastersInput)
+        if (m_arduino.Connected || GlobalConfig.Instance.UseRemoteInput)
         {
-            if (GlobalConfig.Instance.UseMastersInput)
+            if (GlobalConfig.Instance.UseRemoteInput)
                 m_bendValues = HydraGloveNode.Instance.gloveBendValues(m_hand);
             else
             {

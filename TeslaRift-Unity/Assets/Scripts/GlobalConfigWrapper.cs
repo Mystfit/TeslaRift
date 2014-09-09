@@ -37,6 +37,25 @@ public class GlobalConfig  {
 
     [JsonProperty]
     public bool UseRiftCamera;
+    
+    [JsonProperty]
+    public int NumScreens;
+    [JsonProperty]
+    public float ScreenWidthMeters;
+    [JsonProperty]
+    public float ScreenHeightMeters;
+    [JsonProperty]
+    public float ScreenHeightFromGround;
+    [JsonProperty]
+    public float ScreenAngle;
+    [JsonProperty]
+    public int ScreenRenderWidth;
+    [JsonProperty]
+    public int ScreenRenderHeight;
+    public int ProjectionWidth { get { return ScreenRenderWidth * NumScreens; } }
+    public int ProjectionHeight { get { return ScreenRenderHeight; } }
+    public float Aspect { get { return (float)ScreenRenderWidth / (float)ScreenRenderHeight; } }
+    
     [JsonProperty]
     public string ShowtimeStageAddress;
     [JsonProperty]
@@ -46,11 +65,12 @@ public class GlobalConfig  {
     [JsonProperty]
     public bool EnableAnimations;
     [JsonProperty]
-    public string MasterInputNode = "";
-    public bool UseMastersInput{
+    public string InputSource = "";
+    public bool UseRemoteInput
+    {
         get
         {
-            if (MasterInputNode != string.Empty)
+            if (InputSource != null || InputSource == string.Empty || InputSource == "null")
                 return true;
             return false;
         }

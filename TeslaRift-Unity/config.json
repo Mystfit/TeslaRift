@@ -1,10 +1,17 @@
 {
-  "UseRiftCamera": true,
+  "UseRiftCamera": false,
+  "NumScreens": 3,
+  "ScreenWidthMeters": 3.2,
+  "ScreenHeightMeters": 2.0,
+  "ScreenHeightFromGround": 0.9,
+  "ScreenAngle": 45,
+  "ScreenRenderWidth": 1280,
+  "ScreenRenderHeight": 720,
   "ShowtimeStageAddress": "curiosity.soad.vuw.ac.nz",
   "ShowtimeStagePort": 6000,
   "DebugCollisions": false,
   "EnableAnimations": false,
-  "MasterInputNode": "",
+  "InputSource": "HydraGloveNode_master",
   "LeftComPort": "COM6",
   "RightComPort": "COM7"
 }

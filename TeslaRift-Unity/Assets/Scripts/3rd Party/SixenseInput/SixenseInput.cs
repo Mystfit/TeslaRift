@@ -254,7 +254,7 @@ public class SixenseInput : MonoBehaviour
 	/// </summary>
 	void Awake()
 	{
-		SixensePlugin.sixenseInit();
+        SixensePlugin.sixenseInit();
 
 		for ( int i = 0; i < MAX_CONTROLLERS; i++ )
 		{
@@ -274,7 +274,6 @@ public class SixenseInput : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
-
 		if(toggleRebind){
 			toggleRebind = false;
 			RebindHands();
@@ -283,6 +282,7 @@ public class SixenseInput : MonoBehaviour
 		// update controller data
 		uint numControllersBound = 0;
 		uint numControllersEnabled = 0;
+
 		SixensePlugin.sixenseControllerData cd = new SixensePlugin.sixenseControllerData();
 		for ( int i = 0; i < MAX_CONTROLLERS; i++ )
 		{

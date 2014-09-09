@@ -86,7 +86,7 @@ public class SixenseObjectController : MonoBehaviour {
 	protected void UpdatePosition( SixenseInput.Controller controller )
 	{
         Vector3 controllerPosition;
-        if (GlobalConfig.Instance.UseMastersInput)
+        if (GlobalConfig.Instance.UseRemoteInput)
         {
             controllerPosition = new Vector3(
                 HydraGloveNode.Instance.handPosition(Hand).x * Sensitivity.x,
@@ -111,7 +111,7 @@ public class SixenseObjectController : MonoBehaviour {
 	protected void UpdateRotation( SixenseInput.Controller controller )
 	{
         Quaternion rotation;
-        if (GlobalConfig.Instance.UseMastersInput)
+        if (GlobalConfig.Instance.UseRemoteInput)
             rotation = HydraGloveNode.Instance.handRotation(Hand);
         else
             rotation = controller.Rotation;

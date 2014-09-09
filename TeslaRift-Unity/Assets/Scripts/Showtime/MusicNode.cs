@@ -47,7 +47,7 @@ public class MusicNode : UnityNode {
     {
         Dictionary<string, object> args = new Dictionary<string,object>();
         args["trigger"] = 0;
-        if (!GlobalConfig.Instance.UseMastersInput)
+        if (!GlobalConfig.Instance.UseRemoteInput)
         {
             if (m_kp3Node != null)
                 m_node.updateRemoteMethod(m_kp3Node.methods["touch_trigger"], args);

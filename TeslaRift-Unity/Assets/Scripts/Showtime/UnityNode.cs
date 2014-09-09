@@ -21,7 +21,7 @@ public class UnityNode : MonoBehaviour
 
     public virtual void Awake()
     {
-        if (GlobalConfig.Instance.MasterInputNode == string.Empty)
+        if (GlobalConfig.Instance.InputSource == string.Empty)
             m_nodeName += MASTER_SUFFIX;
         else
             m_nodeName += SLAVE_SUFFIX;
