@@ -37,6 +37,24 @@ public class GlobalConfig  {
 
     [JsonProperty]
     public bool UseRiftCamera;
+    [JsonProperty]
+    public bool UseKinectCamera;
+    [JsonProperty]
+    public float KinectHeight;
+    [JsonProperty]
+    public float KinectFOV;
+    [JsonProperty]
+    public float KinectXFromCenter;
+    [JsonProperty]
+    public float KinectZFromCenter;
+    [JsonProperty]
+    public bool CameraRotatesUsingShoulders;
+    [JsonProperty]
+    public bool CameraFacesCenter;
+    [JsonProperty]
+    public bool Fullscreen;
+    [JsonProperty]
+    public bool ShowTestRoom;
     
     [JsonProperty]
     public int NumScreens;
@@ -66,15 +84,8 @@ public class GlobalConfig  {
     public bool EnableAnimations;
     [JsonProperty]
     public string InputSource = "";
-    public bool UseRemoteInput
-    {
-        get
-        {
-            if (InputSource != null || InputSource == string.Empty || InputSource == "null")
-                return true;
-            return false;
-        }
-    }
+    [JsonProperty]
+    public bool UseRemoteInput;
 
     [JsonProperty]
     public string LeftComPort;

@@ -1,6 +1,7 @@
 ﻿Shader "Custom/PerspectiveWarpShader" {
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "white" {}
+		_BorderWidth("Border Width", Float) = 0.0
 		_BL("Bottom Left", Vector) = (0.0, 0.0, 0.0)
 		_BR("Bottom Right", Vector) = (1.0, 0.0, 0.0)
 		_TL("Top Left", Vector) = (0.0, 1.0, 0.0)
@@ -18,6 +19,7 @@
 			float4 _BR;
 			float4 _TL;
 			float4 _TR;
+			float _BorderWidth;
 			sampler2D _MainTex; 
 
 			// vertex input: position, UV
@@ -59,7 +61,18 @@
 				float delta = A1*B2 - A2*B1;
 
 				float2 intersect = float2((B2*C1 - B1*C2)/delta, (A1*C2 - A2*C1)/delta);
-				half4 c = tex2D (_MainTex, intersect.xy);
+				
+				//intersect = min(float2(1.0,1.0), max(float2(0.0, 0.0), intersect ));
+				half4 c =  tex2D(_MainTex, intersect.xy);
+				
+				if(intersect.x > 1.0 || intersect.x < 0.0 || intersect.y < 0.0 || intersect.y > 1.0){
+					c = half4(1.0, 0.0, 0.0, 1.0);
+				} else if(intersect.x > 1.0 - _BorderWidth || intersect.x < _BorderWidth || intersect.y < _BorderWidth || intersect.y > 1.0 - _BorderWidth){
+					c=  half4(0.0, 1.0, 0.0, 1.0);
+				}
+
+				
+				
 				
 				return c;
 			}

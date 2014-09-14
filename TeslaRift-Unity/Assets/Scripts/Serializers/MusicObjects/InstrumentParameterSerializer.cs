@@ -12,11 +12,11 @@ public class InstrumentParameterSerializer : JsonConverter
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
         var musicRef = value as InstrumentParameter;
-
-        writer.WriteStartObject();
-        writer.WritePropertyName("name");
-        writer.WriteValue(musicRef.name);
-        writer.WriteEndObject();
+        writer.WriteNull();
+        //writer.WriteStartObject();
+        //writer.WritePropertyName("name");
+        //writer.WriteValue(musicRef.name);
+        //writer.WriteEndObject();
     }
 
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

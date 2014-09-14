@@ -10,6 +10,7 @@ namespace VRControls
     {
         public override void Awake()
         {
+            SetId(VRControls.StaticIds.INSTRUMENT_DOCK);
             base.Awake();
             m_hideControlsWhenLeaving = false;
             AddAcceptedDocktype(typeof(InstrumentOrb));
