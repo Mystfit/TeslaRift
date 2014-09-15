@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 
 namespace VRControls
 {
-    [JsonConverter(typeof(ControlMatrixSerializer))]
     public class ControlMatrix : BaseVRControl
     {
         public bool m_generateGrid = false;
@@ -18,6 +17,7 @@ namespace VRControls
         public int m_cubeDepth = 4;
         public float m_cubeSpacingMultiplier = 1.0f;
         protected ClipCubeHolder[, ,] m_cubeHolders;
+        private Dictionary<string, int[]> m_savedControlPositions;
 
         //public GameObject m_vertLine;
         //public GameObject m_depthLine;
@@ -34,6 +34,7 @@ namespace VRControls
             AddAcceptedDocktype(typeof(ClipCube));
             AddAcceptedDocktype(typeof(ValueTrigger));
 
+            m_savedControlPositions = new Dictionary<string, int[]>();
             m_cubeHolders = new ClipCubeHolder[m_cubeDepth, m_cubeHeight, m_cubeWidth];
 
             //Build anchors
@@ -102,23 +103,44 @@ namespace VRControls
             return null;
         }
 
+
+        /// <summary>
+        /// Set the expected positions controls should move to when being added. Used for serialization/deserialization
+        /// </summary>
+        /// <param name="id">Control ID</param>
+        /// <param name="x">x index</param>
+        /// <param name="y">y index</param>
+        /// <param name="z">z index</param>
+        public void StoreAnchorIndexes(string id, int x, int y, int z)
+        {
+            m_savedControlPositions[id] = new int[3] { x, y, z };
+        }
+
         public override bool AddDockableAttachment(BaseVRControl attach)
         {
             if (base.AddDockableAttachment(attach))
             {
-                ClipCubeHolder holder = FindClosestHolder(attach.transform.position);
-                if (holder.attach == null)
-                {
-                    attach.SetCloneable(false);
-                    holder.attach = attach;
-                    attach.transform.parent = holder.placeholder;
+                ClipCubeHolder holder = null;
+                if (m_savedControlPositions.ContainsKey(attach.id))
+                    holder = m_cubeHolders[m_savedControlPositions[attach.id][0], m_savedControlPositions[attach.id][1], m_savedControlPositions[attach.id][2]];
+                else
+                    holder = FindClosestHolder(attach.transform.position);
 
-                    if (GlobalConfig.Instance.EnableAnimations)
-                        iTween.MoveTo(attach.gameObject, iTween.Hash("position", Vector3.zero, "islocal", true, "time", 0.5f));
-                    else
-                        attach.transform.localPosition = Vector3.zero;
-                    attach.transform.rotation = holder.placeholder.rotation;
-                    return true;
+                if (holder != null)
+                {
+                    if (holder.attach == null)
+                    {
+                        attach.SetCloneable(false);
+                        holder.attach = attach;
+                        attach.transform.parent = holder.placeholder;
+
+                        if (GlobalConfig.Instance.EnableAnimations)
+                            iTween.MoveTo(attach.gameObject, iTween.Hash("position", Vector3.zero, "islocal", true, "time", 0.5f));
+                        else
+                            attach.transform.localPosition = Vector3.zero;
+                        attach.transform.rotation = holder.placeholder.rotation;
+                        return true;
+                    }
                 }
             }
             return false;

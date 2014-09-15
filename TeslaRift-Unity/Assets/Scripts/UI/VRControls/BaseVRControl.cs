@@ -92,9 +92,10 @@ namespace VRControls
             //Rotate to face player eyes
             if (m_facePerformer && !IsDragging)
             {
+                Vector3 lookTarget = UIController.Instance.EyeTarget;
                 // Look at and dampen the rotation
                 //Vector3 targetVec = Quaternion.LookRotation(this.interiorCollider.bounds.center - HydraController.Instance.EyeCenter, Vector3.up).eulerAngles;
-                Vector3 targetVec = Quaternion.LookRotation(transform.position - HydraController.Instance.EyeCenter, Vector3.up).eulerAngles;
+                Vector3 targetVec = Quaternion.LookRotation(transform.position - lookTarget, Vector3.up).eulerAngles;
                 targetVec.x = 0.0f;
                 targetVec.z = 0.0f;
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(targetVec), (float)Time.deltaTime * 10.0f);
@@ -108,7 +109,10 @@ namespace VRControls
         /// Override the id of this VRControl
         /// </summary>
         /// <param name="id"></param>
-        public void SetId(string id) { m_id = id; }
+        public void SetId(string id) { 
+            m_id = id;
+            UIController.Instance.SetControlId(this, id);
+        }
         private string m_id = "";
 
         /// <summary>
@@ -1207,6 +1211,7 @@ namespace VRControls
             if (this.IsSerializeable && !IsTemplate)
             {
                 attachments.Add(this);
+                Debug.Log("Adding " + this.GetType().ToString() + " to serializer");
             }
 
             if (DockedChildren != null)
@@ -1216,13 +1221,13 @@ namespace VRControls
 						attach.BuildFlatHierarchy(attachments);
 				}
             }
-            if (ChildControls != null)
-            {
-                foreach (BaseVRControl control in ChildControls){
-					if(control != null)
-						control.BuildFlatHierarchy(attachments);
-				}
-            }
+            //if (ChildControls != null)
+            //{
+            //    foreach (BaseVRControl control in ChildControls){
+            //        if(control != null)
+            //            control.BuildFlatHierarchy(attachments);
+            //    }
+            //}
 
             return attachments;
         }

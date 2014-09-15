@@ -60,9 +60,7 @@ namespace VRControls
                 control.jsonPosition = control.transform.position;
                 control.jsonRotation = control.transform.rotation;
                 if (control.jsonParentId == string.Empty)
-                {
                     control.jsonParentId = DockedInto.id;
-                }
             }
         }
 
@@ -108,7 +106,7 @@ namespace VRControls
         public void ApplyControlHierarchy(List<BaseVRControl> controlList)
         {
 			Dictionary<string, BaseVRControl> keyedHierarchy = GetKeyedHierarchy(controlList);
-            List<BaseVRControl> strippedControlList = UnpackKeyedHierarchy(keyedHierarchy);
+            List<BaseVRControl> strippedControlList = UnpackKeyedHierarchyIntoLayout(keyedHierarchy);
 			SetLocalControls(strippedControlList);
         }
 
@@ -123,7 +121,13 @@ namespace VRControls
 			return keyedHierarchy;
 		}
 
-        public List<BaseVRControl> UnpackKeyedHierarchy(Dictionary<string, BaseVRControl> keyedHierarchy)
+
+        /// <summary>
+        /// Takes a flat control hierarchy and docks each control into its associated parent
+        /// </summary>
+        /// <param name="keyedHierarchy">Flat dictionary of Control Ids and associated control onjects</param>
+        /// <returns></returns>
+        public List<BaseVRControl> UnpackKeyedHierarchyIntoLayout(Dictionary<string, BaseVRControl> keyedHierarchy)
 		{
 			List<BaseVRControl> controlList = new List<BaseVRControl>();
 
@@ -140,25 +144,23 @@ namespace VRControls
 				}
 				
 				
-				if (dockId == VRControls.StaticIds.EDITOR_DOCK)
+                //Add top level controls to the layout
+				if (dockId == VRControls.StaticIds.EDITOR_DOCK || dockId == VRControls.StaticIds.INSTRUMENT_DOCK)
 				{
-					if (control.id.Equals(this.id)){
-						//continue;
-					}else {
-						control.DockInto(this);
-					}
+                    //if (!control.id.Equals(this.id))
+                    //    control.DockInto(this);
+
+                    controlList.Add(control);
 				}
 
 				if (keyedHierarchy.ContainsKey(dockId))
 					control.DockInto(keyedHierarchy[dockId]);
-
-				controlList.Add(control);
 			}
 
 			return controlList;
 		}
 
-        public static ControlLayout StripLayoutFromControlList(List<BaseVRControl> controlList)
+        public static ControlLayout SeperateLayoutFromControlList(List<BaseVRControl> controlList)
         {
             ControlLayout layout = controlList.Find(x => x.GetType() == typeof(ControlLayout)) as ControlLayout; ;
             controlList.Remove(layout);

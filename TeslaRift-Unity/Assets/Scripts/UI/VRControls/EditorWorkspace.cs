@@ -18,7 +18,9 @@ namespace VRControls
             typeof(RBFPlug),
             typeof(TetrahedronBlender),
             typeof(ControlMatrix),
-            typeof(ControlLayout)
+            typeof(ControlLayout),
+            typeof(InstrumentOrb),
+            typeof(Slider)
         };
 
         private static EditorWorkspace m_instance;
@@ -133,15 +135,8 @@ namespace VRControls
             {
                 if (path.EndsWith(".json"))
                 {
-                    //ControlLayout page = CreateControlLayout(path);
-                    //ControlLayout layout = UIFactory.CreateMusicRefAttachment(typeof(ControlLayout)) as ControlLayout;
-                    //layout.Init(this);
-                    //layout.SetJsonPath(path);
-                    //layout.layoutIndex = int.Parse(path.Substring(path.Length - "#.json".Length, 1));
-                    //layout.ReadLayout();
-
                     List<BaseVRControl> controls = ControlLayout.ReadLayout(path);
-                    ControlLayout layout = ControlLayout.StripLayoutFromControlList(controls);
+                    ControlLayout layout = ControlLayout.SeperateLayoutFromControlList(controls);
 
                     if(layout != null){
                         layout.Init(this);
@@ -171,6 +166,19 @@ namespace VRControls
             return layout;
 		}
 
+
+        /// <summary>
+        /// Save the active layout to disk
+        /// </summary>
+        public void SaveWorkspace()
+        {
+            SaveWorkspace(m_activeLayout);
+        }
+
+        /// <summary>
+        /// Saves a layout to disk
+        /// </summary>
+        /// <param name="layout"></param>
         public void SaveWorkspace(ControlLayout layout)
         {
             //Check if the layout has been saved yet
@@ -182,12 +190,8 @@ namespace VRControls
             }
 
             List<BaseVRControl> controls = BuildFlatHierarchy();
-            //List<ControlLayout> layouts = layout.StripLayoutsFromControlList(controls);
 
             layout.ApplyControlHierarchy(controls);
-                
-            //foreach (ControlLayout l in layouts)
-            //    controls.Add(l);
             controls.Add(layout);
 
             layout.WriteLayout(controls);
@@ -201,16 +205,14 @@ namespace VRControls
 
                 foreach (BaseVRControl attach in m_activeLayout.LoadedControls)
                 {
-
                         attach.Undock();
                         attach.DockInto(m_activeLayout);
 					    attach.SetInactive();
-                    
                 }
-                //m_activeLayout.SetInactive();
             }
 
-            layout.UnpackKeyedHierarchy(layout.GetKeyedHierarchy(layout.LoadedControls));
+            //Reapply layout hierarchy
+            layout.UnpackKeyedHierarchyIntoLayout(layout.GetKeyedHierarchy(layout.LoadedControls));
 
             //Dock layout controls
             foreach (BaseVRControl attach in layout.LoadedControls)
@@ -218,7 +220,7 @@ namespace VRControls
 	            attach.SetActive();
 	            attach.transform.position = attach.jsonPosition;
 	            attach.transform.rotation = attach.jsonRotation;
-                //attach.DockInto(this);
+                attach.DockInto(UIController.Instance.GetControl(attach.jsonParentId));
             }
 
             m_activeLayout = layout;

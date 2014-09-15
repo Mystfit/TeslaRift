@@ -15,11 +15,11 @@ public class Vector3Serializer : JsonConverter
         var vector = (Vector3)value;
         writer.WriteStartObject();
         writer.WritePropertyName("x");
-        serializer.Serialize(writer, vector.x);
+        writer.WriteValue(vector.x);
         writer.WritePropertyName("y");
-        serializer.Serialize(writer, vector.y);
+        writer.WriteValue(vector.y);
         writer.WritePropertyName("z");
-        serializer.Serialize(writer, vector.z);
+        writer.WriteValue(vector.z);
         writer.WriteEndObject();
     }
 

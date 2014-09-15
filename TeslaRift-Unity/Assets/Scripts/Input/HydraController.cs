@@ -152,17 +152,6 @@ public class HydraController : MonoBehaviour
         return m_rightHandDragTarget;
     }
 
-    /*
-     * Gets the OVR performer
-     */
-    public GameObject GetPerformer { get { return m_performer; } }
-    public Vector3 EyeCenter
-    {
-        get
-        {
-            return Vector3.Lerp(m_leftCamera.transform.position, m_rightCamera.transform.position, 0.5f);
-        }
-    }
 
     /*
      * Checks distance between hand, performer, and a target object
@@ -484,8 +473,10 @@ public class HydraController : MonoBehaviour
                 m_gloveCalibrator.StartCalibration();
         }
 
-        if (key == KeyCode.S)
+        if (key == KeyCode.N)
             EditorWorkspace.Instance.CreateManualLayout();
+        if (key == KeyCode.S)
+            EditorWorkspace.Instance.SaveWorkspace();
         
         if (key == KeyCode.L)
             EditorWorkspace.Instance.OpenWorkspaceFiles();

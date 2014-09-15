@@ -13,6 +13,7 @@ public class CameraSwitcher : MonoBehaviour {
 
         if (GlobalConfig.Instance.UseKinectCamera)
         {
+            //projectorCamera.tag = "MainCamera";
             riftCam.SetActive(false);
             remoteCamera.SetActive(false);
         } else if (GlobalConfig.Instance.UseRiftCamera) 
@@ -26,6 +27,7 @@ public class CameraSwitcher : MonoBehaviour {
             projectorCamera.SetActive(false);
             slaveProjectorCamera.SetActive(false);
             remoteCamera.SetActive(true);
+            remoteCamera.tag = "MainCamera";
         }
 	}
 	

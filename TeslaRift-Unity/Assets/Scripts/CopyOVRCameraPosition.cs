@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UI;
 
 public class CopyOVRCameraPosition : MonoBehaviour {
 
@@ -18,7 +19,7 @@ public class CopyOVRCameraPosition : MonoBehaviour {
 //          m_targetCamera.transform.parent.position.x, 
 //          m_targetCamera.transform.position.y, 
 //          m_targetCamera.transform.parent.position.z);
-        transform.position = HydraController.Instance.EyeCenter;
+        transform.position = UIController.Instance.EyeTarget;
         transform.rotation = m_camera.transform.rotation;
     }
 }

@@ -25,9 +25,15 @@ public class ControlHierarchySerializer : JsonConverter
     {
 		var jsonObjects = JArray.Load(reader);
 		List<BaseVRControl> controls = new List<BaseVRControl>();
-      
+
         foreach (JObject o in jsonObjects)
-			controls.Add(JsonConvert.DeserializeObject<BaseVRControl>(o.ToString(), new BaseVRControlSerializer()));
+        {
+            BaseVRControl control = JsonConvert.DeserializeObject<BaseVRControl>(o.ToString(), new BaseVRControlSerializer());
+            if (control != null)
+                controls.Add(control);
+            else
+                Debug.LogError("Null object slipped into layout!");
+        }
 
 		return controls;
     }

@@ -21,13 +21,11 @@ public class ValueTriggerSerializer : BaseVRControlSerializer
 
         writer.WritePropertyName("savedValues");
         writer.WriteStartArray();
-        foreach (KeyValuePair<BaseVRControl, float> param in attach.storedValues)
+        foreach (KeyValuePair<string, float> param in attach.storedValues)
         {
             writer.WriteStartObject();
-            writer.WritePropertyName("musicRefType");
-            writer.WriteValue(param.Key.musicRef.GetType().ToString());
-            writer.WritePropertyName("musicRefProperties");
-            serializer.Serialize(writer, param.Key.musicRef);
+            writer.WritePropertyName("id");
+            writer.WriteValue(param.Key);
             writer.WritePropertyName("value");
             serializer.Serialize(writer, param.Value);
             writer.WriteEndObject();
@@ -51,15 +49,26 @@ public class ValueTriggerSerializer : BaseVRControlSerializer
 
         foreach (JToken o in musicRefs)
         {
-            var musicRefType = o["musicRefType"].Value<string>();
-            var musicRef = BaseVRControlSerializer.FindExistingMusicRef(Type.GetType(musicRefType), o["musicRefProperties"]);
+            string id = "";
+            try
+            {
+                id = o["id"].Value<string>();
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new Exception(e.ToString());
+            }
+            //var musicRef = BaseVRControlSerializer.FindExistingMusicRef(Type.GetType(musicRefType), o["musicRefProperties"]);
             var musicRefValue = o["value"].Value<float>();
 
-			if(musicRef != null){
-            	Slider slider = UIFactory.CreateMusicRefAttachment(typeof(Slider), musicRef) as Slider;
-            	musicRef.setVal(musicRefValue, true);
-				slider.DockInto(trigger);
-			}
+            trigger.StoreParameterValue(id, musicRefValue);
+
+            //if(musicRef != null){
+            //    Slider slider = UIFactory.CreateMusicRefAttachment(typeof(Slider), musicRef) as Slider;
+            //    musicRef.setVal(musicRefValue, true);
+            //    slider.DockInto(trigger);
+            //}
+
 		}
 	}
 

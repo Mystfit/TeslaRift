@@ -75,12 +75,17 @@ namespace VRControls
 
         public override bool AddDockableAttachment(BaseVRControl attach)
         {
-            Slider slider = attach as Slider;
-            slider.SetCloneable(false);
-            slider.SetIsDraggable(true);
-            slider.SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.GRABBING });
-            slider.DockInto(m_paramscroller);
-            return true;
+            if (base.AddDockableAttachment(attach))
+            {
+                Slider slider = attach as Slider;
+                slider.SetCloneable(false);
+                slider.SetIsDraggable(true);
+                slider.SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.GRABBING });
+                m_paramscroller.AddDockableAttachment(attach);
+                //slider.DockInto(m_paramscroller);
+                return true;
+            }
+            return false;
         }
 
         public override void RemoveDockableAttachment(BaseVRControl attach)

@@ -111,16 +111,14 @@ public class BaseVRControlSerializer : JsonConverter
             {
                 ValueTriggerSerializer.CreateFromJson(jsonObject, (ValueTrigger)attach);
             }
-            else if (controlType == typeof(ControlMatrix).ToString())
-            {
-                ControlMatrixSerializer.CreateFromJson(jsonObject, (ControlMatrix)attach);
-            }
+            //else if (controlType == typeof(ControlMatrix).ToString())
+            //{
+            //    ControlMatrixSerializer.CreateFromJson(jsonObject, (ControlMatrix)attach);
+            //}
 
             attach.SetId(jsonObject["id"].Value<string>());
             attach.jsonParentId = jsonObject["dockedInto"].Value<string>();
         }
-
-
 
         return attach;
     }

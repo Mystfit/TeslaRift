@@ -15,8 +15,8 @@ namespace VRControls
         public Color m_selectedColor;
         public Color m_defaultColor;
 
-        protected Dictionary<BaseVRControl, float> m_storedValues;
-        public Dictionary<BaseVRControl, float> storedValues { get { return m_storedValues; } }
+        protected Dictionary<string, float> m_storedValues;
+        public Dictionary<string, float> storedValues { get { return m_storedValues; } }
 
         //Gui objects
         public Scroller m_scroller;
@@ -31,7 +31,7 @@ namespace VRControls
 			m_scroller.AddAcceptedDocktype(typeof(ClipCube));
 
 			if(m_storedValues == null)
-                m_storedValues = new Dictionary<BaseVRControl, float>();
+                m_storedValues = new Dictionary<string, float>();
 
             SetOutlineMat(GetComponentInChildren<MeshRenderer>().material);
 
@@ -44,12 +44,16 @@ namespace VRControls
 	            if (attach.musicRef != musicRef) {
 	                attach.SetCloneable(false);
 	                attach.SetIsDraggable(true);
-	                attach.SetIsSaveable(false);
+	                //attach.SetIsSaveable(false);
 	                attach.SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.GRABBING });
 					attach.Freeze();
 	                m_scroller.AddDockableAttachment(attach);
-	                if(m_scroller.DockedChildren.Contains(attach))
-	                    m_storedValues[attach] = attach.musicRef.val;
+
+                    if (m_scroller.DockedChildren.Contains(attach))
+                    {
+                        if (!m_storedValues.ContainsKey(attach.id))
+                            m_storedValues[attach.id] = attach.musicRef.val;
+                    }
 	                return true;
 	            }
 			}
@@ -60,7 +64,7 @@ namespace VRControls
         {
             base.RemoveDockableAttachment(attach);
             m_scroller.RemoveDockableAttachment(attach);
-            m_storedValues.Remove(attach);
+            m_storedValues.Remove(attach.id);
         }
 
         public override void DockInto(BaseVRControl attach)
@@ -81,12 +85,16 @@ namespace VRControls
         /*
          * Saves a value in this control to be fired later
          */
+        public void StoreParameterValue(string id, float val)
+        {
+
+        }
         public void StoreParameterValue(BaseVRControl control) { StoreParameterValue(control, control.musicRef.val); }
         public void StoreParameterValue(BaseVRControl control, float val)
         {
 			if(m_storedValues == null)
-				m_storedValues = new Dictionary<BaseVRControl, float>();
-            m_storedValues[control] = val;
+				m_storedValues = new Dictionary<string, float>();
+            m_storedValues[control.id] = val;
         }
 
         public override void ShowControls()
@@ -108,8 +116,8 @@ namespace VRControls
          */
         public override void Fire()
         {
-            foreach (KeyValuePair<BaseVRControl, float> pair in m_storedValues)
-                pair.Key.musicRef.setVal(pair.Value);
+            foreach (KeyValuePair<string, float> pair in m_storedValues)
+                UIController.Instance.GetControl(pair.Key).musicRef.setVal(pair.Value);
         }
 
 

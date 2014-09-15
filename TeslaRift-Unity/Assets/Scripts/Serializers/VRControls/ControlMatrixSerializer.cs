@@ -14,37 +14,30 @@ public class ControlMatrixSerializer : BaseVRControlSerializer
 {
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
+
+
+
         ControlMatrix attach = value as ControlMatrix;
 
         writer.WriteStartObject();
         base.WriteJson(writer, value, serializer);
-        writer.WritePropertyName("dockedControls");
-        writer.WriteStartObject();
+
+        writer.WritePropertyName("slots");
+        writer.WriteStartArray();
         foreach (ClipCubeHolder holder in attach.GetCubeArray)
         {
-
-            if (holder.attach != null)
-            {
-				Debug.Log("Saving clipmatrix slot " + holder.x + ", " + holder.y + ", " + holder.z);
-                writer.WritePropertyName(holder.attach.id);
-                writer.WriteValue(new int[3] { holder.x, holder.y, holder.z });
-            }
+            writer.WriteStartObject();
+            writer.WritePropertyName("id");
+            writer.WriteValue(holder.attach.id);
+            writer.WritePropertyName("x");
+            writer.WriteValue(holder.x);
+            writer.WritePropertyName("y");
+            writer.WriteValue(holder.y);
+            writer.WritePropertyName("z");
+            writer.WriteValue(holder.z);
+            writer.WriteEndObject();
         }
-        writer.WriteEndObject();
-        //writer.WritePropertyName("savedValues");
-        //writer.WriteStartArray();
-        //foreach (KeyValuePair<InstrumentParameter, float> param in attach.storedValues)
-        //{
-        //    writer.WriteStartObject();
-        //    writer.WritePropertyName("musicRefType");
-        //    writer.WriteValue(param.Key.GetType().ToString());
-        //    writer.WritePropertyName("musicRefProperties");
-        //    serializer.Serialize(writer, param.Key);
-        //    writer.WritePropertyName("value");
-        //    serializer.Serialize(writer, param.Value);
-        //    writer.WriteEndObject();
-        //}
-        //writer.WriteEndArray();
+        writer.WriteEndArray();
         writer.WriteEndObject();
     }
 
@@ -55,14 +48,29 @@ public class ControlMatrixSerializer : BaseVRControlSerializer
 
     public static void CreateFromJson(JObject jsonObject, ControlMatrix controlMatrix)
     {
-        var musicRefs = jsonObject["dockedControls"];
+        var musicRefs = jsonObject["slots"];
         controlMatrix.SetAsDock(true);
         controlMatrix.SetIsSaveable(true);
 
-        foreach (JObject o in musicRefs)
+        foreach (JToken o in musicRefs)
         {
-            Debug.Log(o.Values());
+            string id = "";
+            try
+            {
+                id = o["id"].Value<string>();
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new Exception(e.ToString());
+            }
+            //var musicRef = BaseVRControlSerializer.FindExistingMusicRef(Type.GetType(musicRefType), o["musicRefProperties"]);
+            var xIndex = o["x"].Value<int>();
+            var yIndex = o["y"].Value<int>();
+            var zIndex = o["z"].Value<int>();
+
+            controlMatrix.StoreAnchorIndexes(id, xIndex, yIndex, zIndex);
         }
+
 
         //var musicRefs = jsonObject["savedValues"];
         //trigger.SetAsDock(true);

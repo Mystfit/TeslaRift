@@ -184,7 +184,7 @@ namespace VRControls
             m_selectedTraining = attach as ValueTrigger;
 
             foreach (RBFPlug plug in ChildControls)
-                plug.SetPlugVal(m_selectedTraining.storedValues[plug], true);
+                plug.SetPlugVal(m_selectedTraining.storedValues[plug.id], true);
         }
 
         /*
@@ -205,7 +205,7 @@ namespace VRControls
                     if (point.storedValues.Count != ChildControls.Count)
                         throw new System.Exception("ValueTrigger stored values not equal to number of plugs!");
 
-                    foreach (KeyValuePair<BaseVRControl, float> val in point.storedValues)
+                    foreach (KeyValuePair<string, float> val in point.storedValues)
 	                    values[index++] = (double)val.Value;
 
 	                double[] positionVals = new double[m_numInputs];
