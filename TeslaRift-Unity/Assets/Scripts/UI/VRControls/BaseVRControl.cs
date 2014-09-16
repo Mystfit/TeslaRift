@@ -622,6 +622,8 @@ namespace VRControls
                     attach.SetAsTemplate(false);
                     attach.StartDragging(HydraController.Instance.GetHand(MajorHand));
                     attach.SetIsSaveable(true);
+                    if(m_dockedInto != null)
+                        m_dockedInto.ChildAttachmentIsDragging(this);
                 }
                 else
                 {
@@ -1026,6 +1028,15 @@ namespace VRControls
                     m_visibleAttachmentControls.HideControls();
                 m_visibleAttachmentControls = attach;
             }
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="attach"></param>
+        public virtual void ChildAttachmentIsDragging(BaseVRControl attach)
+        {
         }
 
         /// <summary>

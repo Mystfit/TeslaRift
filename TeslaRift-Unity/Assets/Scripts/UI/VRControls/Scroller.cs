@@ -126,12 +126,12 @@ namespace VRControls
 
         protected void CalculateDisplayedItems()
         {
-            if (DockedChildren.Count <= m_maxDisplayedAttachments)
+            if (DockedChildren.Count < m_maxDisplayedAttachments)
                 m_numDisplayedAttachments = DockedChildren.Count;
             else
                 m_numDisplayedAttachments = m_maxDisplayedAttachments;
 
-            if (m_maxDisplayedAttachments <= 0)
+            if (m_maxDisplayedAttachments < 0)
                 m_numDisplayedAttachments = DockedChildren.Count;
         }
 
@@ -213,6 +213,8 @@ namespace VRControls
             foreach (BaseVRControl attach in DockedChildren)
             {
                 float attachY = attach.transform.localPosition.y + m_controlHolder.localPosition.y;
+                
+                //Hide object if o0ut of viewing range
                 if (attachY < m_lowerVisibleBounds || attachY > m_upperVisibleBounds)
                 {
                     //if (attach.gameObject.GetComponent<iTween>() == null && attach.transform.localScale.x != 0.0f)
@@ -226,6 +228,8 @@ namespace VRControls
                         attach.SetInactive();
                     }
                 }
+
+                //Show object if inside visible range
                 else
                 {
                     if (!attach.gameObject.activeSelf)

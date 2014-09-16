@@ -8,7 +8,7 @@ using System;
 public class GloveController : MonoBehaviour {
     
     //Arduino
-    private int[] m_bendPins = {1,0,3,2};
+    public int[] m_bendPins = {1,0,3,2};
     public double[] bendValues { get { return m_bendValues;  } }
     private double[] m_bendValues;
     private Arduino m_arduino;
