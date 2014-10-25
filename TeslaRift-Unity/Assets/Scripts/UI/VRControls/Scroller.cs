@@ -91,7 +91,7 @@ namespace VRControls
             if (base.AddDockableAttachment(attach))
             {
                 CalculateDisplayedItems();
-                attach.SetAsDock(false);
+                //attach.SetAsDock(false);
 				attach.Minimize();
                 attach.transform.parent = m_controlHolder.transform;
                 attach.transform.localRotation = Quaternion.identity;

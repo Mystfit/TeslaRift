@@ -27,7 +27,10 @@ namespace VRControls
         public static EditorWorkspace Instance { get { return m_instance; } }
 
 		public string m_layoutsPath = "Assets/Resources/savedLayouts/";
+
+        public ControlLayout activeLayout { get { return m_activeLayout; } }
         protected ControlLayout m_activeLayout;
+
         public Picker m_controlStateMenu;
 
         public override void Awake()
@@ -62,6 +65,8 @@ namespace VRControls
             if(base.AddDockableAttachment(attach))
             {
                 attach.SetIsSaveable(true);
+                if(m_activeLayout != null)
+                    m_activeLayout.SetSaveDirty();
 
                 if(attach.GetType() == typeof(ControlLayout)){
                     SaveWorkspace((ControlLayout)attach);
@@ -199,32 +204,35 @@ namespace VRControls
 
         public void SetActiveWorkspace(ControlLayout layout)
         {
-            if (m_activeLayout != null)
+            if (m_activeLayout != layout)
             {
-				m_activeLayout.SetColour(Color.white);
-
-                foreach (BaseVRControl attach in m_activeLayout.LoadedControls)
+                if (m_activeLayout != null)
                 {
+                    m_activeLayout.SetColour(Color.white);
+
+                    foreach (BaseVRControl attach in m_activeLayout.LoadedControls)
+                    {
                         attach.Undock();
                         attach.DockInto(m_activeLayout);
-					    attach.SetInactive();
+                        attach.SetInactive();
+                    }
                 }
+
+                //Reapply layout hierarchy
+                layout.UnpackKeyedHierarchyIntoLayout(layout.GetKeyedHierarchy(layout.LoadedControls));
+
+                //Dock layout controls
+                foreach (BaseVRControl attach in layout.LoadedControls)
+                {
+                    attach.SetActive();
+                    attach.transform.position = attach.jsonPosition;
+                    attach.transform.rotation = attach.jsonRotation;
+                    attach.DockInto(UIController.Instance.GetControl(attach.jsonParentId));
+                }
+                m_activeLayout = layout;
             }
-
-            //Reapply layout hierarchy
-            layout.UnpackKeyedHierarchyIntoLayout(layout.GetKeyedHierarchy(layout.LoadedControls));
-
-            //Dock layout controls
-            foreach (BaseVRControl attach in layout.LoadedControls)
-            {
-	            attach.SetActive();
-	            attach.transform.position = attach.jsonPosition;
-	            attach.transform.rotation = attach.jsonRotation;
-                attach.DockInto(UIController.Instance.GetControl(attach.jsonParentId));
-            }
-
-            m_activeLayout = layout;
-            m_activeLayout.SetColour(Color.red);
+            
+            m_activeLayout.SetColour(Color.yellow);
         }
     }
 }

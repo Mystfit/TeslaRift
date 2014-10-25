@@ -27,6 +27,16 @@ public class CameraSwitcher : MonoBehaviour {
             projectorCamera.SetActive(false);
             slaveProjectorCamera.SetActive(false);
             remoteCamera.SetActive(true);
+            remoteCamera.transform.position = new Vector3(
+                GlobalConfig.Instance.RemoteCameraX,
+                GlobalConfig.Instance.RemoteCameraY,
+                GlobalConfig.Instance.RemoteCameraZ);
+            remoteCamera.transform.rotation = Quaternion.Euler(new Vector3(
+                GlobalConfig.Instance.RemoteCameraPitch,
+                GlobalConfig.Instance.RemoteCameraYaw,
+                0.0f));
+
+            remoteCamera.GetComponent<Camera>().fieldOfView = GlobalConfig.Instance.RemoteCameraFOV;
             remoteCamera.tag = "MainCamera";
         }
 	}

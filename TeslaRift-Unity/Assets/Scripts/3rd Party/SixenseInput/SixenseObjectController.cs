@@ -35,7 +35,7 @@ public class SixenseObjectController : MonoBehaviour {
 		}
 		
 		SixenseInput.Controller controller = SixenseInput.GetController( Hand );
-		if ( controller != null && controller.Enabled )  
+		if ( controller != null)  
 		{		
 			UpdateObject(controller);
 		}	
@@ -64,7 +64,7 @@ public class SixenseObjectController : MonoBehaviour {
 		{
 			UpdatePosition( controller );
 			UpdateRotation( controller );
-		}
+        }
 	}
 	
 	public void ActivateHand( SixenseInput.Controller controller){
@@ -88,23 +88,28 @@ public class SixenseObjectController : MonoBehaviour {
         Vector3 controllerPosition;
         if (GlobalConfig.Instance.UseRemoteInput)
         {
+            //controllerPosition = new Vector3(
+            //    HydraGloveNode.Instance.handPosition(Hand).x * Sensitivity.x,
+            //    HydraGloveNode.Instance.handPosition(Hand).y * Sensitivity.y,
+            //    HydraGloveNode.Instance.handPosition(Hand).z * Sensitivity.z);
             controllerPosition = new Vector3(
-                HydraGloveNode.Instance.handPosition(Hand).x * Sensitivity.x,
-                HydraGloveNode.Instance.handPosition(Hand).y * Sensitivity.y,
-                HydraGloveNode.Instance.handPosition(Hand).z * Sensitivity.z);
+                HydraGloveNode.Instance.handPosition(Hand).x,
+                HydraGloveNode.Instance.handPosition(Hand).y,
+                HydraGloveNode.Instance.handPosition(Hand).z
+            );
+            this.gameObject.transform.localPosition = controllerPosition;
         }
         else
         {
             controllerPosition = new Vector3(controller.Position.x * Sensitivity.x,
                                                   controller.Position.y * Sensitivity.y,
                                                   controller.Position.z * Sensitivity.z);
+            // distance controller has moved since enabling positional control
+            Vector3 vDeltaControllerPos = controllerPosition - m_baseControllerPosition;
+
+            // update the localposition of the object
+            this.gameObject.transform.localPosition = m_initialPosition + vDeltaControllerPos;
         }
-		
-		// distance controller has moved since enabling positional control
-		Vector3 vDeltaControllerPos = controllerPosition - m_baseControllerPosition;
-		
-		// update the localposition of the object
-		this.gameObject.transform.localPosition = m_initialPosition + vDeltaControllerPos;
 	}
 	
 	

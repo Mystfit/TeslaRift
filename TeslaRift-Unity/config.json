@@ -1,48 +1,47 @@
-/*{
-  "UseRiftCamera": false,
-  "UseKinectCamera": true,
-  "Fullscreen": true,
-  "NumScreens": 1,
-  "ScreenWidthMeters": 0.5977265033600158,
-  "ScreenHeightMeters": 0.336221158140009,
-  "ScreenHeightFromGround": 1,
-  "ScreenAngle": 0,
-  "ScreenRenderWidth": 2560,
-  "ScreenRenderHeight": 1440,
-  "ShowtimeStageAddress": "curiosity.soad.vuw.ac.nz",
-  "ShowtimeStagePort": 6000,
-  "DebugCollisions": false,
-  "EnableAnimations": false,
-  "UseRemoteInput": false,
-  "InputSource": "HydraGloveNode_master",
-  "LeftComPort": "COM6",
-  "RightComPort": "COM7"
-}
-*/
 {
+  //Active cameras
   "UseRiftCamera": false,
   "UseKinectCamera": false,
+  "UseWebcam:": false,
+
+  //Kinect tracking
   "KinectHeight": 0.5,
   "KinectFOV": 90.0,
   "KinectXFromCenter": 0.0,
   "KinectZFromCenter": -1.0,
   "CameraRotatesUsingShoulders": false,
   "CameraFacesCenter": true,
-  "Fullscreen": true,
-  "ShowTestRoom": true,
-  "NumScreens": 3,
+
+  //Remote camera
+  "RemoteCameraFOV": 54.0,
+  "RemoteCameraX": 0.0,
+  "RemoteCameraY": 1.16, //1.16 default
+  "RemoteCameraZ": 2.48, //2.48 default
+  "RemoteCameraPitch": -3.96,
+  "RemoteCameraYaw": 0.0,
+
+  //Rendering
+  "Fullscreen": false,
+  "NumScreens": 1,
   "ScreenWidthMeters": 3.2,
   "ScreenHeightMeters": 2.0,
   "ScreenHeightFromGround": 0.5,
   "ScreenAngle": 45,
   "ScreenRenderWidth": 1920,
   "ScreenRenderHeight": 1080,
-  "ShowtimeStageAddress": "curiosity.soad.vuw.ac.nz",
+  
+  //Showtime
+  "ShowtimeStageAddress": "130.195.44.62",
   "ShowtimeStagePort": 6000,
-  "DebugCollisions": false,
-  "EnableAnimations": false,
+
+  //Input
   "UseRemoteInput": false,
   "InputSource": "HydraGloveNode_master",
   "LeftComPort": "COM6",
-  "RightComPort": "COM7"
+  "RightComPort": "COM7",
+
+  //Misc
+  "DebugCollisions": false,
+  "EnableAnimations": false,
+  "ShowTestRoom": false,
 }

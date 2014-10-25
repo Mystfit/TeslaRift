@@ -159,12 +159,13 @@ public class MusicNode : UnityNode {
 
     public object outputMeter(ZstMethod methodData)
     {
-        float[] output = JsonConvert.DeserializeObject<float[]>(methodData.output.ToString());
+        Dictionary<string, object> output = JsonConvert.DeserializeObject<Dictionary<string, object>>(methodData.output.ToString());
+        float[] meterOutput = JsonConvert.DeserializeObject<float[]>(output["meter"].ToString());
 
-        for (int i = 0; i < output.Length; i++)
+        for (int i = 0; i < meterOutput.Length; i++)
         {
             //float dbVal = Mathf.Clamp(Utils.Remap(20.0f * Mathf.Log(output[i]), -60.0f, 6.0f, 0.0f, 1.0f), 0.0f, 1.0f);
-            InstrumentController.Instance.GetInstrumentByTrackindex(i).meterVolume = output[i];
+            InstrumentController.Instance.GetInstrumentByTrackindex(i).meterVolume = meterOutput[i];
         }
         return null;
     }

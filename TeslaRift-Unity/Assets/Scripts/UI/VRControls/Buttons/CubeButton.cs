@@ -46,8 +46,10 @@ namespace VRControls
         }
 
 		public override void Fire(){
-			if (musicRef != null)
-				musicRef.Send(true);
+            if (musicRef != null)
+                musicRef.setVal(musicRef.val);
+                InstrumentController.Instance.AddToQueue(musicRef);
+				//musicRef.Send(true);
 
 			if (DockedChildren.Count > 0)
 			{

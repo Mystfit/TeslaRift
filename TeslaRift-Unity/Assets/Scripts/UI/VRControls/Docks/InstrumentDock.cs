@@ -33,7 +33,12 @@ namespace VRControls
                     });
                     return true;
                 }
-                    
+
+            }
+            else
+            {
+                if (attach.IsTransient)
+                    UIController.Instance.DestroyControl(attach);
             }
             return false;
         }

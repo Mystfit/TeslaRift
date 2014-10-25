@@ -299,7 +299,7 @@ namespace VRControls
 
                 int index = 0;
                 foreach (RBFPlug plug in ChildControls)
-                    plug.SetPlugVal((float)output[index++]);
+                    plug.SetPlugVal((float)output[index++], true);
             }
         }
 

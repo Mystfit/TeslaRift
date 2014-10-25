@@ -2,6 +2,7 @@
 using System.Text;
 using System.Collections;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using VRControls;
 
@@ -455,23 +456,7 @@ public class HydraController : MonoBehaviour
         }
 
         if (key == KeyCode.P)
-        {
-            bool leftLoaded = false;
-            bool rightLoaded = false;
-            if (m_leftGlove != null)
-            {
-                if (m_leftGlove.gameObject.activeInHierarchy)
-                    leftLoaded = m_leftGlove.LoadRBF();
-            }
-            if (m_rightGlove != null)
-            {
-                if (m_rightGlove.gameObject.activeInHierarchy)
-                    rightLoaded = m_rightGlove.LoadRBF();
-            }
-
-            if (leftLoaded || rightLoaded)
-                m_gloveCalibrator.StartCalibration();
-        }
+            LoadGloves();
 
         if (key == KeyCode.N)
             EditorWorkspace.Instance.CreateManualLayout();
@@ -480,6 +465,30 @@ public class HydraController : MonoBehaviour
         
         if (key == KeyCode.L)
             EditorWorkspace.Instance.OpenWorkspaceFiles();
+        if (key == KeyCode.C){
+            int numScreenshots = Directory.GetFiles("screenshots").Length;
+            Application.CaptureScreenshot("screenshots/capture_" + numScreenshots + ".png", 4);
+        }
+            
+    }
+
+    public void LoadGloves()
+    {
+        bool leftLoaded = false;
+        bool rightLoaded = false;
+        if (m_leftGlove != null)
+        {
+            if (m_leftGlove.gameObject.activeInHierarchy)
+                leftLoaded = m_leftGlove.LoadRBF();
+        }
+        if (m_rightGlove != null)
+        {
+            if (m_rightGlove.gameObject.activeInHierarchy)
+                rightLoaded = m_rightGlove.LoadRBF();
+        }
+
+        if (leftLoaded || rightLoaded)
+            m_gloveCalibrator.StartCalibration();
     }
 
     public void FreezeHands()

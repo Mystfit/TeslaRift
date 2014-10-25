@@ -44,7 +44,7 @@ namespace VRControls
 	            if (attach.musicRef != musicRef) {
 	                attach.SetCloneable(false);
 	                attach.SetIsDraggable(true);
-	                //attach.SetIsSaveable(false);
+	                attach.SetIsSaveable(true);
 	                attach.SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.GRABBING });
 					attach.Freeze();
 	                m_scroller.AddDockableAttachment(attach);

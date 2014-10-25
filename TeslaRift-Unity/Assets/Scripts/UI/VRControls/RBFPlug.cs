@@ -80,6 +80,7 @@ namespace VRControls
                 Slider slider = attach as Slider;
                 slider.SetCloneable(false);
                 slider.SetIsDraggable(true);
+                slider.SetIsSaveable(true);
                 slider.SetToolmodeResponse(new BaseTool.ToolMode[] { BaseTool.ToolMode.GRABBING });
                 m_paramscroller.AddDockableAttachment(attach);
                 //slider.DockInto(m_paramscroller);

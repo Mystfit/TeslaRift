@@ -63,7 +63,8 @@ namespace VRControls
                 BaseTool.ToolMode.GRABBING
             });
 
-            Destroy(m_volumetrics[attach]);
+            if (m_volumetrics.ContainsKey(attach))
+                Destroy(m_volumetrics[attach]);
 
             attach.DisableControls();
             PlaceObjects();
@@ -150,10 +151,11 @@ namespace VRControls
 
         protected void HideInactiveMenuControls()
         {
-            Vector3 handPosition = HydraController.Instance.GetHandColliderPosition(MajorHand);
-            Vector3 controlPosition;
+            
             if (visibleControls != null)
             {
+                Vector3 handPosition = HydraController.Instance.GetHandColliderPosition(visibleControls.MajorHand);
+                Vector3 controlPosition;
                 controlPosition = visibleControls.transform.position;
 
                 //Flatten control and hand positions so we're only checking distance on a 2D plane

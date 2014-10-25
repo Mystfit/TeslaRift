@@ -759,7 +759,7 @@ namespace VRControls
         
         /// <summary>
         /// Dock this VRControl into a target
-        /// </summary>
+        /// </summar>y
         /// <param name="attach">Target VRControl to dock into</param>
         public virtual void DockInto(BaseVRControl attach)
         {
@@ -767,6 +767,10 @@ namespace VRControls
             {
                 m_dockedInto = attach;
                 attach.AddDockableAttachment(this);
+            }
+            else
+            {
+                Debug.Log(attach.name + ": Not a dock!");
             }
             if (IsDraggable) SetIsDragging(false);
         }
@@ -947,7 +951,18 @@ namespace VRControls
         /// Adds a new child VRControl
         /// </summary>
         /// <param name="control">VRControl to add</param>
-        public void AddChildControl(BaseVRControl control) { m_childControls.Add(control); }
+        public void AddChildControl(BaseVRControl control) { 
+            m_childControls.Add(control);
+            control.SetParentControl(this);
+        }
+
+        public void SetParentControl(BaseVRControl attach)
+        {
+            m_parentControl = attach;
+        }
+
+        public BaseVRControl ParentControl { get { return m_parentControl; } }
+        private BaseVRControl m_parentControl;
 
         /// <summary>
         /// Removes a child VRControl
@@ -1037,6 +1052,10 @@ namespace VRControls
         /// <param name="attach"></param>
         public virtual void ChildAttachmentIsDragging(BaseVRControl attach)
         {
+            if (attach.DockedInto != null)
+            {
+                attach.DockedInto.HideControls();
+            }
         }
 
         /// <summary>
@@ -1219,7 +1238,7 @@ namespace VRControls
             if (attachments == null)
                 attachments = new List<BaseVRControl>();
 
-            if (this.IsSerializeable && !IsTemplate)
+            if (IsSerializeable && !IsTemplate)
             {
                 attachments.Add(this);
                 Debug.Log("Adding " + this.GetType().ToString() + " to serializer");

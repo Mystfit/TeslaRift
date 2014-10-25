@@ -100,6 +100,7 @@ public class UIFrame : MonoBehaviour {
             CreateGrid(m_numGridRows, m_numGridColumns);
 
         if(m_label != null){
+            m_textSize = new TextSize(m_label);
             SetLabel(m_sliderLabel);
             m_label.transform.localPosition = m_frameOffset * 2.0f + new Vector3(0.0f, 0.0f, -0.002f);
             SetTextAsDeselected();
@@ -508,6 +509,7 @@ public class UIFrame : MonoBehaviour {
     public TextMesh label { get { return m_label; } }
     public TextMesh m_label;
     public TextMesh m_valueLabel;
+    private TextSize m_textSize;
     public string m_sliderLabel = "";
 	public int m_maxChars = 10;
 
@@ -531,10 +533,12 @@ public class UIFrame : MonoBehaviour {
 			}
 
             if(m_matchTextWidth)
-                AnimateSize(m_label.renderer.bounds.size.x, m_frameHeight);
+                AnimateSize(m_textSize.width, m_frameHeight);
             //toggleUpdate = true;
+            labelIsSet = true;
         }
     }
+    public bool labelIsSet = false;
 
     public void SetValueLabel(string value)
     {

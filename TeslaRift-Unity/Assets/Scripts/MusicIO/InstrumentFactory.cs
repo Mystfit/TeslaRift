@@ -182,6 +182,7 @@ public class InstrumentFactory : MonoBehaviour {
 
         InstrumentOrb instrument = UIFactory.CreateInstrumentRefAttachment(instrumentDef) as InstrumentOrb;
         instrument.SetAsTemplate(true);
+        instrument.SetAsDock(true);
 
         return instrument;
     }
@@ -193,9 +194,11 @@ public class InstrumentFactory : MonoBehaviour {
             kaossNode, kaossNode.name, color, -1, false, false);
         kaossInstrumentHandle.AddParam(new KaossParameter("touch_x", kaossInstrumentHandle, "x", 0, 127));
         kaossInstrumentHandle.AddParam(new KaossParameter("touch_y", kaossInstrumentHandle, "y", 0, 127));
-        kaossInstrumentHandle.AddParam(new KaossParameter("touch_trigger", kaossInstrumentHandle, "trigger", 0, 1));
-        kaossInstrumentHandle.AddParam(new KaossParameter("gate_hold", kaossInstrumentHandle, "value", 0, 1));
+        kaossInstrumentHandle.AddParam(new KaossParameter("touch_trigger", kaossInstrumentHandle, "trigger", 0, 127));
+        kaossInstrumentHandle.AddParam(new KaossParameter("gate_hold", kaossInstrumentHandle, "value", 0, 127));
         kaossInstrumentHandle.AddParam(new KaossParameter("fader", kaossInstrumentHandle, "value", 0, 127));
+        kaossInstrumentHandle.AddParam(new MidiProgramParameter("send_program", kaossInstrumentHandle, "program", 0, 127));
+        kaossInstrumentHandle.AddParam(new MidiBankParameter("send_bank_change", kaossInstrumentHandle, "bankB", 0, 1));
 
         InstrumentOrb kaossInstrument = UIFactory.CreateInstrumentRefAttachment(kaossInstrumentHandle) as InstrumentOrb;
         kaossInstrument.DockInto(m_returnHolder);

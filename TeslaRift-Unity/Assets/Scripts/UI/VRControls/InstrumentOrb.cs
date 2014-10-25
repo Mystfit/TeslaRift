@@ -10,10 +10,13 @@ namespace VRControls
     public class InstrumentOrb : BaseVRControl
     {
 
-        protected GameObject m_parameterScroller;
-        protected GameObject m_clipScroller;
+        protected Scroller m_parameterScroller;
+        protected Scroller m_clipScroller;
         protected GameObject m_dividingQuad;
         protected GameObject m_rotator;
+        protected UIFrame m_frame;
+        protected bool m_canShowLabel = false;
+        protected bool m_firstDock = true;
 
         public GameObject m_modelFrame;
         public GameObject m_modelInterior;
@@ -37,6 +40,9 @@ namespace VRControls
         {
             base.Awake();
 
+            AddAcceptedDocktype(typeof(Slider));
+            AddAcceptedDocktype(typeof(ClipCube));
+
             //Since instrument attachments are created at runtime, we need to set the filter here
             SetToolmodeResponse(new BaseTool.ToolMode[]{
                 BaseTool.ToolMode.GRABBING,
@@ -49,6 +55,8 @@ namespace VRControls
             SetIsDraggable(true);
             SetCloneable(true);
             SetOutlineMat(m_modelFrame.renderer.material);
+
+            m_frame = transform.Find("frame").GetComponent<UIFrame>();                
         }
 
 
@@ -99,14 +107,18 @@ namespace VRControls
                 clipScroller.AddAcceptedDocktype(typeof(ClipCube));
                 clipScroller.transform.parent = m_rotator.transform;
                 clipScroller.SetOffset(new Vector3(-m_controlsMirrorOffset, m_controlsYOffset + 0.02f, 0.0f));
+                m_clipScroller = clipScroller;
+
+                AddChildControl(clipScroller);
 
                 //Create clips
                 foreach (ClipParameter clip in m_instrumentRef.clipList)
                 {
                     ClipCube cube = UIFactory.CreateMusicRefAttachment(typeof(ClipCube), clip) as ClipCube;
                     cube.SetCloneable(true);
+                    cube.SetIsSaveable(false);
                     cube.SetColour(m_instrumentRef.color);
-                    cube.DockInto(clipScroller);
+                    cube.DockInto(this);
                     cube.SetToolmodeResponse(defaultToolResponse);
                 }
 
@@ -115,6 +127,9 @@ namespace VRControls
                 paramScroller.transform.parent = m_rotator.transform;
                 paramScroller.SetOffset(new Vector3(m_controlsMirrorOffset, m_controlsYOffset, 0.0f));
                 paramScroller.SetItemSpacing(m_itemSpacing);
+                m_parameterScroller = paramScroller;
+
+                AddChildControl(paramScroller);
 
                 
                 //Create note slider
@@ -122,7 +137,8 @@ namespace VRControls
                 {
                     Slider noteSlider = UIFactory.CreateMusicRefAttachment(typeof(Slider), m_instrumentRef.noteChannel) as Slider;
                     noteSlider.SetCloneable(true);
-                    noteSlider.DockInto(paramScroller);
+                    noteSlider.SetIsSaveable(false);
+                    noteSlider.DockInto(this);
                     noteSlider.SetToolmodeResponse(defaultToolResponse);
                 }
 
@@ -131,7 +147,8 @@ namespace VRControls
                 {
                     Slider slider = UIFactory.CreateMusicRefAttachment(typeof(Slider), param) as Slider;
                     slider.SetCloneable(true);
-                    slider.DockInto(paramScroller);
+                    slider.SetIsSaveable(false);
+                    slider.DockInto(this);
                     slider.SetToolmodeResponse(defaultToolResponse);
                 }
 
@@ -140,7 +157,8 @@ namespace VRControls
                 {
                     Slider slider = UIFactory.CreateMusicRefAttachment(typeof(Slider), send) as Slider;
                     slider.SetCloneable(true);
-                    slider.DockInto(paramScroller);
+                    slider.SetIsSaveable(false);
+                    slider.DockInto(this);
                     slider.SetToolmodeResponse(defaultToolResponse);
                 }
 
@@ -150,8 +168,7 @@ namespace VRControls
                 if (m_instrumentRef.paramList.Count < paramScroller.numDisplayedAttachments)
                     paramScroller.SetNumDisplayedAttachments(m_instrumentRef.paramList.Count);
 
-                m_parameterScroller = paramScroller.gameObject;
-                m_clipScroller = clipScroller.gameObject;
+                
 
                 //Central divider 
                 float largestHeight = (clipScroller.upperVisibleBounds > paramScroller.upperVisibleBounds) ? clipScroller.upperVisibleBounds : paramScroller.upperVisibleBounds;
@@ -162,6 +179,45 @@ namespace VRControls
 
                 DisableControls();
             }
+        }
+
+        public override void Undock()
+        {
+            base.Undock();
+            m_canShowLabel = false;
+            m_firstDock = false;
+            if (m_frame != null)
+            {
+                m_frame.gameObject.SetActive(false);
+            }
+        }
+
+        public override void DockInto(BaseVRControl attach)
+        {
+            base.DockInto(attach);
+            m_canShowLabel = true;
+        }
+
+        public override bool AddDockableAttachment(BaseVRControl attach)
+        {
+            if (base.AddDockableAttachment(attach))
+            {
+                if (attach.GetType() == typeof(Slider))
+                    m_parameterScroller.AddDockableAttachment(attach);
+                else if (attach.GetType() == typeof(ClipCube))
+                    m_clipScroller.AddDockableAttachment(attach);
+                return true;
+            }
+            return false;
+        }
+
+        public override void RemoveDockableAttachment(BaseVRControl attach)
+        {
+            base.RemoveDockableAttachment(attach);
+            if (attach.GetType() == typeof(Slider))
+                m_parameterScroller.RemoveDockableAttachment(attach);
+            else if (attach.GetType() == typeof(ClipCube))
+                m_clipScroller.RemoveDockableAttachment(attach);
         }
 
         public override void ShowControls()
@@ -186,6 +242,16 @@ namespace VRControls
         public override void Update()
         {
             base.Update();
+
+            if (m_frame != null)
+            {
+
+                if (m_frame.label.text != m_instrumentRef.name)
+                {
+                    m_frame.SetMatchTextWidth(true);
+                    m_frame.SetLabel(m_instrumentRef.name);
+                }
+            }
 
             if (instrumentRef.isMeterDirty)
             {
@@ -219,6 +285,23 @@ namespace VRControls
 
             if (mode == BaseTool.ToolMode.PRIMARY)
                 ToggleControls();
+        }
+
+        public override void StartHover()
+        {
+            base.StartHover();
+            if (!m_frame.gameObject.activeSelf && m_canShowLabel && !m_firstDock)
+                m_frame.gameObject.SetActive(true);
+        }
+
+        public override void StopHover()
+        {
+            base.StopHover();
+            if (m_frame != null)
+            {
+                if (m_frame.gameObject.activeSelf && !m_firstDock)
+                    m_frame.gameObject.SetActive(false);
+            }
         }
 
         public override void Gesture_IdleProximity()

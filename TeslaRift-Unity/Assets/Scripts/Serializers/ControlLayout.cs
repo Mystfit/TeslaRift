@@ -25,6 +25,7 @@ namespace VRControls
 
         public int layoutIndex = -1;
 
+
         public override void Awake()
         {
             base.Awake();
@@ -78,6 +79,7 @@ namespace VRControls
             StreamWriter writer = new StreamWriter(m_path);
 			writer.WriteLine(this.BuildJsonHierarchy(controls));
             writer.Close();
+            m_saveIsDirty = false;
         }
 
         public override bool AddDockableAttachment(BaseVRControl attach)
@@ -92,7 +94,13 @@ namespace VRControls
 
         public override void Fire()
         {
+            if (m_owner.activeLayout == this && IsSaveDirty)
+            {
+                owner.SaveWorkspace(this);
+            }
+
             owner.SetActiveWorkspace(this);
+            
         }
 
         public static List<BaseVRControl> ReadLayout(string path)
@@ -166,5 +174,12 @@ namespace VRControls
             controlList.Remove(layout);
             return layout;
         }
+
+        public void SetSaveDirty() { 
+            m_saveIsDirty = true;
+            SetColour(Color.red);
+        } 
+        public bool IsSaveDirty{ get { return m_saveIsDirty; }}
+        private bool m_saveIsDirty = false;
     }
 }

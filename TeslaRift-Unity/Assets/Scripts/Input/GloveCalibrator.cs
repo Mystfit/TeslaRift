@@ -18,8 +18,7 @@ public class GloveCalibrator : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        //m_leftGlove.ShowDebugText(false);
-        //m_rightGlove.ShowDebugText(false);
+
     }
 
     public void StartCalibration(){

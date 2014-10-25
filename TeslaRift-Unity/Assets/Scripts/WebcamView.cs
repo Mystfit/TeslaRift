@@ -10,6 +10,12 @@ public class WebcamView : MonoBehaviour {
     void Start () {
         //foreach(WebCamDevice device in WebCamTexture.devices)
             //Debug.Log(device.name);
+
+        if (!GlobalConfig.Instance.UseWebcam)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
     
         m_camTexture = new WebCamTexture(WebCamTexture.devices[deviceIndex].name, 640, 480, 30);
         renderer.material.SetTexture("_MainTex", m_camTexture);

@@ -14,6 +14,7 @@ namespace VRControls
             AddAcceptedDocktype(typeof(CubeButton));
             AddAcceptedDocktype(typeof(ControlLayout));
             AddAcceptedDocktype(typeof(Picker));
+            AddAcceptedDocktype(typeof(DestroyButton));
 
             DockChildTransforms();
 

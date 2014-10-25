@@ -35,10 +35,15 @@ public class GlobalConfigWrapper : MonoBehaviour
 
 public class GlobalConfig  {
 
+    //Active cameras
     [JsonProperty]
     public bool UseRiftCamera;
     [JsonProperty]
     public bool UseKinectCamera;
+    [JsonProperty]
+    public bool UseWebcam;
+    
+    //Kinect tracking
     [JsonProperty]
     public float KinectHeight;
     [JsonProperty]
@@ -51,11 +56,24 @@ public class GlobalConfig  {
     public bool CameraRotatesUsingShoulders;
     [JsonProperty]
     public bool CameraFacesCenter;
+
+    //Remote camera
+    [JsonProperty]
+    public float RemoteCameraFOV;
+    [JsonProperty]
+    public float RemoteCameraX;
+    [JsonProperty]
+    public float RemoteCameraY;
+    [JsonProperty]
+    public float RemoteCameraZ;
+    [JsonProperty]
+    public float RemoteCameraPitch;
+    [JsonProperty]
+    public float RemoteCameraYaw;
+
+    //Rendering
     [JsonProperty]
     public bool Fullscreen;
-    [JsonProperty]
-    public bool ShowTestRoom;
-    
     [JsonProperty]
     public int NumScreens;
     [JsonProperty]
@@ -74,23 +92,29 @@ public class GlobalConfig  {
     public int ProjectionHeight { get { return ScreenRenderHeight; } }
     public float Aspect { get { return (float)ScreenRenderWidth / (float)ScreenRenderHeight; } }
     
+    //Showtime
     [JsonProperty]
     public string ShowtimeStageAddress;
     [JsonProperty]
     public int ShowtimeStagePort;
     [JsonProperty]
-	public bool DebugCollisions;
-    [JsonProperty]
-    public bool EnableAnimations;
-    [JsonProperty]
     public string InputSource = "";
     [JsonProperty]
     public bool UseRemoteInput;
-
+    
+    //Glove Input
     [JsonProperty]
     public string LeftComPort;
     [JsonProperty]
     public string RightComPort;
+
+    //Misc
+    [JsonProperty]
+    public bool DebugCollisions;
+    [JsonProperty]
+    public bool EnableAnimations;
+    [JsonProperty]
+    public bool ShowTestRoom;
 
     public static GlobalConfig m_instance;
     public static GlobalConfig Instance{ get { return m_instance; }}
